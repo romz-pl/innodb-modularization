@@ -14,7 +14,7 @@ cd build
 # Run cmake
 #
 
-cmake ..
+cmake .. -DROMZ_CODE_COVERAGE_ENABLED=ON
 make -j2
 
 
