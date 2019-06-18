@@ -35,6 +35,6 @@ include( romz_ctest )
 #
 #
 add_subdirectory( 3rdparty )
-# add_subdirectory( libs )
+add_subdirectory( libs )
 # add_subdirectory( tests )
 
