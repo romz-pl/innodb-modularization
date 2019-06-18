@@ -20,7 +20,6 @@ set( ROMZ_LINKER_FLAGS "" )
 #
 # Set compilation and linking flags
 #
-include( romz_check_compiler )
 include( romz_cxx_version )
 include( romz_warnings )
 include( romz_debugging )
