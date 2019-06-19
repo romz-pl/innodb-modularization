@@ -14,7 +14,7 @@ cd build
 # Run cmake
 #
 
-cmake .. -DROMZ_CODE_COVERAGE_ENABLED=ON
+cmake .. -DCMAKE_CXX_COMPILER=clang++  -DCMAKE_C_COMPILER=clang -DBUILD_CONFIG=mysql_release
 make -j2
 
 
@@ -22,4 +22,4 @@ make -j2
 # Run test
 #
 # ctest --verbose
-ctest
+#ctest
