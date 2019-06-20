@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 // #include "univ.i"
 
 #include "os0thread.h"
+#include "ut0compiler_hints.h"
 
 /** Report a failed assertion. */
 [[noreturn]] void ut_dbg_assertion_failed(
