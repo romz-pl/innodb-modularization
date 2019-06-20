@@ -96,9 +96,7 @@ made in SQL code cause a complete InnoDB rebuild.  These headers are
 used throughout InnoDB but do not include too much themselves.  They
 support cross-platform development and expose comonly used SQL names. */
 
-#ifndef UNIV_HOTBACKUP
-#include "my_thread.h"
-#endif /* !UNIV_HOTBACKUP  */
+
 
 /* Include <sys/stat.h> to get S_I... macros defined for os0file.cc */
 #include <sys/stat.h>
