@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0size.h"
 #include "sync0rw.h"
 #include "ut0byte.h"
+#include "ut0formatting.h"
 #include "ut0mutex.h"
 #include "ut0new.h"
 

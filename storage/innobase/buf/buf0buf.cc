@@ -58,6 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0rw.h"
 #include "trx0purge.h"
 #include "trx0undo.h"
+#include "ut0formatting.h"
 
 #include <errno.h>
 #include <stdarg.h>

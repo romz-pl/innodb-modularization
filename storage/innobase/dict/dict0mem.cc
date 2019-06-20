@@ -52,6 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <iostream>
 
 #include "sync0sync.h"
+#include "ut0formatting.h"
 
 /** An interger randomly initialized at startup used to make a temporary
 table name as unuique as possible. */

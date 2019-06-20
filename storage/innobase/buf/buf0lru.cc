@@ -53,6 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0rw.h"
 #include "trx0trx.h"
 #include "ut0byte.h"
+#include "ut0formatting.h"
 #include "ut0rnd.h"
 
 /** The number of blocks from the LRU_old pointer onward, including

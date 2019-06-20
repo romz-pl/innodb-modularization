@@ -49,6 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "trx0sys.h"
+#include "ut0formatting.h"
 
 /** There must be at least this many pages in buf_pool in the area to start
 a random read-ahead */

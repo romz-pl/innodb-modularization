@@ -384,39 +384,25 @@ macro ULINTPF. We also give the printf format suffix (without '%') macro
 ULINTPFS, this one can be useful if we want to put something between % and
 lu/llu, like in %03lu. */
 
-#include <inttypes.h>
+
 
 #ifdef _WIN32
-/* Use the integer types and formatting strings defined in Visual Studio. */
-#define UINT32PF "%lu"
-#define UINT32PFS "lu"
-#define UINT64PF "%llu"
-#define UINT64PFx "%016llx"
+/* Use the integer types defined in Visual Studio. */
 typedef unsigned __int64 ib_uint64_t;
 typedef unsigned __int32 ib_uint32_t;
 #else
-/* Use the integer types and formatting strings defined in the C99 standard. */
-#define UINT32PF "%" PRIu32
-#define UINT32PFS PRIu32
-#define UINT64PF "%" PRIu64
-#define UINT64PFx "%016" PRIx64
+/* Use the integer types defined in the C99 standard. */
 typedef uint64_t ib_uint64_t;
 typedef uint32_t ib_uint32_t;
 #endif /* _WIN32 */
 
-#define IB_ID_FMT UINT64PF
-
 #ifdef _WIN64
 typedef unsigned __int64 ulint;
 typedef __int64 lint;
-#define ULINTPFS "llu"
 #else
 typedef unsigned long int ulint;
 typedef long int lint;
-#define ULINTPFS "lu"
 #endif /* _WIN64 */
-
-#define ULINTPF "%" ULINTPFS
 
 #ifndef _WIN32
 #if SIZEOF_LONG != SIZEOF_VOIDP

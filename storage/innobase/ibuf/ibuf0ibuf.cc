@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "ibuf0ibuf.h"
 #include "sync0sync.h"
+#include "ut0formatting.h"
 
 #include "my_dbug.h"
 
