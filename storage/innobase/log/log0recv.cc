@@ -66,6 +66,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0zip.h"
 #include "trx0rec.h"
 #include "trx0undo.h"
+#include "ut0call_destructor.h"
 #include "ut0new.h"
 
 #ifndef UNIV_HOTBACKUP
