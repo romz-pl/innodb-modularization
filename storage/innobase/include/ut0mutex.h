@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "univ.i"
 
 #include "my_inttypes.h"
+#include "sync0types.h"
 
 extern ulong srv_spin_wait_delay;
 extern ulong srv_n_spin_wait_rounds;

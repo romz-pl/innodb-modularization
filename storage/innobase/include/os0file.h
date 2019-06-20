@@ -46,6 +46,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include "my_dbug.h"
 #include "my_io.h"
 #include "os/file.h"
+#include "sync0types.h"
 
 #ifndef _WIN32
 #include <dirent.h>
