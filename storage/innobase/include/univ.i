@@ -97,10 +97,6 @@ used throughout InnoDB but do not include too much themselves.  They
 support cross-platform development and expose comonly used SQL names. */
 
 
-
-/* Include <sys/stat.h> to get S_I... macros defined for os0file.cc */
-#include <sys/stat.h>
-
 #include "my_psi_config.h"
 
 #ifndef _WIN32
