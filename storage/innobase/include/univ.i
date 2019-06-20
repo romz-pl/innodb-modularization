@@ -99,15 +99,6 @@ support cross-platform development and expose comonly used SQL names. */
 
 #include "my_psi_config.h"
 
-
-#ifndef UNIV_HOTBACKUP
-#include <inttypes.h>
-#include <stdint.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#endif /* !UNIV_HOTBACKUP */
-
 /* Following defines are to enable performance schema
 instrumentation in each of five InnoDB modules if
 HAVE_PSI_INTERFACE is defined. */
@@ -394,6 +385,8 @@ the word size of the machine, that is on a 32-bit platform 32 bits, and on a
 macro ULINTPF. We also give the printf format suffix (without '%') macro
 ULINTPFS, this one can be useful if we want to put something between % and
 lu/llu, like in %03lu. */
+
+#include <inttypes.h>
 
 #ifdef _WIN32
 /* Use the integer types and formatting strings defined in Visual Studio. */
