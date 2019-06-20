@@ -85,6 +85,7 @@ inline const char *lock_mode_string(enum lock_mode mode) {
   }
 }
 
+#include "ut0lst.h"
 typedef UT_LIST_BASE_NODE_T(lock_t) trx_lock_list_t;
 
 #endif /* lock0types_h */

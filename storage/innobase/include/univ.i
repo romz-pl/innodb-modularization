@@ -566,7 +566,6 @@ typedef void *os_thread_ret_t;
 #define OS_PATH_SEPARATOR_ALT '\\'
 #endif /* _WIN32 */
 
-#include "ut0lst.h"
 #include "ut0ut.h"
 
 #ifdef UNIV_DEBUG_VALGRIND

@@ -54,6 +54,7 @@ struct return_node_t;
 struct assign_node_t;
 struct col_assign_node_t;
 
+#include "ut0lst.h"
 typedef UT_LIST_BASE_NODE_T(sym_node_t) sym_node_list_t;
 
 #endif

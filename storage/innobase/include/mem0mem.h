@@ -339,6 +339,7 @@ void mem_heap_validate(const mem_heap_t *heap);
 #endif /* UNIV_DEBUG */
 
 /*#######################################################################*/
+#include "ut0lst.h"
 
 /** The info structure stored at the beginning of a heap block */
 struct mem_block_info_t {
