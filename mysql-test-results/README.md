@@ -3,14 +3,13 @@
 2. The test suite is stated by command:
     ./mysql-test-run.pl --do-suite=innodb --force
 
-3. The very first test has been done vor unchanged version of Oracle-MySQL version 8.0.16
+3. The very first test has been done vof unchanged version of Oracle-MySQL version 8.0.16
 
 4. Please, note that some test from this test suits fails (!!!) even for Oracle-MySQL version 8.0.16
 
-5. After changes made during modularization process of InnDB the result of the tests nus be the same.
+5. After changes made during modularization process of InnoDB the result of the tests must be the same.
 
-6. Every files name containg the result starts form four digit numer follod by commit id obtained by comman:
+6. Every files name containing the result starts form four digit number followed by commit id obtained by command:
     git rev-parse HEAD
 
 7. The very first result is called 0000.Oracle-MySQL-8.0.16.txt
-
