@@ -1,0 +1,1326 @@
+[romz@localhost mysql-test]$ ./mysql-test-run.pl --do-suite=innodb --force
+Logging: /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/mysql-test-run.pl  --do-suite=innodb --force
+MySQL Version 8.0.16
+Checking supported features
+Using suite(s): innodb,innodb_fts,innodb_gis,innodb_stress,innodb_undo,innodb_zip
+Collecting tests
+Removing old var directory
+Creating var directory '/home/romz/tmp/innodb/clang/mysql-test/var'
+Installing system database
+Using parallel: 1
+
+==============================================================================
+                  TEST NAME                       RESULT  TIME (ms) COMMENT
+------------------------------------------------------------------------------
+[  0%] innodb_stress.innodb_bigstress            [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  0%] innodb_stress.innodb_bigstress_blob       [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  0%] innodb_stress.innodb_bigstress_blob_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  0%] innodb_stress.innodb_bigstress_crash      [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  0%] innodb_stress.innodb_bigstress_crash_blob  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  0%] innodb_stress.innodb_bigstress_crash_blob_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  1%] innodb_stress.innodb_bigstress_crash_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  1%] innodb_stress.innodb_bigstress_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  1%] innodb_stress.innodb_hugestress           [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  1%] innodb_stress.innodb_hugestress_blob      [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  1%] innodb_stress.innodb_hugestress_blob_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  1%] innodb_stress.innodb_hugestress_crash     [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  1%] innodb_stress.innodb_hugestress_crash_blob  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  2%] innodb_stress.innodb_hugestress_crash_blob_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  2%] innodb_stress.innodb_hugestress_crash_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  2%] innodb_stress.innodb_hugestress_nocompress  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  2%] innodb.alter_crash                        [ skipped ]  Test needs debug binaries.
+[  2%] innodb.alter_rename_files                 [ skipped ]  Test needs debug binaries.
+[  2%] innodb.analyze_table                      [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  3%] innodb.atomic_rename_debug_database       [ skipped ]  Test needs debug binaries.
+[  3%] innodb.atomic_truncate_crash              [ skipped ]  Test needs debug binaries.
+[  3%] innodb.attachable_trx                     [ skipped ]  Test needs debug binaries.
+[  3%] innodb.auto_increment                     [ skipped ]  Test needs debug binaries.
+[  3%] innodb.autoinc_debug                      [ skipped ]  Test needs debug binaries.
+[  3%] innodb.autoinc_persist_debug              [ skipped ]  Test needs debug binaries.
+[  3%] innodb.blob-crash-16k                     [ skipped ]  Test needs debug binaries.
+[  4%] innodb.blob-crash-4k                      [ skipped ]  Test needs debug binaries.
+[  4%] innodb.blob-crash                         [ skipped ]  Test needs debug binaries.
+[  4%] innodb.blob-update-debug                  [ skipped ]  Test needs debug binaries.
+[  4%] innodb.blob_page_reserve                  [ skipped ]  Test needs debug binaries.
+[  4%] innodb.blob_partial_update                [ skipped ]  Test needs debug binaries.
+[  4%] innodb.buf_pool_resize_oom                [ skipped ]  Test needs debug binaries.
+[  5%] innodb.cascade_lock_wait                  [ skipped ]  Test needs debug binaries.
+[  5%] innodb.cmp_per_index                      [ skipped ]  Test needs debug binaries.
+[  5%] innodb.create_table                       [ skipped ]  Test needs debug binaries.
+[  5%] innodb.create_tablespace_debug            [ skipped ]  Test needs debug binaries.
+[  5%] innodb.ddl_crash_alter_partition          [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  5%] innodb.ddl_crash_alter_table              [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  5%] innodb.ddl_crash_alter_table_partition    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  6%] innodb.ddl_crash_alter_table_tablespace   [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  6%] innodb.ddl_crash_basic                    [ skipped ]  Test needs debug binaries.
+[  6%] innodb.doublewrite                        [ skipped ]  Test needs debug binaries.
+[  6%] innodb.end_range_check                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  6%] innodb.end_range_check_2                  [ skipped ]  Test needs debug binaries.
+[  6%] innodb.flush-hang                         [ skipped ]  Test needs debug binaries.
+[  7%] innodb.fts_exec_interrupt                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[  7%] innodb.high_prio_trx_1                    [ skipped ]  Test needs debug binaries.
+[  7%] innodb.high_prio_trx_2                    [ skipped ]  Test needs debug binaries.
+[  7%] innodb.high_prio_trx_3                    [ skipped ]  Test needs debug binaries.
+[  7%] innodb.high_prio_trx_4                    [ skipped ]  Test needs debug binaries.
+[  7%] innodb.high_prio_trx_5                    [ skipped ]  Test needs debug binaries.
+[  7%] innodb.high_prio_trx_6                    [ skipped ]  Test needs debug binaries.
+[  8%] innodb.high_prio_trx_7                    [ skipped ]  Test needs debug binaries.
+[  8%] innodb.high_prio_trx_commit_crash         [ skipped ]  Test needs debug binaries.
+[  8%] innodb.high_prio_trx_debug                [ skipped ]  Test needs debug binaries.
+[  8%] innodb.high_prio_trx_fk                   [ skipped ]  Test needs debug binaries.
+[  8%] innodb.high_prio_trx_predicate            [ skipped ]  Test needs debug binaries.
+[  8%] innodb.high_prio_trx_rpl                  [ skipped ]  Test needs debug binaries.
+[  9%] innodb.ibuf_not_empty                     [ skipped ]  Test needs debug binaries.
+[  9%] innodb.index-lock-mode                    [ skipped ]  Test needs debug binaries.
+[  9%] innodb.index_merge_threshold              [ skipped ]  Test needs debug binaries.
+[  9%] innodb.innodb-2byte-collation             [ skipped ]  Test needs debug binaries.
+[  9%] innodb.innodb-alter-debug-wl6554          [ skipped ]  Test needs debug binaries.
+[  9%] innodb.innodb-alter-debug                 [ skipped ]  Test needs debug binaries.
+[  9%] innodb.innodb-change-buffer-recovery      [ skipped ]  Test needs debug binaries.
+[ 10%] innodb.innodb-copy-alter-debug            [ skipped ]  Test needs debug binaries.
+[ 10%] innodb.innodb-index-debug                 [ skipped ]  Test needs debug binaries.
+[ 10%] innodb.innodb-index-online-fk             [ skipped ]  Test needs debug binaries.
+[ 10%] innodb.innodb-lock-inherit-read_commited  [ skipped ]  Test needs debug binaries.
+[ 10%] innodb.innodb-new-fk                      [ skipped ]  Test needs debug binaries.
+[ 10%] innodb.innodb-replace-debug               [ skipped ]  Test needs debug binaries.
+[ 11%] innodb.innodb-status-output               [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 11%] innodb.innodb-wl5522-debug                [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 11%] innodb.innodb-wl5980-debug                [ skipped ]  Test needs debug binaries.
+[ 11%] innodb.innodb-wl6445-1                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 11%] innodb.innodb_buffer_pool_resize          [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 11%] innodb.innodb_buffer_pool_resize_debug    [ skipped ]  Test needs debug binaries.
+[ 11%] innodb.innodb_buffer_pool_resize_with_chunks  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 12%] innodb.innodb_buffer_pool_resize_with_instances  [ skipped ]  Test needs debug binaries.
+[ 12%] innodb.innodb_bug11754376                 [ skipped ]  Test needs debug binaries.
+[ 12%] innodb.innodb_bug11766634                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 12%] innodb.innodb_bug12400341                 [ skipped ]  Test needs debug binaries.
+[ 12%] innodb.innodb_bug14007109                 [ skipped ]  Test needs debug binaries.
+[ 12%] innodb.innodb_bug14007649                 [ skipped ]  Test needs debug binaries.
+[ 13%] innodb.innodb_bug14147491                 [ skipped ]  Test needs debug binaries.
+[ 13%] innodb.innodb_bug14704286                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 13%] innodb.innodb_bug19164038                 [ skipped ]  Test needs debug binaries.
+[ 13%] innodb.innodb_bug30423                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 13%] innodb.innodb_bug52663                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 13%] innodb.innodb_bug53290                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 13%] innodb.innodb_bug53756                    [ skipped ]  Test needs debug binaries.
+[ 14%] innodb.innodb_bug56143                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 14%] innodb.innodb_bug56947                    [ skipped ]  Test needs debug binaries.
+[ 14%] innodb.innodb_bulk_create_index           [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 14%] innodb.innodb_bulk_create_index_debug     [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 14%] innodb.innodb_bulk_create_index_flush     [ skipped ]  Test needs debug binaries.
+[ 14%] innodb.innodb_bulk_inject_errors          [ skipped ]  Test needs debug binaries.
+[ 15%] innodb.innodb_collation_test              [ skipped ]  Test needs debug binaries.
+[ 15%] innodb.innodb_corrupt_bit                 [ skipped ]  Test needs debug binaries.
+[ 15%] innodb.innodb_corrupt_readonly            [ skipped ]  Test needs debug binaries.
+[ 15%] innodb.innodb_deadlock_with_autoinc       [ skipped ]  Test needs debug binaries.
+[ 15%] innodb.innodb_file_limit_check            [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 15%] innodb.innodb_fts_limit_check             [ skipped ]  Test needs debug binaries.
+[ 15%] innodb.innodb_mysql                       [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 16%] innodb.innodb_redo_debug_1                [ skipped ]  Test needs debug binaries.
+[ 16%] innodb.innodb_redo_debug_2                [ skipped ]  Test needs debug binaries.
+[ 16%] innodb.innodb_redo_debug_3                [ skipped ]  Test needs debug binaries.
+[ 16%] innodb.innodb_redo_debug_4                [ skipped ]  Test needs debug binaries.
+[ 16%] innodb.innodb_redo_debug_5                [ skipped ]  Test needs debug binaries.
+[ 16%] innodb.innodb_redo_debug_6                [ skipped ]  Test needs debug binaries.
+[ 16%] innodb.innodb_rename_index_err            [ skipped ]  Test needs debug binaries.
+[ 17%] innodb.innodb_stats_del_mark              [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 17%] innodb.innodb_thread_concurrency_debug    [ skipped ]  Test needs debug binaries.
+[ 17%] innodb.innodb_upd_stats_if_needed_not_inited  [ skipped ]  Test needs debug binaries.
+[ 17%] innodb.innodb_ut_format_name              [ skipped ]  Test needs debug binaries.
+[ 17%] innodb.innodb_wl6326                      [ skipped ]  Test needs debug binaries.
+[ 17%] innodb.innodb_wl6326_big                  [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 18%] innodb.innodb_wl6469_debug                [ skipped ]  Test needs debug binaries.
+[ 18%] innodb.innodb_wl6470_debug                [ skipped ]  Test needs debug binaries.
+[ 18%] innodb.innodb_wl6560_debug                [ skipped ]  Test needs debug binaries.
+[ 18%] innodb.innodb_wl6915_debug                [ skipped ]  Test needs debug binaries.
+[ 18%] innodb.insert_debug                       [ skipped ]  Test needs debug binaries.
+[ 18%] innodb.instant_add_column_debug           [ skipped ]  Test needs debug binaries.
+[ 18%] innodb.instant_add_column_recovery        [ skipped ]  Test needs debug binaries.
+[ 19%] innodb.iodku_debug                        [ skipped ]  Test needs debug binaries.
+[ 19%] innodb.json-read-uncommitted              [ skipped ]  Test needs debug binaries.
+[ 19%] innodb.json_small_partial_update_04       [ skipped ]  Test needs debug binaries.
+[ 19%] innodb.json_small_partial_update_05       [ skipped ]  Test needs debug binaries.
+[ 19%] innodb.json_small_partial_update_06       [ skipped ]  Test needs debug binaries.
+[ 19%] innodb.lob-being-modified-bit             [ skipped ]  Test needs debug binaries.
+[ 20%] innodb.lob-format                         [ skipped ]  Test needs debug binaries.
+[ 20%] innodb.lob-read-uncommitted               [ skipped ]  Test needs debug binaries.
+[ 20%] innodb.lob-single-zstream                 [ skipped ]  Test needs debug binaries.
+[ 20%] innodb.lob_double_purge                   [ skipped ]  Test needs debug binaries.
+[ 20%] innodb.lob_insert_noindex                 [ skipped ]  Test needs debug binaries.
+[ 20%] innodb.lob_long_partial_update            [ skipped ]  Test needs debug binaries.
+[ 20%] innodb.lob_no_space                       [ skipped ]  Test needs debug binaries.
+[ 21%] innodb.lob_partial_update                 [ skipped ]  Test needs debug binaries.
+[ 21%] innodb.lob_partial_update_concurrent      [ skipped ]  Test needs debug binaries.
+[ 21%] innodb.lob_print                          [ skipped ]  Test needs debug binaries.
+[ 21%] innodb.lob_purge                          [ skipped ]  Test needs debug binaries.
+[ 21%] innodb.lob_rollback_crash                 [ skipped ]  Test needs debug binaries.
+[ 21%] innodb.log_alter_table                    [ skipped ]  Test needs debug binaries.
+[ 22%] innodb.log_ddl_must_flush                 [ skipped ]  Test needs debug binaries.
+[ 22%] innodb.log_file_name_1                    [ skipped ]  Test needs debug binaries.
+[ 22%] innodb.log_file_name_discover             [ skipped ]  Test needs debug binaries.
+[ 22%] innodb.log_file_size                      [ skipped ]  Test needs debug binaries.
+[ 22%] innodb.log_flush_order                    [ skipped ]  Test needs debug binaries.
+[ 22%] innodb.monitor_restart                    [ skipped ]  Test needs debug binaries.
+[ 22%] innodb.mvcc_cache                         [ skipped ]  Test needs debug binaries.
+[ 23%] innodb.mysql_ts_alter_encrypt_1           [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 23%] innodb.mysql_ts_alter_encrypt_2           [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 23%] innodb.open_file_lru                      [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 23%] innodb.page_reorganize                    [ skipped ]  Test needs debug binaries.
+[ 23%] innodb.partition_debug                    [ skipped ]  Test needs debug binaries.
+[ 23%] innodb.records_in_range                   [ skipped ]  Test needs debug binaries.
+[ 24%] innodb.row_format_redundant               [ skipped ]  Test needs debug binaries.
+[ 24%] innodb.sdi_debug                          [ skipped ]  Test needs debug binaries.
+[ 24%] innodb.sdi_delete_marked                  [ skipped ]  Test needs debug binaries.
+[ 24%] innodb.sdi_fail                           [ skipped ]  Test needs debug binaries.
+[ 24%] innodb.session_temp_tablespaces           [ skipped ]  Test needs debug binaries.
+[ 24%] innodb.skip_locked_nowait                 [ skipped ]  Test needs debug binaries.
+[ 24%] innodb.sp_temp_table                      [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 25%] innodb.strict_checksum                    [ skipped ]  Test needs debug binaries.
+[ 25%] innodb.table_compress                     [ skipped ]  Test needs debug binaries.
+[ 25%] innodb.table_encrypt_1                    [ skipped ]  Test needs debug binaries.
+[ 25%] innodb.table_encrypt_4                    [ skipped ]  Test needs debug binaries.
+[ 25%] innodb.table_encrypt_debug                [ skipped ]  Test needs debug binaries.
+[ 25%] innodb.table_encrypt_kill                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 26%] innodb.table_encrypt_portable_32          [ skipped ]  Test needs debug binaries.
+[ 26%] innodb.table_encrypt_portable_64          [ skipped ]  Test needs debug binaries.
+[ 26%] innodb.tablespace_encrypt_2               [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 26%] innodb.tablespace_encrypt_3               [ skipped ]  Test needs debug binaries.
+[ 26%] innodb.tablespace_encrypt_5               [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 26%] innodb.tablespace_encrypt_7               [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 26%] innodb.tablespace_encrypt_8               [ skipped ]  Test needs debug binaries.
+[ 27%] innodb.tablespace_encrypt_9               [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 27%] innodb.tablespace_rename                  [ skipped ]  Test needs debug binaries.
+[ 27%] innodb.temptable_write_row                [ skipped ]  Test needs debug binaries.
+[ 27%] innodb.tinytext-groupby                   [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 27%] innodb.too_many_concurrent_trxs           [ skipped ]  Test needs debug binaries.
+[ 27%] innodb.truncate_debug                     [ skipped ]  Test needs debug binaries.
+[ 28%] innodb.undo_encrypt_bootstrap             [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 28%] innodb.upgrade_compressed_recv            [ skipped ]  Test needs debug binaries.
+[ 28%] innodb.virtual_debug                      [ skipped ]  Test needs debug binaries.
+[ 28%] innodb.virtual_debug_purge                [ skipped ]  Test needs debug binaries.
+[ 28%] innodb.xa_prepare_lock_release            [ skipped ]  Test needs debug binaries.
+[ 28%] innodb.xa_recovery_debug                  [ skipped ]  Test needs debug binaries.
+[ 28%] innodb.xdes_fseg_frag                     [ skipped ]  Test needs debug binaries.
+[ 29%] innodb.zlob_long_partial_update           [ skipped ]  Test needs debug binaries.
+[ 29%] innodb.zlob_no_space                      [ skipped ]  Test needs debug binaries.
+[ 29%] innodb.zlob_partial_update_concurrent     [ skipped ]  Test needs debug binaries.
+[ 29%] innodb.zlob_print                         [ skipped ]  Test needs debug binaries.
+[ 29%] innodb.zlob_purge                         [ skipped ]  Test needs debug binaries.
+[ 29%] innodb.zlob_rollback_crash                [ skipped ]  Test needs debug binaries.
+[ 30%] innodb.zlob_rollback_crash_2              [ skipped ]  Test needs debug binaries.
+[ 30%] innodb_fts.fulltext_table_evict           [ skipped ]  Test needs debug binaries.
+[ 30%] innodb_fts.index_table                    [ skipped ]  Test needs debug binaries.
+[ 30%] innodb_fts.innobase_drop_fts_index_table  [ skipped ]  Test needs debug binaries.
+[ 30%] innodb_fts.limit_union                    [ skipped ]  Test needs debug binaries.
+[ 30%] innodb_fts.misc_debug                     [ skipped ]  Test needs debug binaries.
+[ 30%] innodb_fts.ngram_debug                    [ skipped ]  Test needs debug binaries.
+[ 31%] innodb_fts.plugin_debug                   [ skipped ]  Test needs debug binaries.
+[ 31%] innodb_fts.result_cache_limit             [ skipped ]  Test needs debug binaries.
+[ 31%] innodb_fts.sync_block                     [ skipped ]  Test needs debug binaries.
+[ 31%] innodb_fts.tablespace_location_error      [ skipped ]  Test needs debug binaries.
+[ 31%] innodb_gis.bug16266012                    [ skipped ]  Test needs debug binaries.
+[ 31%] innodb_gis.check_rtree                    [ skipped ]  Test needs debug binaries.
+[ 32%] innodb_gis.geometry                       [ skipped ]  Test needs debug binaries.
+[ 32%] innodb_gis.gis_split_inf                  [ skipped ]  Test needs debug binaries.
+[ 32%] innodb_gis.gis_split_nan                  [ skipped ]  Test needs debug binaries.
+[ 32%] innodb_gis.kill_server                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 32%] innodb_gis.multi_pk                       [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 32%] innodb_gis.point_big                      [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 32%] innodb_gis.rollback                       [ skipped ]  Test needs debug binaries.
+[ 33%] innodb_gis.rtree_compress                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 33%] innodb_gis.rtree_compress2                [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 33%] innodb_gis.rtree_concurrent_srch          [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 33%] innodb_gis.rtree_concurrent_srch_2        [ skipped ]  Test needs debug binaries.
+[ 33%] innodb_gis.rtree_create_inplace           [ skipped ]  Test needs debug binaries.
+[ 33%] innodb_gis.rtree_debug                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 33%] innodb_gis.rtree_drop_index               [ skipped ]  Test needs debug binaries.
+[ 34%] innodb_gis.rtree_estimate                 [ skipped ]  Test needs debug binaries.
+[ 34%] innodb_gis.rtree_purge                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 34%] innodb_gis.rtree_rollback1                [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 34%] innodb_gis.rtree_rollback2                [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 34%] innodb_gis.rtree_split                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 34%] innodb_gis.rtree_split_geographic         [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 35%] innodb_gis.types                          [ skipped ]  Test needs debug binaries.
+[ 35%] innodb_gis.update_root                    [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 35%] innodb_undo.trunc_multi_client_01         [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 35%] innodb_undo.trunc_multi_client_02         [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 35%] innodb_undo.truncate                      [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 35%] innodb_undo.truncate_explicit             [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 35%] innodb_undo.truncate_recover_01           [ skipped ]  Test needs debug binaries.
+[ 36%] innodb_undo.truncate_recover_02           [ skipped ]  Test needs debug binaries.
+[ 36%] innodb_undo.truncate_recover_03           [ skipped ]  Test needs debug binaries.
+[ 36%] innodb_undo.truncate_recover_04           [ skipped ]  Test needs debug binaries.
+[ 36%] innodb_undo.truncate_recover_05           [ skipped ]  Test needs debug binaries.
+[ 36%] innodb_undo.truncate_recover_06           [ skipped ]  Test needs debug binaries.
+[ 36%] innodb_undo.truncate_recover_07           [ skipped ]  Test needs debug binaries.
+[ 37%] innodb_undo.truncate_recover_08           [ skipped ]  Test needs debug binaries.
+[ 37%] innodb_undo.truncate_recover_09           [ skipped ]  Test needs debug binaries.
+[ 37%] innodb_undo.undo_ddl_recover              [ skipped ]  Test needs debug binaries.
+[ 37%] innodb_undo.undo_tablespace_125           [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 37%] innodb_undo.undo_tablespace_debug         [ skipped ]  Test needs debug binaries.
+[ 37%] innodb_zip.16k                            [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 37%] innodb_zip.innochecksum_2                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 38%] innodb_zip.innochecksum_3                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 38%] innodb_zip.large_blob                     [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 38%] innodb_zip.wl5522_debug_zip               [ skipped ]  Test needs debug binaries.
+[ 38%] innodb_zip.wl6347_comp_indx_stat          [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 38%] innodb_zip.wl6501_scale_1                 [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 38%] innodb_zip.wl6915_1                       [ skipped ]  Test needs 'big-test' or 'only-big-test' option.
+[ 39%] innodb.alter_tablespace_partition         [ disabled ]   WL#12034 Enable again once shared tablespaces are allowed in partitioned table.
+[ 39%] innodb.create_tablespace_partition        [ disabled ]   WL#12034 Enable again once shared tablespaces are allowed in partitioned table.
+[ 39%] innodb.ddl_crash_alter_table_partition_tablespace  [ disabled ]   WL#12034 Enable again once shared tablespaces are allowed in partitioned table.
+[ 39%] innodb.innodb_bug14676111                 [ disabled ]   BUG#18200831 The test has never worked correctly
+[ 39%] innodb.portability_tablespace_linux       [ disabled ]   BUG#28352630 The maintainability of the zip files required by this test is not acceptable.
+[ 39%] innodb.portability_tablespace_windows     [ disabled ]   BUG#28352645 The maintainability of the zip files required by this test is not acceptable.
+[ 39%] innodb.subpartition                       [ disabled ]   WL#12034 Enable again once shared tablespaces are allowed in partitioned table.
+[ 40%] innodb.truncate                           [ disabled ]   WL#12034 Enable again once shared tablespaces are allowed in partitioned table.
+[ 40%] innodb.check_sector_size                  [ pass ]   5197
+[ 40%] innodb.table_encrypt_2                    [ pass ]  23471
+[ 40%] innodb.log_encrypt_2                      [ pass ]  25144
+[ 40%] innodb.table_encrypt_5                    [ pass ]  61798
+[ 40%] innodb.tablespace_encrypt_6               [ pass ]  60796
+[ 41%] innodb_fts.mecab_sjis                     [ skipped ]  mecab requires the environment variable $MECAB to be set (normally done by mtr)
+[ 41%] innodb_fts.mecab_ujis                     [ skipped ]  mecab requires the environment variable $MECAB to be set (normally done by mtr)
+[ 41%] innodb_fts.mecab_utf8                     [ skipped ]  mecab requires the environment variable $MECAB to be set (normally done by mtr)
+[ 41%] innodb_fts.ngram                          [ pass ]  58666
+[ 41%] innodb_fts.ngram_2                        [ pass ]  21482
+[ 41%] innodb_fts.plugin                         [ pass ]  18870
+[ 41%] innodb_fts.plugin_1                       [ pass ]  31387
+[ 42%] innodb.optimizer_temporary_table          [ pass ]  19576
+[ 42%] innodb.innodb_bug53674                    [ pass ]   2598
+[ 42%] innodb.innodb                             [ pass ]  76088
+[ 42%] innodb.innodb_misc1                       [ pass ]  40471
+[ 42%] innodb.innodb_ctype_ldml                  [ pass ]   7934
+[ 42%] innodb.mysqld_core_dump_without_buffer_pool_with_resizing  [ skipped ]  Core pattern is not 'core', uses pid is disabled or /proc/sys/kernel/core_{pattern,uses_pid} not readable
+[ 43%] innodb.mysqld_core_dump_without_buffer_pool_dynamic  [ skipped ]  Core pattern is not 'core', uses pid is disabled or /proc/sys/kernel/core_{pattern,uses_pid} not readable
+[ 43%] innodb.mysqld_core_dump_without_buffer_pool  [ skipped ]  Core pattern is not 'core', uses pid is disabled or /proc/sys/kernel/core_{pattern,uses_pid} not readable
+[ 43%] innodb.innodb-autoinc-44030               [ pass ]   5821
+[ 43%] innodb.innodb-autoinc                     [ pass ]  29839
+[ 43%] innodb_zip.cmp_drop_table                 [ pass ]  24562
+[ 43%] innodb.innodb_i_s_multi_file_tablespace   [ pass ]      9
+[ 43%] innodb.innodb_64k                         [ pass ]   8911
+[ 44%] innodb_undo.i_s_files_16k                 [ pass ]  178310
+[ 44%] innodb.instant_add_column_long            [ pass ]   3088
+[ 44%] innodb.autoinc_persist_deadlock           [ skipped ]  Test requires 'have_debug_sync'
+[ 44%] innodb.check_ibd_filesize_16k             [ pass ]  11506
+[ 44%] innodb.crc32_endianness                   [ pass ]   1922
+[ 44%] innodb.create_tablespace_16k              [ pass ]  30130
+[ 45%] innodb.default_row_format_16k             [ pass ]  27527
+[ 45%] innodb.default_row_format_compatibility   [ pass ]   3726
+[ 45%] innodb.file_format_upgrade_16k            [ pass ]  10141
+[ 45%] innodb.ibd2sdi                            [ pass ]   5440
+[ 45%] innodb.import_5_7                         [ pass ]   5080
+[ 45%] innodb.index_tree_operation               [ pass ]    466
+[ 45%] innodb.innodb-blob                        [ skipped ]  Test requires 'have_debug_sync'
+[ 46%] innodb.innodb_buffer_pool_dump_pct        [ pass ]   2720
+[ 46%] innodb.innodb_prefix_index_restart_server  [ pass ]  19089
+[ 46%] innodb.innodb_stats_auto_recalc           [ pass ]  10462
+[ 46%] innodb.innodb_stats_fetch                 [ pass ]    779
+[ 46%] innodb.innodb_stats_sample_pages          [ pass ]   2733
+[ 46%] innodb.log_corruption                     [ pass ]  60445
+[ 47%] innodb.log_corruption_1                   [ pass ]   1520
+[ 47%] innodb.partition-16k                      [ pass ]  10116
+[ 47%] innodb.tablespace_encrypt_1               [ pass ]  73313
+[ 47%] innodb.tablespace_portability             [ pass ]   6880
+[ 47%] innodb.tablespace_portability_windows     [ skipped ]  Need windows
+[ 47%] innodb_gis.create_spatial_index           [ pass ]   4350
+[ 47%] innodb_zip.bug36172                       [ pass ]    748
+[ 48%] innodb_zip.cmp_per_index                  [ pass ]   5353
+[ 48%] innodb_zip.index_large_prefix             [ pass ]   5956
+[ 48%] innodb_zip.prefix_index_liftedlimit       [ pass ]  34524
+[ 48%] innodb_zip.wl5522_zip                     [ pass ]  20233
+[ 48%] innodb_undo.i_s_files_32k                 [ pass ]  139236
+[ 48%] innodb.create_tablespace_32k              [ pass ]  12739
+[ 49%] innodb.innodb_32k                         [ pass ]   2722
+[ 49%] innodb_undo.i_s_files_4k                  [ pass ]  113801
+[ 49%] innodb.create_tablespace_4k               [ pass ]  22978
+[ 49%] innodb.import_export_4k                   [ pass ]   9519
+[ 49%] innodb_zip.4k                             [ pass ]   9841
+[ 49%] innodb_zip.index_large_prefix_4k          [ pass ]   5418
+[ 49%] innodb_undo.i_s_files_64k                 [ pass ]  125488
+[ 50%] innodb.create_tablespace_64k              [ pass ]  13038
+[ 50%] innodb_undo.i_s_files_8k                  [ pass ]  111843
+[ 50%] innodb.create_tablespace_8k               [ pass ]  21296
+[ 50%] innodb_zip.8k                             [ pass ]  13371
+[ 50%] innodb_zip.index_large_prefix_8k          [ pass ]   7026
+[ 50%] innodb_undo.undo_settings                 [ fail ]
+        Test ended at 2019-06-20 11:55:01
+
+CURRENT_TEST: innodb_undo.undo_settings
+--- /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_undo/r/undo_settings.result	2019-04-13 14:41:06.000000000 +0300
++++ /home/romz/tmp/innodb/clang/mysql-test/var/log/undo_settings.reject	2019-06-20 12:55:01.554152515 +0300
+@@ -468,14 +468,14 @@
+ Innodb_undo_tablespaces_total	5
+ Innodb_undo_tablespaces_implicit	2
+ Innodb_undo_tablespaces_explicit	3
+-Innodb_undo_tablespaces_active	3
++Innodb_undo_tablespaces_active	4
+ SELECT NAME, ROW_FORMAT, SPACE_TYPE, STATE FROM INFORMATION_SCHEMA.INNODB_TABLESPACES
+ WHERE name LIKE '%undo%' ORDER BY NAME;
+ NAME	ROW_FORMAT	SPACE_TYPE	STATE
+ innodb_undo_001	Undo	Undo	active
+ innodb_undo_002	Undo	Undo	active
+ undo_003	Undo	Undo	empty
+-undo_004	Undo	Undo	empty
++undo_004	Undo	Undo	active
+ undo_005	Undo	Undo	active
+ SELECT TABLESPACE_NAME, FILE_TYPE, FILE_NAME FROM INFORMATION_SCHEMA.FILES
+ WHERE FILE_NAME LIKE '%undo%' ORDER BY TABLESPACE_NAME;
+
+mysqltest: Result content mismatch
+
+safe_process[1929]: Child process: 1943, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_undo.undo_settings/undo_settings.log'
+
+Retrying test innodb_undo.undo_settings, attempt(2/3).
+
+[ 50%] innodb_undo.undo_settings                 [ retry-pass ]  55940
+Retrying test innodb_undo.undo_settings, attempt(3/3).
+
+[ 50%] innodb_undo.undo_settings                 [ retry-pass ]  56121
+[ 50%] innodb.innodb_bug60196                    [ skipped ]  Test requires 'lower_case_table_names = 2'
+[ 51%] innodb.cats-autoinc                       [ skipped ]  Test requires 'have_debug_sync'
+[ 51%] innodb.innodb_autoinc_lock_mode_zero      [ pass ]    402
+[ 51%] innodb.pct_cached_evict                   [ pass ]  13638
+[ 51%] innodb.update_time                        [ pass ]  14580
+[ 51%] innodb.innodb-index-online                [ skipped ]  Test requires 'have_debug_sync'
+[ 51%] innodb.innodb_buffer_pool_load_now        [ pass ]  16554
+[ 52%] innodb.innodb_buffer_pool_load            [ pass ]  61483
+[ 52%] innodb.innodb-table-online                [ skipped ]  Test requires 'have_debug_sync'
+[ 52%] innodb.events-merge-tmp-path              [ pass ]   5082
+[ 52%] innodb.alter_kill                         [ pass ]  30412
+[ 52%] innodb.innodb_bug39438                    [ pass ]   2694
+[ 52%] innodb.blob_redo                          [ pass ]  11675
+[ 52%] innodb.innodb-index                       [ pass ]  146659
+[ 53%] innodb.innodb_stats_flag_global_off       [ pass ]  15313
+[ 53%] innodb.innodb_stats_flag_global_on        [ pass ]  15037
+[ 53%] innodb.innodb-autoinc-56228               [ pass ]   2965
+[ 53%] innodb.innodb_bug30919                    [ pass ]  41938
+[ 53%] innodb.innochecksum_1                     [ pass ]  32997
+[ 53%] innodb.innodb_bug42101-nonzero            [ pass ]     15
+[ 54%] innodb.innodb_mysql_rbk                   [ pass ]   6149
+[ 54%] innodb.innodb_lock_wait_timeout_1         [ pass ]  21330
+[ 54%] innodb.innodb_timeout_rollback            [ pass ]  13220
+[ 54%] innodb.innodb-consistent                  [ pass ]   3537
+[ 54%] innodb.innodb-semi-consistent             [ pass ]  13501
+[ 54%] innodb.log_encrypt_3                      [ pass ]  49146
+[ 54%] innodb.log_file_size_1                    [ pass ]  33089
+[ 55%] innodb.alter_table_stage_progress         [ pass ]   3414
+[ 55%] innodb.innodb-read-view                   [ skipped ]  Test requires 'have_debug_sync'
+[ 55%] innodb_fts.sync                           [ skipped ]  Test requires 'have_debug_sync'
+[ 55%] innodb.innodb_replace                     [ skipped ]  Test requires 'have_debug_sync'
+[ 55%] innodb.add_foreign_key                    [ pass ]   5618
+[ 55%] innodb.alter_foreign_crash                [ skipped ]  Test requires 'have_debug_sync'
+[ 56%] innodb.alter_missing_tablespace           [ pass ]  29739
+[ 56%] innodb.alter_page_size                    [ pass ]   1391
+[ 56%] innodb.alter_rename_existing              [ pass ]   6903
+[ 56%] innodb.alter_rename_existing_xtra         [ pass ]   2424
+[ 56%] innodb.alter_table_redundant              [ pass ]   5279
+[ 56%] innodb.autoinc_persist                    [ pass ]  69406
+[ 56%] innodb.blob_update_rollback               [ pass ]    435
+[ 57%] innodb.bootstrap                          [ pass ]  98639
+[ 57%] innodb.buffer_pool_overflow_check         [ skipped ]  Need a 32 binary
+[ 57%] innodb.bulk_create_index_online           [ skipped ]  Test requires 'have_debug_sync'
+[ 57%] innodb.checksum                           [ pass ]   5982
+[ 57%] innodb.create-index                       [ pass ]    199
+[ 57%] innodb.create_tablespace                  [ pass ]  50396
+[ 58%] innodb.deadlock_detect                    [ pass ]   3940
+[ 58%] innodb.default_row_format                 [ pass ]   7618
+[ 58%] innodb.default_row_format_tablespace      [ pass ]   4626
+[ 58%] innodb.dropdb                             [ pass ]    742
+[ 58%] innodb.foreign_key                        [ pass ]  18564
+[ 58%] innodb.help_verbose                       [ pass ]  23807
+[ 58%] innodb.i_s_files_debug                    [ skipped ]  Test requires 'have_debug_sync'
+[ 59%] innodb.implicit_to_explicit_conversion    [ skipped ]  Test requires 'have_debug_sync'
+[ 59%] innodb.import                             [ pass ]   1342
+[ 59%] innodb.import_update_stats                [ pass ]   2160
+[ 59%] innodb.index-online-norebuild             [ pass ]   2406
+[ 59%] innodb.innochecksum_linux                 [ pass ]  15239
+[ 59%] innodb.innodb-ac-non-locking-select       [ skipped ]  Test requires 'have_debug_sync'
+[ 60%] innodb.innodb-alter-autoinc               [ pass ]   4782
+[ 60%] innodb.innodb-alter-nullable              [ pass ]   1236
+[ 60%] innodb.innodb-alter-wl6554                [ pass ]   2088
+[ 60%] innodb.innodb-alter                       [ pass ]  30274
+[ 60%] innodb.innodb-analyze                     [ pass ]    943
+[ 60%] innodb.innodb-autoinc-18274               [ pass ]    516
+[ 60%] innodb.innodb-autoinc-optimize            [ pass ]    516
+[ 61%] innodb.innodb-bug-14068765                [ pass ]   3049
+[ 61%] innodb.innodb-bug-14084530                [ pass ]   1674
+[ 61%] innodb.innodb-bug12552164                 [ pass ]    748
+[ 61%] innodb.innodb-bug14219515                 [ pass ]    504
+[ 61%] innodb.innodb-import-partition            [ pass ]  72929
+[ 61%] innodb.innodb-index-online-delete         [ skipped ]  Test requires 'have_debug_sync'
+[ 62%] innodb.innodb-index-online-purge          [ skipped ]  Test requires 'have_debug_sync'
+[ 62%] innodb.innodb-index_ucs2                  [ pass ]   1090
+[ 62%] innodb.innodb-large-prefix                [ pass ]    343
+[ 62%] innodb.innodb-lock                        [ pass ]   3939
+[ 62%] innodb.innodb-timeout                     [ pass ]   4539
+[ 62%] innodb.innodb-truncate                    [ pass ]   4283
+[ 62%] innodb.innodb-ucs2                        [ pass ]   8287
+[ 63%] innodb.innodb-update-insert               [ pass ]    442
+[ 63%] innodb.innodb-wl5522-1                    [ pass ]  27884
+[ 63%] innodb.innodb-wl5522                      [ pass ]  29368
+[ 63%] innodb.innodb-wl5980-alter                [ pass ]  11304
+[ 63%] innodb.innodb-wl5980-discard              [ pass ]  36448
+[ 63%] innodb.innodb-wl6445-2                    [ pass ]  19120
+[ 64%] innodb.innodb-wl6445                      [ pass ]   9526
+[ 64%] innodb.innodb-wl6742                      [ pass ]   9598
+[ 64%] innodb.innodb_bug-13628249                [ pass ]  21412
+[ 64%] innodb.innodb_bug11789106                 [ pass ]    361
+[ 64%] innodb.innodb_bug11933790                 [ pass ]  51127
+[ 64%] innodb.innodb_bug12429573                 [ pass ]   1526
+[ 64%] innodb.innodb_bug12661768                 [ pass ]    318
+[ 65%] innodb.innodb_bug14006907                 [ skipped ]  Test requires 'have_debug_sync'
+[ 65%] innodb.innodb_bug14169459                 [ pass ]    536
+[ 65%] innodb.innodb_bug21704                    [ pass ]   1264
+[ 65%] innodb.innodb_bug26818787                 [ skipped ]  Test requires 'have_debug_sync'
+[ 65%] innodb.innodb_bug34053                    [ pass ]   1747
+[ 65%] innodb.innodb_bug34300                    [ pass ]   4281
+[ 66%] innodb.innodb_bug35220                    [ pass ]    357
+[ 66%] innodb.innodb_bug38231                    [ pass ]    789
+[ 66%] innodb.innodb_bug40360                    [ pass ]    198
+[ 66%] innodb.innodb_bug40565                    [ pass ]    155
+[ 66%] innodb.innodb_bug41904                    [ pass ]    737
+[ 66%] innodb.innodb_bug42101                    [ pass ]      2
+[ 66%] innodb.innodb_bug42419                    [ pass ]    705
+[ 67%] innodb.innodb_bug44032                    [ pass ]    363
+[ 67%] innodb.innodb_bug44369                    [ pass ]      9
+[ 67%] innodb.innodb_bug44571                    [ pass ]    380
+[ 67%] innodb.innodb_bug45357                    [ pass ]    597
+[ 67%] innodb.innodb_bug46000                    [ pass ]    779
+[ 67%] innodb.innodb_bug46676                    [ pass ]    309
+[ 67%] innodb.innodb_bug47621                    [ pass ]   2024
+[ 68%] innodb.innodb_bug47622                    [ pass ]   1297
+[ 68%] innodb.innodb_bug47777                    [ pass ]    449
+[ 68%] innodb.innodb_bug48024                    [ pass ]   2145
+[ 68%] innodb.innodb_bug49164                    [ pass ]    542
+[ 68%] innodb.innodb_bug51378                    [ pass ]   2818
+[ 68%] innodb.innodb_bug51920                    [ pass ]    290
+[ 69%] innodb.innodb_bug52199                    [ pass ]   1231
+[ 69%] innodb.innodb_bug53046                    [ pass ]    648
+[ 69%] innodb.innodb_bug53592                    [ pass ]   3211
+[ 69%] innodb.innodb_bug54044                    [ pass ]    854
+[ 69%] innodb.innodb_bug56716                    [ pass ]    490
+[ 69%] innodb.innodb_bug57252                    [ pass ]    597
+[ 69%] innodb.innodb_bug57255                    [ pass ]    662
+[ 70%] innodb.innodb_bug57904                    [ pass ]    874
+[ 70%] innodb.innodb_bug59307                    [ pass ]    544
+[ 70%] innodb.innodb_bug59410                    [ pass ]    308
+[ 70%] innodb.innodb_bug59641                    [ pass ]   7932
+[ 70%] innodb.innodb_bug59733                    [ pass ]    653
+[ 70%] innodb.innodb_bug60229                    [ pass ]    827
+[ 71%] innodb.innodb_bug70867                    [ pass ]   5060
+[ 71%] innodb.innodb_bug84958                    [ pass ]   2353
+[ 71%] innodb.innodb_bulk_create_index_small     [ pass ]   4755
+[ 71%] innodb.innodb_cats                        [ skipped ]  Test requires 'have_debug_sync'
+[ 71%] innodb.innodb_force_recovery              [ pass ]  24631
+[ 71%] innodb.innodb_i_s_cached_indexes          [ pass ]    196
+[ 71%] innodb.innodb_i_s_innodb_trx              [ pass ]    629
+[ 72%] innodb.innodb_information_schema_buffer   [ pass ]   1570
+[ 72%] innodb.innodb_io_pf                       [ pass ]    136
+[ 72%] innodb.innodb_multi_update                [ pass ]   1759
+[ 72%] innodb.innodb_page_size_func              [ pass ]   9000
+[ 72%] innodb.innodb_pagesize_max_recordsize     [ pass ]  96848
+[ 72%] innodb.innodb_prefix_index_check          [ pass ]   2734
+[ 73%] innodb.innodb_rename_index                [ pass ]  12340
+[ 73%] innodb.innodb_stats                       [ pass ]   6289
+[ 73%] innodb.innodb_stats_auto_recalc_ddl       [ pass ]   2343
+[ 73%] innodb.innodb_stats_auto_recalc_lots      [ pass ]  76353
+[ 73%] innodb.innodb_stats_auto_recalc_on_nonexistent  [ pass ]   1035
+[ 73%] innodb.innodb_stats_create_table          [ pass ]   1679
+[ 73%] innodb.innodb_stats_drop_locked           [ pass ]  103342
+[ 74%] innodb.innodb_stats_external_pages        [ pass ]   5441
+[ 74%] innodb.innodb_stats_fetch_nonexistent     [ pass ]    553
+[ 74%] innodb.innodb_stats_long_names            [ pass ]    453
+[ 74%] innodb.innodb_stats_rename_table          [ pass ]    184
+[ 74%] innodb.innodb_stats_rename_table_if_exists  [ pass ]   1235
+[ 74%] innodb.innodb_stats_table_flag_auto_recalc  [ pass ]  23544
+[ 75%] innodb.innodb_stats_table_flag_sample_pages  [ pass ]  20259
+[ 75%] innodb.innodb_tablespace                  [ pass ]   3676
+[ 75%] innodb.innodb_trx_owns_mutex              [ skipped ]  Test requires 'have_debug_sync'
+[ 75%] innodb.innodb_trx_weight                  [ pass ]   2075
+[ 75%] innodb.innodb_wl6469_1                    [ pass ]    260
+[ 75%] innodb.innodb_wl6470                      [ pass ]     54
+[ 75%] innodb.innodb_wl6560_1                    [ pass ]  11661
+[ 76%] innodb.innodb_wl6915                      [ pass ]   3743
+[ 76%] innodb.innodb_wl8114                      [ pass ]   1778
+[ 76%] innodb.instant_add_column_autoinc         [ pass ]  48710
+[ 76%] innodb.instant_add_column_basic           [ pass ]  132104
+[ 76%] innodb.instant_add_column_clear           [ pass ]  35567
+[ 76%] innodb.instant_add_column_limitations     [ pass ]   1002
+[ 77%] innodb.iodku                              [ pass ]   9041
+[ 77%] innodb.json_small_partial_update_00       [ pass ]   7576
+[ 77%] innodb.json_small_partial_update_01       [ pass ]   4299
+[ 77%] innodb.json_small_partial_update_02       [ pass ]   8813
+[ 77%] innodb.json_small_partial_update_03       [ pass ]   1698
+[ 77%] innodb.lob_compact                        [ pass ]   2917
+[ 77%] innodb.lob_import_export                  [ pass ]   1673
+[ 78%] innodb.lob_insert                         [ pass ]   1172
+[ 78%] innodb.lob_mvcc                           [ pass ]    334
+[ 78%] innodb.lob_vjhi                           [ pass ]    640
+[ 78%] innodb.lock_impl_to_expl                  [ skipped ]  Test requires 'have_debug_sync'
+[ 78%] innodb.lock_impl_to_expl_case_sensitivity  [ skipped ]  Test requires 'have_debug_sync'
+[ 78%] innodb.lock_rec_unlock                    [ skipped ]  Test requires 'have_debug_sync'
+[ 79%] innodb.log_buffer_size                    [ pass ]  10265
+[ 79%] innodb.log_encrypt_1                      [ pass ]  17508
+[ 79%] innodb.log_encrypt_4                      [ pass ]  108464
+[ 79%] innodb.log_encrypt_5                      [ pass ]  49470
+[ 79%] innodb.log_encrypt_6                      [ pass ]  56044
+[ 79%] innodb.log_encrypt_kill                   [ pass ]  78299
+[ 79%] innodb.log_file_size_checkpoint           [ pass ]  87006
+[ 80%] innodb.log_file_system                    [ pass ]  23438
+[ 80%] innodb.log_spin_vars                      [ pass ]  10390
+[ 80%] innodb.missing_tablespaces                [ pass ]  10088
+[ 80%] innodb.mixed_case_0                       [ pass ]   4204
+[ 80%] innodb.mixed_case_1                       [ skipped ]  Test requires 'lower_case_table_names = 1'
+[ 80%] innodb.mixed_case_2                       [ skipped ]  Test requires 'lower_case_table_names = 2'
+[ 81%] innodb.monitor                            [ pass ]   4269
+[ 81%] innodb.mysql_tables_deadlocks             [ skipped ]  Test requires 'have_debug_sync'
+[ 81%] innodb.mysqldump_max_recordsize           [ pass ]  138435
+[ 81%] innodb.partition-blob                     [ pass ]   4603
+[ 81%] innodb.partition                          [ pass ]  25329
+[ 81%] innodb.partition_autoinc                  [ pass ]  43015
+[ 81%] innodb.portability_basic                  [ pass ]  29790
+[ 82%] innodb.portability_tablespace             [ pass ]  54133
+[ 82%] innodb.readahead                          [ pass ]   9561
+[ 82%] innodb.readonly                           [ pass ]  24027
+[ 82%] innodb.rename_fk_1                        [ pass ]   1621
+[ 82%] innodb.rename_fk_2                        [ pass ]    721
+[ 82%] innodb.rename_table                       [ pass ]  11188
+[ 83%] innodb.sdi                                [ pass ]  56638
+[ 83%] innodb.sdi_compressed                     [ pass ]    569
+[ 83%] innodb.show_engine_status                 [ pass ]    173
+[ 83%] innodb.skip_locked_nowait_isolation       [ pass ]   6787
+[ 83%] innodb.stored_fk                          [ pass ]   5392
+[ 83%] innodb.strict_mode                        [ pass ]   1218
+[ 83%] innodb.table_encrypt_3                    [ pass ]  162006
+[ 84%] innodb.tablespace_encrypt_4               [ pass ]  32102
+[ 84%] innodb.tablespace_per_table               [ pass ]   9560
+[ 84%] innodb.tablespace_per_table_not_windows   [ pass ]   2031
+[ 84%] innodb.tablespace_per_table_windows       [ skipped ]  Need windows
+[ 84%] innodb.temp_table                         [ pass ]   1583
+[ 84%] innodb.temp_table_savepoint               [ pass ]    840
+[ 84%] innodb.temporary_table                    [ pass ]  41916
+[ 85%] innodb.temporary_table_optimization       [ pass ]    606
+[ 85%] innodb.timestamp                          [ pass ]    923
+[ 85%] innodb.tmpdir                             [ pass ]   5329
+[ 85%] innodb.trx_id_future                      [ pass ]   5609
+[ 85%] innodb.undo                               [ pass ]    986
+[ 85%] innodb.undo_encrypt_basic                 [ pass ]  58507
+[ 86%] innodb.update-cascade                     [ skipped ]  Test requires 'have_debug_sync'
+[ 86%] innodb.update-ext                         [ pass ]    867
+[ 86%] innodb.update_time_wl6658                 [ pass ]  30558
+[ 86%] innodb.upgrade_orphan                     [ pass ]  124570
+[ 86%] innodb.virtual_basic                      [ pass ]  250688
+[ 86%] innodb.virtual_blob                       [ pass ]   1648
+[ 86%] innodb.virtual_fk                         [ pass ]  33985
+[ 87%] innodb.virtual_fk_restart                 [ pass ]   9033
+[ 87%] innodb.virtual_index                      [ pass ]   6918
+[ 87%] innodb.virtual_purge                      [ pass ]   3788
+[ 87%] innodb.virtual_stats                      [ pass ]   1668
+[ 87%] innodb.virtual_uncommitted                [ skipped ]  Test requires 'have_debug_sync'
+[ 87%] innodb.xa_recovery                        [ pass ]  10475
+[ 88%] innodb.zlob                               [ pass ]   2642
+[ 88%] innodb.zlob_geom                          [ pass ]   1083
+[ 88%] innodb.zlob_import_export                 [ pass ]   1598
+[ 88%] innodb.zlob_purge_undo_no                 [ pass ]    602
+[ 88%] innodb.zlob_redundant_partial_update      [ pass ]   4310
+[ 88%] innodb.zlob_rollback                      [ pass ]    446
+[ 88%] innodb_fts.alter                          [ pass ]  40949
+[ 89%] innodb_fts.basic                          [ pass ]   6373
+[ 89%] innodb_fts.ddl                            [ pass ]  23478
+[ 89%] innodb_fts.fic                            [ pass ]  12724
+[ 89%] innodb_fts.foreign_key_check              [ pass ]   3391
+[ 89%] innodb_fts.foreign_key_update             [ pass ]   1585
+[ 89%] innodb_fts.fulltext                       [ pass ]  48852
+[ 90%] innodb_fts.fulltext2                      [ pass ]  36960
+[ 90%] innodb_fts.fulltext3                      [ pass ]  10957
+[ 90%] innodb_fts.fulltext_cache                 [ pass ]   1335
+[ 90%] innodb_fts.fulltext_distinct              [ pass ]   2279
+[ 90%] innodb_fts.fulltext_left_join             [ pass ]   9881
+[ 90%] innodb_fts.fulltext_misc                  [ pass ]  12825
+[ 90%] innodb_fts.fulltext_multi                 [ pass ]   5005
+[ 91%] innodb_fts.fulltext_order_by              [ pass ]  15491
+[ 91%] innodb_fts.fulltext_update                [ pass ]    796
+[ 91%] innodb_fts.fulltext_var                   [ pass ]   1487
+[ 91%] innodb_fts.large_records                  [ pass ]  13921
+[ 91%] innodb_fts.misc                           [ pass ]  87232
+[ 91%] innodb_fts.misc_1                         [ pass ]  45903
+[ 92%] innodb_fts.multiple_index                 [ pass ]   3767
+[ 92%] innodb_fts.ngram_1                        [ pass ]  218130
+[ 92%] innodb_fts.opt                            [ pass ]  20411
+[ 92%] innodb_fts.phrase                         [ pass ]   1468
+[ 92%] innodb_fts.proximity                      [ pass ]  11556
+[ 92%] innodb_fts.savepoint                      [ pass ]  24670
+[ 92%] innodb_fts.stopword                       [ pass ]  29481
+[ 93%] innodb_fts.subexpr                        [ pass ]    863
+[ 93%] innodb_fts.tablespace                     [ pass ]  16929
+[ 93%] innodb_fts.tablespace_location            [ pass ]  29907
+[ 93%] innodb_fts.transaction                    [ pass ]  15803
+[ 93%] innodb_fts.truncate                       [ pass ]  27337
+[ 93%] innodb_fts.zip                            [ pass ]   6475
+[ 94%] innodb_gis.0                              [ pass ]   5186
+[ 94%] innodb_gis.1                              [ pass ]  18680
+[ 94%] innodb_gis.alter_spatial_index            [ pass ]  14025
+[ 94%] innodb_gis.bug16236208                    [ pass ]    300
+[ 94%] innodb_gis.gis                            [ pass ]  16627
+[ 94%] innodb_gis.point_basic                    [ pass ]  12328
+[ 94%] innodb_gis.precise                        [ pass ]   1082
+[ 95%] innodb_gis.repeatable_spatial             [ pass ]   1652
+[ 95%] innodb_gis.row_format                     [ pass ]   2940
+[ 95%] innodb_gis.rt_precise                     [ pass ]   5600
+[ 95%] innodb_gis.rtree                          [ pass ]   5291
+[ 95%] innodb_gis.rtree_multi_pk                 [ pass ]   3014
+[ 95%] innodb_gis.rtree_old                      [ pass ]  15909
+[ 96%] innodb_gis.rtree_recovery                 [ pass ]  30196
+[ 96%] innodb_gis.rtree_search                   [ pass ]  236035
+[ 96%] innodb_gis.rtree_undo                     [ pass ]  12162
+[ 96%] innodb_undo.encrypt_explicit              [ pass ]  61367
+[ 96%] innodb_undo.undo_ddl_vs_dml               [ pass ]  49228
+[ 96%] innodb_undo.undo_tablespace               [ pass ]  42150
+[ 96%] innodb_undo.undo_tablespace_win           [ skipped ]  Need windows
+[ 97%] innodb_zip.bug36169                       [ pass ]    967
+[ 97%] innodb_zip.bug52745                       [ pass ]    659
+[ 97%] innodb_zip.bug53591                       [ pass ]    742
+[ 97%] innodb_zip.bug56680                       [ pass ]   3222
+[ 97%] innodb_zip.create_options                 [ pass ]  31973
+[ 97%] innodb_zip.innochecksum                   [ pass ]  26143
+[ 98%] innodb_zip.restart                        [ pass ]  38600
+[ 98%] innodb_zip.wl6344_compress_level          [ pass ]   6737
+[ 98%] innodb_zip.zip                            [ pass ]  13589
+[ 98%] innodb_stress.innodb_stress               [ fail ]
+        Test ended at 2019-06-20 13:30:41
+
+CURRENT_TEST: innodb_stress.innodb_stress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress.test: 36
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[786]: Child process: 787, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress/innodb_stress.log'
+
+Retrying test innodb_stress.innodb_stress, attempt(2/3).
+
+[ 98%] innodb_stress.innodb_stress               [ retry-fail ]
+        Test ended at 2019-06-20 13:31:40
+
+CURRENT_TEST: innodb_stress.innodb_stress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress.test: 36
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[1088]: Child process: 1089, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress/innodb_stress.log'
+
+Test innodb_stress.innodb_stress has failed 2 times, no more retries.
+
+[ 98%] innodb_stress.innodb_stress_blob          [ fail ]
+        Test ended at 2019-06-20 13:32:42
+
+CURRENT_TEST: innodb_stress.innodb_stress_blob
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_blob.test: 36
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[1287]: Child process: 1288, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_blob/innodb_stress_blob.log'
+
+Retrying test innodb_stress.innodb_stress_blob, attempt(2/3).
+
+[ 98%] innodb_stress.innodb_stress_blob          [ retry-fail ]
+        Test ended at 2019-06-20 13:33:44
+
+CURRENT_TEST: innodb_stress.innodb_stress_blob
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_blob.test: 36
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[1486]: Child process: 1487, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_blob/innodb_stress_blob.log'
+
+Test innodb_stress.innodb_stress_blob has failed 2 times, no more retries.
+
+[ 98%] innodb_stress.innodb_stress_blob_nocompress  [ fail ]
+        Test ended at 2019-06-20 13:34:48
+
+CURRENT_TEST: innodb_stress.innodb_stress_blob_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_blob_nocompress.test: 34
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[1703]: Child process: 1704, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_blob_nocompress/innodb_stress_blob_nocompress.log'
+
+Retrying test innodb_stress.innodb_stress_blob_nocompress, attempt(2/3).
+
+[ 98%] innodb_stress.innodb_stress_blob_nocompress  [ retry-fail ]
+        Test ended at 2019-06-20 13:35:49
+
+CURRENT_TEST: innodb_stress.innodb_stress_blob_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_blob_nocompress.test: 34
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[1977]: Child process: 1979, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_blob_nocompress/innodb_stress_blob_nocompress.log'
+
+Test innodb_stress.innodb_stress_blob_nocompress has failed 2 times, no more retries.
+
+[ 98%] innodb_stress.innodb_stress_crash         [ fail ]
+        Test ended at 2019-06-20 13:36:53
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash.test: 39
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[2322]: Child process: 2323, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash/innodb_stress_crash.log'
+
+Retrying test innodb_stress.innodb_stress_crash, attempt(2/3).
+
+[ 98%] innodb_stress.innodb_stress_crash         [ retry-fail ]
+        Test ended at 2019-06-20 13:37:50
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash.test: 39
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[2531]: Child process: 2532, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash/innodb_stress_crash.log'
+
+Test innodb_stress.innodb_stress_crash has failed 2 times, no more retries.
+
+[ 99%] innodb_stress.innodb_stress_crash_blob    [ fail ]
+        Test ended at 2019-06-20 13:38:54
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash_blob
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash_blob.test: 39
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[2730]: Child process: 2731, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash_blob/innodb_stress_crash_blob.log'
+
+Retrying test innodb_stress.innodb_stress_crash_blob, attempt(2/3).
+
+[ 99%] innodb_stress.innodb_stress_crash_blob    [ retry-fail ]
+        Test ended at 2019-06-20 13:39:52
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash_blob
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash_blob.test: 39
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB
+ROW_FORMAT=COMPRESSED
+KEY_BLOCK_SIZE=16;
+call mtr.add_suppression(".*");
+safe_process[2926]: Child process: 2927, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash_blob/innodb_stress_crash_blob.log'
+
+Test innodb_stress.innodb_stress_crash_blob has failed 2 times, no more retries.
+
+[ 99%] innodb_stress.innodb_stress_crash_blob_nocompress  [ fail ]
+        Test ended at 2019-06-20 13:40:50
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash_blob_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash_blob_nocompress.test: 37
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[3149]: Child process: 3150, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash_blob_nocompress/innodb_stress_crash_blob_nocompress.log'
+
+Retrying test innodb_stress.innodb_stress_crash_blob_nocompress, attempt(2/3).
+
+[ 99%] innodb_stress.innodb_stress_crash_blob_nocompress  [ retry-fail ]
+        Test ended at 2019-06-20 13:41:52
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash_blob_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 1 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash_blob_nocompress.test: 37
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg longtext,
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[3364]: Child process: 3365, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash_blob_nocompress/innodb_stress_crash_blob_nocompress.log'
+
+Test innodb_stress.innodb_stress_crash_blob_nocompress has failed 2 times, no more retries.
+
+[ 99%] innodb_stress.innodb_stress_crash_nocompress  [ fail ]
+        Test ended at 2019-06-20 13:42:53
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash_nocompress.test: 37
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[3559]: Child process: 3560, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash_nocompress/innodb_stress_crash_nocompress.log'
+
+Retrying test innodb_stress.innodb_stress_crash_nocompress, attempt(2/3).
+
+[ 99%] innodb_stress.innodb_stress_crash_nocompress  [ retry-fail ]
+        Test ended at 2019-06-20 13:43:53
+
+CURRENT_TEST: innodb_stress.innodb_stress_crash_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 10 1000  2 0 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_crash_nocompress.test: 37
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[3754]: Child process: 3755, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_crash_nocompress/innodb_stress_crash_nocompress.log'
+
+Test innodb_stress.innodb_stress_crash_nocompress has failed 2 times, no more retries.
+
+[ 99%] innodb_stress.innodb_stress_nocompress    [ fail ]
+        Test ended at 2019-06-20 13:44:53
+
+CURRENT_TEST: innodb_stress.innodb_stress_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_nocompress.test: 34
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[3947]: Child process: 3948, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_nocompress/innodb_stress_nocompress.log'
+
+Retrying test innodb_stress.innodb_stress_nocompress, attempt(2/3).
+
+[ 99%] innodb_stress.innodb_stress_nocompress    [ retry-fail ]
+        Test ended at 2019-06-20 13:45:53
+
+CURRENT_TEST: innodb_stress.innodb_stress_nocompress
+Traceback (most recent call last):
+  File "/home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py", line 3, in <module>
+    import MySQLdb
+ImportError: No module named MySQLdb
+mysqltest: At line 83: Command "$exec" failed.
+
+Output from before failure:
+exec of 'python /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/load_generator.py /home/romz/tmp/innodb/clang/mysql-test/var/run/mysqld.1.pid 0 1000  2 10 root 127.0.0.1 13000 test 0 4096 /home/romz/tmp/innodb/clang/mysql-test/var/tmp/load_generator 0 0 0' failed, error: 256, status: 1, errno: 2.
+
+In included file ./suite/innodb_stress/include/innodb_stress.inc: 83
+included from /home/romz/romz-projects/github/github-innodb-modularization/innodb-modularization/mysql-test/suite/innodb_stress/t/innodb_stress_nocompress.test: 34
+
+The result from queries just before the failure was:
+include/master-slave.inc
+Warnings:
+Note	####	Sending passwords in plain text without SSL/TLS is extremely insecure.
+Note	####	Storing MySQL user name or password information in the master info repository is not secure and is therefore not recommended. Please consider using the USER and PASSWORD connection options for START SLAVE; see the 'START SLAVE Syntax' in the MySQL Manual for more information.
+[connection master]
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1(id INT AUTO_INCREMENT PRIMARY KEY,
+msg_prefix VARCHAR(255),
+msg VARCHAR(255),
+msg_length int,
+msg_checksum varchar(128),
+KEY msg_i(msg_prefix))
+ENGINE=INNODB;
+call mtr.add_suppression(".*");
+safe_process[4148]: Child process: 4149, exit: 1
+
+ - the logfile can be found in '/home/romz/tmp/innodb/clang/mysql-test/var/log/innodb_stress.innodb_stress_nocompress/innodb_stress_nocompress.log'
+
+Test innodb_stress.innodb_stress_nocompress has failed 2 times, no more retries.
+
+[ 99%] innodb.create_tablespace_replication      [ pass ]   3953
+[ 99%] innodb.innodb-import-partition-rpl        [ pass ]   7198
+[100%] innodb.innodb_bulk_create_index_replication  [ pass ]   9251
+Running ctest parallel=1
+[100%] unit_tests                                [ pass ]       
+------------------------------------------------------------------------------
+
+Unit tests: 100% tests passed, 0 tests failed out of 19
+Report from unit tests in /home/romz/tmp/innodb/clang/mysql-test/var/ctest.log
+------------------------------------------------------------------------------
+The servers were restarted 77 times
+The servers were reinitialized 19 times
+Spent 6921.080 of 8945 seconds executing testcases
+
+Completed: Failed 9/354 tests, 97.46% were successful.
+
+Failing test(s): innodb_stress.innodb_stress innodb_stress.innodb_stress_blob_nocompress innodb_undo.undo_settings innodb_stress.innodb_stress_nocompress innodb_stress.innodb_stress_crash_blob innodb_stress.innodb_stress_crash innodb_stress.innodb_stress_blob innodb_stress.innodb_stress_crash_blob_nocompress innodb_stress.innodb_stress_crash_nocompress
+
+The log files in var/log may give you some hint of what went wrong.
+
+If you want to report this error, please read first the documentation
+at http://dev.mysql.com/doc/mysql/en/mysql-test-suite.html
+
+292 tests were skipped, 38 by the test itself.
+
+mysql-test-run: *** ERROR: there were failing test cases
+
