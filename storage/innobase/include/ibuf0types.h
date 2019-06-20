@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ibuf0types_h
 #define ibuf0types_h
 
+#include "univ.i"
+
 /* The insert buffer tree itself is always located in space 0. */
 #define IBUF_SPACE_ID static_cast<space_id_t>(0)
 

@@ -33,12 +33,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef usr0sess_h
 #define usr0sess_h
 
+#include "univ.i"
+
 #include "data0data.h"
 #include "que0types.h"
 #include "rem0rec.h"
 #include "srv0srv.h"
 #include "trx0types.h"
-#include "univ.i"
 #include "usr0types.h"
 #include "ut0byte.h"
 

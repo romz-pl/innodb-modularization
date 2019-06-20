@@ -34,8 +34,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0quiesce_h
 #define row0quiesce_h
 
-#include "dict0types.h"
 #include "univ.i"
+
+#include "dict0types.h"
 
 struct trx_t;
 

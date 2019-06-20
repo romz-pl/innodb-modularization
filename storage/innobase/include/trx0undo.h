@@ -33,13 +33,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0undo_h
 #define trx0undo_h
 
+#include "univ.i"
+
 #include "mtr0mtr.h"
 #include "page0types.h"
 #include "sql/xa.h"
 #include "trx0sys.h"
 #include "trx0types.h"
 #include "trx0xa.h"
-#include "univ.i"
 
 #ifndef UNIV_HOTBACKUP
 /** Returns TRUE if the roll pointer is of the insert type.

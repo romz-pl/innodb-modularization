@@ -37,6 +37,9 @@ external tools. */
 
 #ifndef dict_dict_h
 #define dict_dict_h
+
+#include "univ.i"
+
 /** Adds a column to index.
 @param[in,out]	index		index
 @param[in]	table		table

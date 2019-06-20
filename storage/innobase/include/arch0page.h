@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ARCH_PAGE_INCLUDE
 #define ARCH_PAGE_INCLUDE
 
+#include "univ.i"
+
 #include "arch0arch.h"
 #include "buf0buf.h"
 

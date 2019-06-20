@@ -52,6 +52,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef IB_LIST_H
 #define IB_LIST_H
 
+#include "univ.i"
+
 #include "mem0mem.h"
 
 struct ib_list_t;

@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0mysql_h
 #define row0mysql_h
 
+#include "univ.i"
+
 #ifndef UNIV_HOTBACKUP
 #include "ha_prototypes.h"
 #endif /* !UNIV_HOTBACKUP */
@@ -59,7 +61,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sess0sess.h"
 #include "sql_cmd.h"
 #include "trx0types.h"
-#include "univ.i"
 
 class THD;
 class ha_innobase;

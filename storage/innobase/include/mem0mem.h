@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mem0mem_h
 #define mem0mem_h
 
-#include "mach0data.h"
 #include "univ.i"
+
+#include "mach0data.h"
 #include "ut0byte.h"
 #include "ut0mem.h"
 #include "ut0rnd.h"

@@ -32,8 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0prdt_h
 #define lock0prdt_h
 
-#include "lock0lock.h"
 #include "univ.i"
+
+#include "lock0lock.h"
 
 /* Predicate lock data */
 typedef struct lock_prdt {

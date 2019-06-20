@@ -32,8 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNOBASE_UT0RBT_H
 #define INNOBASE_UT0RBT_H
 
-#if !defined(IB_RBT_TESTING)
 #include "univ.i"
+
+#if !defined(IB_RBT_TESTING)
 #include "ut0mem.h"
 #else
 #include <assert.h>

@@ -126,6 +126,8 @@ InnoDB:
 #ifndef ut0new_h
 #define ut0new_h
 
+#include "univ.i"
+
 #include <algorithm>
 #include <cerrno>
 #include <cstddef>

@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0iter_h
 #define lock0iter_h
 
-#include "lock0types.h"
 #include "univ.i"
+
+#include "lock0types.h"
 
 struct lock_queue_iterator_t {
   const lock_t *current_lock;

@@ -35,9 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0i_s_h
 #define trx0i_s_h
 
+#include "univ.i"
+
 #include "dict0types.h"
 #include "trx0types.h"
-#include "univ.i"
 
 class PSI_server_data_lock_container;
 

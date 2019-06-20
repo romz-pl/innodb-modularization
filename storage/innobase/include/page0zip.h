@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef page0zip_h
 #define page0zip_h
 
+#include "univ.i"
+
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE
 #define UNIV_INLINE
@@ -53,7 +55,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0types.h"
 #include "srv0srv.h"
 #include "trx0types.h"
-#include "univ.i"
 #include "ut0crc32.h"
 
 /* Compression level to be used by zlib. Settable by user. */

@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0undo_h
 #define row0undo_h
 
+#include "univ.i"
+
 #include "btr0pcur.h"
 #include "btr0types.h"
 #include "dict0types.h"
@@ -41,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0types.h"
 #include "trx0sys.h"
 #include "trx0types.h"
-#include "univ.i"
 
 /** Converts an implict lock on the record to explict in case of partial
  rollback.

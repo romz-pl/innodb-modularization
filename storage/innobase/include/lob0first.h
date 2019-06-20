@@ -27,6 +27,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0first_h
 #define lob0first_h
 
+#include "univ.i"
+
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "dict0dict.h"

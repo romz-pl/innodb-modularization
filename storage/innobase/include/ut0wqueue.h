@@ -38,6 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef IB_WORK_QUEUE_H
 #define IB_WORK_QUEUE_H
 
+#include "univ.i"
+
 #include "mem0mem.h"
 #include "sync0sync.h"
 #include "ut0list.h"

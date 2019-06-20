@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define ut0rnd_h
 
 #include "univ.i"
+
 #include "ut0byte.h"
 
 /** The 'character code' for end of field or string (used

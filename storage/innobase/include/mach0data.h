@@ -34,8 +34,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mach0data_h
 #define mach0data_h
 
-#include "mtr0types.h"
 #include "univ.i"
+
+#include "mtr0types.h"
 
 #ifdef UNIV_HOTBACKUP
 #include "ut0byte.h"

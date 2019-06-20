@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fsp0file_h
 #define fsp0file_h
 
+#include "univ.i"
+
 #include <vector>
 #include "fil0fil.h" /* SPACE_UNKNOWN */
 #include "ha_prototypes.h"

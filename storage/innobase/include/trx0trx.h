@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0trx_h
 #define trx0trx_h
 
+#include "univ.i"
+
 #include <list>
 #include <set>
 

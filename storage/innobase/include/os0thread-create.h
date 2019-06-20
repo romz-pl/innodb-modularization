@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef os0thread_create_h
 #define os0thread_create_h
 
-#include "os0thread.h"
 #include "univ.i"
+
+#include "os0thread.h"
 
 #include <my_thread.h>
 #include <atomic>

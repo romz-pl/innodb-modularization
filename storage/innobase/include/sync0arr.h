@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sync0arr_h
 #define sync0arr_h
 
-#include "os0thread.h"
 #include "univ.i"
+
+#include "os0thread.h"
 
 /** Synchronization wait array cell */
 struct sync_cell_t;

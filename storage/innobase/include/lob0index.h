@@ -26,10 +26,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0index_h
 #define lob0index_h
 
+#include "univ.i"
+
 #include "fut0lst.h"
 #include "lob0util.h"
 #include "trx0trx.h"
-#include "univ.i"
 
 namespace lob {
 

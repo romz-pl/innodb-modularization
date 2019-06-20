@@ -26,6 +26,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0util_h
 #define lob0util_h
 
+#include "univ.i"
+
 #include <stdint.h>
 
 #include "buf0buf.h"

@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef btr0bulk_h
 #define btr0bulk_h
 
+#include "univ.i"
+
 #include <stddef.h>
 #include <vector>
 

@@ -37,6 +37,8 @@ external tools. */
 #ifndef rem_rec_h
 #define rem_rec_h
 
+#include "univ.i"
+
 #include "dict0boot.h"
 #include "dict0dict.h"
 

@@ -26,6 +26,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef zlob0index_h
 #define zlob0index_h
 
+#include "univ.i"
+
 #include "fil0fil.h"
 #include "fut0lst.h"
 #include "lob0impl.h"

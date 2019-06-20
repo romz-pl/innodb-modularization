@@ -47,6 +47,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef srv_conc_h
 #define srv_conc_h
 
+#include "univ.i"
+
 /** We are prepared for a situation that we have this many threads waiting for
 a semaphore inside InnoDB. innobase_start_or_create_for_mysql() sets the
 value. */

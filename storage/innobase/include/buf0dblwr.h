@@ -33,10 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0dblwr_h
 #define buf0dblwr_h
 
+#include "univ.i"
+
 #include "buf0types.h"
 #include "log0log.h"
 #include "log0recv.h"
-#include "univ.i"
 #include "ut0byte.h"
 
 /** Doublewrite system */

@@ -33,12 +33,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0ins_h
 #define row0ins_h
 
+#include "univ.i"
+
 #include "data0data.h"
 #include "dict0types.h"
 #include "que0types.h"
 #include "row0types.h"
 #include "trx0types.h"
-#include "univ.i"
 
 /** Checks if foreign key constraint fails for an index entry. Sets shared locks
  which lock either the success or the failure of the constraint. NOTE that

@@ -33,11 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0rseg_h
 #define trx0rseg_h
 
+#include "univ.i"
+
 #include <vector>
 #include "fut0lst.h"
 #include "trx0sys.h"
 #include "trx0types.h"
-#include "univ.i"
 
 /** Gets a rollback segment header.
 @param[in]	space		space where placed

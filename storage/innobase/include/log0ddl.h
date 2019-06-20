@@ -39,6 +39,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef log0ddl_h
 #define log0ddl_h
 
+#include "univ.i"
+
 /** DDL log types defined as uint32_t because it costs 4 bytes in
 mysql.innodb_ddl_log. */
 enum class Log_Type : uint32_t {

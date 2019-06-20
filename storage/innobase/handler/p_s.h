@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef p_s_h
 #define p_s_h
 
+#include "univ.i"
+
 #include "mysql/psi/psi_data_lock.h"
 
 /** Inspect data locks in innodb.

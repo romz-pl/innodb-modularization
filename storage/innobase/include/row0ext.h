@@ -33,12 +33,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0ext_h
 #define row0ext_h
 
+#include "univ.i"
+
 #include "data0types.h"
 #include "dict0types.h"
 #include "mem0mem.h"
 #include "page0size.h"
 #include "row0types.h"
-#include "univ.i"
 
 #ifdef UNIV_DEBUG
 #define row_ext_create(index, n_ext, ext, flags, tuple, is_sdi, heap) \

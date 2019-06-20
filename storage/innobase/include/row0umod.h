@@ -33,13 +33,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0umod_h
 #define row0umod_h
 
+#include "univ.i"
+
 #include "data0data.h"
 #include "dict0types.h"
 #include "mtr0mtr.h"
 #include "que0types.h"
 #include "row0types.h"
 #include "trx0types.h"
-#include "univ.i"
 
 /** Undoes a modify operation on a row of a table.
  @return DB_SUCCESS or error code */

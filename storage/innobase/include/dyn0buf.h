@@ -33,9 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dyn0buf_h
 #define dyn0buf_h
 
+#include "univ.i"
+
 #include "dyn0types.h"
 #include "mem0mem.h"
-#include "univ.i"
 #include "ut0lst.h"
 
 /** Class that manages dynamic buffers. It uses a UT_LIST of

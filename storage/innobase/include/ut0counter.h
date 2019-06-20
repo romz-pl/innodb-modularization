@@ -34,9 +34,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0counter_h
 #define ut0counter_h
 
+#include "univ.i"
+
 #include <my_rdtsc.h>
 
-#include "univ.i"
 
 #include "os0thread.h"
 #include "ut0dbg.h"

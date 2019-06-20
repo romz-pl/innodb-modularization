@@ -44,8 +44,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef log0log_h
 #define log0log_h
 
-#include "dyn0buf.h"
 #include "univ.i"
+
+#include "dyn0buf.h"
 #ifndef UNIV_HOTBACKUP
 #include "sync0rw.h"
 #endif /* !UNIV_HOTBACKUP */

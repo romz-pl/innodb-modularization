@@ -33,11 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0roll_h
 #define trx0roll_h
 
+#include "univ.i"
+
 #include "mtr0mtr.h"
 #include "trx0sys.h"
 #include "trx0trx.h"
 #include "trx0types.h"
-#include "univ.i"
 
 #ifdef UNIV_HOTBACKUP
 #include "que0que.h"

@@ -33,12 +33,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef pars0pars_h
 #define pars0pars_h
 
+#include "univ.i"
+
 #include "pars0types.h"
 #include "que0types.h"
 #include "row0mysql.h"
 #include "row0types.h"
 #include "trx0types.h"
-#include "univ.i"
 #include "usr0types.h"
 #include "ut0vec.h"
 

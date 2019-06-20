@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0import_h
 #define row0import_h
 
-#include "dict0types.h"
 #include "univ.i"
+
+#include "dict0types.h"
 
 // Forward declarations
 struct trx_t;

@@ -33,13 +33,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0crea_h
 #define dict0crea_h
 
+#include "univ.i"
+
 #include "dict0dict.h"
 #include "dict0types.h"
 #include "fsp0space.h"
 #include "mtr0mtr.h"
 #include "que0types.h"
 #include "row0types.h"
-#include "univ.i"
 
 /** Build a table definition without updating SYSTEM TABLES
 @param[in,out]	table	dict table object

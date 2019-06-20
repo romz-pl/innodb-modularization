@@ -26,6 +26,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef zlob0read_h
 #define zlob0read_h
 
+#include "univ.i"
+
 #include "zlob0index.h"
 
 namespace lob {

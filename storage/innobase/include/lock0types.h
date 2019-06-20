@@ -30,10 +30,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/7/1996 Heikki Tuuri
  *******************************************************/
 
-#include "univ.i"
 
 #ifndef lock0types_h
 #define lock0types_h
+
+#include "univ.i"
 
 #define lock_t ib_lock_t
 

@@ -33,10 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fsp0space_h
 #define fsp0space_h
 
+#include "univ.i"
+
 #include "fsp0file.h"
 #include "fsp0fsp.h"
 #include "fsp0types.h"
-#include "univ.i"
 #include "ut0new.h"
 
 #include <vector>

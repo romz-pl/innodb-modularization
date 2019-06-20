@@ -33,10 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef eval0proc_h
 #define eval0proc_h
 
+#include "univ.i"
+
 #include "pars0pars.h"
 #include "pars0sym.h"
 #include "que0types.h"
-#include "univ.i"
 
 /** Performs an execution step of a procedure node.
  @return query thread to run next or NULL */

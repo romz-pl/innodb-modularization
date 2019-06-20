@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0types_h
 #define row0types_h
 
+#include "univ.i"
+
 struct plan_t;
 
 struct upd_t;

@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef i_s_h
 #define i_s_h
 
+#include "univ.i"
+
 class THD;
 struct TABLE_LIST;
 

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/17/1996 Heikki Tuuri
  *************************************************************************/
 
+#include "univ.i"
 #include "btr0cur.h"
 #include "buf0buf.h"
 #include "dict0mem.h"

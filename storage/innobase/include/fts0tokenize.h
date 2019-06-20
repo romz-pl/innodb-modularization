@@ -30,6 +30,20 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/11/17 Shaohua Wang
  ***********************************************************************/
 
+// Inclusion of the file "univ.i" causes the compilation error:
+//
+// In file included from ../../../innodb-modularization/plugin/fulltext/ngram_parser/plugin_ngram.cc:28:
+// In file included from ../../../innodb-modularization/storage/innobase/include/fts0tokenize.h:33:
+// In file included from ../../../innodb-modularization/storage/innobase/include/univ.i:597:
+// In file included from ../../../innodb-modularization/storage/innobase/include/sync0types.h:44:
+// In file included from ../../../innodb-modularization/storage/innobase/include/ut0new.h:148:
+// In file included from ../../../innodb-modularization/storage/innobase/include/ut0byte.h:38:
+// ../../../innodb-modularization/storage/innobase/include/ut0ut.h:66:10: fatal error: 'ut/ut.h' file not found
+//
+// Probably it is related to not correct CMakeList.txt file!
+//
+// #include "univ.i"
+
 #include "ft_global.h"
 #include "m_ctype.h"
 #include "mysql/plugin_ftparser.h"

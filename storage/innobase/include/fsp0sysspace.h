@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fsp0sysspace_h
 #define fsp0sysspace_h
 
-#include "fsp0space.h"
 #include "univ.i"
+
+#include "fsp0space.h"
 
 #ifdef UNIV_HOTBACKUP
 #include "srv0srv.h"

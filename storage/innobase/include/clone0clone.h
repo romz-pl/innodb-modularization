@@ -32,11 +32,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef CLONE_CLONE_INCLUDE
 #define CLONE_CLONE_INCLUDE
 
+#include "univ.i"
+
 #include <chrono>
 #include "db0err.h"
 #include "handler.h"
 #include "mysql/plugin.h"  // thd_killed()
-#include "univ.i"
 #include "ut0mutex.h"
 
 #include "clone0desc.h"

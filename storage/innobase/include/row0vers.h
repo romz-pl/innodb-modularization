@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0vers_h
 #define row0vers_h
 
+#include "univ.i"
+
 #include "data0data.h"
 #include "dict0mem.h"
 #include "dict0types.h"
@@ -41,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 #include "rem0types.h"
 #include "trx0types.h"
-#include "univ.i"
 
 // Forward declaration
 class ReadView;

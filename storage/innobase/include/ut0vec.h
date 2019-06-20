@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef IB_VECTOR_H
 #define IB_VECTOR_H
 
-#include "mem0mem.h"
 #include "univ.i"
+
+#include "mem0mem.h"
 
 struct ib_alloc_t;
 struct ib_vector_t;

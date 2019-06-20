@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0types_h
 #define dict0types_h
 
+#include "univ.i"
+
 #include "ibuf0types.h" /* IBUF_SPACE_ID */
 #include "rem0types.h"
 #include "ut0mutex.h"

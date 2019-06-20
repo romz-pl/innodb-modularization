@@ -33,12 +33,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNOBASE_FTS0PRIV_H
 #define INNOBASE_FTS0PRIV_H
 
+#include "univ.i"
+
 #include "dict0dict.h"
 #include "fts0types.h"
 #include "pars0pars.h"
 #include "que0que.h"
 #include "que0types.h"
-#include "univ.i"
 
 /* The various states of the FTS sub system pertaining to a table with
 FTS indexes defined on it. */

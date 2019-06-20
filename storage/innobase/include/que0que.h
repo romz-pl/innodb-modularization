@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef que0que_h
 #define que0que_h
 
+#include "univ.i"
+
 #include "data0data.h"
 #include "dict0types.h"
 #include "pars0types.h"
@@ -41,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "trx0roll.h"
 #include "trx0trx.h"
-#include "univ.i"
 #include "usr0types.h"
 
 /** Mutex protecting the query threads. */

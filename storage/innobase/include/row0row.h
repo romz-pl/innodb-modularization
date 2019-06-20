@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0row_h
 #define row0row_h
 
+#include "univ.i"
+
 #include "btr0types.h"
 #include "data0data.h"
 #include "dict0types.h"
@@ -41,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "rem0types.h"
 #include "row0types.h"
 #include "trx0types.h"
-#include "univ.i"
 
 /** Gets the offset of the DB_TRX_ID field, in bytes relative to the origin of
  a clustered index record.

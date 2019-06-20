@@ -34,9 +34,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mtr0mtr_h
 #define mtr0mtr_h
 
-#include <stddef.h>
-
 #include "univ.i"
+
+#include <stddef.h>
 
 #include "buf0types.h"
 #include "dyn0buf.h"

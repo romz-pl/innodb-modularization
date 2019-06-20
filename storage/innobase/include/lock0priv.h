@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0priv_h
 #define lock0priv_h
 
+#include "univ.i"
+
 #ifndef LOCK_MODULE_IMPLEMENTATION
 /* If you need to access members of the structures defined in this
 file, please write appropriate functions that retrieve them and put
@@ -43,7 +45,6 @@ those functions in lock/ */
 #include "dict0types.h"
 #include "hash0hash.h"
 #include "trx0types.h"
-#include "univ.i"
 
 #include <utility>
 

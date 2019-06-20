@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNODB_FTS0OPT_H
 #define INNODB_FTS0OPT_H
 
+#include "univ.i"
+
 /********************************************************************
 Callback function to fetch the rows in an FTS INDEX record. */
 ibool fts_optimize_index_fetch_node(

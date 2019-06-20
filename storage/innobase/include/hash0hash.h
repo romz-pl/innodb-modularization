@@ -33,10 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef hash0hash_h
 #define hash0hash_h
 
+#include "univ.i"
+
 #include <stddef.h>
 
 #include "mem0mem.h"
-#include "univ.i"
 #ifndef UNIV_HOTBACKUP
 #include "sync0rw.h"
 #endif /* !UNIV_HOTBACKUP */

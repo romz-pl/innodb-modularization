@@ -26,6 +26,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0inf_h
 #define lob0inf_h
 
+#include "univ.i"
+
 #include <list>
 
 #include "fut0lst.h"

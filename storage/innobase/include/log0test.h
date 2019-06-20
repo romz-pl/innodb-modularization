@@ -40,6 +40,8 @@ the file COPYING.Google.
 #ifndef log0test_h
 #define log0test_h
 
+#include "univ.i"
+
 #include "log0types.h"
 
 #ifndef UNIV_HOTBACKUP

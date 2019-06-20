@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0merge_h
 #define row0merge_h
 
+#include "univ.i"
+
 #include "btr0types.h"
 #include "data0data.h"
 #include "dict0types.h"
@@ -44,7 +46,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0mysql.h"
 #include "srv0srv.h"
 #include "trx0types.h"
-#include "univ.i"
 #include "ut0stage.h"
 
 // Forward declaration

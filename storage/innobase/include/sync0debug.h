@@ -39,9 +39,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sync0debug_h
 #define sync0debug_h
 
+#include "univ.i"
+
 #ifndef UNIV_LIBRARY
 #include "sync0types.h"
-#include "univ.i"
 
 /** Initializes the synchronization data structures.
 @param[in]	max_threads	Maximum threads that can be created. */

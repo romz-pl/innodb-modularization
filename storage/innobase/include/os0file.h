@@ -41,10 +41,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef os0file_h
 #define os0file_h
 
+#include "univ.i"
+
 #include "my_dbug.h"
 #include "my_io.h"
 #include "os/file.h"
-#include "univ.i"
 
 #ifndef _WIN32
 #include <dirent.h>

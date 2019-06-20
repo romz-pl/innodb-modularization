@@ -26,6 +26,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0ins_h
 #define lob0ins_h
 
+#include "univ.i"
+
 #include "lob0lob.h"
 
 namespace lob {

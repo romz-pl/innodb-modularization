@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0mutex_h
 #define ut0mutex_h
 
+#include "univ.i"
+
 #include "my_inttypes.h"
 
 extern ulong srv_spin_wait_delay;

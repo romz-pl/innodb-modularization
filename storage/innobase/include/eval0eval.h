@@ -34,10 +34,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef eval0eval_h
 #define eval0eval_h
 
+#include "univ.i"
+
 #include "pars0pars.h"
 #include "pars0sym.h"
 #include "que0types.h"
-#include "univ.i"
 
 /** Free the buffer from global dynamic memory for a value of a que_node,
  if it has been allocated in the above function. The freeing for pushed

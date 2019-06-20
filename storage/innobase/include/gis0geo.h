@@ -29,6 +29,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef _gis0geo_h
 #define _gis0geo_h
 
+#include "univ.i"
+
 #include "page0types.h"
 #include "sql/gis/rtree_support.h"
 

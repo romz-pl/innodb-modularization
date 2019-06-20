@@ -38,6 +38,7 @@ external tools. */
 #define ut_ut_h
 
 #include "univ.i"
+
 /** Prints the contents of a memory buffer in hex and ascii. */
 void ut_print_buf(FILE *file,      /*!< in: file where to print */
                   const void *buf, /*!< in: memory buffer */

@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0ftsort_h
 #define row0ftsort_h
 
+#include "univ.i"
+
 #include "btr0bulk.h"
 #include "data0data.h"
 #include "dict0types.h"
@@ -41,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fts0types.h"
 #include "row0merge.h"
 #include "row0mysql.h"
-#include "univ.i"
 
 /** This structure defineds information the scan thread will fetch
 and put to the linked list for parallel tokenization/sort threads

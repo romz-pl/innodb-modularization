@@ -33,9 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mtr0log_h
 #define mtr0log_h
 
+#include "univ.i"
+
 #include "dyn0buf.h"
 #include "mtr0mtr.h"
-#include "univ.i"
 
 // Forward declaration
 struct dict_index_t;

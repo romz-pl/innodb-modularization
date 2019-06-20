@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0upd_h
 #define row0upd_h
 
+#include "univ.i"
+
 #include <stack>
 #include "btr0types.h"
 #include "data0data.h"
@@ -41,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0types.h"
 #include "table.h"
 #include "trx0types.h"
-#include "univ.i"
 
 #include "btr0pcur.h"
 #ifndef UNIV_HOTBACKUP

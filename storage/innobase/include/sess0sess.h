@@ -34,11 +34,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sess0sess_h
 #define sess0sess_h
 
+#include "univ.i"
+
 #include <sql_thd_internal_api.h>
 #include "dict0mem.h"
 #include "srv0tmp.h"
 #include "trx0trx.h"
-#include "univ.i"
 #include "ut0new.h"
 
 #include <map>

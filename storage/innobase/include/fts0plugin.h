@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNOBASE_FTS0PLUGIN_H
 #define INNOBASE_FTS0PLUGIN_H
 
+#include "univ.i"
+
 #include "ha_prototypes.h"
 
 extern struct st_mysql_ftparser fts_default_parser;

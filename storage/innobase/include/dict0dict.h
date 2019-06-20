@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0dict_h
 #define dict0dict_h
 
+#include "univ.i"
+
 #include <set>
 
 #include <deque>
@@ -51,7 +53,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql/dd/object_id.h"
 #include "sync0rw.h"
 #include "trx0types.h"
-#include "univ.i"
 #include "ut0byte.h"
 #include "ut0mem.h"
 #include "ut0new.h"

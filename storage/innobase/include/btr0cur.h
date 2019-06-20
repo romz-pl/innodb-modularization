@@ -36,11 +36,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef btr0cur_h
 #define btr0cur_h
 
+#include "univ.i"
+
 #include "btr0types.h"
 #include "dict0dict.h"
 #include "gis0type.h"
 #include "page0cur.h"
-#include "univ.i"
 
 /** Mode flags for btr_cur operations; these can be ORed */
 enum {

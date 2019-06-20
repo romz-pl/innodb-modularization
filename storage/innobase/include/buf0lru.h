@@ -35,8 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0lru_h
 #define buf0lru_h
 
-#include "buf0types.h"
 #include "univ.i"
+
+#include "buf0types.h"
 #ifndef UNIV_HOTBACKUP
 #include "ut0byte.h"
 

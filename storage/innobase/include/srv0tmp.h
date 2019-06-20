@@ -26,6 +26,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef srv0tmp_h
 #define srv0tmp_h
+
+#include "univ.i"
+
 #include "srv0srv.h"
 namespace ibt {
 

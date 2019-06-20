@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef data0types_h
 #define data0types_h
 
+#include "univ.i"
+
 /* SQL data field struct */
 struct dfield_t;
 

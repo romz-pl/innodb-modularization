@@ -29,6 +29,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ha_innopart_h
 #define ha_innopart_h
 
+#include "univ.i"
+
 #include <stddef.h>
 #include <sys/types.h>
 

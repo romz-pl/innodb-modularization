@@ -33,13 +33,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef srv0start_h
 #define srv0start_h
 
+#include "univ.i"
+
 #include "log0types.h"
 #include "os0thread-create.h"
 #ifndef UNIV_HOTBACKUP
 #include "sync0rw.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "trx0purge.h"
-#include "univ.i"
 #include "ut0byte.h"
 
 // Forward declaration

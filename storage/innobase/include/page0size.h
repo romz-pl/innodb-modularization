@@ -33,8 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef page0size_t
 #define page0size_t
 
-#include "fsp0types.h"
 #include "univ.i"
+
+#include "fsp0types.h"
 
 #define FIELD_REF_SIZE 20
 

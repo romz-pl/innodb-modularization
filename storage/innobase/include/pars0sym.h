@@ -33,11 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef pars0sym_h
 #define pars0sym_h
 
+#include "univ.i"
+
 #include "dict0types.h"
 #include "pars0types.h"
 #include "que0types.h"
 #include "row0types.h"
-#include "univ.i"
 #include "usr0types.h"
 
 /** Creates a symbol table for a single stored procedure or query.

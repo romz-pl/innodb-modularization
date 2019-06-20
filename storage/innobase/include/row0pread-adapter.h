@@ -32,6 +32,8 @@ Created 2018-02-28 by Darshan M N. */
 #ifndef row0pread_adapter_h
 #define row0pread_adapter_h
 
+#include "univ.i"
+
 #include "row0pread.h"
 
 /** Size of the buffer used to store InnoDB records and sent to the adapter*/

@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNOBASE_FST0AST_H
 #define INNOBASE_FST0AST_H
 
+#include "univ.i"
+
 #include "ha_prototypes.h"
 #include "mem0mem.h"
 

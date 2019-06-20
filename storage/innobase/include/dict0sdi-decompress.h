@@ -27,6 +27,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef DICT_SDI_DECOMPRESS_H
 #define DICT_SDI_DECOMPRESS_H
 
+#include "univ.i"
+
 #include <zlib.h>
 
 /** Decompress SDI record */

@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0stage_h
 #define ut0stage_h
 
+#include "univ.i"
+
 #include <math.h>
 #include <algorithm>
 
@@ -40,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/psi/mysql_stage.h" /* mysql_stage_inc_work_completed */
 #include "row0log.h"               /* row_log_estimate_work() */
 #include "srv0srv.h"               /* ut_stage_alter_t */
-#include "univ.i"
 
 #ifdef HAVE_PSI_STAGE_INTERFACE
 

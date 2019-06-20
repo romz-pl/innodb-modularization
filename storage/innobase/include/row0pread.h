@@ -32,10 +32,11 @@ Created 2018-01-27 by Sunny Bains. */
 #ifndef row0par_read_h
 #define row0par_read_h
 
+#include "univ.i"
+
 #include <functional>
 #include <vector>
 
-#include "univ.i"
 
 // Forward declarations
 struct trx_t;

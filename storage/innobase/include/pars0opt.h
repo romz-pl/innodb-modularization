@@ -33,11 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef pars0opt_h
 #define pars0opt_h
 
+#include "univ.i"
+
 #include "dict0types.h"
 #include "pars0sym.h"
 #include "que0types.h"
 #include "row0sel.h"
-#include "univ.i"
 #include "usr0types.h"
 
 /** Optimizes a select. Decides which indexes to tables to use. The tables

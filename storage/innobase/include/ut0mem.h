@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define ut0mem_h
 
 #include "univ.i"
+
 #ifndef UNIV_HOTBACKUP
 #include "os0event.h"
 #include "ut0mutex.h"

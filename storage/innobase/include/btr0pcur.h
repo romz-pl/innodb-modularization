@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef btr0pcur_h
 #define btr0pcur_h
 
+#include "univ.i"
+
 #include "btr0btr.h"
 #include "btr0cur.h"
 #include "btr0types.h"
@@ -40,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "mtr0mtr.h"
 #include "page0cur.h"
-#include "univ.i"
 #ifndef UNIV_HOTBACKUP
 #include "gis0rtree.h"
 #endif /* UNIV_HOTBACKUP */

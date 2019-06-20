@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0lock_h
 #define lock0lock_h
 
+#include "univ.i"
+
 #include "buf0types.h"
 #include "dict0types.h"
 #include "hash0hash.h"
@@ -42,7 +44,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "rem0types.h"
 #include "srv0srv.h"
 #include "trx0types.h"
-#include "univ.i"
 #include "ut0vec.h"
 #ifndef UNIV_HOTBACKUP
 #include "gis0rtree.h"

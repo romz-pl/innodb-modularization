@@ -34,13 +34,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef api0misc_h
 #define api0misc_h
 
+#include "univ.i"
+
 #include <sys/types.h>
 
 #include "handler.h"
 #include "os0file.h"
 #include "que0que.h"
 #include "trx0trx.h"
-#include "univ.i"
 
 /** Whether binlog is enabled for applications using InnoDB APIs */
 extern bool ib_binlog_enabled;

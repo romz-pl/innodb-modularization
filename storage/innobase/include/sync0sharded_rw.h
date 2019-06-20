@@ -43,6 +43,8 @@ the file COPYING.Google.
 #ifndef sync0sharded_rw_h
 #define sync0sharded_rw_h
 
+#include "univ.i"
+
 #include "sync0rw.h"
 #include "ut0rnd.h"
 #include "ut0ut.h"

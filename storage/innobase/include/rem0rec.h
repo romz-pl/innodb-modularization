@@ -33,10 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef rem0rec_h
 #define rem0rec_h
 
+#include "univ.i"
+
 #include <ostream>
 #include <sstream>
-
-#include "univ.i"
 
 #include "data0data.h"
 #include "mtr0types.h"

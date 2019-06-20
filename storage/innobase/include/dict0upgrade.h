@@ -24,6 +24,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+#include "univ.i"
+
 #include "my_inttypes.h"
 
 class THD;

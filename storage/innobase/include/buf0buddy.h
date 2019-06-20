@@ -33,13 +33,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0buddy_h
 #define buf0buddy_h
 
+#include "univ.i"
+
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE
 #define UNIV_INLINE
 #endif
 
 #include "buf0types.h"
-#include "univ.i"
 
 /** Allocate a block. This function should only be used for allocating
 compressed page frames. The thread calling this function must hold

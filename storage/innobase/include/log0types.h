@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef log0types_h
 #define log0types_h
 
+#include "univ.i"
+
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -51,7 +53,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0event.h"
 #include "os0file.h"
 #include "sync0sharded_rw.h"
-#include "univ.i"
 #include "ut0link_buf.h"
 #include "ut0mutex.h"
 
@@ -576,7 +577,7 @@ struct alignas(INNOBASE_CACHE_LINE_SIZE) log_t {
   /** A new checkpoint could be written for this lsn value.
   Up to this lsn value, all dirty pages have been added to flush
   lists and flushed. Updated in the log checkpointer thread by
-  taking minimum oldest_modification out of the last dirty pages
+  taking minimum oldest_modification out of the last dirty pages
   from each flush list. However it will not be bigger than the
   current value of log.buf_dirty_pages_added_up_to_lsn.
   Protected by: checkpointer_mutex.

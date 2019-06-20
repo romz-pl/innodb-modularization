@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0purge_h
 #define trx0purge_h
 
+#include "univ.i"
+
 #include "fil0fil.h"
 #include "mtr0mtr.h"
 #include "page0page.h"
@@ -40,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "read0types.h"
 #include "trx0sys.h"
 #include "trx0types.h"
-#include "univ.i"
 #include "usr0sess.h"
 #ifdef UNIV_HOTBACKUP
 #include "trx0sys.h"

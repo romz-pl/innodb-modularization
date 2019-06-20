@@ -32,8 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef CLONE_DESC_INCLUDE
 #define CLONE_DESC_INCLUDE
 
-#include "mem0mem.h"
 #include "univ.i"
+
+#include "mem0mem.h"
 
 /** Invalid locator ID. */
 const ib_uint64_t CLONE_LOC_INVALID_ID = 0;

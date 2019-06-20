@@ -30,10 +30,11 @@ Data dictionary interface */
 #ifndef dict0dd_h
 #define dict0dd_h
 
+#include "univ.i"
+
 #include "dict0dict.h"
 #include "dict0mem.h"
 #include "dict0types.h"
-#include "univ.i"
 
 #ifndef UNIV_HOTBACKUP
 #include "dd/cache/dictionary_client.h"

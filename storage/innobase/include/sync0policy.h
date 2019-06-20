@@ -33,10 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sync0policy_h
 #define sync0policy_h
 
+#include "univ.i"
+
 #include "os0thread.h"
 #include "srv0mon.h"
 #include "sync0types.h"
-#include "univ.i"
 #include "ut0rnd.h"
 
 #ifndef UNIV_LIBRARY

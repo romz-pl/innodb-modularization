@@ -26,10 +26,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef zlob0first_h
 #define zlob0first_h
 
+#include "univ.i"
+
 #include "fil0types.h"
 #include "fut0lst.h"
 #include "lob0impl.h"
-#include "univ.i"
 
 namespace lob {
 

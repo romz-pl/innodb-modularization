@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define sync0sync_h
 
 #include "univ.i"
+
 #include "ut0counter.h"
 
 #ifdef HAVE_PSI_INTERFACE

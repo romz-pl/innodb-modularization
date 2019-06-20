@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0buf_h
 #define buf0buf_h
 
+#include "univ.i"
+
 #include "buf0types.h"
 #include "fil0fil.h"
 #include "hash0hash.h"
@@ -41,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0proc.h"
 #include "page0types.h"
 #include "srv0srv.h"
-#include "univ.i"
 #include "ut0byte.h"
 #include "ut0rbt.h"
 

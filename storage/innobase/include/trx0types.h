@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0types_h
 #define trx0types_h
 
+#include "univ.i"
+
 #include "page0size.h"
 #include "sync0rw.h"
 #include "ut0byte.h"
