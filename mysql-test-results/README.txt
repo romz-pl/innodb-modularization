@@ -9,5 +9,8 @@
 
 5. After changes made during modularization process of InnDB the result of the tests nus be the same.
 
-6. 
+6. Every files name containg the result starts form four digit numer follod by commit id obtained by comman:
+    git rev-parse HEAD
+
+7. The very first result is called 0000.Oracle-MySQL-8.0.16.txt
 
