@@ -41,6 +41,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef univ_i
 #define univ_i
 
+#include "my_config.h"
+#include "my_compiler.h"
+#include "my_inttypes.h"
+#include "my_macros.h"
+
 #ifdef UNIV_HOTBACKUP
 #include "hb_univ.i"
 #endif /* UNIV_HOTBACKUP */
