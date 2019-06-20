@@ -10,5 +10,7 @@
    - Provide clear, layered structure of code.
    - Divide the engine into separate libraries (modules).
 
-4. Each enhancement (source code modification) is defined as [Issue](https://github.com/romz-pl/innodb-modularization/issues)
+4. Each enhancement (source code modification) is defined as [Issue](https://github.com/romz-pl/innodb-modularization/issues).
+
+5. The source code changes are monitored by running test suite defined in the script [mysql-test-run.pl](https://dev.mysql.com/doc/dev/mysql-server/latest/PAGE_MYSQL_TEST_RUN_PL.html)
 
