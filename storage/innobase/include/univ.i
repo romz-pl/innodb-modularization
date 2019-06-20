@@ -166,9 +166,7 @@ command. */
 #define UNIV_ENABLE_UNIT_TEST_ROW_RAW_FORMAT_INT
 */
 
-#if defined HAVE_VALGRIND
-#define UNIV_DEBUG_VALGRIND
-#endif /* HAVE_VALGRIND */
+
 
 #ifdef DBUG_OFF
 #undef UNIV_DEBUG
@@ -566,93 +564,6 @@ typedef void *os_thread_ret_t;
 #define OS_PATH_SEPARATOR_ALT '\\'
 #endif /* _WIN32 */
 
-#include "ut0ut.h"
-
-#ifdef UNIV_DEBUG_VALGRIND
-#include <valgrind/memcheck.h>
-
-#define UNIV_MEM_VALID(addr, size) VALGRIND_MAKE_MEM_DEFINED(addr, size)
-#define UNIV_MEM_INVALID(addr, size) VALGRIND_MAKE_MEM_UNDEFINED(addr, size)
-#define UNIV_MEM_FREE(addr, size) VALGRIND_MAKE_MEM_NOACCESS(addr, size)
-#define UNIV_MEM_ALLOC(addr, size) VALGRIND_MAKE_MEM_UNDEFINED(addr, size)
-#define UNIV_MEM_DESC(addr, size) VALGRIND_CREATE_BLOCK(addr, size, #addr)
-#define UNIV_MEM_UNDESC(b) VALGRIND_DISCARD(b)
-#define UNIV_MEM_ASSERT_RW_LOW(addr, size, should_abort)                      \
-  do {                                                                        \
-    const void *_p =                                                          \
-        (const void *)(ulint)VALGRIND_CHECK_MEM_IS_DEFINED(addr, size);       \
-    if (UNIV_LIKELY_NULL(_p)) {                                               \
-      fprintf(stderr, "%s:%d: %p[%u] undefined at %ld\n", __FILE__, __LINE__, \
-              (const void *)(addr), (unsigned)(size),                         \
-              (long)(((const char *)_p) - ((const char *)(addr))));           \
-      if (should_abort) {                                                     \
-        ut_error;                                                             \
-      }                                                                       \
-    }                                                                         \
-  } while (0)
-#define UNIV_MEM_ASSERT_RW(addr, size) UNIV_MEM_ASSERT_RW_LOW(addr, size, false)
-#define UNIV_MEM_ASSERT_RW_ABORT(addr, size) \
-  UNIV_MEM_ASSERT_RW_LOW(addr, size, true)
-#define UNIV_MEM_ASSERT_W(addr, size)                                          \
-  do {                                                                         \
-    const void *_p =                                                           \
-        (const void *)(ulint)VALGRIND_CHECK_MEM_IS_ADDRESSABLE(addr, size);    \
-    if (UNIV_LIKELY_NULL(_p))                                                  \
-      fprintf(stderr, "%s:%d: %p[%u] unwritable at %ld\n", __FILE__, __LINE__, \
-              (const void *)(addr), (unsigned)(size),                          \
-              (long)(((const char *)_p) - ((const char *)(addr))));            \
-  } while (0)
-#define UNIV_MEM_TRASH(addr, c, size) \
-  do {                                \
-    void *p = (addr);                 \
-    ut_d(memset(p, c, size));         \
-    UNIV_MEM_INVALID(addr, size);     \
-  } while (0)
-#else
-#define UNIV_MEM_VALID(addr, size) \
-  do {                             \
-  } while (0)
-#define UNIV_MEM_INVALID(addr, size) \
-  do {                               \
-  } while (0)
-#define UNIV_MEM_FREE(addr, size) \
-  do {                            \
-  } while (0)
-#define UNIV_MEM_ALLOC(addr, size) \
-  do {                             \
-  } while (0)
-#define UNIV_MEM_DESC(addr, size) \
-  do {                            \
-  } while (0)
-#define UNIV_MEM_UNDESC(b) \
-  do {                     \
-  } while (0)
-#define UNIV_MEM_ASSERT_RW_LOW(addr, size, should_abort) \
-  do {                                                   \
-  } while (0)
-#define UNIV_MEM_ASSERT_RW(addr, size) \
-  do {                                 \
-  } while (0)
-#define UNIV_MEM_ASSERT_RW_ABORT(addr, size) \
-  do {                                       \
-  } while (0)
-#define UNIV_MEM_ASSERT_W(addr, size) \
-  do {                                \
-  } while (0)
-#define UNIV_MEM_TRASH(addr, c, size) \
-  do {                                \
-  } while (0)
-#endif
-#define UNIV_MEM_ASSERT_AND_FREE(addr, size) \
-  do {                                       \
-    UNIV_MEM_ASSERT_W(addr, size);           \
-    UNIV_MEM_FREE(addr, size);               \
-  } while (0)
-#define UNIV_MEM_ASSERT_AND_ALLOC(addr, size) \
-  do {                                        \
-    UNIV_MEM_ASSERT_W(addr, size);            \
-    UNIV_MEM_ALLOC(addr, size);               \
-  } while (0)
 
 extern ulong srv_page_size_shift;
 extern ulong srv_page_size;
@@ -674,10 +585,16 @@ void call_destructor(T *p) {
   p->~T();
 }
 
+#include <type_traits>
+
 template <typename T>
 constexpr auto to_int(T v) -> typename std::underlying_type<T>::type {
   return (static_cast<typename std::underlying_type<T>::type>(v));
 }
+
+#include <time.h>
+/** Time stamp */
+typedef time_t ib_time_t;
 
 /** If we are doing something that takes longer than this many seconds then
 print an informative message. Type should be return type of ut_time(). */

@@ -30,6 +30,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
  Inlined implementation for os_event_*
  *******************************************************************/
 
+#include "ut0ut.h"
+
 /** Waits in loop until a provided condition is satisfied. Combines usage
 of spin-delay and event.
 

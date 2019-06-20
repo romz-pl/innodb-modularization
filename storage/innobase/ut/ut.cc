@@ -39,6 +39,7 @@ external tools. */
 
 #include "univ.i"
 #include "ut/ut.h"
+#include "ut0memcheck.h"
 
 /** Prints the contents of a memory buffer in hex and ascii. */
 void ut_print_buf(FILE *file,      /*!< in: file where to print */

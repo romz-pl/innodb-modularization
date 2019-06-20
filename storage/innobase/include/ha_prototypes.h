@@ -38,12 +38,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "univ.i"
 
+#include <stdio.h>
+#include <string>
+
 /* Forward declarations */
 class ha_innobase;
 class THD;
 class MDL_ticket;
 struct CHARSET_INFO;
 struct dict_table_t;
+struct trx_t;
 
 /** Formats the raw data in "data" (in InnoDB on-disk format) that is of
  type DATA_(CHAR|VARCHAR|MYSQL|VARMYSQL) using "charset_coll" and writes

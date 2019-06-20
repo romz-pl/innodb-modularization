@@ -80,8 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 @return the message string or nullptr */
 const char *srv_get_server_errmsgs(int errcode);
 
-/** Time stamp */
-typedef time_t ib_time_t;
+
 
 #ifndef UNIV_HOTBACKUP
 #if defined(HAVE_PAUSE_INSTRUCTION)

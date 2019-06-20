@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "os0event.h"
+#include "ut0memcheck.h"
 
 /** Lock an rw-lock in shared mode for the current thread. If the rw-lock is
  locked in exclusive mode, or there is an exclusive lock request waiting,

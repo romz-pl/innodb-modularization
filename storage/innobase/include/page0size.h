@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "univ.i"
 
+#include "ut0ut.h"
 #include "fsp0types.h"
 
 #define FIELD_REF_SIZE 20

@@ -92,6 +92,7 @@ external tools. */
 #include "my_compiler.h"
 #include "my_config.h"
 #include "my_inttypes.h"
+#include "ut0ut.h"
 
 #include <string.h>
 

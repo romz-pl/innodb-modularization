@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 
 #include "ut0dbg.h"
+#include "ut0ut.h"
 
 /** Report a failed assertion. */
 [[noreturn]] void ut_dbg_assertion_failed(

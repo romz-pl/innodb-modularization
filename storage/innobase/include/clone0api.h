@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define CLONE_API_INCLUDE
 
 #include "univ.i"
+#include "db0err.h"
 
 #ifndef UNIV_HOTBACKUP
 #include "handler.h"

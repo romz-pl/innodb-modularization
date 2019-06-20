@@ -36,7 +36,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 other files in library. The code in this file is used to make a library for
 external tools. */
 
-#include "my_compiler.h"
 
 /** @file os/file.h
  The interface to the operating system file io
@@ -47,6 +46,7 @@ external tools. */
 #define os_file_h
 
 #include "univ.i"
+#include "ut0ut.h"
 
 /** Compression algorithm. */
 struct Compression {
