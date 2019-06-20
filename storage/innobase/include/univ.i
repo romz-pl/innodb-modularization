@@ -566,7 +566,7 @@ typedef void *os_thread_ret_t;
 #define OS_PATH_SEPARATOR_ALT '\\'
 #endif /* _WIN32 */
 
-#include <stdio.h>
+
 
 #include "db0err.h"
 #include "sync0types.h"
