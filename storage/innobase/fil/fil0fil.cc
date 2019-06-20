@@ -56,6 +56,7 @@ The tablespace memory cache */
 #include "page0zip.h"
 #include "srv0start.h"
 #include "ut0call_destructor.h"
+#include "ut0to_int.h"
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0lru.h"

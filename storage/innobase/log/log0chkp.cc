@@ -65,6 +65,7 @@ the file COPYING.Google.
 #include "sync0sync.h"
 #include "trx0roll.h"
 #include "trx0sys.h"
+#include "ut0to_int.h"
 #include "trx0trx.h"
 
 #ifndef UNIV_HOTBACKUP

@@ -579,14 +579,6 @@ myisam/sp_defs.h. We only support 2 dimension data */
   { name, n_indexes }
 
 
-
-#include <type_traits>
-
-template <typename T>
-constexpr auto to_int(T v) -> typename std::underlying_type<T>::type {
-  return (static_cast<typename std::underlying_type<T>::type>(v));
-}
-
 #include <time.h>
 /** Time stamp */
 typedef time_t ib_time_t;
