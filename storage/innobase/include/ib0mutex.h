@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ib0mutex_h
 #define ib0mutex_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "os0atomic.h"
 #include "os0event.h"

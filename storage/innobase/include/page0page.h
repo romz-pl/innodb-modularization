@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef page0page_h
 #define page0page_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0buf.h"
 #include "data0data.h"

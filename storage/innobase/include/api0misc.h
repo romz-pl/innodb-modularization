@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef api0misc_h
 #define api0misc_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <sys/types.h>
 

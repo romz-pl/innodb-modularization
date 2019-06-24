@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef gis0type_h
 #define gis0type_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0buf.h"
 #include "data0type.h"

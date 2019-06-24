@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mtr0log_h
 #define mtr0log_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dyn0buf.h"
 #include "mtr0mtr.h"

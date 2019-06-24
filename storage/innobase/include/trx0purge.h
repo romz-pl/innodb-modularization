@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0purge_h
 #define trx0purge_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "fil0fil.h"
 #include "mtr0mtr.h"

@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created May 26, 2014 Vasil Dimov
  *******************************************************/
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "my_compiler.h"
 #include "ut0new.h"

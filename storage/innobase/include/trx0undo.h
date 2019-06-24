@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0undo_h
 #define trx0undo_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "mtr0mtr.h"
 #include "page0types.h"

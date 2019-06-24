@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0lock_h
 #define lock0lock_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0types.h"
 #include "dict0types.h"

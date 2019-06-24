@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sync0debug_h
 #define sync0debug_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifndef UNIV_LIBRARY
 #include "sync0types.h"

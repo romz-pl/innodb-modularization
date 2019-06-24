@@ -1,4 +1,4 @@
-#include "univ.i"
+#include <innodb/univ/univ.h>
 static char *yytext;
 #line 2 "lexyy.cc"
 
@@ -904,7 +904,7 @@ Created 12/14/1997 Heikki Tuuri
 #line 53 "pars0lex.l"
 #define YYSTYPE que_node_t*
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "pars0pars.h"
 #include "pars0grm.h"
 #include "pars0sym.h"

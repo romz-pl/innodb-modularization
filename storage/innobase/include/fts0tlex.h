@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *
  * Created 2007/5/9 Sunny Bains
  */
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 
 

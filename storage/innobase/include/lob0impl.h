@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0impl_h
 #define lob0impl_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0btr.h"
 #include "fut0lst.h"

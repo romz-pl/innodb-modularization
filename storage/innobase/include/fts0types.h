@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNOBASE_FTS0TYPES_H
 #define INNOBASE_FTS0TYPES_H
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "fts0fts.h"
 #include "fut0fut.h"

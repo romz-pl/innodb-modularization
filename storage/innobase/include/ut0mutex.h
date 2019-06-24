@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0mutex_h
 #define ut0mutex_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "my_inttypes.h"
 #include "sync0types.h"

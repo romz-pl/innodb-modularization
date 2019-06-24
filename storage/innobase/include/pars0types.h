@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef pars0types_h
 #define pars0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 struct pars_info_t;
 struct pars_user_func_t;

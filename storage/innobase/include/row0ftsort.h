@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0ftsort_h
 #define row0ftsort_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0bulk.h"
 #include "data0data.h"

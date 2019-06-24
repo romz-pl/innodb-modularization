@@ -73,7 +73,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0page.h"
 #include "page0size.h"
 #include "page0types.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0byte.h"
 #include "ut0crc32.h"
 

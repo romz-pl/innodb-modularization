@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fil0fil_h
 #define fil0fil_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0types.h"
 #include "fil0types.h"

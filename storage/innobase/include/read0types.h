@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef read0types_h
 #define read0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <algorithm>
 #include "dict0mem.h"

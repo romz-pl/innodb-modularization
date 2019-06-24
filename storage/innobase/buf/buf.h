@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf_h
 #define buf_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "page0size.h"
 

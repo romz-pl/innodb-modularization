@@ -71,7 +71,6 @@ The parts not included are excluded by #ifndef UNIV_INNOCHECKSUM. */
 #include "storage/innobase/include/page0size.h" /* page_size_t */
 #include "storage/innobase/include/page0zip.h"
 #include "storage/innobase/include/trx0undo.h" /* TRX_UNDO_* */
-#include "storage/innobase/include/univ.i"     /* include all of this */
 #include "storage/innobase/include/ut0crc32.h" /* ut_crc32_init() */
 
 /* Global variables */

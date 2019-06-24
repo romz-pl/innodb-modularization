@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mtr0mtr_h
 #define mtr0mtr_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <stddef.h>
 

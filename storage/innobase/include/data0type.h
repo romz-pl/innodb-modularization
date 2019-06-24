@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef data0type_h
 #define data0type_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 extern ulint data_mysql_default_charset_coll;
 #define DATA_MYSQL_BINARY_CHARSET_COLL 63

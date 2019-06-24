@@ -30,7 +30,7 @@ Data dictionary interface */
 #ifndef dict0dd_h
 #define dict0dd_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0dict.h"
 #include "dict0mem.h"

@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef CLONE_SNAPSHOT_INCLUDE
 #define CLONE_SNAPSHOT_INCLUDE
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "arch0log.h"
 #include "arch0page.h"

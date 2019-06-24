@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef XA_H
 #define XA_H
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "sql/xa.h"
 

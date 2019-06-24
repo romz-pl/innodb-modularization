@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "pars0pars.h"
 #include "row0sel.h"
 #include "trx0trx.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0new.h"
 #include "ut0rnd.h"
 #include "ut0ut.h"

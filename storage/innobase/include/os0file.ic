@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/20/2010 Jimmy Yang
  *******************************************************/
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifdef UNIV_PFS_IO
 /** NOTE! Please use the corresponding macro os_file_create_simple(),

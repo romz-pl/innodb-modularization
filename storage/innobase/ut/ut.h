@@ -37,7 +37,7 @@ external tools. */
 #ifndef ut_ut_h
 #define ut_ut_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0ut.h"
 
 /** Prints the contents of a memory buffer in hex and ascii. */

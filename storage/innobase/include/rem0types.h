@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef rem0types_h
 #define rem0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /* We define the physical record simply as an array of bytes */
 typedef byte rec_t;

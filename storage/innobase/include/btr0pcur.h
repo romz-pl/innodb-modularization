@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef btr0pcur_h
 #define btr0pcur_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0btr.h"
 #include "btr0cur.h"

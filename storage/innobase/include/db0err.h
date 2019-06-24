@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define db0err_h
 
 /* Do not include univ.i because univ.i includes this. */
-// #include "univ.i"
+// #include <innodb/univ/univ.h>
 
 enum dberr_t {
   DB_ERROR_UNSET = 0,

@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict_mem_h
 #define dict_mem_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Creates a table memory object.
  @return own: table object */

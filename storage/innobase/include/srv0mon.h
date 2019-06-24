@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef srv0mon_h
 #define srv0mon_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifndef __STDC_LIMIT_MACROS
 /* Required for FreeBSD so that INT64_MAX is defined. */

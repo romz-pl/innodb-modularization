@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ha0ha_h
 #define ha0ha_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0types.h"
 #include "hash0hash.h"

@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dyn0buf_h
 #define dyn0buf_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dyn0types.h"
 #include "mem0mem.h"

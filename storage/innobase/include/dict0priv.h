@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0priv_h
 #define dict0priv_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Gets a table; loads it to the dictionary cache if necessary. A low-level
  function. Note: Not to be called from outside dict0*c functions.

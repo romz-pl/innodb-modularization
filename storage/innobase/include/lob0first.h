@@ -27,7 +27,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0first_h
 #define lob0first_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

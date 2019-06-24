@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0types_h
 #define row0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 struct plan_t;
 

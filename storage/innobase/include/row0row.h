@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0row_h
 #define row0row_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0types.h"
 #include "data0data.h"

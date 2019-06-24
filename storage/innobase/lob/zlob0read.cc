@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0zip.h"
 #include "my_dbug.h"
 #include "trx0trx.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0ut.h"
 #include "zlob0first.h"
 

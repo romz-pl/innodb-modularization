@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0rnd_h
 #define ut0rnd_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "ut0byte.h"
 

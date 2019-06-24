@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0crc32_h
 #define ut0crc32_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Initializes the data structures used by ut_crc32*(). Does not do any
  allocations, would not hurt if called twice, but would be pointless. */

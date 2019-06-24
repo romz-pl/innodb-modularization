@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef zlob0first_h
 #define zlob0first_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "fil0types.h"
 #include "fut0lst.h"

@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef api0api_h
 #define api0api_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <stdio.h>
 

@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0counter_h
 #define ut0counter_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <my_rdtsc.h>
 

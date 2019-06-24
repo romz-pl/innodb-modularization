@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef gis0rtree_h
 #define gis0rtree_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0cur.h"
 #include "btr0types.h"

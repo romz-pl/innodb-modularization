@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0types_h
 #define buf0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "os0event.h"
 #include "sync0rw.h"

@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef page0size_t
 #define page0size_t
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "ut0ut.h"
 #include "fsp0types.h"

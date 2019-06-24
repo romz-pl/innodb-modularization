@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef IB_VECTOR_H
 #define IB_VECTOR_H
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "mem0mem.h"
 

@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sync0policy_h
 #define sync0policy_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "os0thread.h"
 #include "srv0mon.h"

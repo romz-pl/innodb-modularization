@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mtr0types_h
 #define mtr0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "sync0rw.h"
 

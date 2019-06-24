@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0dblwr_h
 #define buf0dblwr_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0types.h"
 #include "log0log.h"

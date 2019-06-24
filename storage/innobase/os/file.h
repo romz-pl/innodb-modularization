@@ -45,7 +45,7 @@ external tools. */
 #ifndef os_file_h
 #define os_file_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0ut.h"
 
 /** Compression algorithm. */

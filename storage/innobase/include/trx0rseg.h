@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0rseg_h
 #define trx0rseg_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <vector>
 #include "fut0lst.h"

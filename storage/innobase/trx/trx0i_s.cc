@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 /* Found during the build of 5.5.3 on Linux 2.4 and early 2.6 kernels:
-   The includes "univ.i" -> "my_global.h" cause a different path
+   The includes <innodb/univ/univ.h> -> "my_global.h" cause a different path
    to be taken further down with pthread functions and types,
    so they must come first.
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.

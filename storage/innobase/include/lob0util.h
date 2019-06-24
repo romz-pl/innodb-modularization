@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0util_h
 #define lob0util_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <stdint.h>
 

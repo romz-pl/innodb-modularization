@@ -126,7 +126,7 @@ InnoDB:
 #ifndef ut0new_h
 #define ut0new_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <algorithm>
 #include <cerrno>
@@ -144,7 +144,7 @@ InnoDB:
 
 #include "os0proc.h"
 #include "os0thread.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0byte.h"    /* ut_align */
 #include "ut0counter.h" /* INNOBASE_CACHE_LINE_SIZE */
 #include "ut0ut.h"

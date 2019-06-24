@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/11/17 Shaohua Wang
  ***********************************************************************/
 
-// Inclusion of the file "univ.i" causes the compilation error:
+// Inclusion of the file <innodb/univ/univ.h> causes the compilation error:
 //
 // In file included from ../../../innodb-modularization/plugin/fulltext/ngram_parser/plugin_ngram.cc:28:
 // In file included from ../../../innodb-modularization/storage/innobase/include/fts0tokenize.h:33:
@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 //
 // Probably it is related to not correct CMakeList.txt file!
 //
-// #include "univ.i"
+// #include <innodb/univ/univ.h>
 
 #include "ft_global.h"
 #include "m_ctype.h"

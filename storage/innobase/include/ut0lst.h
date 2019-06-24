@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define ut0lst_h
 
 /* Do not include univ.i because univ.i includes this. */
-// #include "univ.i"
+// #include <innodb/univ/univ.h>
 
 #include "ut0dbg.h"
 

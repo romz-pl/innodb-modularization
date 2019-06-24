@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ha0storage_h
 #define ha0storage_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** This value is used by default by ha_storage_create(). More memory
 is allocated later when/if it is needed. */

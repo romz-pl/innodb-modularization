@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fts0fts_h
 #define fts0fts_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "ha_prototypes.h"
 

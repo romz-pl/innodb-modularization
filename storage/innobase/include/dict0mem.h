@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0mem_h
 #define dict0mem_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "sql/dd/object_id.h"
 #include "sql/dd/types/column.h"

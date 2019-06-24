@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0priv_h
 #define lock0priv_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifndef LOCK_MODULE_IMPLEMENTATION
 /* If you need to access members of the structures defined in this

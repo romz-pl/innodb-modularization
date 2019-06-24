@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/8/1995 Heikki Tuuri
  *******************************************************/
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <atomic>
 #include <thread>

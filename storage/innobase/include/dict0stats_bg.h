@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0stats_bg_h
 #define dict0stats_bg_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0types.h"
 #include "os0event.h"

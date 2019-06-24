@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/5/1995 Heikki Tuuri
  *******************************************************/
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "sync0rw.h"
 #include "sync0sync.h"

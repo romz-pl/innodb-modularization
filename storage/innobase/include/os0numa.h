@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef os0numa_h
 #define os0numa_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifdef HAVE_LIBNUMA
 #include <numa.h>

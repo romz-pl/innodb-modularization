@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0stage_h
 #define ut0stage_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <math.h>
 #include <algorithm>

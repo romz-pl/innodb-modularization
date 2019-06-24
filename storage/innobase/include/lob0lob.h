@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lob0lob_h
 #define lob0lob_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <my_dbug.h>
 #include "btr0pcur.h"

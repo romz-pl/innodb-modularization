@@ -30,7 +30,7 @@
  ***********************************************************************/
 
 #include "ut0rbt.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0new.h"
 
 /** Definition of a red-black tree

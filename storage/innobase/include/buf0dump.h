@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0dump_h
 #define buf0dump_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Wakes up the buffer pool dump/load thread and instructs it to start
  a dump. This function is called by MySQL code via buffer_pool_dump_now()

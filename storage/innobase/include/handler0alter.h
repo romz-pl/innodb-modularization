@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef handler0alter_h
 #define handler0alter_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Copies an InnoDB record to table->record[0]. */
 void innobase_rec_to_mysql(struct TABLE *table, /*!< in/out: MySQL table */

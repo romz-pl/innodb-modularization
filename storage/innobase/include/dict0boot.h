@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0boot_h
 #define dict0boot_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0buf.h"
 #include "dict0dict.h"

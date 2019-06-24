@@ -67,7 +67,7 @@
 /* The value of the semantic attribute is a pointer to a query tree node
 que_node_t */
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include <math.h>
 
 #include "pars0pars.h"

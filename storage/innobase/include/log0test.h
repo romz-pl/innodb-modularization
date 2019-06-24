@@ -40,7 +40,7 @@ the file COPYING.Google.
 #ifndef log0test_h
 #define log0test_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "log0types.h"
 

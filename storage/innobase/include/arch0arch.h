@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ARCH_ARCH_INCLUDE
 #define ARCH_ARCH_INCLUDE
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <mysql/components/services/page_track_service.h>
 #include "log0log.h"

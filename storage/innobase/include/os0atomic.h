@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef os0atomic_h
 #define os0atomic_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifdef _WIN32
 

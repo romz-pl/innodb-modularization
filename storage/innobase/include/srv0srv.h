@@ -48,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef srv0srv_h
 #define srv0srv_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0checksum.h"
 #include "fil0fil.h"

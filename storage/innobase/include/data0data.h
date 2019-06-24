@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef data0data_h
 #define data0data_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "data0type.h"
 #include "data0types.h"

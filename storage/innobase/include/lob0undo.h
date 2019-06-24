@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef lob0undo_h
 #define lob0undo_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <list>
 #include "dict0mem.h"

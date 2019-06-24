@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef pars0sym_h
 #define pars0sym_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0types.h"
 #include "pars0types.h"

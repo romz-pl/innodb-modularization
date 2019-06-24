@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0log_h
 #define row0log_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "data0types.h"
 #include "dict0types.h"

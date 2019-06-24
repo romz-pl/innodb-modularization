@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef read0read_h
 #define read0read_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <stddef.h>
 #include <algorithm>

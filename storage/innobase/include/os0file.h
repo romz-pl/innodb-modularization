@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef os0file_h
 #define os0file_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "my_dbug.h"
 #include "my_io.h"

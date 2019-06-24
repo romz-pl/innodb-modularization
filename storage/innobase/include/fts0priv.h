@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNOBASE_FTS0PRIV_H
 #define INNOBASE_FTS0PRIV_H
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0dict.h"
 #include "fts0types.h"

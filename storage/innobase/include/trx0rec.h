@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0rec_h
 #define trx0rec_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "data0data.h"
 #include "dict0types.h"

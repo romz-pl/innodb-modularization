@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lock0iter.h"
 #include "lock0lock.h"
 #include "lock0priv.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Initialize lock queue iterator so that it starts to iterate from
  "lock". bit_no specifies the record number within the heap where the

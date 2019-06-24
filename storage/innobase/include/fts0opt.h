@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef INNODB_FTS0OPT_H
 #define INNODB_FTS0OPT_H
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /********************************************************************
 Callback function to fetch the rows in an FTS INDEX record. */

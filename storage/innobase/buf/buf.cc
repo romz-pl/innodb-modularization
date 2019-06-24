@@ -38,7 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "page0size.h"
-#include "univ.i"
+// #include <innodb/univ/univ.h>
+#include <innodb/univ/univ.h>
 
 /** Checks if a page contains only zeroes.
 @param[in]	read_buf	database page

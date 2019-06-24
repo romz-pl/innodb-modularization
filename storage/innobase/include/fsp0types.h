@@ -34,7 +34,7 @@ Created May 26, 2009 Vasil Dimov
 #ifndef fsp0types_h
 #define fsp0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** @name Flags for inserting records in order
 If records are inserted in order, there are the following

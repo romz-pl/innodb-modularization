@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef log0types_h
 #define log0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <atomic>
 #include <chrono>

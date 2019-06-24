@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0mysql_h
 #define row0mysql_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "ha_prototypes.h"

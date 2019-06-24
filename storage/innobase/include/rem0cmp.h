@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef rem0cmp_h
 #define rem0cmp_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <my_sys.h>
 #include "data0data.h"

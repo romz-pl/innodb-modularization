@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0types_h
 #define lock0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0dbg.h"
 
 #define lock_t ib_lock_t

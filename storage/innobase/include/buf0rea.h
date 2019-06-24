@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0rea_h
 #define buf0rea_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0buf.h"
 #include "buf0types.h"

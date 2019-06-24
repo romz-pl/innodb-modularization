@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sess0sess_h
 #define sess0sess_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <sql_thd_internal_api.h>
 #include "dict0mem.h"

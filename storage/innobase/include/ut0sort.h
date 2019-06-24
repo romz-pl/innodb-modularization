@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0sort_h
 #define ut0sort_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /* This module gives a macro definition of the body of
 a standard sort function for an array of elements of any

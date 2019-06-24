@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef btr0types_h
 #define btr0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "page0size.h"
 #include "page0types.h"

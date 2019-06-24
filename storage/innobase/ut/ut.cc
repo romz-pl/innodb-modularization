@@ -37,7 +37,7 @@ external tools. */
 #include <sys/types.h>
 #include <time.h>
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut/ut.h"
 #include "ut0formatting.h"
 #include "ut0memcheck.h"

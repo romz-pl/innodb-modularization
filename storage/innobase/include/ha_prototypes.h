@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef HA_INNODB_PROTOTYPES_H
 #define HA_INNODB_PROTOTYPES_H
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <stdio.h>
 #include <string>

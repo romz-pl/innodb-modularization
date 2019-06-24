@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0crea_h
 #define dict0crea_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0dict.h"
 #include "dict0types.h"

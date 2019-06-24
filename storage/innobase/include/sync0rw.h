@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sync0rw_h
 #define sync0rw_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "os0event.h"

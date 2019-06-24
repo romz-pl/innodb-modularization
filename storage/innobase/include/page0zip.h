@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef page0zip_h
 #define page0zip_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE

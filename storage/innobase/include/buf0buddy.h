@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0buddy_h
 #define buf0buddy_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE

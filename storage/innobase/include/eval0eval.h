@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef eval0eval_h
 #define eval0eval_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "pars0pars.h"
 #include "pars0sym.h"

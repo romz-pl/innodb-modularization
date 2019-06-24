@@ -76,7 +76,7 @@ Created Nov 22, 2013 Mattias Jonsson */
 #include "row0quiesce.h"
 #include "row0sel.h"
 #include "row0upd.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0ut.h"
 
 /* To be backwards compatible we also fold partition separator on windows. */

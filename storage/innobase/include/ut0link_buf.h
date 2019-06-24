@@ -44,7 +44,7 @@ the file COPYING.Google.
 #ifndef ut0link_buf_h
 #define ut0link_buf_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <atomic>
 #include <cstdint>

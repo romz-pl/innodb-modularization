@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dict0dict_h
 #define dict0dict_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <set>
 

@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0purge_h
 #define row0purge_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0pcur.h"
 #include "btr0types.h"

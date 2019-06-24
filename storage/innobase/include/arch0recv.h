@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef ARCH_RECV_INCLUDE
 #define ARCH_RECV_INCLUDE
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "arch0arch.h"
 #include "arch0page.h"

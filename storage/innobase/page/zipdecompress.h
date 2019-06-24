@@ -38,7 +38,7 @@ external tools. */
 #ifndef zip_decompress_h
 #define zip_decompress_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0types.h"
 #include "fil0types.h"

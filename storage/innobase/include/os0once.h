@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef os0once_h
 #define os0once_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "os0atomic.h"
 #include "ut0ut.h"

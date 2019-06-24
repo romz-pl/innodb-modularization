@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef CLONE_MONITOR_H
 #define CLONE_MONITOR_H
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /* mysql_stage_inc_work_completed */
 #include "mysql/psi/mysql_stage.h"

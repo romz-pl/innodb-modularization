@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef mem0mem_h
 #define mem0mem_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "mach0data.h"
 #include "ut0byte.h"

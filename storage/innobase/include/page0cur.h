@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef page0cur_h
 #define page0cur_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0types.h"
 #include "data0data.h"

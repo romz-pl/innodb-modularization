@@ -123,7 +123,7 @@ ALWAYS_INLINE uint64_t _mm_crc32_u64(uint64_t __C, uint64_t __V) {
 #endif
 #endif  // defined(gnuc64) || defined(_WIN32)
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0crc32.h"
 
 /** Pointer to CRC32 calculation function. */

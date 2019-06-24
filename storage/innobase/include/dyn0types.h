@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef dyn0types_h
 #define dyn0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Value of dyn_block_t::magic_n */
 #define DYN_BLOCK_MAGIC_N 375767

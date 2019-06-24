@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fut0lst_h
 #define fut0lst_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "fil0fil.h"
 #include "mtr0mtr.h"

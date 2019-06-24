@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef os0event_h
 #define os0event_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <sys/types.h>
 

@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef lock0prdt_h
 #define lock0prdt_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "lock0lock.h"
 

@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef row0quiesce_h
 #define row0quiesce_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0types.h"
 

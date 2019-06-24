@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef os0thread_h
 #define os0thread_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <thread>
 

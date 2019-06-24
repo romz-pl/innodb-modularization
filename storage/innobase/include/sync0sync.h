@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef sync0sync_h
 #define sync0sync_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "ut0counter.h"
 

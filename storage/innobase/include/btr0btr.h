@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef btr0btr_h
 #define btr0btr_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "btr0types.h"
 #include "data0data.h"

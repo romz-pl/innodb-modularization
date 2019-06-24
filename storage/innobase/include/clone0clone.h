@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef CLONE_CLONE_INCLUDE
 #define CLONE_CLONE_INCLUDE
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <chrono>
 #include "db0err.h"

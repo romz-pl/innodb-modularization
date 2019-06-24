@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0pool_h
 #define ut0pool_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <functional>
 #include <queue>

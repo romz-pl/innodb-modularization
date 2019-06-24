@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef CLONE_DESC_INCLUDE
 #define CLONE_DESC_INCLUDE
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "mem0mem.h"
 

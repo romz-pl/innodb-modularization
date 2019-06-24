@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef pars0pars_h
 #define pars0pars_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "pars0types.h"
 #include "que0types.h"

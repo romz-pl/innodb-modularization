@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef buf0stats_h
 #define buf0stats_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "dict0types.h"        /* index_id_t, DICT_IBUF_ID_MIN */
 #include "fsp0sysspace.h"      /* srv_tmp_space */

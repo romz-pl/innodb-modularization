@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_dbug.h"
 #include "page0size.h"
 #include "srv0srv.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 #include "ut0crc32.h"
 #include "ut0rnd.h"
 #ifdef UNIV_HOTBACKUP

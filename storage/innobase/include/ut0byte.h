@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0byte_h
 #define ut0byte_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "ut0ut.h"
 

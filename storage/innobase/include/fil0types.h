@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fil0types_h
 #define fil0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** The byte offsets on a file page for various variables. */
 

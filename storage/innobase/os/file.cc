@@ -46,7 +46,7 @@ external tools. */
 #include "fil0fil.h"
 #include "mach0data.h"
 #include "os0file.h"
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include <lz4.h>
 #include <zlib.h>

@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef fsp0space_h
 #define fsp0space_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "fsp0file.h"
 #include "fsp0fsp.h"

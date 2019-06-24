@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef trx0sys_h
 #define trx0sys_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 #include "buf0buf.h"
 #include "fil0fil.h"

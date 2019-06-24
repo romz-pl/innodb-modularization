@@ -38,7 +38,7 @@ external tools. */
 #ifndef dict_dict_h
 #define dict_dict_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 /** Adds a column to index.
 @param[in,out]	index		index

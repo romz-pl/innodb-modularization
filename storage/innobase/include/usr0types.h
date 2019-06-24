@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef usr0types_h
 #define usr0types_h
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
 
 struct sess_t;
 
