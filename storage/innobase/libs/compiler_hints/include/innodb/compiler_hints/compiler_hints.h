@@ -1,5 +1,7 @@
 #pragma once
 
+#include <innodb/univ/univ.h>
+
 //
 // Some macros to improve branch prediction and reduce cache misses
 //

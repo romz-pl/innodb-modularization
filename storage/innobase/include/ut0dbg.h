@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 // #include <innodb/univ/univ.h>
 
 #include "os0thread.h"
-#include "ut0compiler_hints.h"
+#include <innodb/compiler_hints/compiler_hints.h>
 
 /** Report a failed assertion. */
 [[noreturn]] void ut_dbg_assertion_failed(
