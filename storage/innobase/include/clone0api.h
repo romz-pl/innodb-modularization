@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define CLONE_API_INCLUDE
 
 #include <innodb/univ/univ.h>
-#include "db0err.h"
+#include <innodb/error/dberr_t.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "handler.h"

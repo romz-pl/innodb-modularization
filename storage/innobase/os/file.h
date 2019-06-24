@@ -46,6 +46,7 @@ external tools. */
 #define os_file_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/error/dberr_t.h>
 #include "ut0ut.h"
 
 /** Compression algorithm. */

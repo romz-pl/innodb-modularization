@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <table.h>
 #include <memory>
-#include "db0err.h"
+#include <innodb/error/dberr_t.h>
 #include "field.h"
 #include "fil0fil.h"
 #include "fut0lst.h"

@@ -42,7 +42,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 other files in library. The code in this file is used to make a library for
 external tools. */
 
-#include "db0err.h"
+#include <innodb/error/dberr_t.h>
 #include "fil0fil.h"
 #include "mach0data.h"
 #include "os0file.h"

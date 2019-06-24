@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define INNOBASE_FST0AST_H
 
 #include <innodb/univ/univ.h>
+#include <innodb/error/dberr_t.h>
 
 #include "ha_prototypes.h"
 #include "mem0mem.h"

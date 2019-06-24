@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <chrono>
-#include "db0err.h"
+#include <innodb/error/dberr_t.h>
 #include "handler.h"
 #include "mysql/plugin.h"  // thd_killed()
 #include "ut0mutex.h"

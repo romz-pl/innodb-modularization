@@ -30,11 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/24/1996 Heikki Tuuri
  *******************************************************/
 
-#ifndef db0err_h
-#define db0err_h
+#pragma once
 
-/* Do not include univ.i because univ.i includes this. */
-// #include <innodb/univ/univ.h>
+#include <innodb/univ/univ.h>
 
 enum dberr_t {
   DB_ERROR_UNSET = 0,
@@ -208,4 +206,11 @@ enum dberr_t {
                            because the types mismatch */
 };
 
-#endif
+
+
+/** Convert an error number to a human readable text message. The
+ returned string is static and should not be freed or modified.
+ @return string, describing the error */
+const char *ut_strerr(dberr_t num); /*!< in: error number */
+
+

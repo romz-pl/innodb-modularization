@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdio.h>
 
 #include "config.h"
-#include "db0err.h"
+#include <innodb/error/dberr_t.h>
 
 /* Define uint32 outside my_compiler.h, because my_compiler.h would not allow
 Memcached C code to use the bool data type. */

@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define row0log_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/error/dberr_t.h>
 
 #include "data0types.h"
 #include "dict0types.h"

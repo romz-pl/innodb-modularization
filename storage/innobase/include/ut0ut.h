@@ -52,8 +52,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sstream>
 #include <type_traits>
 
-#include "db0err.h"
-
 #ifndef UNIV_HOTBACKUP
 #include "os0atomic.h"
 #endif /* !UNIV_HOTBACKUP */
@@ -339,10 +337,7 @@ void ut_vsnprintf(char *str,       /*!< out: string */
 #define ut_vsnprintf(buf, size, fmt, ap) ((void)vsnprintf(buf, size, fmt, ap))
 #endif /* _WIN32 */
 
-/** Convert an error number to a human readable text message. The
- returned string is static and should not be freed or modified.
- @return string, describing the error */
-const char *ut_strerr(dberr_t num); /*!< in: error number */
+
 
 namespace ib {
 

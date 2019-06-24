@@ -24,7 +24,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
-#include "db0err.h"
+#include <innodb/error/dberr_t.h>
 #include "lob0zip.h"
 
 namespace lob {

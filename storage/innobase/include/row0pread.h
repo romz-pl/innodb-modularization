@@ -45,7 +45,7 @@ struct btr_pcur_t;
 struct buf_block_t;
 struct dict_table_t;
 
-#include "db0err.h"
+#include <innodb/error/dberr_t.h>
 #include "fil0fil.h"
 #include "os0event.h"
 #include "page0size.h"
