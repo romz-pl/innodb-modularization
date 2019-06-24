@@ -60,6 +60,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sql_table.h>
 #include "mysql/components/services/system_variable_source.h"
 
+#include <innodb/time/ut_time.h>
+
 #ifndef UNIV_HOTBACKUP
 #include <current_thd.h>
 #include <debug_sync.h>

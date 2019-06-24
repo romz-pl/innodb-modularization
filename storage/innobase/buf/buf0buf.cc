@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "my_config.h"
+#include <innodb/time/ut_time.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

@@ -140,11 +140,6 @@ reimplement this function. */
 #define ut_gettimeofday gettimeofday
 #endif
 
-/** Returns system time. We do not specify the format of the time returned:
- the only way to manipulate it is to use the function ut_difftime.
- @return system time */
-ib_time_t ut_time(void) { return (time(NULL)); }
-
 /** Returns system time.
  Upon successful completion, the value 0 is returned; otherwise the
  value -1 is returned and the global variable errno is set to indicate the

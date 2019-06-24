@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <mysql/service_thd_wait.h>
 #include <sys/types.h>
 #include <time.h>
+#include <innodb/time/ut_time.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0buf.h"

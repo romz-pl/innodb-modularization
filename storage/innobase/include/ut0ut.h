@@ -45,12 +45,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Do not include univ.i because univ.i includes this. */
 // #include <innodb/univ/univ.h>
 
+
 #include <string.h>
 #include <algorithm>
 #include <iterator>
 #include <ostream>
 #include <sstream>
 #include <type_traits>
+#include <innodb/time/ib_time_t.h>
+
 
 #ifndef UNIV_HOTBACKUP
 #include "os0atomic.h"
@@ -206,10 +209,6 @@ store the given number of bits.
 @return number of bytes (octets) needed to represent b */
 #define UT_BITS_IN_BYTES(b) (((b) + 7) / 8)
 
-/** Returns system time. We do not specify the format of the time returned:
- the only way to manipulate it is to use the function ut_difftime.
- @return system time */
-ib_time_t ut_time(void);
 /** Returns system time.
  Upon successful completion, the value 0 is returned; otherwise the
  value -1 is returned and the global variable errno is set to indicate the

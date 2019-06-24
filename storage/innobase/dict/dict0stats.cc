@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <vector>
 
+#include <innodb/time/ut_time.h>
 #include "dict0stats.h"
 #include "dyn0buf.h"
 #include "ha_prototypes.h"

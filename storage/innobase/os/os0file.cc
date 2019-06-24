@@ -38,6 +38,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
  Created 10/21/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/time/ut_time.h>
+
 #include "os0file.h"
 #include "fil0fil.h"
 #include "ha_prototypes.h"

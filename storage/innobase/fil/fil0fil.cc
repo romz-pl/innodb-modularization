@@ -33,6 +33,8 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/time/ut_time.h>
+
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "buf0flu.h"

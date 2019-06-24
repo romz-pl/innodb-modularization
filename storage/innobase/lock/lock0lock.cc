@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <unordered_set>
 #include <vector>
 
+#include <innodb/time/ut_time.h>
+
 #include "btr0btr.h"
 #include "current_thd.h"
 #include "dict0boot.h"

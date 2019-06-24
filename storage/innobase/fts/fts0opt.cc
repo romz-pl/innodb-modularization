@@ -38,6 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 #include <zlib.h>
 
+#include <innodb/time/ut_time.h>
+
 #include "current_thd.h"
 #include "dict0dd.h"
 #include "fts0fts.h"

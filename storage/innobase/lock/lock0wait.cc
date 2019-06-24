@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <time.h>
 
+#include <innodb/time/ut_time.h>
+
 #include "ha_prototypes.h"
 #include "lock0lock.h"
 #include "lock0priv.h"

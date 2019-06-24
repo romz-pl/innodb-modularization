@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sql_thd_internal_api.h>
 
+#include <innodb/time/ut_time.h>
+
 #include "btr0sea.h"
 #include "dict0dd.h"
 #include "fsp0sysspace.h"

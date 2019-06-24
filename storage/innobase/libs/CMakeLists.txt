@@ -6,5 +6,7 @@ add_subdirectory( error )
 
 add_subdirectory( formatting )
 
+add_subdirectory( time )
+
 add_subdirectory( univ )
 

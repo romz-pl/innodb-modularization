@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/time/ut_time.h>
+
 #include "clone0api.h"
 #include "dict0dd.h"
 #include "fil0fil.h"

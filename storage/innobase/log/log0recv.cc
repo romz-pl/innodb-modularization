@@ -43,6 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <string>
 #include <vector>
 
+#include <innodb/time/ut_time.h>
+
 #include "arch0arch.h"
 #include "log0recv.h"
 

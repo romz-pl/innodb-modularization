@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/time/ut_time.h>
+
 #include "btr0pcur.h"
 #include "dict0priv.h"
 #include "dict0stats.h"
