@@ -61,7 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "trx0sys.h"
 #include "ut0byte.h"
-#include "ut0formatting.h"
+#include <innodb/formatting/formatting.h>
 #include "ut0stage.h"
 
 #ifdef UNIV_LINUX

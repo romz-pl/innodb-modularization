@@ -1,8 +1,10 @@
 #pragma once
 
-///
-/// Define formatting strings
-///
+//
+// Define formatting strings
+//
+
+#include <innodb/univ/univ.h>
 
 
 #ifdef _WIN32 /* Use the formatting strings defined in Visual Studio. */

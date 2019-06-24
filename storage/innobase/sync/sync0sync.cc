@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "sync0rw.h"
 #include "sync0sync.h"
-#include "ut0formatting.h"
+#include <innodb/formatting/formatting.h>
 
 #ifdef HAVE_PSI_INTERFACE
 /** To keep count of number of PS keys defined. */

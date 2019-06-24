@@ -39,7 +39,7 @@ external tools. */
 
 #include <innodb/univ/univ.h>
 #include "ut/ut.h"
-#include "ut0formatting.h"
+#include <innodb/formatting/formatting.h>
 #include "ut0memcheck.h"
 
 /** Prints the contents of a memory buffer in hex and ascii. */

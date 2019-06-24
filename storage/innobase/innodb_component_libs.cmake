@@ -16,6 +16,9 @@ SET( INNODB_COMPONENT_LIBS
     # C
     compiler_hints
 
+    # F
+    formatting
+
     # U
     univ
 )
