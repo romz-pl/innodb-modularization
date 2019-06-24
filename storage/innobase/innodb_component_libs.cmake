@@ -13,6 +13,9 @@ ADD_SUBDIRECTORY( libs )
 # List in alphabetical order
 #
 SET( INNODB_COMPONENT_LIBS
+    # A
+    assert
+
     # C
     compiler_hints
 

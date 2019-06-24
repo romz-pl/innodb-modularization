@@ -36,62 +36,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Do not include univ.i because univ.i includes this. */
 // #include <innodb/univ/univ.h>
 
-#include "os0thread.h"
+#include <innodb/assert/assert.h>
 #include <innodb/compiler_hints/compiler_hints.h>
 
-/** Report a failed assertion. */
-[[noreturn]] void ut_dbg_assertion_failed(
-    const char *expr, /*!< in: the failed assertion */
-    const char *file, /*!< in: source file containing the assertion */
-    ulint line);      /*!< in: line number of the assertion */
-
-/** Abort execution if EXPR does not evaluate to nonzero.
-@param EXPR assertion expression that should hold */
-#define ut_a(EXPR)                                               \
-  do {                                                           \
-    if (UNIV_UNLIKELY(!(ulint)(EXPR))) {                         \
-      ut_dbg_assertion_failed(#EXPR, __FILE__, (ulint)__LINE__); \
-    }                                                            \
-  } while (0)
 
 /** Abort execution. */
 #define ut_error ut_dbg_assertion_failed(0, __FILE__, (ulint)__LINE__)
-
-#ifdef UNIV_DEBUG
-/** Debug assertion. Does nothing unless UNIV_DEBUG is defined. */
-#define ut_ad(EXPR) ut_a(EXPR)
-/** Debug statement. Does nothing unless UNIV_DEBUG is defined. */
-#define ut_d(EXPR) EXPR
-#else
-/** Debug assertion. Does nothing unless UNIV_DEBUG is defined. */
-#define ut_ad(EXPR)
-/** Debug statement. Does nothing unless UNIV_DEBUG is defined. */
-#define ut_d(EXPR)
-#endif
-
-/** Debug crash point */
-#ifdef UNIV_DEBUG
-#define DBUG_INJECT_CRASH(prefix, count)            \
-  do {                                              \
-    char buf[64];                                   \
-    snprintf(buf, sizeof buf, prefix "_%u", count); \
-    DBUG_EXECUTE_IF(buf, DBUG_SUICIDE(););          \
-  } while (0)
-
-#define DBUG_INJECT_CRASH_WITH_LOG_FLUSH(prefix, count)                \
-  do {                                                                 \
-    char buf[64];                                                      \
-    snprintf(buf, sizeof buf, prefix "_%u", count);                    \
-    DBUG_EXECUTE_IF(buf, log_buffer_flush_to_disk(); DBUG_SUICIDE();); \
-  } while (0)
-#else
-#define DBUG_INJECT_CRASH(prefix, count)
-#define DBUG_INJECT_CRASH_WITH_LOG_FLUSH(prefix, count)
-#endif
-
-/** Silence warnings about an unused variable by doing a null assignment.
-@param A the unused variable */
-#define UT_NOT_USED(A) A = A
 
 #if defined(HAVE_SYS_TIME_H) && defined(HAVE_SYS_RESOURCE_H)
 
