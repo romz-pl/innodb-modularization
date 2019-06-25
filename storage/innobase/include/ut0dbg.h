@@ -38,10 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/assert/assert.h>
 #include <innodb/compiler_hints/compiler_hints.h>
-
-
-/** Abort execution. */
-#define ut_error ut_dbg_assertion_failed(0, __FILE__, (ulint)__LINE__)
+#include <innodb/error/ut_error.h>
 
 
 #endif
