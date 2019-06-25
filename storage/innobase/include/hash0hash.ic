@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/math/ut_2pow_remainder.h>
 #include "ut0rnd.h"
 
 /** Gets the nth cell in a hash table.

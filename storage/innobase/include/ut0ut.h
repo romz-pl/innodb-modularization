@@ -127,48 +127,13 @@ independent way by using YieldProcessor. */
 #define ut_max std::max
 #define ut_min std::min
 
-/** Calculate the minimum of two pairs.
-@param[out]	min_hi	MSB of the minimum pair
-@param[out]	min_lo	LSB of the minimum pair
-@param[in]	a_hi	MSB of the first pair
-@param[in]	a_lo	LSB of the first pair
-@param[in]	b_hi	MSB of the second pair
-@param[in]	b_lo	LSB of the second pair */
-UNIV_INLINE
-void ut_pair_min(ulint *min_hi, ulint *min_lo, ulint a_hi, ulint a_lo,
-                 ulint b_hi, ulint b_lo);
 
-/** Compares two ulints.
-@param[in]	a	ulint
-@param[in]	b	ulint
-@return 1 if a > b, 0 if a == b, -1 if a < b */
-UNIV_INLINE
-int ut_ulint_cmp(ulint a, ulint b);
 
-/** Compare two pairs of integers.
-@param[in]	a_h	more significant part of first pair
-@param[in]	a_l	less significant part of first pair
-@param[in]	b_h	more significant part of second pair
-@param[in]	b_l	less significant part of second pair
-@return comparison result of (a_h,a_l) and (b_h,b_l)
-@retval -1 if (a_h,a_l) is less than (b_h,b_l)
-@retval 0 if (a_h,a_l) is equal to (b_h,b_l)
-@retval 1 if (a_h,a_l) is greater than (b_h,b_l) */
-UNIV_INLINE
-int ut_pair_cmp(ulint a_h, ulint a_l, ulint b_h, ulint b_l)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Calculates fast the remainder of n/m when m is a power of two.
- @param n in: numerator
- @param m in: denominator, must be a power of two
- @return the remainder of n/m */
-#define ut_2pow_remainder(n, m) ((n) & ((m)-1))
-/** Calculates the biggest multiple of m that is not bigger than n
- when m is a power of two.  In other words, rounds n down to m * k.
- @param n in: number to round down
- @param m in: alignment, must be a power of two
- @return n rounded down to the biggest possible integer multiple of m */
-#define ut_2pow_round(n, m) ((n) & ~((m)-1))
+
+
+
+
 /** Align a number down to a multiple of a power of two.
 @param n in: number to round down
 @param m in: alignment, must be a power of two
@@ -180,22 +145,11 @@ int ut_pair_cmp(ulint a_h, ulint a_l, ulint b_h, ulint b_l)
  @param m in: alignment, must be a power of two
  @return n rounded up to the smallest possible integer multiple of m */
 #define ut_calc_align(n, m) (((n) + ((m)-1)) & ~((m)-1))
-/** Calculates fast the 2-logarithm of a number, rounded upward to an
- integer.
- @return logarithm in the base 2, rounded upward */
-UNIV_INLINE
-ulint ut_2_log(ulint n); /*!< in: number */
 
-/** Calculates 2 to power n.
-@param[in]	n	power of 2
-@return 2 to power n */
-UNIV_INLINE
-uint32_t ut_2_exp(uint32_t n);
 
-/** Calculates fast the number rounded up to the nearest power of 2.
- @return first power of 2 which is >= n */
-ulint ut_2_power_up(ulint n) /*!< in: number != 0 */
-    MY_ATTRIBUTE((const));
+
+
+
 
 /** Determine how many bytes (groups of 8 bits) are needed to
 store the given number of bits.

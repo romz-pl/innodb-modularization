@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stddef.h>
 
 #include <innodb/logger/info.h>
+#include <innodb/math/ut_ulint_cmp.h>
 
 #include "buf0buf.h"
 #include "buf0dblwr.h"

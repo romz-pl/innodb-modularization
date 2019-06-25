@@ -31,6 +31,8 @@ Created 2018-01-27 by Sunny Bains */
 
 #include <vector>
 
+#include <innodb/math/ut_2_power_up.h>
+
 #include "btr0pcur.h"
 #include "dict0dict.h"
 #include "row0pread.h"

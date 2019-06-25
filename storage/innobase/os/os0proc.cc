@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 
 #include <innodb/logger/warn.h>
+#include <innodb/math/ut_2pow_round.h>
 
 #include <errno.h>
 #include <stddef.h>

@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/17/1996 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/math/ut_pair_cmp.h>
+
 #include "btr0sea.h"
 
 #include <sys/types.h>

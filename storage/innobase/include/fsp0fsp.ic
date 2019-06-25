@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/18/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/math/ut_2pow_remainder.h>
+#include <innodb/math/ut_2pow_round.h>
+
 /** Checks if a page address is an extent descriptor page address.
 @param[in]	page_id		page id
 @param[in]	page_size	page size

@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/4/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/math/ut_pair_cmp.h>
+#include <innodb/math/ut_pair_min.h>
+
 #include "page0cur.h"
 
 #include "btr0btr.h"

@@ -41,6 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
+#include <innodb/math/ut_2_power_up.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
