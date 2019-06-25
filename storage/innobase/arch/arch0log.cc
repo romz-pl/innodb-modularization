@@ -29,6 +29,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/align/ut_uint64_align_down.h>
+#include <innodb/align/ut_uint64_align_up.h>
+
 #include "arch0log.h"
 #include "clone0clone.h"
 #include "srv0start.h"

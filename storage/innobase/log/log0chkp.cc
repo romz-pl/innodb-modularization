@@ -44,6 +44,9 @@ the file COPYING.Google.
 
  *******************************************************/
 
+#include <innodb/align/ut_uint64_align_down.h>
+#include <innodb/align/ut_uint64_align_up.h>
+
 #include "ha_prototypes.h"
 
 #ifndef UNIV_HOTBACKUP

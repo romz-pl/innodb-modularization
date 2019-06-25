@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  ************************************************************************/
 
+
+#include <innodb/align/ut_align_offset.h>
 #include "mach0data.h"
 #include "ut0byte.h"
 

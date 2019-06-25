@@ -1,3 +1,4 @@
+add_subdirectory( align )
 add_subdirectory( assert )
 
 add_subdirectory( compiler_hints )

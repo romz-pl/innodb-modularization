@@ -44,42 +44,6 @@ ib_uint64_t ut_ull_create(ulint high, /*!< in: high-order 32 bits */
                           ulint low)  /*!< in: low-order 32 bits */
     MY_ATTRIBUTE((const));
 
-/** Rounds a 64-bit integer downward to a multiple of a power of 2.
-@param[in]	n		number to be rounded
-@param[in]	align_no	align by this number
-@return rounded value */
-UNIV_INLINE
-ib_uint64_t ut_uint64_align_down(ib_uint64_t n, ulint align_no);
-
-/** Rounds ib_uint64_t upward to a multiple of a power of 2.
-@param[in]	n		number to be rounded
-@param[in]	align_no	align by this number
-@return rounded value */
-UNIV_INLINE
-ib_uint64_t ut_uint64_align_up(ib_uint64_t n, ulint align_no);
-
-/** The following function rounds up a pointer to the nearest aligned address.
-@param[in]	ptr		pointer
-@param[in]	align_no	align by this number
-@return aligned pointer */
-UNIV_INLINE
-void *ut_align(const void *ptr, ulint align_no);
-
-/** The following function rounds down a pointer to the nearest
- aligned address.
- @return aligned pointer */
-UNIV_INLINE
-void *ut_align_down(const void *ptr, /*!< in: pointer */
-                    ulint align_no)  /*!< in: align by this number */
-    MY_ATTRIBUTE((const));
-/** The following function computes the offset of a pointer from the nearest
- aligned address.
- @return distance from aligned pointer */
-UNIV_INLINE
-ulint ut_align_offset(const void *ptr, /*!< in: pointer */
-                      ulint align_no)  /*!< in: align by this number */
-    MY_ATTRIBUTE((const));
-
 /** Gets the nth bit of a ulint.
 @param[in]	a	ulint
 @param[in]	n	nth bit requested

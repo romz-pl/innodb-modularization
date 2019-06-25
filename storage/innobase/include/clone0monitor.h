@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/math/ut_2_exp.h>
+#include <innodb/align/ut_uint64_align_down.h>
 
 /* mysql_stage_inc_work_completed */
 #include "mysql/psi/mysql_stage.h"

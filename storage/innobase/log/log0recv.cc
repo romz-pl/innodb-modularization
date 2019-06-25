@@ -31,6 +31,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/align/ut_uint64_align_up.h>
+#include <innodb/align/ut_uint64_align_down.h>
+#include <innodb/time/ut_time.h>
+#include <innodb/logger/info.h>
+
 #include "ha_prototypes.h"
 
 #include <my_aes.h>
@@ -42,9 +47,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <new>
 #include <string>
 #include <vector>
-
-#include <innodb/time/ut_time.h>
-#include <innodb/logger/info.h>
 
 #include "arch0arch.h"
 #include "log0recv.h"

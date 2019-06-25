@@ -37,6 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/5/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/align/ut_align_down.h>
+#include <innodb/align/ut_align_offset.h>
+
 #include "mtr0mtr.h"
 
 #ifndef UNIV_HOTBACKUP

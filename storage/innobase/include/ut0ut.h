@@ -134,17 +134,8 @@ independent way by using YieldProcessor. */
 
 
 
-/** Align a number down to a multiple of a power of two.
-@param n in: number to round down
-@param m in: alignment, must be a power of two
-@return n rounded down to the biggest possible integer multiple of m */
-#define ut_calc_align_down(n, m) ut_2pow_round(n, m)
-/** Calculates the smallest multiple of m that is not smaller than n
- when m is a power of two.  In other words, rounds n up to m * k.
- @param n in: number to round up
- @param m in: alignment, must be a power of two
- @return n rounded up to the smallest possible integer multiple of m */
-#define ut_calc_align(n, m) (((n) + ((m)-1)) & ~((m)-1))
+
+
 
 
 
@@ -194,10 +185,7 @@ ulint ut_time_ms(void);
 double ut_difftime(ib_time_t time2,  /*!< in: time */
                    ib_time_t time1); /*!< in: time */
 
-/** Determines if a number is zero or a power of two.
-@param[in]	n	number
-@return nonzero if n is zero or a power of two; zero otherwise */
-#define ut_is_2pow(n) UNIV_LIKELY(!((n) & ((n)-1)))
+
 
 
 

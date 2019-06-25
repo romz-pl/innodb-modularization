@@ -128,6 +128,7 @@ InnoDB:
 
 #include <innodb/univ/univ.h>
 #include <innodb/logger/fatal_or_error.h>
+#include <innodb/align/ut_align.h>
 
 #include <algorithm>
 #include <cerrno>
@@ -1132,11 +1133,6 @@ inline void ut_delete_array(T *ptr) {
 
 #endif /* UNIV_PFS_MEMORY */
 
-/** This is a forward declaration, which is because of the circular dependency
-between ut0new.h and ut0byte.h (going through univ.i and sync0types.h).
-I've managed to observe problem when building MEB and this helps then. */
-UNIV_INLINE
-void *ut_align(const void *ptr, ulint align_no);
 
 /** Abstract class to manage an object that is aligned to specified number of
 bytes.

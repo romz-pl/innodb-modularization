@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define BOOST_ATOMIC_NO_LIB
 
 #include <innodb/univ/univ.h>
+#include <innodb/math/ut_is_2pow.h>
 
 #include <atomic>
 #include <list>

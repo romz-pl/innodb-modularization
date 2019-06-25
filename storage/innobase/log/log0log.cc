@@ -56,6 +56,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/logger/info.h>
+#include <innodb/align/ut_uint64_align_up.h>
+#include <innodb/align/ut_uint64_align_down.h>
 
 #include "log0types.h"
 

@@ -51,6 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 
 #include <innodb/logger/info.h>
+#include <innodb/align/ut_uint64_align_up.h>
 
 #include <zlib.h>
 #include "btr0btr.h"

@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <new>
 
 #include <innodb/logger/info.h>
+#include <innodb/align/ut_uint64_align_up.h>
 
 #include "current_thd.h"
 #include "ha_prototypes.h"

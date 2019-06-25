@@ -47,6 +47,8 @@ the file COPYING.Google.
 #include <cstring>
 
 #include <innodb/logger/info.h>
+#include <innodb/align/ut_uint64_align_up.h>
+#include <innodb/align/ut_uint64_align_down.h>
 
 #include "ha_prototypes.h"
 

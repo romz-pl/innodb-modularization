@@ -14,6 +14,7 @@ ADD_SUBDIRECTORY( libs )
 #
 SET( INNODB_COMPONENT_LIBS
     # A
+    align
     assert
 
     # C

@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/math/ut_is_2pow.h>
+
 #include "hash0hash.h"
 #include "mem0mem.h"
 #include "sync0sync.h"

@@ -29,6 +29,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/align/ut_uint64_align_up.h>
+
 #include "buf0dump.h"
 #include "clone0clone.h"
 #include "dict0dict.h"
