@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created December 2006 by Marko Makela
  *******************************************************/
 
+#include <innodb/time/ut_time_us.h>
+
 #include "buf0buddy.h"
 
 #include "buf0buf.h"

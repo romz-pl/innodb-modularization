@@ -42,6 +42,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.
 */
 
+#include <innodb/time/ut_time_us.h>
+
 #include <sql_class.h>
 #include <stdio.h>
 

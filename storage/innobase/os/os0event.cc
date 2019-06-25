@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-09-23 Sunny Bains
  *******************************************************/
 
+#include <innodb/time/ut_usectime.h>
+
 #include "os0event.h"
 
 #include <errno.h>

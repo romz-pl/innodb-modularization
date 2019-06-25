@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created June 2005 by Marko Makela
  *******************************************************/
 
+#include <innodb/time/ut_time_us.h>
 #include "page0zip.h"
 
 #include "page0size.h"

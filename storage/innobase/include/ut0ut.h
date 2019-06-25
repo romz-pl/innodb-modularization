@@ -128,65 +128,11 @@ independent way by using YieldProcessor. */
 #define ut_min std::min
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /** Determine how many bytes (groups of 8 bits) are needed to
 store the given number of bits.
 @param b in: bits
 @return number of bytes (octets) needed to represent b */
 #define UT_BITS_IN_BYTES(b) (((b) + 7) / 8)
-
-/** Returns system time.
- Upon successful completion, the value 0 is returned; otherwise the
- value -1 is returned and the global variable errno is set to indicate the
- error.
- @return 0 on success, -1 otherwise */
-int ut_usectime(ulint *sec, /*!< out: seconds since the Epoch */
-                ulint *ms); /*!< out: microseconds since the Epoch+*sec */
-
-/** Returns the number of microseconds since epoch. Similar to
- time(3), the return value is also stored in *tloc, provided
- that tloc is non-NULL.
- @return us since epoch */
-uintmax_t ut_time_us(uintmax_t *tloc); /*!< out: us since epoch, if non-NULL */
-/** Returns the number of milliseconds since some epoch.  The
- value may wrap around.  It should only be used for heuristic
- purposes.
- @return ms since epoch */
-ulint ut_time_ms(void);
-
-#ifdef _WIN32
-/** Initialise highest available time resolution API on Windows
- @return false if all OK else true */
-bool ut_win_init_time();
-
-#endif /* _WIN32 */
-
-/** Returns the number of milliseconds since some epoch.  The
- value may wrap around.  It should only be used for heuristic
- purposes.
- @return ms since epoch */
-ulint ut_time_ms(void);
-
-/** Returns the difference of two times in seconds.
- @return time2 - time1 expressed in seconds */
-double ut_difftime(ib_time_t time2,  /*!< in: time */
-                   ib_time_t time1); /*!< in: time */
-
-
-
 
 
 namespace ut {

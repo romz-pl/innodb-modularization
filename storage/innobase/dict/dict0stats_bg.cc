@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <vector>
 
+#include <innodb/time/ut_difftime.h>
+
 #include "dict0dd.h"
 #include "dict0dict.h"
 #include "dict0stats.h"

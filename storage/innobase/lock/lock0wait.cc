@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 
 #include <innodb/time/ut_time.h>
+#include <innodb/time/ut_usectime.h>
+#include <innodb/time/ut_difftime.h>
 
 #include "ha_prototypes.h"
 #include "lock0lock.h"

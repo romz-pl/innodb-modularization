@@ -35,14 +35,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ut0dbg.h"
 
 
-
-
-
-
-
-
-
-
 #ifndef UNIV_HOTBACKUP
 /** Waits in loop until given condition is satisfied. It starts waiting
 using spin loop with pauses and after reaching maximum iterations, it

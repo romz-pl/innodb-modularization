@@ -51,9 +51,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 
 #include <chrono>
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
+#include <innodb/time/ut_difftime.h>
+#include <innodb/time/ut_time_us.h>
 
 #include "btr0sea.h"
 #include "buf0flu.h"

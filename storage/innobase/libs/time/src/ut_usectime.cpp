@@ -1,6 +1,7 @@
 #include <innodb/time/ut_usectime.h>
 #include <innodb/logger/error.h>
 #include <innodb/time/ut_gettimeofday.h>
+#include <innodb/thread/os_thread_sleep.h>
 
 /** Returns system time.
  Upon successful completion, the value 0 is returned; otherwise the
