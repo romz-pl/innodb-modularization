@@ -20,3 +20,5 @@ add_subdirectory( time )
 
 add_subdirectory( univ )
 
+add_subdirectory( wait )
+

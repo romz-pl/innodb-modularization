@@ -77,76 +77,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define TEMP_INDEX_PREFIX_STR "\377"
 
 
-#ifndef UNIV_HOTBACKUP
-#if defined(HAVE_PAUSE_INSTRUCTION)
-/* According to the gcc info page, asm volatile means that the
-instruction has important side-effects and must not be removed.
-Also asm volatile may trigger a memory barrier (spilling all registers
-to memory). */
-#ifdef __SUNPRO_CC
-#define UT_RELAX_CPU() asm("pause")
-#else
-#define UT_RELAX_CPU() __asm__ __volatile__("pause")
-#endif /* __SUNPRO_CC */
-
-#elif defined(HAVE_FAKE_PAUSE_INSTRUCTION)
-#define UT_RELAX_CPU() __asm__ __volatile__("rep; nop")
-#elif defined _WIN32
-/* In the Win32 API, the x86 PAUSE instruction is executed by calling
-the YieldProcessor macro defined in WinNT.h. It is a CPU architecture-
-independent way by using YieldProcessor. */
-#define UT_RELAX_CPU() YieldProcessor()
-#else
-#define UT_RELAX_CPU() __asm__ __volatile__("" ::: "memory")
-#endif
-
-#if defined(HAVE_HMT_PRIORITY_INSTRUCTION)
-#define UT_LOW_PRIORITY_CPU() __asm__ __volatile__("or 1,1,1")
-#define UT_RESUME_PRIORITY_CPU() __asm__ __volatile__("or 2,2,2")
-#else
-#define UT_LOW_PRIORITY_CPU() ((void)0)
-#define UT_RESUME_PRIORITY_CPU() ((void)0)
-#endif
-
-/** Delays execution for at most max_wait_us microseconds or returns earlier
- if cond becomes true.
- @param cond in: condition to wait for; evaluated every 2 ms
- @param max_wait_us in: maximum delay to wait, in microseconds */
-#define UT_WAIT_FOR(cond, max_wait_us)                               \
-  do {                                                               \
-    uintmax_t start_us;                                              \
-    start_us = ut_time_us(NULL);                                     \
-    while (!(cond) && ut_time_us(NULL) - start_us < (max_wait_us)) { \
-      os_thread_sleep(2000 /* 2 ms */);                              \
-    }                                                                \
-  } while (0)
-#else                  /* !UNIV_HOTBACKUP */
-#define UT_RELAX_CPU() /* No op */
-#endif                 /* !UNIV_HOTBACKUP */
-
 #define ut_max std::max
 #define ut_min std::min
 
 
-namespace ut {
-/** The current value of @@innodb_spin_wait_pause_multiplier. Determines
-how many PAUSE instructions to emit for each requested unit of delay
-when calling `ut_delay(delay)`. The default value of 50 causes `delay*50` PAUSES
-which was equivalent to `delay` microseconds on 100 MHz Pentium + Visual C++.
-Useful on processors which have "non-standard" duration of a single PAUSE
-instruction - one can compensate for longer PAUSES by setting the
-spin_wait_pause_multiplier to a smaller value on such machine */
-extern ulong spin_wait_pause_multiplier;
-}  // namespace ut
 
-/** Runs an idle loop on CPU. The argument gives the desired delay
- in microseconds on 100 MHz Pentium + Visual C++.
- The actual duration depends on a product of `delay` and the current value of
- @@innodb_spin_wait_pause_multiplier.
- @param[in]   delay   delay in microseconds on 100 MHz Pentium, assuming
-                      spin_wait_pause_multiplier is 50 (default).
- @return dummy value */
-ulint ut_delay(ulint delay);
+
 
 /* Forward declaration of transaction handle */
 struct trx_t;
@@ -213,23 +149,5 @@ replaced by '_'.
 void meb_sprintf_timestamp_without_extra_chars(char *buf);
 #endif /* UNIV_HOTBACKUP */
 
-struct Wait_stats {
-  uint64_t wait_loops;
-
-  explicit Wait_stats(uint64_t wait_loops = 0) : wait_loops(wait_loops) {}
-
-  Wait_stats &operator+=(const Wait_stats &rhs) {
-    wait_loops += rhs.wait_loops;
-    return (*this);
-  }
-
-  Wait_stats operator+(const Wait_stats &rhs) const {
-    return (Wait_stats{wait_loops + rhs.wait_loops});
-  }
-
-  bool any_waits() const { return (wait_loops != 0); }
-};
-
-#include "ut0ut.ic"
 
 #endif /* !ut0ut_h */

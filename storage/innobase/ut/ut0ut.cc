@@ -58,9 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/components/services/log_builtins.h"
 #include "sql/derror.h"
 
-namespace ut {
-ulong spin_wait_pause_multiplier = 50;
-}
+
 
 
 #ifdef UNIV_HOTBACKUP
@@ -92,28 +90,6 @@ void meb_sprintf_timestamp_without_extra_chars(
 #endif
 }
 
-#else  /* UNIV_HOTBACKUP */
-
-ulint ut_delay(ulint delay) {
-  ulint i, j;
-  /* We don't expect overflow here, as ut::spin_wait_pause_multiplier is limited
-  to 100, and values of delay are not larger than @@innodb_spin_wait_delay
-  which is limited by 1 000. Anyway, in case an overflow happened, the program
-  would still work (as iterations is unsigned). */
-  const ulint iterations = delay * ut::spin_wait_pause_multiplier;
-  UT_LOW_PRIORITY_CPU();
-
-  j = 0;
-
-  for (i = 0; i < iterations; i++) {
-    j += i;
-    UT_RELAX_CPU();
-  }
-
-  UT_RESUME_PRIORITY_CPU();
-
-  return (j);
-}
 #endif /* UNIV_HOTBACKUP */
 
 

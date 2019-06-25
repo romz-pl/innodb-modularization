@@ -44,4 +44,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # U
     univ
+
+    #W
+    wait
 )

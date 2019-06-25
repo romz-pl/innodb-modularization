@@ -45,6 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define log0log_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/wait/Wait_stats.h>
 
 #include "dyn0buf.h"
 #ifndef UNIV_HOTBACKUP
