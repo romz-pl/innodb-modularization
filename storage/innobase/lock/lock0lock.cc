@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <vector>
 
 #include <innodb/time/ut_time.h>
+#include <innodb/logger/info.h>
 
 #include "btr0btr.h"
 #include "current_thd.h"

@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <iomanip>
 #include <vector>
 
+#include <innodb/logger/info.h>
+
 #include "dict0dict.h"
 #include "fts0ast.h"
 #include "fts0fts.h"
@@ -319,10 +321,10 @@ Find a doc_id in a word's ilist.
 static
 ibool
 fts_query_find_doc_id(
-	fts_select_t*	select,		/*!< in/out: search the doc id selected,
-					update the frequency if found. */
-	void*		data,		/*!< in: doc id ilist */
-	ulint		len);		/*!< in: doc id ilist size */
+    fts_select_t*	select,		/*!< in/out: search the doc id selected,
+                    update the frequency if found. */
+    void*		data,		/*!< in: doc id ilist */
+    ulint		len);		/*!< in: doc id ilist size */
 #endif
 
 /** This function implements a simple "blind" query expansion search:
@@ -366,11 +368,11 @@ Get the total number of words in a documents. */
 static
 ulint
 fts_query_terms_in_document(
-					/*!< out: DB_SUCCESS if all go well
-					else error code */
-	fts_query_t*	query,		/*!< in: FTS query state */
-	doc_id_t	doc_id,		/*!< in: the word to check */
-	ulint*		total);		/*!< out: total words in document */
+                    /*!< out: DB_SUCCESS if all go well
+                    else error code */
+    fts_query_t*	query,		/*!< in: FTS query state */
+    doc_id_t	doc_id,		/*!< in: the word to check */
+    ulint*		total);		/*!< out: total words in document */
 #endif
 
 /********************************************************************
@@ -392,22 +394,22 @@ Print the table used for calculating LCS. */
 static
 void
 fts_print_lcs_table(
-	const ulint*	table,		/*!< in: array to print */
-	ulint		n_rows,		/*!< in: total no. of rows */
-	ulint		n_cols)		/*!< in: total no. of cols */
+    const ulint*	table,		/*!< in: array to print */
+    ulint		n_rows,		/*!< in: total no. of rows */
+    ulint		n_cols)		/*!< in: total no. of cols */
 {
-	ulint		i;
+    ulint		i;
 
-	for (i = 0; i < n_rows; ++i) {
-		ulint	j;
+    for (i = 0; i < n_rows; ++i) {
+        ulint	j;
 
-		printf("\n");
+        printf("\n");
 
-		for (j = 0; j < n_cols; ++j) {
+        for (j = 0; j < n_cols; ++j) {
 
-			printf("%2lu ", FTS_ELEM(table, n_cols, i, j));
-		}
-	}
+            printf("%2lu ", FTS_ELEM(table, n_cols, i, j));
+        }
+    }
 }
 
 /********************************************************************
@@ -416,59 +418,59 @@ the document. */
 static
 ulint
 fts_query_lcs(
-					/*!< out: LCS (length) between
-					two ilists */
-	const	ulint*	p1,		/*!< in: word positions of query */
-	ulint	len_p1,			/*!< in: no. of elements in p1 */
-	const	ulint*	p2,		/*!< in: word positions within document */
-	ulint	len_p2)			/*!< in: no. of elements in p2 */
+                    /*!< out: LCS (length) between
+                    two ilists */
+    const	ulint*	p1,		/*!< in: word positions of query */
+    ulint	len_p1,			/*!< in: no. of elements in p1 */
+    const	ulint*	p2,		/*!< in: word positions within document */
+    ulint	len_p2)			/*!< in: no. of elements in p2 */
 {
-	int	i;
-	ulint	len = 0;
-	ulint	r = len_p1;
-	ulint	c = len_p2;
-	ulint	size = (r + 1) * (c + 1) * sizeof(ulint);
-	ulint*	table = (ulint*) ut_malloc_nokey(size);
+    int	i;
+    ulint	len = 0;
+    ulint	r = len_p1;
+    ulint	c = len_p2;
+    ulint	size = (r + 1) * (c + 1) * sizeof(ulint);
+    ulint*	table = (ulint*) ut_malloc_nokey(size);
 
-	/* Traverse the table backwards, from the last row to the first and
-	also from the last column to the first. We compute the smaller
-	common subsequeces first, then use the caluclated values to determine
-	the longest common subsequence. The result will be in TABLE[0][0]. */
-	for (i = r; i >= 0; --i) {
-		int	j;
+    /* Traverse the table backwards, from the last row to the first and
+    also from the last column to the first. We compute the smaller
+    common subsequeces first, then use the caluclated values to determine
+    the longest common subsequence. The result will be in TABLE[0][0]. */
+    for (i = r; i >= 0; --i) {
+        int	j;
 
-		for (j = c; j >= 0; --j) {
+        for (j = c; j >= 0; --j) {
 
-			if (p1[i] == (ulint) -1 || p2[j] == (ulint) -1) {
+            if (p1[i] == (ulint) -1 || p2[j] == (ulint) -1) {
 
-				FTS_ELEM(table, c, i, j) = 0;
+                FTS_ELEM(table, c, i, j) = 0;
 
-			} else if (p1[i] == p2[j]) {
+            } else if (p1[i] == p2[j]) {
 
-				FTS_ELEM(table, c, i, j) = FTS_ELEM(
-					table, c, i + 1, j + 1) + 1;
+                FTS_ELEM(table, c, i, j) = FTS_ELEM(
+                    table, c, i + 1, j + 1) + 1;
 
-			} else {
+            } else {
 
-				ulint	value;
+                ulint	value;
 
-				value = ut_max(
-					FTS_ELEM(table, c, i + 1, j),
-					FTS_ELEM(table, c, i, j + 1));
+                value = ut_max(
+                    FTS_ELEM(table, c, i + 1, j),
+                    FTS_ELEM(table, c, i, j + 1));
 
-				FTS_ELEM(table, c, i, j) = value;
-			}
-		}
-	}
+                FTS_ELEM(table, c, i, j) = value;
+            }
+        }
+    }
 
-	len = FTS_ELEM(table, c, 0, 0);
+    len = FTS_ELEM(table, c, 0, 0);
 
-	fts_print_lcs_table(table, r, c);
-	printf("\nLen=%lu\n", len);
+    fts_print_lcs_table(table, r, c);
+    printf("\nLen=%lu\n", len);
 
-	ut_free(table);
+    ut_free(table);
 
-	return(len);
+    return(len);
 }
 #endif
 
@@ -1876,48 +1878,48 @@ Callback function to check whether a record was found or not. */
 static
 ibool
 fts_query_select(
-	void*		row,		/*!< in:  sel_node_t* */
-	void*		user_arg)	/*!< in:  fts_doc_t* */
+    void*		row,		/*!< in:  sel_node_t* */
+    void*		user_arg)	/*!< in:  fts_doc_t* */
 {
-	int		i;
-	que_node_t*	exp;
-	sel_node_t*	node = row;
-	fts_select_t*	select = user_arg;
+    int		i;
+    que_node_t*	exp;
+    sel_node_t*	node = row;
+    fts_select_t*	select = user_arg;
 
-	ut_a(select->word_freq);
-	ut_a(select->word_freq->doc_freqs);
+    ut_a(select->word_freq);
+    ut_a(select->word_freq->doc_freqs);
 
-	exp = node->select_list;
+    exp = node->select_list;
 
-	for (i = 0; exp && !select->found; ++i) {
-		dfield_t*	dfield = que_node_get_val(exp);
-		void*		data = dfield_get_data(dfield);
-		ulint		len = dfield_get_len(dfield);
+    for (i = 0; exp && !select->found; ++i) {
+        dfield_t*	dfield = que_node_get_val(exp);
+        void*		data = dfield_get_data(dfield);
+        ulint		len = dfield_get_len(dfield);
 
-		switch (i) {
-		case 0: /* DOC_COUNT */
-			if (len != UNIV_SQL_NULL && len != 0) {
+        switch (i) {
+        case 0: /* DOC_COUNT */
+            if (len != UNIV_SQL_NULL && len != 0) {
 
-				select->word_freq->doc_count +=
-					mach_read_from_4(data);
-			}
-			break;
+                select->word_freq->doc_count +=
+                    mach_read_from_4(data);
+            }
+            break;
 
-		case 1: /* ILIST */
-			if (len != UNIV_SQL_NULL && len != 0) {
+        case 1: /* ILIST */
+            if (len != UNIV_SQL_NULL && len != 0) {
 
-				fts_query_find_doc_id(select, data, len);
-			}
-			break;
+                fts_query_find_doc_id(select, data, len);
+            }
+            break;
 
-		default:
-			ut_error;
-		}
+        default:
+            ut_error;
+        }
 
-		exp = que_node_get_next(exp);
-	}
+        exp = que_node_get_next(exp);
+    }
 
-	return(FALSE);
+    return(FALSE);
 }
 
 /********************************************************************
@@ -1927,107 +1929,107 @@ doc id is between first and last doc id.
 static MY_ATTRIBUTE((warn_unused_result))
 dberr_t
 fts_query_find_term(
-	fts_query_t*		query,	/*!< in: FTS query state */
-	que_t**			graph,	/*!< in: prepared statement */
-	const fts_string_t*	word,	/*!< in: the word to fetch */
-	doc_id_t		doc_id,	/*!< in: doc id to match */
-	ulint*			min_pos,/*!< in/out: pos found must be
-					 greater than this minimum value. */
-	ibool*			found)	/*!< out: TRUE if found else FALSE */
+    fts_query_t*		query,	/*!< in: FTS query state */
+    que_t**			graph,	/*!< in: prepared statement */
+    const fts_string_t*	word,	/*!< in: the word to fetch */
+    doc_id_t		doc_id,	/*!< in: doc id to match */
+    ulint*			min_pos,/*!< in/out: pos found must be
+                     greater than this minimum value. */
+    ibool*			found)	/*!< out: TRUE if found else FALSE */
 {
-	pars_info_t*		info;
-	dberr_t			error;
-	fts_select_t		select;
-	doc_id_t		match_doc_id;
-	trx_t*			trx = query->trx;
-	char			table_name[MAX_FULL_NAME_LEN];
+    pars_info_t*		info;
+    dberr_t			error;
+    fts_select_t		select;
+    doc_id_t		match_doc_id;
+    trx_t*			trx = query->trx;
+    char			table_name[MAX_FULL_NAME_LEN];
 
-	trx->op_info = "fetching FTS index matching nodes";
+    trx->op_info = "fetching FTS index matching nodes";
 
-	if (*graph) {
-		info = (*graph)->info;
-	} else {
-		ulint	selected;
+    if (*graph) {
+        info = (*graph)->info;
+    } else {
+        ulint	selected;
 
-		info = pars_info_create();
+        info = pars_info_create();
 
-		selected = fts_select_index(*word->f_str);
-		query->fts_index_table.suffix = fts_get_suffix(selected);
+        selected = fts_select_index(*word->f_str);
+        query->fts_index_table.suffix = fts_get_suffix(selected);
 
-		fts_get_table_name(&query->fts_index_table, table_name);
-		pars_info_bind_id(info, true, "index_table_name", table_name);
-	}
+        fts_get_table_name(&query->fts_index_table, table_name);
+        pars_info_bind_id(info, true, "index_table_name", table_name);
+    }
 
-	select.found = FALSE;
-	select.doc_id = doc_id;
-	select.min_pos = *min_pos;
-	select.word_freq = fts_query_add_word_freq(query, word->f_str);
+    select.found = FALSE;
+    select.doc_id = doc_id;
+    select.min_pos = *min_pos;
+    select.word_freq = fts_query_add_word_freq(query, word->f_str);
 
-	pars_info_bind_function(info, "my_func", fts_query_select, &select);
-	pars_info_bind_varchar_literal(info, "word", word->f_str, word->f_len);
+    pars_info_bind_function(info, "my_func", fts_query_select, &select);
+    pars_info_bind_varchar_literal(info, "word", word->f_str, word->f_len);
 
-	/* Convert to "storage" byte order. */
-	fts_write_doc_id((byte*) &match_doc_id, doc_id);
+    /* Convert to "storage" byte order. */
+    fts_write_doc_id((byte*) &match_doc_id, doc_id);
 
-	fts_bind_doc_id(info, "min_doc_id", &match_doc_id);
+    fts_bind_doc_id(info, "min_doc_id", &match_doc_id);
 
-	fts_bind_doc_id(info, "max_doc_id", &match_doc_id);
+    fts_bind_doc_id(info, "max_doc_id", &match_doc_id);
 
-	if (!*graph) {
+    if (!*graph) {
 
-		*graph = fts_parse_sql(
-			&query->fts_index_table,
-			info,
-			"DECLARE FUNCTION my_func;\n"
-			"DECLARE CURSOR c IS"
-			" SELECT doc_count, ilist\n"
-			" FROM $index_table_name\n"
-			" WHERE word LIKE :word AND"
-			" first_doc_id <= :min_doc_id AND"
-			" last_doc_id >= :max_doc_id\n"
-			" ORDER BY first_doc_id;\n"
-			"BEGIN\n"
-			"\n"
-			"OPEN c;\n"
-			"WHILE 1 = 1 LOOP\n"
-			"  FETCH c INTO my_func();\n"
-			"  IF c % NOTFOUND THEN\n"
-			"    EXIT;\n"
-			"  END IF;\n"
-			"END LOOP;\n"
-			"CLOSE c;");
-	}
+        *graph = fts_parse_sql(
+            &query->fts_index_table,
+            info,
+            "DECLARE FUNCTION my_func;\n"
+            "DECLARE CURSOR c IS"
+            " SELECT doc_count, ilist\n"
+            " FROM $index_table_name\n"
+            " WHERE word LIKE :word AND"
+            " first_doc_id <= :min_doc_id AND"
+            " last_doc_id >= :max_doc_id\n"
+            " ORDER BY first_doc_id;\n"
+            "BEGIN\n"
+            "\n"
+            "OPEN c;\n"
+            "WHILE 1 = 1 LOOP\n"
+            "  FETCH c INTO my_func();\n"
+            "  IF c % NOTFOUND THEN\n"
+            "    EXIT;\n"
+            "  END IF;\n"
+            "END LOOP;\n"
+            "CLOSE c;");
+    }
 
-	for (;;) {
-		error = fts_eval_sql(trx, *graph);
+    for (;;) {
+        error = fts_eval_sql(trx, *graph);
 
-		if (error == DB_SUCCESS) {
+        if (error == DB_SUCCESS) {
 
-			break;				/* Exit the loop. */
-		} else {
+            break;				/* Exit the loop. */
+        } else {
 
-			if (error == DB_LOCK_WAIT_TIMEOUT) {
-				ib::warn(ER_IB_MSG_506) << "lock wait timeout reading FTS"
-					" index. Retrying!";
+            if (error == DB_LOCK_WAIT_TIMEOUT) {
+                ib::warn(ER_IB_MSG_506) << "lock wait timeout reading FTS"
+                    " index. Retrying!";
 
-				trx->error_state = DB_SUCCESS;
-			} else {
-				ib::error(ER_IB_MSG_507) << error
-					<< " while reading FTS index.";
+                trx->error_state = DB_SUCCESS;
+            } else {
+                ib::error(ER_IB_MSG_507) << error
+                    << " while reading FTS index.";
 
-				break;			/* Exit the loop. */
-			}
-		}
-	}
+                break;			/* Exit the loop. */
+            }
+        }
+    }
 
-	/* Value to return */
-	*found = select.found;
+    /* Value to return */
+    *found = select.found;
 
-	if (*found) {
-		*min_pos = select.min_pos;
-	}
+    if (*found) {
+        *min_pos = select.min_pos;
+    }
 
-	return(error);
+    return(error);
 }
 
 /********************************************************************
@@ -2035,30 +2037,30 @@ Callback aggregator for int columns. */
 static
 ibool
 fts_query_sum(
-					/*!< out: always returns TRUE */
-	void*		row,		/*!< in:  sel_node_t* */
-	void*		user_arg)	/*!< in:  ulint* */
+                    /*!< out: always returns TRUE */
+    void*		row,		/*!< in:  sel_node_t* */
+    void*		user_arg)	/*!< in:  ulint* */
 {
 
-	que_node_t*	exp;
-	sel_node_t*	node = row;
-	ulint*		total = user_arg;
+    que_node_t*	exp;
+    sel_node_t*	node = row;
+    ulint*		total = user_arg;
 
-	exp = node->select_list;
+    exp = node->select_list;
 
-	while (exp) {
-		dfield_t*	dfield = que_node_get_val(exp);
-		void*		data = dfield_get_data(dfield);
-		ulint		len = dfield_get_len(dfield);
+    while (exp) {
+        dfield_t*	dfield = que_node_get_val(exp);
+        void*		data = dfield_get_data(dfield);
+        ulint		len = dfield_get_len(dfield);
 
-		if (len != UNIV_SQL_NULL && len != 0) {
-			*total += mach_read_from_4(data);
-		}
+        if (len != UNIV_SQL_NULL && len != 0) {
+            *total += mach_read_from_4(data);
+        }
 
-		exp = que_node_get_next(exp);
-	}
+        exp = que_node_get_next(exp);
+    }
 
-	return(TRUE);
+    return(TRUE);
 }
 
 /********************************************************************
@@ -2067,79 +2069,79 @@ Calculate the total documents that contain a particular word (term).
 static MY_ATTRIBUTE((warn_unused_result))
 dberr_t
 fts_query_total_docs_containing_term(
-	fts_query_t*		query,	/*!< in: FTS query state */
-	const fts_string_t*	word,	/*!< in: the word to check */
-	ulint*			total)	/*!< out: documents containing word */
+    fts_query_t*		query,	/*!< in: FTS query state */
+    const fts_string_t*	word,	/*!< in: the word to check */
+    ulint*			total)	/*!< out: documents containing word */
 {
-	pars_info_t*		info;
-	dberr_t			error;
-	que_t*			graph;
-	ulint			selected;
-	trx_t*			trx = query->trx;
-	char			table_name[MAX_FULL_NAME_LEN]
+    pars_info_t*		info;
+    dberr_t			error;
+    que_t*			graph;
+    ulint			selected;
+    trx_t*			trx = query->trx;
+    char			table_name[MAX_FULL_NAME_LEN]
 
-	trx->op_info = "fetching FTS index document count";
+    trx->op_info = "fetching FTS index document count";
 
-	*total = 0;
+    *total = 0;
 
-	info = pars_info_create();
+    info = pars_info_create();
 
-	pars_info_bind_function(info, "my_func", fts_query_sum, total);
-	pars_info_bind_varchar_literal(info, "word", word->f_str, word->f_len);
+    pars_info_bind_function(info, "my_func", fts_query_sum, total);
+    pars_info_bind_varchar_literal(info, "word", word->f_str, word->f_len);
 
-	selected = fts_select_index(*word->f_str);
+    selected = fts_select_index(*word->f_str);
 
-	query->fts_index_table.suffix = fts_get_suffix(selected);
+    query->fts_index_table.suffix = fts_get_suffix(selected);
 
-	fts_get_table_name(&query->fts_index_table, table_name);
+    fts_get_table_name(&query->fts_index_table, table_name);
 
-	pars_info_bind_id(info, true, "index_table_name", table_name);
+    pars_info_bind_id(info, true, "index_table_name", table_name);
 
-	graph = fts_parse_sql(
-		&query->fts_index_table,
-		info,
-		"DECLARE FUNCTION my_func;\n"
-		"DECLARE CURSOR c IS"
-		" SELECT doc_count\n"
-		" FROM $index_table_name\n"
-		" WHERE word = :word"
-		" ORDER BY first_doc_id;\n"
-		"BEGIN\n"
-		"\n"
-		"OPEN c;\n"
-		"WHILE 1 = 1 LOOP\n"
-		"  FETCH c INTO my_func();\n"
-		"  IF c % NOTFOUND THEN\n"
-		"    EXIT;\n"
-		"  END IF;\n"
-		"END LOOP;\n"
-		"CLOSE c;");
+    graph = fts_parse_sql(
+        &query->fts_index_table,
+        info,
+        "DECLARE FUNCTION my_func;\n"
+        "DECLARE CURSOR c IS"
+        " SELECT doc_count\n"
+        " FROM $index_table_name\n"
+        " WHERE word = :word"
+        " ORDER BY first_doc_id;\n"
+        "BEGIN\n"
+        "\n"
+        "OPEN c;\n"
+        "WHILE 1 = 1 LOOP\n"
+        "  FETCH c INTO my_func();\n"
+        "  IF c % NOTFOUND THEN\n"
+        "    EXIT;\n"
+        "  END IF;\n"
+        "END LOOP;\n"
+        "CLOSE c;");
 
-	for (;;) {
-		error = fts_eval_sql(trx, graph);
+    for (;;) {
+        error = fts_eval_sql(trx, graph);
 
-		if (error == DB_SUCCESS) {
+        if (error == DB_SUCCESS) {
 
-			break;				/* Exit the loop. */
-		} else {
+            break;				/* Exit the loop. */
+        } else {
 
-			if (error == DB_LOCK_WAIT_TIMEOUT) {
-				ib::warn(ER_IB_MSG_508) << "lock wait timeout reading FTS"
-					" index. Retrying!";
+            if (error == DB_LOCK_WAIT_TIMEOUT) {
+                ib::warn(ER_IB_MSG_508) << "lock wait timeout reading FTS"
+                    " index. Retrying!";
 
-				trx->error_state = DB_SUCCESS;
-			} else {
-				ib::error(ER_IB_MSG_509) << error
-					<< " while reading FTS index.";
+                trx->error_state = DB_SUCCESS;
+            } else {
+                ib::error(ER_IB_MSG_509) << error
+                    << " while reading FTS index.";
 
-				break;			/* Exit the loop. */
-			}
-		}
-	}
+                break;			/* Exit the loop. */
+            }
+        }
+    }
 
-	fts_que_graph_free(graph);
+    fts_que_graph_free(graph);
 
-	return(error);
+    return(error);
 }
 
 /********************************************************************
@@ -2148,79 +2150,79 @@ Get the total number of words in a documents.
 static MY_ATTRIBUTE((warn_unused_result))
 dberr_t
 fts_query_terms_in_document(
-	fts_query_t*	query,		/*!< in: FTS query state */
-	doc_id_t	doc_id,		/*!< in: the word to check */
-	ulint*		total)		/*!< out: total words in document */
+    fts_query_t*	query,		/*!< in: FTS query state */
+    doc_id_t	doc_id,		/*!< in: the word to check */
+    ulint*		total)		/*!< out: total words in document */
 {
-	pars_info_t*	info;
-	dberr_t		error;
-	que_t*		graph;
-	doc_id_t	read_doc_id;
-	trx_t*		trx = query->trx;
-	char		table_name[MAX_FULL_NAME_LEN];
+    pars_info_t*	info;
+    dberr_t		error;
+    que_t*		graph;
+    doc_id_t	read_doc_id;
+    trx_t*		trx = query->trx;
+    char		table_name[MAX_FULL_NAME_LEN];
 
-	trx->op_info = "fetching FTS document term count";
+    trx->op_info = "fetching FTS document term count";
 
-	*total = 0;
+    *total = 0;
 
-	info = pars_info_create();
+    info = pars_info_create();
 
-	pars_info_bind_function(info, "my_func", fts_query_sum, total);
+    pars_info_bind_function(info, "my_func", fts_query_sum, total);
 
-	/* Convert to "storage" byte order. */
-	fts_write_doc_id((byte*) &read_doc_id, doc_id);
-	fts_bind_doc_id(info, "doc_id", &read_doc_id);
+    /* Convert to "storage" byte order. */
+    fts_write_doc_id((byte*) &read_doc_id, doc_id);
+    fts_bind_doc_id(info, "doc_id", &read_doc_id);
 
-	query->fts_index_table.suffix = "DOC_ID";
+    query->fts_index_table.suffix = "DOC_ID";
 
-	fts_get_table_name(&query->fts_index_table, table_name);
+    fts_get_table_name(&query->fts_index_table, table_name);
 
-	pars_info_bind_id(info, true, "index_table_name", table_name);
+    pars_info_bind_id(info, true, "index_table_name", table_name);
 
-	graph = fts_parse_sql(
-		&query->fts_index_table,
-		info,
-		"DECLARE FUNCTION my_func;\n"
-		"DECLARE CURSOR c IS"
-		" SELECT count\n"
-		" FROM $index_table_name\n"
-		" WHERE doc_id = :doc_id"
-		" BEGIN\n"
-		"\n"
-		"OPEN c;\n"
-		"WHILE 1 = 1 LOOP\n"
-		"  FETCH c INTO my_func();\n"
-		"  IF c % NOTFOUND THEN\n"
-		"    EXIT;\n"
-		"  END IF;\n"
-		"END LOOP;\n"
-		"CLOSE c;");
+    graph = fts_parse_sql(
+        &query->fts_index_table,
+        info,
+        "DECLARE FUNCTION my_func;\n"
+        "DECLARE CURSOR c IS"
+        " SELECT count\n"
+        " FROM $index_table_name\n"
+        " WHERE doc_id = :doc_id"
+        " BEGIN\n"
+        "\n"
+        "OPEN c;\n"
+        "WHILE 1 = 1 LOOP\n"
+        "  FETCH c INTO my_func();\n"
+        "  IF c % NOTFOUND THEN\n"
+        "    EXIT;\n"
+        "  END IF;\n"
+        "END LOOP;\n"
+        "CLOSE c;");
 
-	for (;;) {
-		error = fts_eval_sql(trx, graph);
+    for (;;) {
+        error = fts_eval_sql(trx, graph);
 
-		if (error == DB_SUCCESS) {
+        if (error == DB_SUCCESS) {
 
-			break;				/* Exit the loop. */
-		} else {
+            break;				/* Exit the loop. */
+        } else {
 
-			if (error == DB_LOCK_WAIT_TIMEOUT) {
-				ib::warn(ER_IB_MSG_510) << "lock wait timeout reading FTS"
-					" doc id table. Retrying!";
+            if (error == DB_LOCK_WAIT_TIMEOUT) {
+                ib::warn(ER_IB_MSG_510) << "lock wait timeout reading FTS"
+                    " doc id table. Retrying!";
 
-				trx->error_state = DB_SUCCESS;
-			} else {
-				ib::error(ER_IB_MSG_511) << error << " while reading FTS"
-					" doc id table.";
+                trx->error_state = DB_SUCCESS;
+            } else {
+                ib::error(ER_IB_MSG_511) << error << " while reading FTS"
+                    " doc id table.";
 
-				break;			/* Exit the loop. */
-			}
-		}
-	}
+                break;			/* Exit the loop. */
+            }
+        }
+    }
 
-	fts_que_graph_free(graph);
+    fts_que_graph_free(graph);
 
-	return(error);
+    return(error);
 }
 #endif
 
@@ -2869,67 +2871,67 @@ Check if the doc id exists in the ilist.
 static
 ulint
 fts_query_find_doc_id(
-	fts_select_t*	select,		/*!< in/out: contains the doc id to
-					find, we update the word freq if
-					document found */
-	void*		data,		/*!< in: doc id ilist */
-	ulint		len)		/*!< in: doc id ilist size */
+    fts_select_t*	select,		/*!< in/out: contains the doc id to
+                    find, we update the word freq if
+                    document found */
+    void*		data,		/*!< in: doc id ilist */
+    ulint		len)		/*!< in: doc id ilist size */
 {
-	byte*		ptr = data;
-	doc_id_t	doc_id = 0;
-	ulint		decoded = 0;
+    byte*		ptr = data;
+    doc_id_t	doc_id = 0;
+    ulint		decoded = 0;
 
-	/* Decode the ilist and search for selected doc_id. We also
-	calculate the frequency of the word in the document if found. */
-	while (decoded < len && !select->found) {
-		ulint		freq = 0;
-		ulint		min_pos = 0;
-		ulint		last_pos = 0;
-		ulint		pos = fts_decode_vlc(&ptr);
+    /* Decode the ilist and search for selected doc_id. We also
+    calculate the frequency of the word in the document if found. */
+    while (decoded < len && !select->found) {
+        ulint		freq = 0;
+        ulint		min_pos = 0;
+        ulint		last_pos = 0;
+        ulint		pos = fts_decode_vlc(&ptr);
 
-		/* Add the delta. */
-		doc_id += pos;
+        /* Add the delta. */
+        doc_id += pos;
 
-		while (*ptr) {
-			++freq;
-			last_pos += fts_decode_vlc(&ptr);
+        while (*ptr) {
+            ++freq;
+            last_pos += fts_decode_vlc(&ptr);
 
-			/* Only if min_pos is not set and the current
-			term exists in a position greater than the
-			min_pos of the previous term. */
-			if (min_pos == 0 && last_pos > select->min_pos) {
-				min_pos = last_pos;
-			}
-		}
+            /* Only if min_pos is not set and the current
+            term exists in a position greater than the
+            min_pos of the previous term. */
+            if (min_pos == 0 && last_pos > select->min_pos) {
+                min_pos = last_pos;
+            }
+        }
 
-		/* Skip the end of word position marker. */
-		++ptr;
+        /* Skip the end of word position marker. */
+        ++ptr;
 
-		/* Bytes decoded so far. */
-		decoded = ptr - (byte*) data;
+        /* Bytes decoded so far. */
+        decoded = ptr - (byte*) data;
 
-		/* A word may exist in the document but we only consider a
-		match if it exists in a position that is greater than the
-		position of the previous term. */
-		if (doc_id == select->doc_id && min_pos > 0) {
-			fts_doc_freq_t*	doc_freq;
+        /* A word may exist in the document but we only consider a
+        match if it exists in a position that is greater than the
+        position of the previous term. */
+        if (doc_id == select->doc_id && min_pos > 0) {
+            fts_doc_freq_t*	doc_freq;
 
-			/* Add the doc id to the doc freq rb tree, if
-			the doc id doesn't exist it will be created. */
-			doc_freq = fts_query_add_doc_freq(
-				select->word_freq->doc_freqs, doc_id);
+            /* Add the doc id to the doc freq rb tree, if
+            the doc id doesn't exist it will be created. */
+            doc_freq = fts_query_add_doc_freq(
+                select->word_freq->doc_freqs, doc_id);
 
-			/* Avoid duplicating the frequency tally */
-			if (doc_freq->freq == 0) {
-				doc_freq->freq = freq;
-			}
+            /* Avoid duplicating the frequency tally */
+            if (doc_freq->freq == 0) {
+                doc_freq->freq = freq;
+            }
 
-			select->found = TRUE;
-			select->min_pos = min_pos;
-		}
-	}
+            select->found = TRUE;
+            select->min_pos = min_pos;
+        }
+    }
 
-	return(select->found);
+    return(select->found);
 }
 #endif
 

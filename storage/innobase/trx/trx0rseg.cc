@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #include "trx0rseg.h"
 
 #include <stddef.h>

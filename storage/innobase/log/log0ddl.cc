@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/1/2016 Shaohua Wang
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #include <debug_sync.h>
 #include "ha_prototypes.h"
 

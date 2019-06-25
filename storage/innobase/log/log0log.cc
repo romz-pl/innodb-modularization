@@ -55,6 +55,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/9/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #include "log0types.h"
 
 /** Pointer to the log checksum calculation function. */

@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+
 #include "btr0bulk.h"
 #include "btr0cur.h"
 #include "dict0dd.h"

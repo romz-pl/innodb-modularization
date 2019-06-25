@@ -23,6 +23,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 *****************************************************************************/
+
+#include <innodb/logger/info.h>
+
 #include "dict0upgrade.h"
 #include <sql_backup_lock.h>
 #include <sql_class.h>

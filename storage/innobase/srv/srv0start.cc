@@ -50,6 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+
 #include <zlib.h>
 #include "btr0btr.h"
 #include "btr0cur.h"
@@ -2949,25 +2951,25 @@ static
 void
 srv_fts_close(void)
 {
-	dict_table_t*	table;
+    dict_table_t*	table;
 
-	for (table = UT_LIST_GET_FIRST(dict_sys->table_LRU);
-	     table; table = UT_LIST_GET_NEXT(table_LRU, table)) {
-		fts_t*	fts = table->fts;
+    for (table = UT_LIST_GET_FIRST(dict_sys->table_LRU);
+         table; table = UT_LIST_GET_NEXT(table_LRU, table)) {
+        fts_t*	fts = table->fts;
 
-		if (fts != NULL) {
-			fts_sync_table(table);
-		}
-	}
+        if (fts != NULL) {
+            fts_sync_table(table);
+        }
+    }
 
-	for (table = UT_LIST_GET_FIRST(dict_sys->table_non_LRU);
-	     table; table = UT_LIST_GET_NEXT(table_LRU, table)) {
-		fts_t*	fts = table->fts;
+    for (table = UT_LIST_GET_FIRST(dict_sys->table_non_LRU);
+         table; table = UT_LIST_GET_NEXT(table_LRU, table)) {
+        fts_t*	fts = table->fts;
 
-		if (fts != NULL) {
-			fts_sync_table(table);
-		}
-	}
+        if (fts != NULL) {
+            fts_sync_table(table);
+        }
+    }
 }
 #endif
 

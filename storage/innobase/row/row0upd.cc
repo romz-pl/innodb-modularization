@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+
 #include "dict0dict.h"
 #include "ha_prototypes.h"
 

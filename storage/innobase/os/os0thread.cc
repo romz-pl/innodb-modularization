@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/univ/univ.h>
+#include <innodb/logger/info.h>
+#include <innodb/logger/error.h>
 
 #include <atomic>
 #include <thread>

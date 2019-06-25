@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013-7-26 by Kevin Lewis
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #include "ha_prototypes.h"
 
 #include "dict0dd.h"

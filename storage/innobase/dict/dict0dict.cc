@@ -33,6 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/logger/info.h>
+#include <innodb/logger/error_or_warn.h>
+
 #include <stdlib.h>
 #include <strfunc.h>
 #include <sys/types.h>

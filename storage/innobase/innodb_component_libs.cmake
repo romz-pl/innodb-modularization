@@ -25,6 +25,9 @@ SET( INNODB_COMPONENT_LIBS
     # F
     formatting
 
+    # L
+    logger
+
     # T
     time
 

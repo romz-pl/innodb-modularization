@@ -35,6 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdio.h>
 #include <algorithm>
 
+#include <innodb/logger/info.h>
+#include <innodb/logger/error.h>
+
 #include "buf0buf.h"
 #include "buf0dump.h"
 #include "dict0dict.h"
@@ -704,7 +707,7 @@ void buf_dump_thread() {
 
   if (srv_buffer_pool_dump_at_shutdown && srv_fast_shutdown != 2) {
     buf_dump(FALSE /* ignore shutdown down flag,
-		keep going even if we are in a shutdown state */);
+        keep going even if we are in a shutdown state */);
   }
 
   my_thread_end();

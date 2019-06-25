@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/5/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/warn.h>
+
 #include "sync0arr.h"
 
 #include <sys/types.h>

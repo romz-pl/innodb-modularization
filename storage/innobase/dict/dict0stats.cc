@@ -38,6 +38,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <vector>
 
 #include <innodb/time/ut_time.h>
+#include <innodb/logger/info.h>
+#include <innodb/logger/warn.h>
+
 #include "dict0stats.h"
 #include "dyn0buf.h"
 #include "ha_prototypes.h"
@@ -1012,22 +1015,22 @@ static void dict_stats_analyze_index_level(
                  __func__, *total_recs, *total_pages, i, n_diff[i]);
 
 #if 0
-		if (n_diff_boundaries != NULL) {
-			ib_uint64_t	j;
+        if (n_diff_boundaries != NULL) {
+            ib_uint64_t	j;
 
-			DEBUG_PRINTF("    %s(): boundaries[%lu]: ",
-				     __func__, i);
+            DEBUG_PRINTF("    %s(): boundaries[%lu]: ",
+                     __func__, i);
 
-			for (j = 0; j < n_diff[i]; j++) {
-				ib_uint64_t	idx;
+            for (j = 0; j < n_diff[i]; j++) {
+                ib_uint64_t	idx;
 
-				idx = n_diff_boundaries[i][j];
+                idx = n_diff_boundaries[i][j];
 
-				DEBUG_PRINTF(UINT64PF "=" UINT64PF ", ",
-					     j, idx);
-			}
-			DEBUG_PRINTF("\n");
-		}
+                DEBUG_PRINTF(UINT64PF "=" UINT64PF ", ",
+                         j, idx);
+            }
+            DEBUG_PRINTF("\n");
+        }
 #endif
   }
 #endif /* UNIV_STATS_DEBUG */
@@ -1310,8 +1313,8 @@ static void dict_stats_analyze_index_below_cur(const btr_cur_t *cur,
                            n_diff, n_external_pages);
 
 #if 0
-	DEBUG_PRINTF("      %s(): n_diff below page_no=%lu: " UINT64PF "\n",
-		     __func__, page_no, n_diff);
+    DEBUG_PRINTF("      %s(): n_diff below page_no=%lu: " UINT64PF "\n",
+             __func__, page_no, n_diff);
 #endif
 
   mtr_commit(&mtr);
@@ -1381,10 +1384,10 @@ static void dict_stats_analyze_index_for_n_prefix(
   ib_uint64_t i;
 
 #if 0
-	DEBUG_PRINTF("    %s(table=%s, index=%s, level=%lu, n_prefix=%lu,"
-		     " n_diff_on_level=" UINT64PF ")\n",
-		     __func__, index->table->name, index->name, level,
-		     n_prefix, n_diff_data->n_diff_on_level);
+    DEBUG_PRINTF("    %s(table=%s, index=%s, level=%lu, n_prefix=%lu,"
+             " n_diff_on_level=" UINT64PF ")\n",
+             __func__, index->table->name, index->name, level,
+             n_prefix, n_diff_data->n_diff_on_level);
 #endif
 
   ut_ad(mtr_memo_contains(mtr, dict_index_get_lock(index), MTR_MEMO_SX_LOCK));
@@ -1477,8 +1480,8 @@ static void dict_stats_analyze_index_for_n_prefix(
         boundaries->at(static_cast<unsigned>(left + rnd));
 
 #if 0
-		DEBUG_PRINTF("    %s(): dive below record with index="
-			     UINT64PF "\n", __func__, dive_below_idx);
+        DEBUG_PRINTF("    %s(): dive below record with index="
+                 UINT64PF "\n", __func__, dive_below_idx);
 #endif
 
     /* seek to the record with index dive_below_idx */

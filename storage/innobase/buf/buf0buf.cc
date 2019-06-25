@@ -38,7 +38,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "my_config.h"
+
 #include <innodb/time/ut_time.h>
+#include <innodb/logger/info.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
@@ -6214,15 +6216,15 @@ Gets the current length of the free list of buffer blocks.
 ulint
 buf_get_free_list_len(void)
 {
-	ulint	len;
+    ulint	len;
 
-	mutex_enter(&buf_pool->free_list_mutex);
+    mutex_enter(&buf_pool->free_list_mutex);
 
-	len = UT_LIST_GET_LEN(buf_pool->free);
+    len = UT_LIST_GET_LEN(buf_pool->free);
 
-	mutex_exit(&buf_pool->free_list_mutex);
+    mutex_exit(&buf_pool->free_list_mutex);
 
-	return(len);
+    return(len);
 }
 #endif
 

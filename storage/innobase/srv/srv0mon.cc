@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <time.h>
 
+#include <innodb/logger/info.h>
+
 #include "arch0arch.h"
 #include "buf0buf.h"
 #include "dict0mem.h"

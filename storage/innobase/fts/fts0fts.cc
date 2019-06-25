@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <new>
 
 #include <innodb/time/ut_time.h>
+#include <innodb/logger/warn.h>
+#include <innodb/logger/info.h>
 
 #include "btr0pcur.h"
 #include "dict0priv.h"
@@ -2351,28 +2353,28 @@ Return string representation of state. */
 static
 const char*
 fts_get_state_str(
-				/* out: string representation of state */
-	fts_row_state	state)	/*!< in: state */
+                /* out: string representation of state */
+    fts_row_state	state)	/*!< in: state */
 {
-	switch (state) {
-	case FTS_INSERT:
-		return("INSERT");
+    switch (state) {
+    case FTS_INSERT:
+        return("INSERT");
 
-	case FTS_MODIFY:
-		return("MODIFY");
+    case FTS_MODIFY:
+        return("MODIFY");
 
-	case FTS_DELETE:
-		return("DELETE");
+    case FTS_DELETE:
+        return("DELETE");
 
-	case FTS_NOTHING:
-		return("NOTHING");
+    case FTS_NOTHING:
+        return("NOTHING");
 
-	case FTS_INVALID:
-		return("INVALID");
+    case FTS_INVALID:
+        return("INVALID");
 
-	default:
-		return("UNKNOWN");
-	}
+    default:
+        return("UNKNOWN");
+    }
 }
 #endif
 
@@ -3765,7 +3767,7 @@ doc_id_t fts_get_max_doc_id(dict_table_t *table) /*!< in: user table */
   dfield = index->get_field(0);
 
 #if 0 /* This can fail when renaming a column to FTS_DOC_ID_COL_NAME. */
-	ut_ad(innobase_strcasecmp(FTS_DOC_ID_COL_NAME, dfield->name) == 0);
+    ut_ad(innobase_strcasecmp(FTS_DOC_ID_COL_NAME, dfield->name) == 0);
 #endif
 
   mtr_start(&mtr);
@@ -5431,15 +5433,15 @@ void fts_free(dict_table_t *table) /*!< in/out: table with FTS indexes */
 Signal FTS threads to initiate shutdown. */
 void
 fts_start_shutdown(
-	dict_table_t*	table,		/*!< in: table with FTS indexes */
-	fts_t*		fts)		/*!< in: fts instance that needs
-					to be informed about shutdown */
+    dict_table_t*	table,		/*!< in: table with FTS indexes */
+    fts_t*		fts)		/*!< in: fts instance that needs
+                    to be informed about shutdown */
 {
-	mutex_enter(&fts->bg_threads_mutex);
+    mutex_enter(&fts->bg_threads_mutex);
 
-	fts->fts_status |= BG_THREAD_STOP;
+    fts->fts_status |= BG_THREAD_STOP;
 
-	mutex_exit(&fts->bg_threads_mutex);
+    mutex_exit(&fts->bg_threads_mutex);
 
 }
 
@@ -5447,16 +5449,16 @@ fts_start_shutdown(
 Wait for FTS threads to shutdown. */
 void
 fts_shutdown(
-	dict_table_t*	table,		/*!< in: table with FTS indexes */
-	fts_t*		fts)		/*!< in: fts instance to shutdown */
+    dict_table_t*	table,		/*!< in: table with FTS indexes */
+    fts_t*		fts)		/*!< in: fts instance to shutdown */
 {
-	mutex_enter(&fts->bg_threads_mutex);
+    mutex_enter(&fts->bg_threads_mutex);
 
-	ut_a(fts->fts_status & BG_THREAD_STOP);
+    ut_a(fts->fts_status & BG_THREAD_STOP);
 
-	dict_table_wait_for_bg_threads_to_exit(table, 20000);
+    dict_table_wait_for_bg_threads_to_exit(table, 20000);
 
-	mutex_exit(&fts->bg_threads_mutex);
+    mutex_exit(&fts->bg_threads_mutex);
 }
 #endif
 

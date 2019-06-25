@@ -45,6 +45,9 @@ Created Nov 22, 2013 Mattias Jonsson */
 #include <strfunc.h>
 #include <new>
 
+#include <innodb/logger/info.h>
+#include <innodb/logger/warn.h>
+
 #include "dd/dd.h"
 #include "dd/dictionary.h"
 #include "dd/properties.h"

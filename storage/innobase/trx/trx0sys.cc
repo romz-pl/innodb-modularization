@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/logger/info.h>
+
 #include "current_thd.h"
 #include "ha_prototypes.h"
 #include "sql_error.h"

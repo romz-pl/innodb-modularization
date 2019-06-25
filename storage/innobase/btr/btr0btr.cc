@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/info.h>
+#include <innodb/logger/warn.h>
+
 #include "btr0btr.h"
 
 #include <sys/types.h>

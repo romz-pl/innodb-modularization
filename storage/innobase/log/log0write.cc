@@ -45,6 +45,9 @@ the file COPYING.Google.
 #ifndef UNIV_HOTBACKUP
 
 #include <cstring>
+
+#include <innodb/logger/info.h>
+
 #include "ha_prototypes.h"
 
 #include <debug_sync.h>

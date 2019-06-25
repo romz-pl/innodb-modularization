@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define os0thread_create_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/logger/warn.h>
 
 #include "os0thread.h"
 

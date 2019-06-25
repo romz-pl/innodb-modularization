@@ -39,6 +39,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #ifndef UNIV_HOTBACKUP
 
 #include "arch0arch.h"

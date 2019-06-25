@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-11-16 by Sunny Bains as srv/srv0space.cc
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #include "ha_prototypes.h"
 
 #include "fsp0fsp.h"

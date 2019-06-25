@@ -34,6 +34,7 @@ The tablespace memory cache */
 #include <sys/types.h>
 
 #include <innodb/time/ut_time.h>
+#include <innodb/logger/info.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
@@ -2770,15 +2771,15 @@ bool Fil_shard::mutex_acquire_and_get_space(space_id_t space_id,
   }
 
 #if 0
-	/* The magic value of 300 comes from innodb.open_file_lru.test */
-	if (fil_system->m_max_n_open == 300) {
-		ib::warn(ER_IB_MSG_280)
-			<< "Too many (" << s_n_open
-			<< ") files are open the maximum allowed"
-			<< " value is " << fil_system->m_max_n_open
-			<< ". You should raise the value of"
-			<< " --innodb-open-files in my.cnf.";
-	}
+    /* The magic value of 300 comes from innodb.open_file_lru.test */
+    if (fil_system->m_max_n_open == 300) {
+        ib::warn(ER_IB_MSG_280)
+            << "Too many (" << s_n_open
+            << ") files are open the maximum allowed"
+            << " value is " << fil_system->m_max_n_open
+            << ". You should raise the value of"
+            << " --innodb-open-files in my.cnf.";
+    }
 #endif
 
   mutex_acquire();

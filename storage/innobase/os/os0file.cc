@@ -39,6 +39,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
  *******************************************************/
 
 #include <innodb/time/ut_time.h>
+#include <innodb/logger/info.h>
 
 #include "os0file.h"
 #include "fil0fil.h"

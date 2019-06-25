@@ -127,6 +127,7 @@ InnoDB:
 #define ut0new_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/logger/fatal_or_error.h>
 
 #include <algorithm>
 #include <cerrno>

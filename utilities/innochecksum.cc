@@ -34,6 +34,9 @@
 
 #include "my_config.h"
 
+#include <innodb/logger/info.h>
+#include <innodb/logger/warn.h>
+
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>

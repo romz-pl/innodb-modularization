@@ -35,6 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <math.h>
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+#include <innodb/logger/warn.h>
+
 #include <sql_class.h>
 #include "btr0bulk.h"
 #include "dict0crea.h"

@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 
 #include <innodb/univ/univ.h>
+#include <innodb/logger/error.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "ha_prototypes.h"

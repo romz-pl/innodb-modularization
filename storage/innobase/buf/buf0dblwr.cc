@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+
 #include "buf0buf.h"
 #include "buf0checksum.h"
 #include "buf0dblwr.h"

@@ -32,11 +32,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+#include <innodb/formatting/formatting.h>
+
 #include "btr0sea.h"
 #include "ha_prototypes.h"
 #include "ibuf0ibuf.h"
 #include "sync0sync.h"
-#include <innodb/formatting/formatting.h>
 
 #include "my_dbug.h"
 
@@ -840,20 +842,20 @@ void ibuf_set_free_bits_func(
     old_val = ibuf_bitmap_page_get_bits(bitmap_page, block->page.id,
                                         IBUF_BITMAP_FREE, &mtr);
 #if 0
-		if (old_val != max_val) {
-			fprintf(stderr,
-				"Ibuf: page %lu old val %lu max val %lu\n",
-				page_get_page_no(page),
-				old_val, max_val);
-		}
+        if (old_val != max_val) {
+            fprintf(stderr,
+                "Ibuf: page %lu old val %lu max val %lu\n",
+                page_get_page_no(page),
+                old_val, max_val);
+        }
 #endif
 
     ut_a(old_val <= max_val);
   }
 #if 0
-	fprintf(stderr, "Setting page no %lu free bits to %lu should be %lu\n",
-		page_get_page_no(page), val,
-		ibuf_index_page_calc_free(block));
+    fprintf(stderr, "Setting page no %lu free bits to %lu should be %lu\n",
+        page_get_page_no(page), val,
+        ibuf_index_page_calc_free(block));
 #endif
 
   ut_a(val <= ibuf_index_page_calc_free(block));
@@ -2178,8 +2180,8 @@ static ulint ibuf_get_merge_page_nos_func(
   ut_a(*n_stored <= IBUF_MAX_N_PAGES_MERGED);
 #endif
 #if 0
-	fprintf(stderr, "Ibuf merge batch %lu pages %lu volume\n",
-		*n_stored, sum_volumes);
+    fprintf(stderr, "Ibuf merge batch %lu pages %lu volume\n",
+        *n_stored, sum_volumes);
 #endif
   return (sum_volumes);
 }
@@ -2290,8 +2292,8 @@ static ulint ibuf_merge_pages(
   sum_sizes = ibuf_get_merge_page_nos(TRUE, btr_pcur_get_rec(&pcur), &mtr,
                                       space_ids, page_nos, n_pages);
 #if 0 /* defined UNIV_IBUF_DEBUG */
-	fprintf(stderr, "Ibuf contract sync %lu pages %lu volume %lu\n",
-		sync, *n_pages, sum_sizes);
+    fprintf(stderr, "Ibuf contract sync %lu pages %lu volume %lu\n",
+        sync, *n_pages, sum_sizes);
 #endif
   ibuf_mtr_commit(&mtr);
   btr_pcur_close(&pcur);

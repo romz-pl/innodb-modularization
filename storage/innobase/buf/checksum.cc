@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created Aug 11, 2011 Vasil Dimov
  *******************************************************/
 
+#include <innodb/logger/warn.h>
+
 #include <sys/types.h>
 #include <zlib.h>
 

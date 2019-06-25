@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <mysql/service_thd_wait.h>
 #include <stddef.h>
 
+#include <innodb/logger/info.h>
+
 #include "buf0buf.h"
 #include "buf0dblwr.h"
 #include "buf0flu.h"

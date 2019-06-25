@@ -41,6 +41,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+#include <innodb/logger/warn.h>
+
 #include "btr0btr.h"
 #include "btr0cur.h"
 #include "btr0sea.h"

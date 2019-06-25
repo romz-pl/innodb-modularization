@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define ut0pool_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/logger/info.h>
 
 #include <functional>
 #include <queue>

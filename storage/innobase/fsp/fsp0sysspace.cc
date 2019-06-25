@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/logger/info.h>
+
 #include "dict0load.h"
 #include "fsp0sysspace.h"
 #ifndef UNIV_HOTBACKUP

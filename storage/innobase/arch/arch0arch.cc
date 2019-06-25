@@ -29,6 +29,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #include "arch0arch.h"
 #include "os0thread-create.h"
 

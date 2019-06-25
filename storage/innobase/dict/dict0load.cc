@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/24/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/info.h>
+
 #include "current_thd.h"
 #include "ha_prototypes.h"
 

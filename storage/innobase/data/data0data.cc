@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/logger/warn.h>
+
 #include <sys/types.h>
 #include <new>
 
@@ -619,12 +621,12 @@ big_rec_t *dtuple_convert_big_rec(dict_index_t *index, /*!< in: index */
     }
 
 #if 0
-		/* The following would fail the Valgrind checks in
-		page_cur_insert_rec_low() and page_cur_insert_rec_zip().
-		The BLOB pointers in the record will be initialized after
-		the record and the BLOBs have been written. */
-		UNIV_MEM_ALLOC(data + local_prefix_len,
-			       BTR_EXTERN_FIELD_REF_SIZE);
+        /* The following would fail the Valgrind checks in
+        page_cur_insert_rec_low() and page_cur_insert_rec_zip().
+        The BLOB pointers in the record will be initialized after
+        the record and the BLOBs have been written. */
+        UNIV_MEM_ALLOC(data + local_prefix_len,
+                   BTR_EXTERN_FIELD_REF_SIZE);
 #endif
 
     dfield_set_data(dfield, data, local_len);

@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/logger/warn.h>
+
 #include "btr0btr.h"
 #include "dict0boot.h"
 #include "dict0dd.h"

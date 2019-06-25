@@ -27,6 +27,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** @file dict/dict0dd.cc
 Data dictionary interface */
 
+#include <innodb/logger/info.h>
+
 #ifndef UNIV_HOTBACKUP
 #include <auto_thd.h>
 #include <current_thd.h>

@@ -43,6 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include "ha_prototypes.h"
 
+#include <innodb/logger/info.h>
+
 #include "dd/cache/dictionary_client.h"
 #include "dd/dd.h"
 #include "dd/dictionary.h"

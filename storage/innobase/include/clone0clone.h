@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define CLONE_CLONE_INCLUDE
 
 #include <innodb/univ/univ.h>
+#include <innodb/logger/info.h>
 
 #include <chrono>
 #include <innodb/error/dberr_t.h>

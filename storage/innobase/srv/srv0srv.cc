@@ -53,6 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <chrono>
 
 #include <innodb/time/ut_time.h>
+#include <innodb/logger/info.h>
 
 #include "btr0sea.h"
 #include "buf0flu.h"
@@ -3120,6 +3121,3 @@ bool srv_purge_threads_active() {
 
 #endif /* !UNIV_HOTBACKUP */
 
-const char *srv_get_server_errmsgs(int errcode) {
-  return (error_message_for_error_log(errcode));
-}

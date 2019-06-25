@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Do not include univ.i because univ.i includes this. */
 // #include <innodb/univ/univ.h>
 
+#include <innodb/logger/error.h>
+
 #include <iostream>
 #include <vector>
 

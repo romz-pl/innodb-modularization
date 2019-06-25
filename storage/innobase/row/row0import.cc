@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <memory>
 #include <vector>
 
+#include <innodb/logger/info.h>
+
 #include "btr0pcur.h"
 #include "dict0boot.h"
 #include "dict0crea.h"
