@@ -35,6 +35,7 @@ The tablespace memory cache */
 
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
+#include <innodb/formatting/hex.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

@@ -2,6 +2,9 @@ set( LIB_NAME formatting )
 
 add_library( ${LIB_NAME} STATIC
     formatting.cpp
+    get_first_format.cpp
+    hex.cpp
+    verify_fmt_match.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
