@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define lock0types_h
 
 #include <innodb/univ/univ.h>
-#include "ut0dbg.h"
+#include <innodb/error/ut_error.h>
 
 #define lock_t ib_lock_t
 

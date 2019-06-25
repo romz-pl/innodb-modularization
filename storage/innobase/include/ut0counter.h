@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
-#include "ut0dbg.h"
+#include <innodb/error/ut_error.h>
 
 #include <array>
 #include <atomic>

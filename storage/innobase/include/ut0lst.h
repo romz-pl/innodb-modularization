@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Do not include univ.i because univ.i includes this. */
 // #include <innodb/univ/univ.h>
 
-#include "ut0dbg.h"
+#include <innodb/error/ut_error.h>
 
 /* This module implements the two-way linear list. Note that a single
 list node may belong to two or more lists, but is only on one list

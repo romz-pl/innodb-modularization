@@ -50,7 +50,7 @@ the file COPYING.Google.
 #include <cstdint>
 
 #include "ut0counter.h"
-#include "ut0dbg.h"
+#include <innodb/error/ut_error.h>
 #include "ut0new.h"
 #include "ut0ut.h"
 

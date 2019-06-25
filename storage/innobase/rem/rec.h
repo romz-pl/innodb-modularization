@@ -38,6 +38,7 @@ external tools. */
 #define rem_rec_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/bit/UT_BITS_IN_BYTES.h>
 
 #include "dict0boot.h"
 #include "dict0dict.h"

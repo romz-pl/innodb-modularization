@@ -1,6 +1,7 @@
 set( LIB_NAME bit )
 
 add_library( ${LIB_NAME} STATIC
+    UT_BITS_IN_BYTES.cpp
     ut_bit_get_nth.cpp
     ut_bit_set_nth.cpp
 )

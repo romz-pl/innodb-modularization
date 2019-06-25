@@ -9,7 +9,7 @@
 #ifdef UNIV_DEBUG_VALGRIND
 
 #include <stdio.h>
-#include "ut0dbg.h"
+#include <innodb/error/ut_error.h>
 
 #include <valgrind/memcheck.h>
 

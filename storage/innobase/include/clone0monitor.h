@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 /* mysql_stage_inc_work_completed */
 #include "mysql/psi/mysql_stage.h"
-#include "ut0dbg.h"
+#include <innodb/error/ut_error.h>
 
 /** Class used to report CLONE progress via Performance Schema. */
 class Clone_Monitor {

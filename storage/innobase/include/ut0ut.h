@@ -65,7 +65,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stdarg.h>
 #include "ut/ut.h"
-#include "ut0dbg.h"
+#include <innodb/error/ut_error.h>
 
 #ifndef UNIV_NO_ERR_MSGS
 #include "mysql/components/services/log_builtins.h"
@@ -126,13 +126,6 @@ independent way by using YieldProcessor. */
 
 #define ut_max std::max
 #define ut_min std::min
-
-
-/** Determine how many bytes (groups of 8 bits) are needed to
-store the given number of bits.
-@param b in: bits
-@return number of bytes (octets) needed to represent b */
-#define UT_BITS_IN_BYTES(b) (((b) + 7) / 8)
 
 
 namespace ut {
