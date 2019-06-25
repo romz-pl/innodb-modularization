@@ -138,7 +138,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/psi/mysql_data_lock.h"
 #include "mysys_err.h"
 #include "os0thread-create.h"
-#include "os0thread.h"
+
 #include "p_s.h"
 #include "page0zip.h"
 #include "pars0pars.h"
@@ -163,7 +163,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0sdi.h"
 #include "dict0upgrade.h"
 #include "os0thread-create.h"
-#include "os0thread.h"
+
 #include "sql/item.h"
 #include "sql/json_dom.h"
 #include "sql_base.h"

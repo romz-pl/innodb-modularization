@@ -47,7 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 
 #include "mysql_com.h"
-#include "os0thread.h"
+
 #include "ut0ut.h"
 
 #ifndef UNIV_HOTBACKUP

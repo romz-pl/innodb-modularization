@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/psi/mysql_stage.h"
 #include "os0file.h"
 #include "os0thread-create.h"
-#include "os0thread.h"
+
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "sync0rw.h"

@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ut0mem.h"
 #include <stdlib.h>
-#include "os0thread.h"
+
 #include "srv0srv.h"
 
 /** Copies up to size - 1 characters from the NUL-terminated string src to

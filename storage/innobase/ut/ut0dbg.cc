@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/logger/error.h>
+#include <innodb/thread/os_thread_handle.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "ha_prototypes.h"

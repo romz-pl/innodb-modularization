@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "mem0mem.h"
 #include "os0event.h"
-#include "os0thread.h"
+
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "sync0debug.h"

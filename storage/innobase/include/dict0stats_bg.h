@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0types.h"
 #include "os0event.h"
-#include "os0thread.h"
+
 
 /** Event to wake up the stats thread */
 extern os_event_t dict_stats_event;

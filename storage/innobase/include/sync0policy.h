@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "os0thread.h"
+
 #include "srv0mon.h"
 #include "sync0types.h"
 #include "ut0rnd.h"

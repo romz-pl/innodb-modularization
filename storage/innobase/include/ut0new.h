@@ -129,6 +129,7 @@ InnoDB:
 #include <innodb/univ/univ.h>
 #include <innodb/logger/fatal_or_error.h>
 #include <innodb/align/ut_align.h>
+#include <innodb/thread/os_thread_sleep.h>
 
 #include <algorithm>
 #include <cerrno>
@@ -145,7 +146,7 @@ InnoDB:
 #include "mysql/psi/psi_memory.h"
 
 #include "os0proc.h"
-#include "os0thread.h"
+
 #include <innodb/univ/univ.h>
 #include "ut0byte.h"    /* ut_align */
 #include "ut0counter.h" /* INNOBASE_CACHE_LINE_SIZE */

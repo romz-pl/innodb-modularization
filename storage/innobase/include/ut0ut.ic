@@ -30,9 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *******************************************************************/
 
+#include <innodb/thread/os_thread_sleep.h>
 #include <algorithm>
-
-#include "os0thread.h"
 #include "ut0dbg.h"
 
 

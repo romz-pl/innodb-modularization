@@ -35,11 +35,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define ut0counter_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/thread/os_thread_get_curr_id.h>
 
 #include <my_rdtsc.h>
 
 
-#include "os0thread.h"
+
 #include "ut0dbg.h"
 
 #include <array>

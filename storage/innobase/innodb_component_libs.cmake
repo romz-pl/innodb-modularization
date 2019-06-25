@@ -39,6 +39,7 @@ SET( INNODB_COMPONENT_LIBS
     string
 
     # T
+    thread
     time
 
     # U

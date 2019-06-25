@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/11/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/thread/os_thread_eq.h>
+
 #include "os0event.h"
 #include "ut0memcheck.h"
 

@@ -54,7 +54,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include "srv0start.h"
 #ifndef UNIV_HOTBACKUP
 #include "os0event.h"
-#include "os0thread.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 #ifdef _WIN32

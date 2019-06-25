@@ -34,8 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define sync0arr_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/thread/os_thread_id_t.h>
 
-#include "os0thread.h"
 
 /** Synchronization wait array cell */
 struct sync_cell_t;

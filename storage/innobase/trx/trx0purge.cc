@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_compiler.h"
 #include "my_dbug.h"
 #include "my_inttypes.h"
-#include "os0thread.h"
+
 #include "que0que.h"
 #include "read0read.h"
 #include "row0purge.h"

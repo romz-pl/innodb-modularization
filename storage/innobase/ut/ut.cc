@@ -38,8 +38,10 @@ external tools. */
 #include <time.h>
 
 #include <innodb/univ/univ.h>
-#include "ut/ut.h"
+#include <innodb/thread/os_thread_handle.h>
 #include <innodb/formatting/formatting.h>
+
+#include "ut/ut.h"
 #include "ut0memcheck.h"
 
 /** Prints the contents of a memory buffer in hex and ascii. */
