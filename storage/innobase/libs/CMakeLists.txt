@@ -8,6 +8,8 @@ add_subdirectory( formatting )
 
 add_subdirectory( logger )
 
+add_subdirectory( string )
+
 add_subdirectory( time )
 
 add_subdirectory( univ )

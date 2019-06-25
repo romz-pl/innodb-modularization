@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
+#include <innodb/string/ut_strcmp_functor.h>
 
 #include "dict0stats.h"
 #include "dyn0buf.h"

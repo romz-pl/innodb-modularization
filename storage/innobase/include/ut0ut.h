@@ -245,13 +245,7 @@ double ut_difftime(ib_time_t time2,  /*!< in: time */
 @return nonzero if n is zero or a power of two; zero otherwise */
 #define ut_is_2pow(n) UNIV_LIKELY(!((n) & ((n)-1)))
 
-/** Functor that compares two C strings. Can be used as a comparator for
-e.g. std::map that uses char* as keys. */
-struct ut_strcmp_functor {
-  bool operator()(const char *a, const char *b) const {
-    return (strcmp(a, b) < 0);
-  }
-};
+
 
 namespace ut {
 /** The current value of @@innodb_spin_wait_pause_multiplier. Determines

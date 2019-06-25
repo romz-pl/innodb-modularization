@@ -28,6 +28,9 @@ SET( INNODB_COMPONENT_LIBS
     # L
     logger
 
+    # S
+    string
+
     # T
     time
 
