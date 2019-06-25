@@ -1,6 +1,8 @@
 add_subdirectory( align )
 add_subdirectory( assert )
 
+add_subdirectory( bit )
+
 add_subdirectory( compiler_hints )
 
 add_subdirectory( error )

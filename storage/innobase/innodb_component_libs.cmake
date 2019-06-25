@@ -17,6 +17,9 @@ SET( INNODB_COMPONENT_LIBS
     align
     assert
 
+    # B
+    bit
+
     # C
     compiler_hints
 

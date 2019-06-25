@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *******************************************************************/
 
+#include <innodb/assert/assert.h>
+
 /** Creates a 64-bit integer out of two 32-bit integers.
  @return created integer */
 UNIV_INLINE
@@ -41,33 +43,6 @@ ib_uint64_t ut_ull_create(ulint high, /*!< in: high-order 32 bits */
   return (((ib_uint64_t)high) << 32 | low);
 }
 
-/** Gets the nth bit of a ulint.
- @return true if nth bit is 1; 0th bit is defined to be the least significant */
-UNIV_INLINE
-ibool ut_bit_get_nth(ulint a, /*!< in: ulint */
-                     ulint n) /*!< in: nth bit requested */
-{
-  ut_ad(n < 8 * sizeof(ulint));
-#if TRUE != 1
-#error "TRUE != 1"
-#endif
-  return (1 & (a >> n));
-}
 
-/** Sets the nth bit of a ulint.
- @return the ulint with the bit set as requested */
-UNIV_INLINE
-ulint ut_bit_set_nth(ulint a,   /*!< in: ulint */
-                     ulint n,   /*!< in: nth bit requested */
-                     ibool val) /*!< in: value for the bit to set */
-{
-  ut_ad(n < 8 * sizeof(ulint));
-#if TRUE != 1
-#error "TRUE != 1"
-#endif
-  if (val) {
-    return (((ulint)1 << n) | a);
-  } else {
-    return (~((ulint)1 << n) & a);
-  }
-}
+
+

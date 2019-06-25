@@ -35,8 +35,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "ut0ut.h"
-
 /** Creates a 64-bit integer out of two 32-bit integers.
  @return created integer */
 UNIV_INLINE
@@ -44,20 +42,6 @@ ib_uint64_t ut_ull_create(ulint high, /*!< in: high-order 32 bits */
                           ulint low)  /*!< in: low-order 32 bits */
     MY_ATTRIBUTE((const));
 
-/** Gets the nth bit of a ulint.
-@param[in]	a	ulint
-@param[in]	n	nth bit requested
-@return true if nth bit is 1; 0th bit is defined to be the least significant */
-UNIV_INLINE
-ibool ut_bit_get_nth(ulint a, ulint n);
-
-/** Sets the nth bit of a ulint.
-@param[in]	a	ulint
-@param[in]	n	nth bit requested
-@param[in]	val	value for the bit to set
-@return the ulint with the bit set as requested */
-UNIV_INLINE
-ulint ut_bit_set_nth(ulint a, ulint n, ibool val);
 
 #include "ut0byte.ic"
 

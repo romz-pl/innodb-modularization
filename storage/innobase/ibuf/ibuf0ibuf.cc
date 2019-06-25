@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/formatting/formatting.h>
+#include <innodb/bit/ut_bit_set_nth.h>
 
 #include "btr0sea.h"
 #include "ha_prototypes.h"
