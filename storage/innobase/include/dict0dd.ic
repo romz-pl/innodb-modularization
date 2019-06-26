@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created  10/2016 Jimmy Yamg
  *******************************************************/
 
+#include <innodb/memory/ut_memcpy.h>
+
 #include "sql_table.h"
 #ifndef UNIV_HOTBACKUP
 #include "dict0crea.h"

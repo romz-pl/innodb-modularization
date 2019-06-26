@@ -34,6 +34,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # M
     math
+    memory
 
     # S
     string

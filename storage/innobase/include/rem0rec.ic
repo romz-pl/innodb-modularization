@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/memory/ut_memcpy.h>
+
 #include "btr0types.h"
 #include "dict0boot.h"
 #include "dict0dict.h"

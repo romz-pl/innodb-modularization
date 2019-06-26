@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/logger/info.h>
+#include <innodb/memory/ut_memcmp.h>
 
 #include "current_thd.h"
 #include "ha_prototypes.h"

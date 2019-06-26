@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
+#include <innodb/memory/ut_memmove.h>
+#include <innodb/memory/ut_memcmp.h>
 
 #include "ha_prototypes.h"
 

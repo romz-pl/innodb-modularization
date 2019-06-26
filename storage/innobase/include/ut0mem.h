@@ -35,38 +35,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#ifndef UNIV_HOTBACKUP
-#include "os0event.h"
-#include "ut0mutex.h"
-#endif /* !UNIV_HOTBACKUP */
-
-/** Wrapper for memcpy(3).  Copy memory area when the source and
-target are not overlapping.
-@param[in,out]	dest	copy to
-@param[in]	src	copy from
-@param[in]	n	number of bytes to copy
-@return dest */
-UNIV_INLINE
-void *ut_memcpy(void *dest, const void *src, ulint n);
-
-/** Wrapper for memmove(3).  Copy memory area when the source and
-target are overlapping.
-@param[in,out]	dest	Move to
-@param[in]	src	Move from
-@param[in]	n	number of bytes to move
-@return dest */
-UNIV_INLINE
-void *ut_memmove(void *dest, const void *src, ulint n);
-
-/** Wrapper for memcmp(3).  Compare memory areas.
-@param[in]	str1	first memory block to compare
-@param[in]	str2	second memory block to compare
-@param[in]	n	number of bytes to compare
-@return negative, 0, or positive if str1 is smaller, equal,
-                or greater than str2, respectively. */
-UNIV_INLINE
-int ut_memcmp(const void *str1, const void *str2, ulint n);
-
 /** Wrapper for strcpy(3).  Copy a NUL-terminated string.
 @param[in,out]	dest	Destination to copy to
 @param[in]	src	Source to copy from

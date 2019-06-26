@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Historical note: Innobase executed its first SQL string (CREATE TABLE)
 on 1/27/1998 */
 
+#include <innodb/memory/ut_memcmp.h>
+
 #include "current_thd.h"
 #include "ha_prototypes.h"
 
