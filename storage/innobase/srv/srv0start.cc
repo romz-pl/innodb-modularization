@@ -89,7 +89,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "trx0sys.h"
 #include "trx0trx.h"
-#include "ut0mem.h"
 #include "ut0to_int.h"
 
 #include "arch0arch.h"

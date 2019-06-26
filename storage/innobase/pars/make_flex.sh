@@ -33,7 +33,7 @@ flex -o $TMPFILE pars0lex.l
 
 # AIX needs its includes done in a certain order, so include "univ.i" first
 # to be sure we get it right.
-echo '#include "univ.i"' > $OUTFILE
+echo '#include <innodb/univ/univ.h>' > $OUTFILE
 echo 'static char *yytext;' >> $OUTFILE
 
 # flex assigns a pointer to an int in one place without a cast, resulting in

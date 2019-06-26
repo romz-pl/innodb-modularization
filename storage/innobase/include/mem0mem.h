@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "mach0data.h"
 #include "ut0byte.h"
-#include "ut0mem.h"
 #include "ut0rnd.h"
 
 #include <limits.h>

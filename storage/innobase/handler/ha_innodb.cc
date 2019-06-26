@@ -141,6 +141,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/psi/mysql_data_lock.h"
 #include "mysys_err.h"
 #include "os0thread-create.h"
+#include "ut0mem.h"
 
 #include "p_s.h"
 #include "page0zip.h"
@@ -176,7 +177,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0sys.h"
 #include "trx0trx.h"
 #include "trx0xa.h"
-#include "ut0mem.h"
 #else
 #include <typelib.h>
 #include "buf0types.h"

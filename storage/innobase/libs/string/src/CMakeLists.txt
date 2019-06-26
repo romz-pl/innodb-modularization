@@ -2,6 +2,10 @@ set( LIB_NAME string )
 
 add_library( ${LIB_NAME} STATIC
     ut_strcmp_functor.cpp
+    ut_strcmp.cpp
+    ut_strcpy.cpp
+    ut_strlcpy.cpp
+    ut_strlen.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

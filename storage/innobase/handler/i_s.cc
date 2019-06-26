@@ -39,6 +39,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <time.h>
 
+#include <innodb/string/ut_strcpy.h>
+
 #include "auth_acls.h"
 #include "btr0btr.h"
 #include "btr0pcur.h"

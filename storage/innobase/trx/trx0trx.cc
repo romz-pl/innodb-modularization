@@ -38,6 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sql_thd_internal_api.h>
 
 #include <innodb/time/ut_time.h>
+#include <innodb/string/ut_strlcpy.h>
+#include <innodb/string/ut_strlen.h>
 
 #include "btr0sea.h"
 #include "dict0dd.h"

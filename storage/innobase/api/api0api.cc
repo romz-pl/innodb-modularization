@@ -37,6 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/string/ut_strlen.h>
+#include <innodb/string/ut_strcpy.h>
+
 #include "api0api.h"
 #include "api0misc.h"
 #include "btr0pcur.h"

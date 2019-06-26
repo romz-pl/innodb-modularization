@@ -60,7 +60,8 @@ Created 12/14/1997 Heikki Tuuri
 %{
 #define YYSTYPE que_node_t*
 
-#include "univ.i"
+#include <innodb/univ/univ.h>
+#include <innodb/string/ut_strcmp.h>
 #include "pars0pars.h"
 #include "pars0grm.h"
 #include "pars0sym.h"

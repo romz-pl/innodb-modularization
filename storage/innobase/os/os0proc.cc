@@ -43,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0proc.h"
 #include "srv0srv.h"
 #include "ut0byte.h"
-#include "ut0mem.h"
 
 /* FreeBSD for example has only MAP_ANON, Linux has MAP_ANONYMOUS and
 MAP_ANON but MAP_ANON is marked as deprecated */

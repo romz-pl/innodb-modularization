@@ -35,35 +35,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-/** Wrapper for strcpy(3).  Copy a NUL-terminated string.
-@param[in,out]	dest	Destination to copy to
-@param[in]	src	Source to copy from
-@return dest */
-UNIV_INLINE
-char *ut_strcpy(char *dest, const char *src);
-
-/** Wrapper for strlen(3).  Determine the length of a NUL-terminated string.
-@param[in]	str	string
-@return length of the string in bytes, excluding the terminating NUL */
-UNIV_INLINE
-ulint ut_strlen(const char *str);
-
-/** Wrapper for strcmp(3).  Compare NUL-terminated strings.
-@param[in]	str1	first string to compare
-@param[in]	str2	second string to compare
-@return negative, 0, or positive if str1 is smaller, equal,
-                or greater than str2, respectively. */
-UNIV_INLINE
-int ut_strcmp(const char *str1, const char *str2);
-
-/** Copies up to size - 1 characters from the NUL-terminated string src to
- dst, NUL-terminating the result. Returns strlen(src), so truncation
- occurred if the return value >= size.
- @return strlen(src) */
-ulint ut_strlcpy(char *dst,       /*!< in: destination buffer */
-                 const char *src, /*!< in: source buffer */
-                 ulint size);     /*!< in: size of destination buffer */
-
 /********************************************************************
 Concatenate 3 strings.*/
 char *ut_str3cat(

@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 on 1/27/1998 */
 
 #include <innodb/memory/ut_memcmp.h>
+#include <innodb/string/ut_strlen.h>
 
 #include "current_thd.h"
 #include "ha_prototypes.h"

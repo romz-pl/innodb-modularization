@@ -65,7 +65,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0i_s.h"
 #include "trx0sys.h"
 #include "trx0trx.h"
-#include "ut0mem.h"
 
 #include "storage/perfschema/pfs_data_lock.h"
 static_assert(sizeof(pk_pos_data_lock::m_engine_lock_id) >

@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/warn.h>
 #include <innodb/logger/info.h>
+#include <innodb/string/ut_strlen.h>
 
 #include "btr0pcur.h"
 #include "dict0priv.h"

@@ -32,28 +32,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/align/ut_align_offset.h>
 
-/** Wrapper for strcpy(3).  Copy a NUL-terminated string.
-@param[in,out]	dest	Destination to copy to
-@param[in]	src	Source to copy from
-@return dest */
-UNIV_INLINE
-char *ut_strcpy(char *dest, const char *src) { return (strcpy(dest, src)); }
 
-/** Wrapper for strlen(3).  Determine the length of a NUL-terminated string.
-@param[in]	str	string
-@return length of the string in bytes, excluding the terminating NUL */
-UNIV_INLINE
-ulint ut_strlen(const char *str) { return (strlen(str)); }
 
-/** Wrapper for strcmp(3).  Compare NUL-terminated strings.
-@param[in]	str1	first string to compare
-@param[in]	str2	second string to compare
-@return negative, 0, or positive if str1 is smaller, equal,
-                or greater than str2, respectively. */
-UNIV_INLINE
-int ut_strcmp(const char *str1, const char *str2) {
-  return (strcmp(str1, str2));
-}
+
+
+
 
 /** Converts a raw binary data to a NUL-terminated hex string. The output is
  truncated if there is not enough space in "hex", make sure "hex_size" is at

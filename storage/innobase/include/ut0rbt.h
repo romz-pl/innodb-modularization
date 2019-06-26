@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #if !defined(IB_RBT_TESTING)
-#include "ut0mem.h"
+//
 #else
 #include <assert.h>
 #include <stdio.h>

@@ -94,7 +94,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "usr0sess.h"
 #include "ut0crc32.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "ut0mem.h"
 #include "ut0ut.h"
 #include "ut/ut.h"
 

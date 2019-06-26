@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "pars0pars.h"
 #include "que0que.h"
 #include "trx0roll.h"
+#include "ut0mem.h"
 
 #include <algorithm>
 #include <string>

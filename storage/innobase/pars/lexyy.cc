@@ -24,6 +24,8 @@ static char *yytext;
 #include <errno.h>
 #include <stdlib.h>
 
+#include <innodb/string/ut_strlen.h>
+
 /* end standard C headers. */
 
 /* flex integer type definitions */
