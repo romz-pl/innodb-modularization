@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #define srv0mon_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/time/ib_time_t.h>
 
 #ifndef __STDC_LIMIT_MACROS
 /* Required for FreeBSD so that INT64_MAX is defined. */
@@ -708,10 +709,10 @@ Use MONITOR_DEC if appropriate mutex protection exists.
   MONITOR_CHECK_DEFINED(value);                                               \
   if (MONITOR_IS_ON(monitor)) {                                               \
                 ut_ad(MONITOR_VALUE(monitor) >= (mon_type_t) (value);	\
-		MONITOR_VALUE(monitor) -= (mon_type_t) (value);		\
-		if (MONITOR_VALUE(monitor) < MONITOR_MIN_VALUE(monitor)) {  \
-			MONITOR_MIN_VALUE(monitor) = MONITOR_VALUE(monitor);\
-		}                                                             \
+        MONITOR_VALUE(monitor) -= (mon_type_t) (value);		\
+        if (MONITOR_VALUE(monitor) < MONITOR_MIN_VALUE(monitor)) {  \
+            MONITOR_MIN_VALUE(monitor) = MONITOR_VALUE(monitor);\
+        }                                                             \
   }
 
 /* Increment/decrement counter without check the monitor on/off bit, which

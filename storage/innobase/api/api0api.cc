@@ -341,7 +341,7 @@ static ib_err_t ib_read_tuple(
   copy = rec_copy(ptr, rec, offsets);
 
   n_index_fields =
-      ut_min(rec_offs_n_fields(offsets), dtuple_get_n_fields(dtuple));
+      std::min(rec_offs_n_fields(offsets), dtuple_get_n_fields(dtuple));
 
   for (i = 0; i < n_index_fields; ++i) {
     ulint len;
@@ -1826,7 +1826,7 @@ ib_err_t ib_col_set_value(ib_tpl_t ib_tpl,    /*!< in: tuple instance */
   exception. Perhaps we need to set the precise type and check
   for that. */
   if (ib_col_is_capped(dtype)) {
-    len = ut_min(len, static_cast<ib_ulint_t>(col_len));
+    len = std::min(len, static_cast<ib_ulint_t>(col_len));
 
     if (dst == NULL || len > dfield_get_len(dfield)) {
       dst = mem_heap_alloc(tuple->heap, col_len);
@@ -2070,7 +2070,7 @@ ib_ulint_t ib_col_copy_value_low(
         }
         break;
       default:
-        data_len = ut_min(data_len, len);
+        data_len = std::min(data_len, len);
         memcpy(dst, data, data_len);
     }
   } else {

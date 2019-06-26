@@ -5926,7 +5926,7 @@ dberr_t row_count_rtree_recs(
 
   prebuilt->search_tuple = entry;
 
-  ulint bufsize = ut_max(UNIV_PAGE_SIZE, prebuilt->mysql_row_len);
+  ulint bufsize = std::max(UNIV_PAGE_SIZE, prebuilt->mysql_row_len);
   buf = static_cast<byte *>(ut_malloc_nokey(bufsize));
 
   ulint cnt = 1000;

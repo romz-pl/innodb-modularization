@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define IB_WORK_QUEUE_H
 
 #include <innodb/univ/univ.h>
+#include <innodb/time/ib_time_t.h>
 
 #include "mem0mem.h"
 #include "sync0sync.h"

@@ -52,7 +52,6 @@ the file COPYING.Google.
 #include "ut0counter.h"
 #include <innodb/error/ut_error.h>
 #include "ut0new.h"
-#include "ut0ut.h"
 
 /** Concurrent data structure, which allows to track concurrently
 performed operations which locally might be dis-ordered.

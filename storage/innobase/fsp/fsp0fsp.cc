@@ -75,6 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "thd_raii.h"
 #include "transaction.h"
 #include "ut0stage.h"
+#include "ut/ut.h"
 
 /** DDL records for tablespace (un)encryption. */
 std::vector<DDL_Record *> ts_encrypt_ddl_records;

@@ -68,6 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0i_s.h"
 #include "trx0trx.h"
 #include "ut0new.h"
+#include "ut0ut.h"
 
 #include "my_dbug.h"
 
@@ -261,10 +262,10 @@ static int field_store_time_t(
 
   if (time) {
 #if 0
-		/* use this if you are sure that `variables' and `time_zone'
-		are always initialized */
-		thd->variables.time_zone->gmt_sec_to_TIME(
-			&my_time, (my_time_t) time);
+        /* use this if you are sure that `variables' and `time_zone'
+        are always initialized */
+        thd->variables.time_zone->gmt_sec_to_TIME(
+            &my_time, (my_time_t) time);
 #else
     localtime_r(&time, &tm_time);
     localtime_to_TIME(&my_time, &tm_time);
@@ -766,7 +767,7 @@ static int trx_i_s_common_fill_table(
   trx_i_s_cache_end_read(cache);
 
 #if 0
-	DBUG_RETURN(ret);
+    DBUG_RETURN(ret);
 #else
   /* if this function returns something else than 0 then a
   deadlock occurs between the mysqld server and mysql client,
@@ -4477,7 +4478,7 @@ static int i_s_innodb_fill_buffer_pool(
 
   /* Go through each chunk of buffer pool. Currently, we only
   have one single chunk for each buffer pool */
-  for (ulint n = 0; n < ut_min(buf_pool->n_chunks, buf_pool->n_chunks_new);
+  for (ulint n = 0; n < std::min(buf_pool->n_chunks, buf_pool->n_chunks_new);
        n++) {
     const buf_block_t *block;
     ulint n_blocks;
@@ -4495,7 +4496,7 @@ static int i_s_innodb_fill_buffer_pool(
     while (chunk_size > 0) {
       /* we cache maximum MAX_BUF_INFO_CACHED number of
       buffer page info */
-      num_to_process = ut_min(chunk_size, MAX_BUF_INFO_CACHED);
+      num_to_process = std::min(chunk_size, MAX_BUF_INFO_CACHED);
 
       mem_size = num_to_process * sizeof(buf_page_info_t);
 

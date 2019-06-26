@@ -92,9 +92,10 @@ external tools. */
 #include "my_compiler.h"
 #include "my_config.h"
 #include "my_inttypes.h"
-#include "ut0ut.h"
 
 #include <string.h>
+
+#include <innodb/assert/assert.h>
 
 #if defined(__GNUC__) && defined(__x86_64__)
 #define gnuc64

@@ -2102,7 +2102,7 @@ static ibool btr_search_hash_table_validate(ulint hash_table_id) {
       }
     }
 
-    ulint end_index = ut_min(i + chunk_size - 1, cell_count - 1);
+    ulint end_index = std::min(i + chunk_size - 1, cell_count - 1);
 
     if (!ha_validate(btr_search_sys->hash_tables[hash_table_id], i,
                      end_index)) {

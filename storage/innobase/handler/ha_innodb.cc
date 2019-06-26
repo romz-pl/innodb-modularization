@@ -4062,7 +4062,7 @@ static void innodb_buffer_pool_size_init() {
       Windows 32-bit systems, which can have trouble
       allocating larger single contiguous memory blocks. */
       srv_buf_pool_instances =
-          ut_min(static_cast<ulong>(MAX_BUFFER_POOLS),
+          std::min(static_cast<ulong>(MAX_BUFFER_POOLS),
                  static_cast<ulong>(srv_buf_pool_size / (128 * 1024 * 1024)));
 #else  /* defined(_WIN32) && !defined(_WIN64) */
       /* Default to 8 instances when size > 1GB. */
@@ -4374,7 +4374,7 @@ static int innodb_init_params() {
     } else {
       /* The user has not set the value. We should
       set it based on innodb_io_capacity. */
-      srv_max_io_capacity = ut_max(2 * srv_io_capacity, 2000UL);
+      srv_max_io_capacity = std::max(2 * srv_io_capacity, 2000UL);
     }
 
   } else if (srv_max_io_capacity < srv_io_capacity) {
@@ -5752,7 +5752,7 @@ zip_ssize. Zero means it is not compressed. */
 static ulint get_zip_shift_size(ulint key_block_size) {
   ulint zssize; /* Zip Shift Size */
   ulint kbsize; /* Key Block Size */
-  const ulint zip_ssize_max = ut_min(static_cast<ulint>(UNIV_PAGE_SSIZE_MAX),
+  const ulint zip_ssize_max = std::min(static_cast<ulint>(UNIV_PAGE_SSIZE_MAX),
                                      static_cast<ulint>(PAGE_ZIP_SSIZE_MAX));
   for (zssize = kbsize = 1; zssize <= zip_ssize_max; zssize++, kbsize <<= 1) {
     if (kbsize == key_block_size) {
@@ -11308,7 +11308,7 @@ bool create_table_info_t::create_option_tablespace_is_valid() {
     table_is_compressed = true;
   } else if (m_create_info->row_type == ROW_TYPE_COMPRESSED) {
     block_size_needed =
-        ut_min(UNIV_PAGE_SIZE / 2, static_cast<ulint>(UNIV_ZIP_SIZE_MAX));
+        std::min(UNIV_PAGE_SIZE / 2, static_cast<ulint>(UNIV_ZIP_SIZE_MAX));
     table_is_compressed = true;
   } else {
     block_size_needed = UNIV_PAGE_SIZE;
@@ -11454,7 +11454,7 @@ const char *create_table_info_t::create_options_are_invalid() {
         UNIV_PAGE_SIZE_MAX. But if UNIV_PAGE_SIZE is
         smaller than UNIV_PAGE_SIZE_MAX, the maximum
         KBS is also smaller. */
-        kbs_max = ut_min(1 << (UNIV_PAGE_SSIZE_MAX - 1),
+        kbs_max = std::min(1 << (UNIV_PAGE_SSIZE_MAX - 1),
                          1 << (PAGE_ZIP_SSIZE_MAX - 1));
         if (m_create_info->key_block_size > kbs_max) {
           push_warning_printf(m_thd, Sql_condition::SL_WARNING,
@@ -11835,7 +11835,7 @@ bool create_table_info_t::innobase_table_flags() {
   bool zip_allowed = !is_temp;
   rec_format_t innodb_row_format = get_row_format(innodb_default_row_format);
 
-  const ulint zip_ssize_max = ut_min(static_cast<ulint>(UNIV_PAGE_SSIZE_MAX),
+  const ulint zip_ssize_max = std::min(static_cast<ulint>(UNIV_PAGE_SSIZE_MAX),
                                      static_cast<ulint>(PAGE_ZIP_SSIZE_MAX));
 
   m_flags = 0;

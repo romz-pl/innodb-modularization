@@ -32,7 +32,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 #include <innodb/wait/Wait_stats.h>
 #include <innodb/wait/UT_RELAX_CPU.h>
-#include "ut0ut.h"
 
 /** Waits in loop until a provided condition is satisfied. Combines usage
 of spin-delay and event.

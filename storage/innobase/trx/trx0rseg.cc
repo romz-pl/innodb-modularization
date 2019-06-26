@@ -585,7 +585,7 @@ bool trx_rseg_add_rollback_segments(space_id_t space_id, ulong target_rsegs,
           << ". Only " << n_known << " are active.";
 
       srv_rollback_segments =
-          ut_min(srv_rollback_segments, static_cast<ulong>(n_known));
+          std::min(srv_rollback_segments, static_cast<ulong>(n_known));
 
     } else {
       ib::warn(ER_IB_MSG_1192)
@@ -593,7 +593,7 @@ bool trx_rseg_add_rollback_segments(space_id_t space_id, ulong target_rsegs,
           << loc.str() << ". Only " << n_known << " are active.";
 
       srv_rollback_segments =
-          ut_min(srv_rollback_segments, static_cast<ulong>(n_known));
+          std::min(srv_rollback_segments, static_cast<ulong>(n_known));
 
       success = false;
     }

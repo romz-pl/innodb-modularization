@@ -65,6 +65,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "rem0cmp.h"
 #include "srv0srv.h"
 #include "srv0start.h"
+#include "ut0ut.h"
 
 /** Following are the InnoDB system tables. The positions in
 this array are referenced by enum dict_system_table_id. */
@@ -1300,7 +1301,7 @@ space_id_t dict_check_sys_tablespaces(bool validate) {
     }
 
     if (!dict_sys_t::is_reserved(space_id)) {
-      max_space_id = ut_max(max_space_id, space_id);
+      max_space_id = std::max(max_space_id, space_id);
     }
 
     ut_free(filepath);
@@ -1535,7 +1536,7 @@ space_id_t dict_check_sys_tables(bool validate) {
     }
 
     if (!dict_sys_t::is_reserved(space_id)) {
-      max_space_id = ut_max(max_space_id, space_id);
+      max_space_id = std::max(max_space_id, space_id);
     }
 
     ut_free(table_name.m_name);

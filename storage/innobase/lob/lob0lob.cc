@@ -761,7 +761,7 @@ void Reader::fetch_page() {
 
   byte *blob_header = page + m_rctx.m_offset;
   part_len = btr_blob_get_part_len(blob_header);
-  copy_len = ut_min(part_len, m_rctx.m_len - m_copied_len);
+  copy_len = std::min(part_len, m_rctx.m_len - m_copied_len);
 
   memcpy(m_rctx.m_buf + m_copied_len, blob_header + LOB_HDR_SIZE, copy_len);
 

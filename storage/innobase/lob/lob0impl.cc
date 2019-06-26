@@ -34,7 +34,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0zip.h"
 #include "my_dbug.h"
 #include "trx0sys.h"
-#include "ut0ut.h"
 #include "zlob0first.h"
 #include "zlob0index.h"
 #include "zlob0read.h"

@@ -454,7 +454,7 @@ fts_query_lcs(
 
                 ulint	value;
 
-                value = ut_max(
+                value = std::max(
                     FTS_ELEM(table, c, i + 1, j),
                     FTS_ELEM(table, c, i, j + 1));
 

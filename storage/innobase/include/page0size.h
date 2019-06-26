@@ -33,9 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef page0size_t
 #define page0size_t
 
-#include <innodb/univ/univ.h>
+#include <ostream>
 
-#include "ut0ut.h"
+#include <innodb/univ/univ.h>
+#include <innodb/assert/assert.h>
+#include <innodb/math/ut_is_2pow.h>
+
 #include "fsp0types.h"
 
 #define FIELD_REF_SIZE 20

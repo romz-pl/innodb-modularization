@@ -68,7 +68,7 @@ hash_table_t *ib_create(ulint n,       /*!< in: number of array cells */
 
   if (n_sync_obj == 0) {
     table->heap = mem_heap_create_typed(
-        ut_min(static_cast<ulint>(4096), MEM_MAX_ALLOC_IN_BUF / 2 -
+        std::min(static_cast<ulint>(4096), MEM_MAX_ALLOC_IN_BUF / 2 -
                                              MEM_BLOCK_HEADER_SIZE -
                                              MEM_SPACE_NEEDED(0)),
         type);
@@ -90,7 +90,7 @@ hash_table_t *ib_create(ulint n,       /*!< in: number of array cells */
 
   for (ulint i = 0; i < n_sync_obj; i++) {
     table->heaps[i] = mem_heap_create_typed(
-        ut_min(static_cast<ulint>(4096), MEM_MAX_ALLOC_IN_BUF / 2 -
+        std::min(static_cast<ulint>(4096), MEM_MAX_ALLOC_IN_BUF / 2 -
                                              MEM_BLOCK_HEADER_SIZE -
                                              MEM_SPACE_NEEDED(0)),
         type);
@@ -128,7 +128,7 @@ hash_table_t *ib_recreate(hash_table_t *table, ulint n) {
 
   for (ulint i = 0; i < new_table->n_sync_obj; i++) {
     new_table->heaps[i] = mem_heap_create_typed(
-        ut_min(static_cast<ulint>(4096), MEM_MAX_ALLOC_IN_BUF / 2 -
+        std::min(static_cast<ulint>(4096), MEM_MAX_ALLOC_IN_BUF / 2 -
                                              MEM_BLOCK_HEADER_SIZE -
                                              MEM_SPACE_NEEDED(0)),
         MEM_HEAP_FOR_PAGE_HASH);

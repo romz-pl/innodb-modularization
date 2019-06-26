@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mem0mem.h"
 #include "page0size.h"
 #include "row0types.h"
+#include "ut/ut.h"
 
 #ifdef UNIV_DEBUG
 #define row_ext_create(index, n_ext, ext, flags, tuple, is_sdi, heap) \

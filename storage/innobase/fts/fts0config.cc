@@ -54,7 +54,7 @@ static ibool fts_config_fetch_value(void *row,      /*!< in: sel_node_t* */
   ut_a(dtype_get_mtype(type) == DATA_VARCHAR);
 
   if (len != UNIV_SQL_NULL) {
-    ulint max_len = ut_min(value->f_len - 1, len);
+    ulint max_len = std::min(value->f_len - 1, len);
 
     memcpy(value->f_str, data, max_len);
     value->f_len = max_len;

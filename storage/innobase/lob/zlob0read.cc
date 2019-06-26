@@ -31,7 +31,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_dbug.h"
 #include "trx0trx.h"
 #include <innodb/univ/univ.h>
-#include "ut0ut.h"
 #include "zlob0first.h"
 
 namespace lob {

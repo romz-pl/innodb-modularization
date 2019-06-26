@@ -345,7 +345,7 @@ row_merge_buf_t *row_merge_buf_create(
   mem_heap_t *heap;
 
   max_tuples = static_cast<ulint>(srv_sort_buf_size) /
-               ut_max(static_cast<ulint>(1), index->get_min_size());
+               std::max(static_cast<ulint>(1), index->get_min_size());
 
   buf_size = (sizeof *buf);
 

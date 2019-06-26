@@ -378,7 +378,7 @@ struct Tablespace {
 
     ut_ad(m_rsegs->is_active());
 
-    page_no_t trunc_size = ut_max(
+    page_no_t trunc_size = std::max(
         static_cast<page_no_t>(srv_max_undo_tablespace_size / srv_page_size),
         static_cast<page_no_t>(SRV_UNDO_TABLESPACE_SIZE_IN_PAGES));
     if (fil_space_get_size(id()) > trunc_size) {

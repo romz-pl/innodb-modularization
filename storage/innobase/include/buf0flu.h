@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include "os0atomic.h"
 #include "buf0types.h"
 #include "log0log.h"
 #include "ut0byte.h"

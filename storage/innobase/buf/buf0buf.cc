@@ -46,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/math/ut_2_power_up.h>
 #include <innodb/time/ut_difftime.h>
+#include <innodb/formatting/ut_vsnprintf.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
@@ -87,6 +88,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "sync0sync.h"
 #include "ut0new.h"
+#include "ut/ut.h"
 #endif /* !UNIV_HOTBACKUP */
 
 #ifdef HAVE_LIBNUMA
@@ -696,7 +698,7 @@ static void pfs_register_buffer_block(
 
   block = chunk->blocks;
 
-  num_to_register = ut_min(chunk->size, PFS_MAX_BUFFER_MUTEX_LOCK_REGISTER);
+  num_to_register = std::min(chunk->size, PFS_MAX_BUFFER_MUTEX_LOCK_REGISTER);
 
   for (ulint i = 0; i < num_to_register; i++) {
 #ifdef UNIV_PFS_MUTEX
@@ -1297,7 +1299,7 @@ static void buf_pool_create(buf_pool_t *buf_pool, ulint buf_pool_size,
 
     buf_pool->instance_no = instance_no;
     buf_pool->read_ahead_area = static_cast<page_no_t>(
-        ut_min(BUF_READ_AHEAD_PAGES,
+        std::min(BUF_READ_AHEAD_PAGES,
                ut_2_power_up(buf_pool->curr_size / BUF_READ_AHEAD_PORTION)));
     buf_pool->curr_pool_size = buf_pool->curr_size * UNIV_PAGE_SIZE;
 
@@ -1789,7 +1791,7 @@ static bool buf_pool_withdraw_blocks(buf_pool_t *buf_pool) {
       ulint n_flushed = 0;
 
       /* cap scan_depth with current LRU size. */
-      scan_depth = ut_min(ut_max(buf_pool->withdraw_target -
+      scan_depth = std::min(std::max(buf_pool->withdraw_target -
                                      UT_LIST_GET_LEN(buf_pool->withdraw),
                                  static_cast<ulint>(srv_LRU_scan_depth)),
                           lru_len);
@@ -2283,7 +2285,7 @@ withdraw_retry:
         goto calc_buf_pool_size;
       }
 
-      ulint n_chunks_copy = ut_min(buf_pool->n_chunks_new, buf_pool->n_chunks);
+      ulint n_chunks_copy = std::min(buf_pool->n_chunks_new, buf_pool->n_chunks);
 
       memcpy(new_chunks, buf_pool->chunks, n_chunks_copy * sizeof(*chunk));
 
@@ -2360,7 +2362,7 @@ withdraw_retry:
       ut_ad(UT_LIST_GET_LEN(buf_pool->withdraw) == 0);
 
       buf_pool->read_ahead_area = static_cast<page_no_t>(
-          ut_min(BUF_READ_AHEAD_PAGES,
+                 std::min(BUF_READ_AHEAD_PAGES,
                  ut_2_power_up(buf_pool->curr_size / BUF_READ_AHEAD_PORTION)));
       buf_pool->curr_pool_size = buf_pool->curr_size * UNIV_PAGE_SIZE;
       curr_size += buf_pool->curr_pool_size;
@@ -3296,7 +3298,7 @@ static ibool buf_pointer_is_block_field_instance(
 {
   const buf_chunk_t *chunk = buf_pool->chunks;
   const buf_chunk_t *const echunk =
-      chunk + ut_min(buf_pool->n_chunks, buf_pool->n_chunks_new);
+      chunk + std::min(buf_pool->n_chunks, buf_pool->n_chunks_new);
 
   /* TODO: protect buf_pool->chunks with a mutex (the older pointer will
   currently remain while during buf_pool_resize()) */

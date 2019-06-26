@@ -62,6 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "usr0sess.h"
 
 #include "my_dbug.h"
+#include "ut0ut.h"
 
 /*************************************************************************
 IMPORTANT NOTE: Any operation that generates redo MUST check that there
@@ -1938,9 +1939,9 @@ static MY_ATTRIBUTE((warn_unused_result)) dberr_t
     } else if (allow_duplicates) {
 #if 0  // TODO: Enable this assert after WL#9509. REPLACE will not be allowed on
        // DD tables
-			/* This assert means DD tables should not use REPLACE
-			or INSERT INTO table.. ON DUPLCIATE KEY */
-			ut_ad(!index->table->is_dd_table);
+            /* This assert means DD tables should not use REPLACE
+            or INSERT INTO table.. ON DUPLCIATE KEY */
+            ut_ad(!index->table->is_dd_table);
 #endif
 
 #if 1  // TODO: Remove this code after WL#9509. REPLACE will not be allowed on

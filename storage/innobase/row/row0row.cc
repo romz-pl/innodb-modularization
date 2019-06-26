@@ -1080,7 +1080,7 @@ static ulint row_raw_format_int(
     ret = 0;
   }
 
-  return (ut_min(ret, buf_size));
+  return (std::min(ret, buf_size));
 }
 
 /** Formats the raw data in "data" (in InnoDB on-disk format) that is of
@@ -1158,7 +1158,7 @@ ulint row_raw_format(const char *data,               /*!< in: raw data */
   if (data_len == UNIV_SQL_NULL) {
     ret = snprintf((char *)buf, buf_size, "NULL") + 1;
 
-    return (ut_min(ret, buf_size));
+    return (std::min(ret, buf_size));
   }
 
   mtype = dict_field->col->mtype;

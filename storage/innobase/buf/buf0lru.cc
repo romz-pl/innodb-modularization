@@ -58,6 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ut0byte.h"
 #include <innodb/formatting/formatting.h>
 #include "ut0rnd.h"
+#include "ut/ut.h"
 
 /** The number of blocks from the LRU_old pointer onward, including
 the block pointed to, must be buf_pool->LRU_old_ratio/BUF_LRU_OLD_RATIO_DIV
@@ -1090,7 +1091,7 @@ ibool buf_LRU_buf_pool_running_out(void) {
 
     if (!recv_recovery_is_on() &&
         UT_LIST_GET_LEN(buf_pool->free) + UT_LIST_GET_LEN(buf_pool->LRU) <
-            ut_min(buf_pool->curr_size, buf_pool->old_size) / 4) {
+            std::min(buf_pool->curr_size, buf_pool->old_size) / 4) {
       ret = TRUE;
     }
   }
@@ -1374,7 +1375,7 @@ void buf_LRU_old_adjust_len(buf_pool_t *buf_pool) {
 #endif /* UNIV_LRU_DEBUG */
 
   old_len = buf_pool->LRU_old_len;
-  new_len = ut_min(UT_LIST_GET_LEN(buf_pool->LRU) * buf_pool->LRU_old_ratio /
+  new_len = std::min(UT_LIST_GET_LEN(buf_pool->LRU) * buf_pool->LRU_old_ratio /
                        BUF_LRU_OLD_RATIO_DIV,
                    UT_LIST_GET_LEN(buf_pool->LRU) -
                        (BUF_LRU_OLD_TOLERANCE + BUF_LRU_NON_OLD_MIN_LEN));
@@ -2381,7 +2382,7 @@ static void buf_LRU_validate_instance(buf_pool_t *buf_pool) {
     ut_a(buf_pool->LRU_old);
     old_len = buf_pool->LRU_old_len;
 
-    new_len = ut_min(UT_LIST_GET_LEN(buf_pool->LRU) * buf_pool->LRU_old_ratio /
+    new_len = std::min(UT_LIST_GET_LEN(buf_pool->LRU) * buf_pool->LRU_old_ratio /
                          BUF_LRU_OLD_RATIO_DIV,
                      UT_LIST_GET_LEN(buf_pool->LRU) -
                          (BUF_LRU_OLD_TOLERANCE + BUF_LRU_NON_OLD_MIN_LEN));

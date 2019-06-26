@@ -966,7 +966,7 @@ try_again:
   }
 
   /* Write out the first block of the doublewrite buffer */
-  len = ut_min(TRX_SYS_DOUBLEWRITE_BLOCK_SIZE, buf_dblwr->first_free) *
+  len = std::min(TRX_SYS_DOUBLEWRITE_BLOCK_SIZE, buf_dblwr->first_free) *
         UNIV_PAGE_SIZE;
 
   err =

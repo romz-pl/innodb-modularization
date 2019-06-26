@@ -47,7 +47,6 @@ external tools. */
 
 #include <innodb/univ/univ.h>
 #include <innodb/error/dberr_t.h>
-#include "ut0ut.h"
 
 /** Compression algorithm. */
 struct Compression {

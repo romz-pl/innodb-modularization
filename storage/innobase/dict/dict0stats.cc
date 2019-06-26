@@ -52,7 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include "ut0new.h"
 #include "ut0rnd.h"
-#include "ut0ut.h"
+#include "ut/ut.h"
 
 /* Sampling algorithm description @{
 

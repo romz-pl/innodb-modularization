@@ -66,6 +66,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ut0byte.h"
 #include <innodb/formatting/formatting.h>
 #include "ut0stage.h"
+#include "ut/ut.h"
 
 #ifdef UNIV_LINUX
 /* include defs for CPU time priority settings */
@@ -2235,9 +2236,9 @@ static ulint buf_flush_LRU_list(buf_pool_t *buf_pool) {
   withdraw_depth = buf_get_withdraw_depth(buf_pool);
 
   if (withdraw_depth > srv_LRU_scan_depth) {
-    scan_depth = ut_min(withdraw_depth, scan_depth);
+    scan_depth = std::min(withdraw_depth, scan_depth);
   } else {
-    scan_depth = ut_min(static_cast<ulint>(srv_LRU_scan_depth), scan_depth);
+    scan_depth = std::min(static_cast<ulint>(srv_LRU_scan_depth), scan_depth);
   }
 
   /* Currently one of page_cleaners is the only thread
@@ -2487,7 +2488,7 @@ static ulint page_cleaner_flush_pages_recommendation(lsn_t *lsn_limit,
   pct_for_dirty = af_get_pct_for_dirty();
   pct_for_lsn = af_get_pct_for_lsn(age);
 
-  pct_total = ut_max(pct_for_dirty, pct_for_lsn);
+  pct_total = std::max(pct_for_dirty, pct_for_lsn);
 
   /* Estimate pages to be flushed for the lsn progress */
   ulint sum_pages_for_lsn = 0;
@@ -2575,11 +2576,11 @@ static ulint pc_sleep_if_needed(ulint next_loop_time, int64_t sig_count) {
 
   if (next_loop_time > cur_time) {
     /* Get sleep interval in micro seconds. We use
-    ut_min() to avoid long sleep in case of wrap around. */
+    std::min() to avoid long sleep in case of wrap around. */
     ulint sleep_us;
 
     sleep_us =
-        ut_min(static_cast<ulint>(1000000), (next_loop_time - cur_time) * 1000);
+        std::min(static_cast<ulint>(1000000), (next_loop_time - cur_time) * 1000);
 
     return (os_event_wait_time_low(buf_flush_event, sleep_us, sig_count));
   }

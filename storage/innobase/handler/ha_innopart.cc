@@ -784,7 +784,7 @@ inline int ha_innopart::initialize_auto_increment(bool /* no_lock */) {
         partition tables still doesn't modify the
         in-memory counter while persisted one could
         be updated if it's updated to larger value. */
-        set_if_bigger(max_auto_inc, ut_max(read_auto_inc, persisted_auto_inc));
+        set_if_bigger(max_auto_inc, std::max(read_auto_inc, persisted_auto_inc));
         dict_table_autoinc_unlock(ib_table);
         continue;
       }

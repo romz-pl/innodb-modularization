@@ -47,7 +47,6 @@ the file COPYING.Google.
 
 #include "sync0rw.h"
 #include "ut0rnd.h"
-#include "ut0ut.h"
 
 #ifndef UNIV_HOTBACKUP
 #ifndef UNIV_LIBRARY

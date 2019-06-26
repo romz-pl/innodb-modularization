@@ -2861,7 +2861,7 @@ retry:
   if (doc_id_cmp == 0 && *doc_id) {
     cache->synced_doc_id = *doc_id - 1;
   } else {
-    cache->synced_doc_id = ut_max(doc_id_cmp, *doc_id);
+    cache->synced_doc_id = std::max(doc_id_cmp, *doc_id);
   }
 
   mutex_enter(&cache->doc_id_lock);

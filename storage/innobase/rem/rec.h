@@ -518,7 +518,7 @@ UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ibool rec_offs_validate(
     ut_ad((ulint)index == offsets[3]);
     ulint n_fields = dict_index_get_n_fields(index);
     ulint n_unique_in_tree = dict_index_get_n_unique_in_tree(index) + 1;
-    max_n_fields = ut_max(n_fields, n_unique_in_tree);
+    max_n_fields = std::max(n_fields, n_unique_in_tree);
     if (!comp && rec != nullptr && rec_get_n_fields_old_raw(rec) < i) {
       ut_a(index->has_instant_cols());
     }

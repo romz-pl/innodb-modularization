@@ -41,7 +41,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0event.h"
 #include "sync0policy.h"
 #include "ut0rnd.h"
-#include "ut0ut.h"
 
 #include <atomic>
 

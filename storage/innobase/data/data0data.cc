@@ -384,7 +384,7 @@ static void dfield_print_raw(FILE *f,                /*!< in: output stream */
 {
   ulint len = dfield_get_len(dfield);
   if (!dfield_is_null(dfield)) {
-    ulint print_len = ut_min(len, static_cast<ulint>(1000));
+    ulint print_len = std::min(len, static_cast<ulint>(1000));
     ut_print_buf(f, dfield_get_data(dfield), print_len);
     if (len != print_len) {
       fprintf(f, "(total %lu bytes%s)", (ulong)len,

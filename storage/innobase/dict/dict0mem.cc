@@ -54,6 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0sync.h"
 #include <innodb/formatting/formatting.h>
 #include <innodb/time/ut_time.h>
+#include "ut0ut.h"
 
 /** An interger randomly initialized at startup used to make a temporary
 table name as unuique as possible. */

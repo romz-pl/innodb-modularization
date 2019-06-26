@@ -917,7 +917,7 @@ static void page_cur_insert_rec_write_log(
   i = 0;
 
   if (cur_extra_size == extra_size) {
-    ulint min_rec_size = ut_min(cur_rec_size, rec_size);
+    ulint min_rec_size = std::min(cur_rec_size, rec_size);
 
     const byte *cur_ptr = cursor_rec - cur_extra_size;
 

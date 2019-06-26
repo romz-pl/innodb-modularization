@@ -95,6 +95,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ut0crc32.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "ut0mem.h"
+#include "ut0ut.h"
+#include "ut/ut.h"
+
 
 #ifdef UNIV_HOTBACKUP
 #include "page0size.h"
@@ -2826,7 +2829,7 @@ static ulint srv_do_purge(
 
     ulint undo_trunc_freq = purge_sys->undo_trunc.get_rseg_truncate_frequency();
 
-    ulint rseg_truncate_frequency = ut_min(
+    ulint rseg_truncate_frequency = std::min(
         static_cast<ulint>(srv_purge_rseg_truncate_frequency), undo_trunc_freq);
 
     n_pages_purged = trx_purge(n_use_threads, srv_purge_batch_size,

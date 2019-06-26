@@ -275,7 +275,7 @@ static void trx_sysf_create(mtr_t *mtr) /*!< in: mtr */
   define TRX_SYS_N_RSEGS as 256 (TRX_SYS_OLD_N_RSEGS) and expect
   that the whole array is initialized. */
   ptr = TRX_SYS_RSEGS + sys_header;
-  len = ut_max(TRX_SYS_OLD_N_RSEGS, TRX_SYS_N_RSEGS) * TRX_SYS_RSEG_SLOT_SIZE;
+  len = std::max(TRX_SYS_OLD_N_RSEGS, TRX_SYS_N_RSEGS) * TRX_SYS_RSEG_SLOT_SIZE;
   memset(ptr, 0xff, len);
   ptr += len;
   ut_a(ptr <= page + (UNIV_PAGE_SIZE - FIL_PAGE_DATA_END));

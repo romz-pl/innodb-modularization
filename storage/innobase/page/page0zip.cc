@@ -99,7 +99,7 @@ Compare at most sizeof(field_ref_zero) bytes.
 @param s in: size of the memory block, in bytes */
 #define ASSERT_ZERO(b, s)          \
   ut_ad(!memcmp(b, field_ref_zero, \
-                ut_min(static_cast<size_t>(s), sizeof field_ref_zero)));
+                std::min(static_cast<size_t>(s), sizeof field_ref_zero)));
 /** Assert that a BLOB pointer is filled with zero bytes.
 @param b in: BLOB pointer */
 #define ASSERT_ZERO_BLOB(b) \
@@ -1330,7 +1330,7 @@ static void page_zip_hexdump_func(
 
     fprintf(stderr, "%04lx ", (ulong)addr);
 
-    i = ut_min(width, size - addr);
+    i = std::min(width, size - addr);
 
     while (i--) {
       fprintf(stderr, "%02x", *s++);

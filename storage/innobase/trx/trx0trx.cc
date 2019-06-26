@@ -63,6 +63,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ut0new.h"
 #include "ut0pool.h"
 #include "ut0vec.h"
+#include "ut/ut.h"
 
 #include "my_dbug.h"
 #include "mysql/plugin.h"

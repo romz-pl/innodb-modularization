@@ -2053,7 +2053,7 @@ static ulint ibuf_get_merge_page_nos_func(
 
   *n_stored = 0;
 
-  limit = ut_min(IBUF_MAX_N_PAGES_MERGED, buf_pool_get_curr_size() / 4);
+  limit = std::min(IBUF_MAX_N_PAGES_MERGED, buf_pool_get_curr_size() / 4);
 
   if (page_rec_is_supremum(rec)) {
     rec = page_rec_get_prev_const(rec);

@@ -5379,7 +5379,7 @@ bool os_file_set_size(const char *name, pfs_os_file_t file, os_offset_t offset,
   if (size <= UNIV_PAGE_SIZE) {
     buf_size = 1;
   } else {
-    buf_size = ut_min(static_cast<ulint>(64),
+    buf_size = std::min(static_cast<ulint>(64),
                       static_cast<ulint>(size / UNIV_PAGE_SIZE));
   }
 

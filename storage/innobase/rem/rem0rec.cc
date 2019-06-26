@@ -43,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0mtr.h"
 #include "page0page.h"
 #include "trx0sys.h"
+#include "ut/ut.h"
 
 #include "my_dbug.h"
 
@@ -456,7 +457,7 @@ UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint
         flen = vfield->len;
 
         if (flen != UNIV_SQL_NULL) {
-          flen = ut_min(flen, static_cast<ulint>(
+          flen = std::min(flen, static_cast<ulint>(
                                   DICT_MAX_FIELD_LEN_BY_FORMAT(index->table)));
           data_size += flen;
         }
@@ -884,7 +885,7 @@ bool rec_convert_dtuple_to_rec_comp(rec_t *rec, const dict_index_t *index,
         /* The virtual column can only be in sec
         index, and index key length is bound by
         DICT_MAX_FIELD_LEN_BY_FORMAT */
-        flen = ut_min(flen, static_cast<ulint>(
+        flen = std::min(flen, static_cast<ulint>(
                                 DICT_MAX_FIELD_LEN_BY_FORMAT(index->table)));
       }
 

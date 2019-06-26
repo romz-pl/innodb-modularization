@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/logger/error.h>
+#include <innodb/formatting/ut_vsnprintf.h>
 
 #include "buf0buf.h"
 #include "buf0dump.h"
@@ -55,6 +56,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0rw.h"
 #include <innodb/univ/univ.h>
 #include "ut0byte.h"
+#include "ut/ut.h"
 
 enum status_severity { STATUS_VERBOSE, STATUS_INFO, STATUS_ERR };
 

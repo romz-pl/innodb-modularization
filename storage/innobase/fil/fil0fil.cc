@@ -2160,7 +2160,7 @@ fil_node_t *Fil_shard::create_node(const char *name, page_no_t size,
   to be tested even when full punch hole support is not available. */
   DBUG_EXECUTE_IF(
       "ignore_punch_hole",
-      file.block_size = ut_min(static_cast<ulint>(stat_info.block_size),
+      file.block_size = std::min(static_cast<ulint>(stat_info.block_size),
                                UNIV_PAGE_SIZE / 2););
 
   if (!IORequest::is_punch_hole_supported() || !punch_hole ||
@@ -5984,7 +5984,7 @@ static dberr_t fil_write_zeros(const fil_node_t *file, ulint page_size,
   ut_a(len > 0);
 
   /* Extend at most 1M at a time */
-  ulint n_bytes = ut_min(static_cast<ulint>(1024 * 1024), len);
+  ulint n_bytes = std::min(static_cast<ulint>(1024 * 1024), len);
 
   byte *ptr = reinterpret_cast<byte *>(ut_zalloc_nokey(n_bytes + page_size));
 
@@ -6010,7 +6010,7 @@ static dberr_t fil_write_zeros(const fil_node_t *file, ulint page_size,
 
     offset += n_bytes;
 
-    n_bytes = ut_min(n_bytes, static_cast<ulint>(end - offset));
+    n_bytes = std::min(n_bytes, static_cast<ulint>(end - offset));
 
     DBUG_EXECUTE_IF("ib_crash_during_tablespace_extension", DBUG_SUICIDE(););
   }
@@ -8130,7 +8130,7 @@ static dberr_t fil_iterate(const Fil_page_iterator &iter, buf_block_t *block,
     InnoDB IO functions croak on failed reads. */
 
     n_bytes = static_cast<ulint>(
-        ut_min(static_cast<os_offset_t>(n_bytes), iter.m_end - offset));
+        std::min(static_cast<os_offset_t>(n_bytes), iter.m_end - offset));
 
     ut_ad(n_bytes > 0);
     ut_ad(!(n_bytes % iter.m_page_size));

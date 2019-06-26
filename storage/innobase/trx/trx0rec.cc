@@ -1327,7 +1327,7 @@ static ulint trx_undo_page_report_modify(
         /* Only log sufficient bytes for index
         record update */
         if (flen != UNIV_SQL_NULL) {
-          flen = ut_min(flen, max_v_log_len);
+          flen = std::min(flen, max_v_log_len);
         }
       } else {
         field = rec_get_nth_field_instant(rec, offsets, pos, index, &flen);
@@ -1385,7 +1385,7 @@ static ulint trx_undo_page_report_modify(
         field = static_cast<byte *>(fld->new_val.data);
         flen = fld->new_val.len;
         if (flen != UNIV_SQL_NULL) {
-          flen = ut_min(flen, max_v_log_len);
+          flen = std::min(flen, max_v_log_len);
         }
 
         if (trx_undo_left(undo_page, ptr) < 15) {
@@ -1557,7 +1557,7 @@ static ulint trx_undo_page_report_modify(
         }
 
         if (flen != UNIV_SQL_NULL) {
-          flen = ut_min(flen, max_v_log_len);
+          flen = std::min(flen, max_v_log_len);
         }
 
         ptr += mach_write_compressed(ptr, flen);

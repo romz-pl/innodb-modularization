@@ -4,6 +4,7 @@ add_library( ${LIB_NAME} STATIC
     formatting.cpp
     get_first_format.cpp
     hex.cpp
+    ut_vsnprintf.cpp
     verify_fmt_match.cpp
 )
 

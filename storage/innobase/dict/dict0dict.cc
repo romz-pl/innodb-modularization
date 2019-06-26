@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/logger/error_or_warn.h>
 
+#include "mysql/components/services/log_builtins.h"
+
 #include <stdlib.h>
 #include <strfunc.h>
 #include <sys/types.h>
@@ -124,6 +126,7 @@ extern uint ibuf_debug;
 #include "trx0undo.h"
 #include "ut0new.h"
 #endif /* !UNIV_HOTBACKUP */
+#include "ut0ut.h"
 
 static_assert(DATA_ROW_ID == 0, "DATA_ROW_ID != 0");
 static_assert(DATA_TRX_ID == 1, "DATA_TRX_ID != 1");
@@ -2809,7 +2812,7 @@ void dict_table_copy_v_types(dtuple_t *tuple, const dict_table_t *table) {
   if we are calling this for creating index along with adding
   virtual columns */
   ulint n_fields =
-      ut_min(dtuple_get_n_v_fields(tuple), static_cast<ulint>(table->n_v_def));
+      std::min(dtuple_get_n_v_fields(tuple), static_cast<ulint>(table->n_v_def));
 
   for (ulint i = 0; i < n_fields; i++) {
     dfield_t *dfield = dtuple_get_nth_v_field(tuple, i);
@@ -6195,7 +6198,7 @@ ulint dict_index_zip_pad_optimal_page_size(
   ut_ad(zip_pad_max < 100);
   min_sz = (UNIV_PAGE_SIZE * (100 - zip_pad_max)) / 100;
 
-  return (ut_max(sz, min_sz));
+  return (std::max(sz, min_sz));
 }
 
 /** Convert a 32 bit integer table flags to the 32 bit FSP Flags.

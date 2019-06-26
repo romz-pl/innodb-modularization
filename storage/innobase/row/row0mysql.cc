@@ -80,6 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0undo.h"
 #include "ut0mpmcbq.h"
 #include "ut0new.h"
+#include "ut0ut.h"
 
 #include "current_thd.h"
 #include "my_dbug.h"
@@ -2895,7 +2896,7 @@ dberr_t row_create_index_for_mysql(
     len = index->get_field(i)->prefix_len;
 
     if (field_lengths && field_lengths[i]) {
-      len = ut_max(len, field_lengths[i]);
+      len = std::max(len, field_lengths[i]);
     }
 
     DBUG_EXECUTE_IF("ib_create_table_fail_at_create_index",
@@ -4626,7 +4627,7 @@ skip_parallel_read:
   rec_offs_init(offsets_);
 
   ulint cnt = 1000;
-  ulint bufsize = ut_max(UNIV_PAGE_SIZE, prebuilt->mysql_row_len);
+  ulint bufsize = std::max(UNIV_PAGE_SIZE, prebuilt->mysql_row_len);
   auto buf = static_cast<byte *>(ut_malloc_nokey(bufsize));
   auto heap = mem_heap_create(100);
 
