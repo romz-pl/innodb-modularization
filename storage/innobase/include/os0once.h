@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "os0atomic.h"
+#include <innodb/atomic/atomic.h>
 
 /** Execute a given function exactly once in a multi-threaded environment
 or wait for the function to be executed by another thread.

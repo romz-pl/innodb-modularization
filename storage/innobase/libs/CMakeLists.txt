@@ -1,5 +1,6 @@
 add_subdirectory( align )
 add_subdirectory( assert )
+add_subdirectory( atomic )
 
 add_subdirectory( bit )
 

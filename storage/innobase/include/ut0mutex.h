@@ -65,7 +65,7 @@ typedef OSMutex ib_bpmutex_t;
 
 #include <set>
 #include "ib0mutex.h"
-#include "os0atomic.h"
+#include <innodb/atomic/atomic.h>
 #include "sync0policy.h"
 
 /** Create a typedef using the MutexType<PolicyType>

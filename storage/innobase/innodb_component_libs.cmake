@@ -16,6 +16,7 @@ SET( INNODB_COMPONENT_LIBS
     # A
     align
     assert
+    atomic
 
     # B
     bit

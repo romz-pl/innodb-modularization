@@ -1,3 +1,6 @@
+#pragma once
+
+
 /*****************************************************************************
 Copyright (c) 1995, 2018, Oracle and/or its affiliates. All Rights Reserved.
 Copyright (c) 2008, Google Inc.
@@ -36,8 +39,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-09-23 Sunny Bains (Split from os0sync.h)
  *******************************************************/
 
-#ifndef os0atomic_h
-#define os0atomic_h
 
 #include <innodb/univ/univ.h>
 
@@ -342,6 +343,5 @@ amount to decrement. */
 #define IB_MEMORY_BARRIER_STARTUP_MSG "Memory barrier is not used"
 #endif
 
-#include "os0atomic.ic"
+#include "atomic.ic"
 
-#endif /* !os0atomic_h */
