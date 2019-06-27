@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 extern ulint sync_array_size;
 extern sync_array_t **sync_wait_array;
 
-#include "ut0counter.h"
+#include <innodb/counter/counter.h>
 
 /** Get an instance of the sync wait array.
  @return an instance of the sync wait array. */

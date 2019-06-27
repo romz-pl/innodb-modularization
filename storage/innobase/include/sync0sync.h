@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "ut0counter.h"
+#include <innodb/counter/counter.h>
 
 #ifdef HAVE_PSI_INTERFACE
 

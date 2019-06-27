@@ -49,7 +49,7 @@ the file COPYING.Google.
 #include <atomic>
 #include <cstdint>
 
-#include "ut0counter.h"
+#include <innodb/counter/counter.h>
 #include <innodb/error/ut_error.h>
 #include "ut0new.h"
 

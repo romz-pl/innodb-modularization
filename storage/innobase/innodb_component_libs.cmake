@@ -23,6 +23,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # C
     compiler_hints
+    counter
 
     # E
     error

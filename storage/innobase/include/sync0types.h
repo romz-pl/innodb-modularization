@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <vector>
 
 #include "sync0sync.h"
-#include "ut0counter.h"
+#include <innodb/counter/counter.h>
 #include "ut0new.h"
 
 #ifdef UNIV_DEBUG

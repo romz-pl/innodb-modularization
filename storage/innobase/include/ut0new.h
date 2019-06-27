@@ -149,7 +149,7 @@ InnoDB:
 
 #include <innodb/univ/univ.h>
 #include "ut0byte.h"    /* ut_align */
-#include "ut0counter.h" /* INNOBASE_CACHE_LINE_SIZE */
+#include <innodb/counter/counter.h> /* INNOBASE_CACHE_LINE_SIZE */
 
 #define OUT_OF_MEMORY_MSG                                             \
   "Check if you should increase the swap file or ulimits of your"     \

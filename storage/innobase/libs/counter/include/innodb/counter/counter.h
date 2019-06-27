@@ -1,3 +1,5 @@
+#pragma once
+
 /*****************************************************************************
 
 Copyright (c) 2012, 2018, Oracle and/or its affiliates. All Rights Reserved.
@@ -31,8 +33,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012/04/12 by Sunny Bains
  *******************************************************/
 
-#ifndef ut0counter_h
-#define ut0counter_h
 
 #include <innodb/univ/univ.h>
 #include <innodb/thread/os_thread_get_curr_id.h>
@@ -274,4 +274,4 @@ inline void clear(Shards &shards) {
 
 }  // namespace Counter
 
-#endif /* ut0counter_h */
+

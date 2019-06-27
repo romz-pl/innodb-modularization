@@ -62,7 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 #include "srv0conc.h"
 #include "trx0types.h"
-#include "ut0counter.h"
+#include <innodb/counter/counter.h>
 
 /* Global counters used inside InnoDB. */
 struct srv_stats_t {

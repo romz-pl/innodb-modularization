@@ -5,6 +5,7 @@ add_subdirectory( atomic )
 add_subdirectory( bit )
 
 add_subdirectory( compiler_hints )
+add_subdirectory( counter )
 
 add_subdirectory( error )
 

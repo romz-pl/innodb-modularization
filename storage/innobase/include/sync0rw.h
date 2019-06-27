@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef UNIV_HOTBACKUP
 #include "os0event.h"
-#include "ut0counter.h"
+#include <innodb/counter/counter.h>
 #endif /* !UNIV_HOTBACKUP */
 #include "ut0mutex.h"
 
