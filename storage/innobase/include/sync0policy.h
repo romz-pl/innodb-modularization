@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "srv0mon.h"
 #include "sync0types.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 #ifndef UNIV_LIBRARY
 #ifdef UNIV_DEBUG

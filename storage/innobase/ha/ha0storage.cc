@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "hash0hash.h"
 #include "mem0mem.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 /** Retrieves a data from a storage. If it is present, a pointer to the
  stored copy of data is returned, otherwise NULL is returned. */

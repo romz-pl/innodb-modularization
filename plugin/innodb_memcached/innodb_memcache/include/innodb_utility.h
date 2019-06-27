@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
  Created 03/15/2011      Jimmy Yang (most macros and defines are adopted
                          from utility files in the InnoDB. Namely
-                         ut/ut0lst.h, ut0rnd.h and hash0hash.h etc.)
+                         ut/ut0lst.h, "ut0rnd.h" and hash0hash.h etc.)
  *******************************************************/
 
 #ifndef INNODB_UTILITY_H
@@ -116,7 +116,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 /*************************************************************/ /**
  Folds a character string ending in the null character.
- Extracted from ut0rnd.h and ut0rnd.ic.
+ Extracted from "ut0rnd.h" and ut0rnd.ic.
  @return folded value */
 
 ib_ulint_t ut_fold_string(

@@ -1,3 +1,5 @@
+#pragma once
+
 /*****************************************************************************
 
 Copyright (c) 1994, 2018, Oracle and/or its affiliates. All Rights Reserved.
@@ -24,18 +26,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
-/** @file include/ut0rnd.h
+/** @file include/"ut0rnd.h"
  Random numbers and hashing
 
  Created 1/20/1994 Heikki Tuuri
  ***********************************************************************/
 
-#ifndef ut0rnd_h
-#define ut0rnd_h
 
 #include <innodb/univ/univ.h>
-
-#include "ut0byte.h"
 
 /** The 'character code' for end of field or string (used
 in folding records */
@@ -99,6 +97,6 @@ ulint ut_fold_binary(const byte *str, /*!< in: string of bytes */
                      ulint len)       /*!< in: length */
     MY_ATTRIBUTE((pure));
 
-#include "ut0rnd.ic"
+#include "random.ic"
 
-#endif
+

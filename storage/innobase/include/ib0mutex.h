@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/atomic/atomic.h>
 #include "os0event.h"
 #include "sync0policy.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 #include <atomic>
 

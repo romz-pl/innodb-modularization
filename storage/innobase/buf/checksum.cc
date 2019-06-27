@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include <innodb/univ/univ.h>
 #include "ut0crc32.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 #ifdef UNIV_HOTBACKUP
 #include "buf0checksum.h"
 #endif /* UNIV_HOTBACKUP */

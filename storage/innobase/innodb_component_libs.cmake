@@ -37,6 +37,9 @@ SET( INNODB_COMPONENT_LIBS
     math
     memory
 
+    # R
+    random
+
     # S
     string
 

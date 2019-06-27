@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0types.h"
 #include "mem0mem.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 /** Deletes a hash node. */
 void ha_delete_hash_node(hash_table_t *table,  /*!< in: hash table */

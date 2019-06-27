@@ -55,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0types.h"
 #include "ut0byte.h"
 #include "ut0new.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 #define DICT_HEAP_SIZE                   \
   100 /*!< initial memory heap size when \

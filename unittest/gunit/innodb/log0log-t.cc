@@ -42,7 +42,7 @@
 #include "srv0start.h" /* srv_is_being_started */
 #include "ut0byte.h"
 #include "ut0new.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 static std::map<std::string, std::vector<std::string>> log_sync_points = {
     {"log_buffer_exclussive_access",

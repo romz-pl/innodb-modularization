@@ -51,7 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0trx.h"
 #include <innodb/univ/univ.h>
 #include "ut0new.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 #include "ut/ut.h"
 
 /* Sampling algorithm description @{

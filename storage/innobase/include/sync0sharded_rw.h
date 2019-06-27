@@ -46,7 +46,7 @@ the file COPYING.Google.
 #include <innodb/univ/univ.h>
 
 #include "sync0rw.h"
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 #ifndef UNIV_HOTBACKUP
 #ifndef UNIV_LIBRARY

@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/11/1994 Heikki Tuuri
  ********************************************************************/
 
-#include "ut0rnd.h"
+#include <innodb/random/random.h>
 
 /** These random numbers are used in ut_find_prime */
 /*@{*/

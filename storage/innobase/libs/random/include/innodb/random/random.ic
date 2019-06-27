@@ -44,6 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define UT_XOR_RND2 143537923
 
 #include <my_thread_local.h>
+#include <innodb/assert/assert.h>
 
 /** Seed value of ut_rnd_gen_ulint() */
 extern thread_local ulint ut_rnd_ulint_counter;
