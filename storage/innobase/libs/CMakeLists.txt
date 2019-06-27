@@ -15,6 +15,7 @@ add_subdirectory( logger )
 
 add_subdirectory( math )
 add_subdirectory( memory )
+add_subdirectory( memory_check )
 
 add_subdirectory( random )
 

@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/fatal.h>
 #include <innodb/align/ut_calc_align.h>
 #include "ut0new.h"
-#include "ut0memcheck.h"
+#include <innodb/memory_check/memory_check.h>
 
 #ifdef UNIV_DEBUG
 #define mem_heap_create_block(heap, n, type, file_name, line) \
