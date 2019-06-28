@@ -49,7 +49,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0lob.h"
 #include "my_dbug.h"
 #include "row0sel.h"
-#include "ut0new.h"
 #include "ut0rbt.h"
 
 #define FTS_ELEM(t, n, i, j) (t[(i)*n + (j)])

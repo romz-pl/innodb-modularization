@@ -42,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0types.h"
 #include "trx0types.h"
-#include "ut0new.h"
 
 #include "lock0types.h"
 #include "log0log.h"

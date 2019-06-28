@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *************************************************************************/
 
 #include <innodb/math/ut_pair_cmp.h>
+#include <innodb/allocator/ut_malloc.h>
 
 #include "btr0sea.h"
 

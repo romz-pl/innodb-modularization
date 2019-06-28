@@ -30,7 +30,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/6/2006 Osku Salerma
  ************************************************************************/
 
-#include "ut0new.h"
 
 #define IB_VEC_OFFSET(v, i) (vec->sizeof_value * i)
 

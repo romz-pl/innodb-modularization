@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define log0types_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/aligned_array_pointer.h>
 
 #include <atomic>
 #include <chrono>

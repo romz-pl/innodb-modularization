@@ -24,6 +24,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+
+#include <innodb/allocator/ut_free.h>
 #include "ut0wqueue.h"
 
 #include <stddef.h>

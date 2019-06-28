@@ -43,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include "ha_prototypes.h"
 
+#include <innodb/allocator/ut_zalloc.h>
 #include <innodb/logger/info.h>
 
 #include "dd/cache/dictionary_client.h"
@@ -96,7 +97,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0mon.h"
 #include "trx0roll.h"
 #include "trx0trx.h"
-#include "ut0new.h"
 #include "ut0stage.h"
 
 /* For supporting Native InnoDB Partitioning. */

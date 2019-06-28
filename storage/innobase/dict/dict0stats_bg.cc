@@ -46,7 +46,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0thread-create.h"
 #include "row0mysql.h"
 #include "srv0start.h"
-#include "ut0new.h"
 #include <innodb/time/ut_time.h>
 
 /** Minimum time interval between stats recalc for a given table */

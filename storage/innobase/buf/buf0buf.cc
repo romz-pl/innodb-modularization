@@ -47,6 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/math/ut_2_power_up.h>
 #include <innodb/time/ut_difftime.h>
 #include <innodb/formatting/ut_vsnprintf.h>
+#include <innodb/allocator/ut_zalloc_nokey_nofatal.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
@@ -87,7 +88,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "sync0sync.h"
-#include "ut0new.h"
 #include "ut/ut.h"
 #endif /* !UNIV_HOTBACKUP */
 

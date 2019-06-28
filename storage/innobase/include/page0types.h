@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0types.h"
 #include "mtr0types.h"
-#include "ut0new.h"
 
 #include <map>
 

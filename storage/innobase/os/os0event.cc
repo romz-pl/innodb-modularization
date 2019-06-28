@@ -39,7 +39,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ha_prototypes.h"
 #include "ut0mutex.h"
-#include "ut0new.h"
 
 #ifdef _WIN32
 #include <windows.h>

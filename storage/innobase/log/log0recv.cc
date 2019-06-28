@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_down.h>
+#include <innodb/allocator/ut_realloc.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
 #include <innodb/memory/ut_memmove.h>
@@ -74,7 +75,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rec.h"
 #include "trx0undo.h"
 #include "ut0call_destructor.h"
-#include "ut0new.h"
 #include "ut/ut.h"
 
 #ifndef UNIV_HOTBACKUP

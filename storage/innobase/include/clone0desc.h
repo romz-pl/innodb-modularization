@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <map>
+
 #include "mem0mem.h"
 
 /** Invalid locator ID. */

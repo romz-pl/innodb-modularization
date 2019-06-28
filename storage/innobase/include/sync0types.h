@@ -37,13 +37,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 // #include <innodb/univ/univ.h>
 
 #include <innodb/logger/error.h>
+#include <innodb/allocator/UT_DELETE.h>
+#include <innodb/allocator/UT_NEW_NOKEY.h>
+#include <innodb/allocator/ut_allocator.h>
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
 #include "sync0sync.h"
 #include <innodb/counter/counter.h>
-#include "ut0new.h"
 
 #ifdef UNIV_DEBUG
 /** Set when InnoDB has invoked exit(). */

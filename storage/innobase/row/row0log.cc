@@ -49,7 +49,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0upd.h"
 #include "srv0mon.h"
 #include "trx0rec.h"
-#include "ut0new.h"
 #include "ut0stage.h"
 
 #include "my_dbug.h"

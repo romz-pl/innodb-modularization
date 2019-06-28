@@ -58,7 +58,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0purge.h"
 #include "trx0sys.h"
 #include "usr0sess.h"
-#include "ut0new.h"
 #include "ut0ut.h"
 #include "ut0vec.h"
 #include "ut/ut.h"

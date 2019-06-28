@@ -38,7 +38,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0file.h"
 #include "fsp0fsp.h"
 #include "fsp0types.h"
-#include "ut0new.h"
 
 #include <vector>
 

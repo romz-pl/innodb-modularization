@@ -73,7 +73,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0mon.h"
 #include "trx0trx.h"
 #include "trx0undo.h"
-#include "ut0new.h"
 
 #include "my_dbug.h"
 

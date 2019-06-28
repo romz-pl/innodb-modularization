@@ -66,7 +66,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0once.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "dict/mem.h"
-#include "ut0new.h"
 
 #include "sql/sql_const.h" /* MAX_KEY_LENGTH */
 

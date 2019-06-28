@@ -40,7 +40,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0dict.h"
 #include "page0cur.h"
-#include "ut0new.h"
 
 /** Innodb B-tree index fill factor for bulk load. */
 extern long innobase_fill_factor;

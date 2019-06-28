@@ -50,7 +50,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "trx0trx.h"
 #include <innodb/univ/univ.h>
-#include "ut0new.h"
 #include <innodb/random/random.h>
 #include "ut/ut.h"
 

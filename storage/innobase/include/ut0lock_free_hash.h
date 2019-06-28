@@ -36,6 +36,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define BOOST_ATOMIC_NO_LIB
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/allocator/ut_malloc.h>
+#include <innodb/allocator/UT_DELETE_ARRAY.h>
 #include <innodb/math/ut_is_2pow.h>
 
 #include <atomic>
@@ -43,7 +46,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "os0numa.h"  /* os_numa_*() */
 #include "ut0mutex.h" /* ib_mutex_t */
-#include "ut0new.h"   /* UT_NEW*(), UT_DELETE*() */
 #include <innodb/random/random.h>   /* ut_fold_ull() */
 
 /** An interface class to a basic hash table, that ut_lock_free_hash_t is. */

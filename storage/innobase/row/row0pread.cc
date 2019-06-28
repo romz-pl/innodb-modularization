@@ -39,7 +39,6 @@ Created 2018-01-27 by Sunny Bains */
 #include "row0row.h"
 #include "row0vers.h"
 #include "ut0call_destructor.h"
-#include "ut0new.h"
 
 // Doxygen gets confused by the explicit specializations.
 

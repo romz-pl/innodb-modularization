@@ -39,7 +39,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0sysspace.h"      /* srv_tmp_space */
 #include "ibuf0ibuf.h"         /* IBUF_SPACE_ID */
 #include "ut0lock_free_hash.h" /* ut_lock_free_hash_t */
-#include "ut0new.h"            /* UT_NEW(), UT_DELETE() */
 
 /** Per index buffer pool statistics - contains how many pages for each index
 are cached in the buffer pool(s). This is a key,value store where the key is

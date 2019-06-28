@@ -42,9 +42,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0types.h"
 #include "os0file.h" /* OS_FILE_LOG_BLOCK_SIZE */
 #include "ut0byte.h"
-#include "ut0new.h"
 
 #include <list>
+#include <map>
 #include <set>
 #include <unordered_map>
 

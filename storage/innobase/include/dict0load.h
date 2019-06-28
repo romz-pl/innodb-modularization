@@ -42,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mem0mem.h"
 #include "trx0types.h"
 #include "ut0byte.h"
-#include "ut0new.h"
 
 #include <deque>
 

@@ -53,7 +53,6 @@ direct reference to server header and global variable */
 #endif /* !UNIV_HOTBACKUP */
 #include "srv0start.h"
 #include "trx0sys.h"
-#include "ut0new.h"
 
 /** The control info of the system tablespace. */
 SysTablespace srv_sys_space;

@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/26/2006 Osku Salerma
  ************************************************************************/
 
+
+#include <innodb/allocator/ut_zalloc_nokey.h>
+#include <innodb/allocator/ut_free.h>
 #include "ut0list.h"
 
 #include <stddef.h>

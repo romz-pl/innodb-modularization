@@ -34,6 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #define ARCH_RECV_INCLUDE
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/UT_DELETE_ARRAY.h>
 
 #include "arch0arch.h"
 #include "arch0page.h"

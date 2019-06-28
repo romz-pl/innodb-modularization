@@ -42,6 +42,8 @@ the file COPYING.Google.
 
 #include <innodb/univ/univ.h>
 
+#include <map>
+
 #include "log0types.h"
 
 #ifndef UNIV_HOTBACKUP

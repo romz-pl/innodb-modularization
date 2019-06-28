@@ -54,7 +54,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #endif /* !UNIV_NO_ERR_MSGS */
 
-#include "ut0new.h"
 
 #ifdef UNIV_DEBUG
 

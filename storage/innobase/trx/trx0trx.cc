@@ -62,7 +62,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0undo.h"
 #include "trx0xa.h"
 #include "usr0sess.h"
-#include "ut0new.h"
 #include "ut0pool.h"
 #include "ut0vec.h"
 #include "ut/ut.h"

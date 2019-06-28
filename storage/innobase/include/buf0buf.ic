@@ -50,7 +50,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0rea.h"
 #include "fsp0types.h"
 #include "sync0debug.h"
-#include "ut0new.h"
 #endif /* !UNIV_HOTBACKUP */
 
 /** A chunk of buffers. The buffer pool is allocated in chunks. */

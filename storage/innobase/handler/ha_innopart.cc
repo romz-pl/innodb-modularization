@@ -45,6 +45,7 @@ Created Nov 22, 2013 Mattias Jonsson */
 #include <strfunc.h>
 #include <new>
 
+#include <innodb/allocator/ut_zalloc.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
 

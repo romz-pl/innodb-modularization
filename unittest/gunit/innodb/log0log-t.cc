@@ -41,7 +41,7 @@
 #include "srv0srv.h"
 #include "srv0start.h" /* srv_is_being_started */
 #include "ut0byte.h"
-#include "ut0new.h"
+#include 
 #include <innodb/random/random.h>
 
 static std::map<std::string, std::vector<std::string>> log_sync_points = {

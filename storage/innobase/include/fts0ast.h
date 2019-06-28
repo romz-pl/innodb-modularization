@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define INNOBASE_FST0AST_H
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/ut_free.h>
+#include <innodb/allocator/ut_realloc.h>
 #include <innodb/error/dberr_t.h>
 
 #include "ha_prototypes.h"

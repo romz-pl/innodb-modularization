@@ -30,8 +30,12 @@
  ***********************************************************************/
 
 #include "ut0rbt.h"
-#include <innodb/univ/univ.h>
-#include "ut0new.h"
+
+#include <innodb/allocator/ut_free.h>
+#include <innodb/allocator/ut_zalloc_nokey.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/error/ut_error.h>
+
 
 /** Definition of a red-black tree
  ==============================

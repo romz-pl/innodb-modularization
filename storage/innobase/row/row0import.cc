@@ -57,7 +57,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "row0upd.h"
 #include "srv0start.h"
-#include "ut0new.h"
 #include "zlob0first.h"
 
 #include <vector>

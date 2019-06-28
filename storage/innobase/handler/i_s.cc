@@ -69,7 +69,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0tmp.h"
 #include "trx0i_s.h"
 #include "trx0trx.h"
-#include "ut0new.h"
 #include "ut0ut.h"
 
 #include "my_dbug.h"

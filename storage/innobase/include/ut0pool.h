@@ -40,8 +40,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <queue>
 #include <vector>
 
-#include "ut0new.h"
-
 /** Allocate the memory for the object in blocks. We keep the objects sorted
 on pointer so that they are closer together in case they have to be iterated
 over in a list. */

@@ -14,16 +14,17 @@ ADD_SUBDIRECTORY( libs )
 #
 SET( INNODB_COMPONENT_LIBS
     # A
-    align
-    assert
-    atomic
+    #align
+    allocator
+    #assert
+    #atomic
 
     # B
     bit
 
     # C
     #compiler_hints
-    counter
+    #counter
 
     # E
     #error
@@ -37,7 +38,7 @@ SET( INNODB_COMPONENT_LIBS
     # M
     #math
     memory
-    memory_check
+    #memory_check
 
     # R
     random

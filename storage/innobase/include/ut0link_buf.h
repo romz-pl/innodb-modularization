@@ -45,13 +45,14 @@ the file COPYING.Google.
 #define ut0link_buf_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/UT_DELETE_ARRAY.h>
 
 #include <atomic>
 #include <cstdint>
 
+#include <innodb/allocator/UT_NEW_ARRAY_NOKEY.h>
 #include <innodb/counter/counter.h>
 #include <innodb/error/ut_error.h>
-#include "ut0new.h"
 
 /** Concurrent data structure, which allows to track concurrently
 performed operations which locally might be dis-ordered.

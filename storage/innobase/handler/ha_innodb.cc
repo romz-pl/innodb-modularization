@@ -60,8 +60,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sql_table.h>
 #include "mysql/components/services/system_variable_source.h"
 
-#include <innodb/time/ut_time.h>
+#include <innodb/allocator/ut_new_boot.h>
+#include <innodb/allocator/ut_realloc.h>
+#include <innodb/allocator/os_large_page_size.h>
+#include <innodb/allocator/os_use_large_pages.h>
 #include <innodb/logger/info.h>
+#include <innodb/time/ut_time.h>
 #include <innodb/time/ut_time_us.h>
 #include <innodb/wait/UT_WAIT_FOR.h>
 #include <innodb/wait/spin_wait_pause_multiplier.h>

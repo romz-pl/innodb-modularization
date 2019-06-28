@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define read0types_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/UT_DELETE_ARRAY.h>
 
 #include <algorithm>
 #include "dict0mem.h"

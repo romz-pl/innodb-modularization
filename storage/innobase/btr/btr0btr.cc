@@ -55,7 +55,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "rem0cmp.h"
 #include "srv0mon.h"
 #include "trx0trx.h"
-#include "ut0new.h"
 #endif /* !UNIV_HOTBACKUP */
 
 #ifndef UNIV_HOTBACKUP

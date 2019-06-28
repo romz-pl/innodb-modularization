@@ -54,7 +54,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0rw.h"
 #include "trx0types.h"
 #include "ut0byte.h"
-#include "ut0new.h"
 #include <innodb/random/random.h>
 
 #define DICT_HEAP_SIZE                   \

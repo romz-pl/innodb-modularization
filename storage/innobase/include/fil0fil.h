@@ -42,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "ibuf0types.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "ut0new.h"
 
 #include "sql/dd/object_id.h"
 

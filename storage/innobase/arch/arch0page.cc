@@ -29,6 +29,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/allocator/ut_zalloc.h>
+#include <innodb/allocator/ut_malloc.h>
+
 #include "arch0page.h"
 #include "arch0recv.h"
 #include "clone0clone.h"

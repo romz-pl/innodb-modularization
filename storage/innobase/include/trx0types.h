@@ -40,8 +40,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ut0byte.h"
 #include <innodb/formatting/formatting.h>
 #include "ut0mutex.h"
-#include "ut0new.h"
 
+#include <algorithm>
 #include <atomic>
 #include <queue>
 #include <set>

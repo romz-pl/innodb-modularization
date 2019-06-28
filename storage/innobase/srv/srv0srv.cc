@@ -54,9 +54,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
-#include <innodb/time/ut_time.h>
+#include <innodb/allocator/os_total_large_mem_allocated.h>
 #include <innodb/logger/info.h>
 #include <innodb/time/ut_difftime.h>
+#include <innodb/time/ut_time.h>
 #include <innodb/time/ut_time_us.h>
 
 #include "btr0sea.h"

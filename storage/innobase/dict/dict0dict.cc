@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/allocator/ut_realloc.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/error_or_warn.h>
 #include <innodb/memory/ut_memcmp.h>
@@ -126,7 +127,6 @@ extern uint ibuf_debug;
 #include "srv0start.h"
 #include "sync0sync.h"
 #include "trx0undo.h"
-#include "ut0new.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "ut0ut.h"
 

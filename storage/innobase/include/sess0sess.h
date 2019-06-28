@@ -40,7 +40,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0mem.h"
 #include "srv0tmp.h"
 #include "trx0trx.h"
-#include "ut0new.h"
 
 #include <map>
 

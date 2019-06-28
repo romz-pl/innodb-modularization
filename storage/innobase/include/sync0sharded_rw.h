@@ -45,6 +45,8 @@ the file COPYING.Google.
 
 #include <innodb/univ/univ.h>
 
+#include <algorithm>
+
 #include "sync0rw.h"
 #include <innodb/random/random.h>
 

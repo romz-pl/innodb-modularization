@@ -30,10 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/11/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include "ut0mem.h"
 
 #include <string.h>
-#include "ut0new.h"
 
 
 

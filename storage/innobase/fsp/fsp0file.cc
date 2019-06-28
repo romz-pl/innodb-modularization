@@ -43,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0page.h"
 #include "srv0start.h"
 #include "trx0purge.h"
-#include "ut0new.h"
 
 #ifdef UNIV_HOTBACKUP
 #include "my_sys.h"
