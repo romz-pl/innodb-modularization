@@ -45,6 +45,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # S
     string
+    sync_os
 
     # T
     #thread
