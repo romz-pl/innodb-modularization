@@ -20,10 +20,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    thread
     time
-    univ
     PRIVATE
-    error
 )
 

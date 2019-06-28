@@ -22,20 +22,20 @@ SET( INNODB_COMPONENT_LIBS
     bit
 
     # C
-    compiler_hints
+    #compiler_hints
     counter
 
     # E
-    error
+    #error
 
     # F
     formatting
 
     # L
-    logger
+    #logger
 
     # M
-    math
+    #math
     memory
     memory_check
 
@@ -46,11 +46,11 @@ SET( INNODB_COMPONENT_LIBS
     string
 
     # T
-    thread
-    time
+    #thread
+    #time
 
     # U
-    univ
+    #univ
 
     #W
     wait

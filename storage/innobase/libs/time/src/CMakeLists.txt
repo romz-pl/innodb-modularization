@@ -23,8 +23,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    logger
-    PRIVATE
     thread
+    PRIVATE
 )
 

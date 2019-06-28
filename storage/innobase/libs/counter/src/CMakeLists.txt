@@ -16,7 +16,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     thread
-    error
     PRIVATE
 )
 
