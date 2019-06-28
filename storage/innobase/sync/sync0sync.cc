@@ -226,34 +226,7 @@ void sync_print(FILE *file) {
   sync_print_wait_info(file);
 }
 
-/** Print the filename "basename" e.g., p = "/a/b/c/d/e.cc" -> p = "e.cc"
-@param[in]	filename	Name from where to extract the basename
-@return the basename */
-const char *sync_basename(const char *filename) {
-  const char *ptr = filename + strlen(filename) - 1;
 
-  while (ptr > filename && *ptr != '/' && *ptr != '\\') {
-    --ptr;
-  }
-
-  ++ptr;
-
-  return (ptr);
-}
-
-/** String representation of the filename and line number where the
-latch was created
-@param[in]	id		Latch ID
-@param[in]	created		Filename and line number where it was crated
-@return the string representation */
-std::string sync_mutex_to_string(latch_id_t id, const std::string &created) {
-  std::ostringstream msg;
-
-  msg << "Mutex " << sync_latch_get_name(id) << " "
-      << "created " << created;
-
-  return (msg.str());
-}
 
 /** Enable the mutex monitoring */
 void MutexMonitor::enable() {

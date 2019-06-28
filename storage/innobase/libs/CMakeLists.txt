@@ -22,6 +22,7 @@ add_subdirectory( random )
 
 add_subdirectory( string )
 add_subdirectory( sync_os )
+add_subdirectory( sync_latch )
 
 add_subdirectory( thread )
 add_subdirectory( time )

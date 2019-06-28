@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #ifndef UNIV_LIBRARY
-#include "sync0types.h"
+
 
 /** Initializes the synchronization data structures.
 @param[in]	max_threads	Maximum threads that can be created. */

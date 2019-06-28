@@ -34,13 +34,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define ib0mutex_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/atomic/atomic.h>
+#include <innodb/random/random.h>
 #include <innodb/thread/os_thread_yield.h>
 #include <innodb/wait/ut_delay.h>
 
-#include <innodb/atomic/atomic.h>
 #include "os0event.h"
 #include "sync0policy.h"
-#include <innodb/random/random.h>
+#include "sync0types.h"
 
 #include <atomic>
 

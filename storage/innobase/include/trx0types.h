@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define trx0types_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/ut_allocator.h>
 
 #include "page0size.h"
 #include "sync0rw.h"

@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define hash0hash_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/sync_latch/latch_id_t.h>
 
 #include <stddef.h>
 

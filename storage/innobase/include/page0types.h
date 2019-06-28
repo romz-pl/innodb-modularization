@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define page0types_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/ut_allocator.h>
 
 #include "dict0types.h"
 #include "mtr0types.h"

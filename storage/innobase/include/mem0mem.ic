@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/memory_check/memory_check.h>
 
+#include <string.h>
+
 #ifdef UNIV_DEBUG
 #define mem_heap_create_block(heap, n, type, file_name, line) \
   mem_heap_create_block_func(heap, n, file_name, line, type)

@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define trx0purge_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/UT_NEW_NOKEY.h>
 
 #include "fil0fil.h"
 #include "mtr0mtr.h"

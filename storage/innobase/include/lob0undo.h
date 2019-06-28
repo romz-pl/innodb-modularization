@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #define lob0undo_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/UT_NEW_NOKEY.h>
 
 #include <list>
 #include "dict0mem.h"

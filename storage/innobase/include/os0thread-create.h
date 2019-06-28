@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/warn.h>
 
 
-
+#include "sync0sync.h"
 #include <my_thread.h>
 #include <atomic>
 #include <functional>

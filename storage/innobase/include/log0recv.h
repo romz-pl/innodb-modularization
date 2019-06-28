@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define log0recv_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/allocator/ut_allocator.h>
 
 #include "buf0types.h"
 #include "dict0types.h"
@@ -47,6 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <set>
 #include <unordered_map>
+#include <vector>
 
 class MetadataRecover;
 class PersistentTableMetadata;

@@ -44,6 +44,7 @@ the file COPYING.Google.
 #define sync0sharded_rw_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/sync_latch/latch_level_t.h>
 
 #include <algorithm>
 

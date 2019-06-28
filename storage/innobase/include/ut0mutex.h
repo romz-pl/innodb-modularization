@@ -34,9 +34,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define ut0mutex_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/sync_os/OSMutex.h>
 
 #include "my_inttypes.h"
-#include "sync0types.h"
+
 
 extern ulong srv_spin_wait_delay;
 extern ulong srv_n_spin_wait_rounds;

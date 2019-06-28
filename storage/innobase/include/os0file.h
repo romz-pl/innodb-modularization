@@ -42,12 +42,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #define os0file_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/assert/assert.h>
 #include <innodb/error/dberr_t.h>
 
 #include "my_dbug.h"
 #include "my_io.h"
 #include "os/file.h"
-#include "sync0types.h"
+
 
 #ifndef _WIN32
 #include <dirent.h>

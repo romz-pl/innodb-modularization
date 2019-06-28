@@ -32,6 +32,8 @@ Created 2018-02-28 by Darshan M N */
 #include "row0pread-adapter.h"
 #include "row0sel.h"
 
+#include <iostream>
+
 dberr_t Parallel_reader_adapter::worker(size_t id, Queue &ctxq, Function &f) {
   ulong *mysql_row_offsets;
   ulong *mysql_nullbit_offsets;

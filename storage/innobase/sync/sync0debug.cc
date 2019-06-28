@@ -1025,25 +1025,6 @@ latch_id_t sync_latch_get_id(const char *name) {
   return (LATCH_ID_NONE);
 }
 
-/** Get the latch name from a sync level
-@param[in]	level		Latch level to lookup
-@return NULL if not found. */
-const char *sync_latch_get_name(latch_level_t level) {
-  LatchMetaData::const_iterator end = latch_meta.end();
-
-  /* Linear scan should be OK, this should be extremely rare. */
-
-  for (LatchMetaData::const_iterator it = latch_meta.begin(); it != end; ++it) {
-    if (*it == NULL || (*it)->get_id() == LATCH_ID_NONE) {
-      continue;
-
-    } else if ((*it)->get_level() == level) {
-      return ((*it)->get_name());
-    }
-  }
-
-  return (0);
-}
 
 /** Check if it is OK to acquire the latch.
 @param[in]	latch	latch type */
@@ -1199,9 +1180,7 @@ void rw_lock_debug_mutex_exit() {
 }
 #endif /* UNIV_DEBUG */
 
-/* Meta data for all the InnoDB latches. If the latch is not in recorded
-here then it will be be considered for deadlock checks.  */
-LatchMetaData latch_meta;
+
 
 /** Load the latch meta data. */
 static void sync_latch_meta_init() UNIV_NOTHROW {

@@ -34,10 +34,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define sync0policy_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/sync_latch/latch_meta_t.h>
+#include <innodb/sync_latch/LatchMetaData.h>
 
 
 #include "srv0mon.h"
-#include "sync0types.h"
+
 #include <innodb/random/random.h>
 
 #ifndef UNIV_LIBRARY
