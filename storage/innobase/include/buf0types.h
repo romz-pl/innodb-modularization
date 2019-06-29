@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "os0event.h"
+
 #include "sync0rw.h"
 #include "ut0mutex.h"
 

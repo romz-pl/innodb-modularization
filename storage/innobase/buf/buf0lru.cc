@@ -48,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ibuf0ibuf.h"
 #include "log0recv.h"
 #include "my_dbug.h"
-#include "os0event.h"
+
 #include "os0file.h"
 #include "page0zip.h"
 #include "srv0mon.h"

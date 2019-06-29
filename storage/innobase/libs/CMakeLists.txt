@@ -21,6 +21,7 @@ add_subdirectory( memory_check )
 add_subdirectory( random )
 
 add_subdirectory( string )
+add_subdirectory( sync_event )
 add_subdirectory( sync_latch )
 add_subdirectory( sync_os )
 add_subdirectory( sync_policy )

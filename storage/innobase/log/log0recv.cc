@@ -38,6 +38,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/memory/ut_memmove.h>
 #include <innodb/memory/ut_memcmp.h>
+#include <innodb/sync_event/os_event_set.h>
+#include <innodb/sync_event/os_event_wait.h>
+#include <innodb/sync_event/os_event_reset.h>
 
 #include "ha_prototypes.h"
 

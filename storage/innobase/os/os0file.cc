@@ -40,6 +40,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
+#include <innodb/sync_event/os_event_wait.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_is_set.h>
 
 #include "os0file.h"
 #include "fil0fil.h"
@@ -53,7 +56,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include "srv0srv.h"
 #include "srv0start.h"
 #ifndef UNIV_HOTBACKUP
-#include "os0event.h"
+
 
 #endif /* !UNIV_HOTBACKUP */
 

@@ -26,6 +26,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include <innodb/allocator/ut_free.h>
+#include <innodb/sync_event/OS_SYNC_TIME_EXCEEDED.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_wait_time_low.h>
 #include "ut0wqueue.h"
 
 #include <stddef.h>

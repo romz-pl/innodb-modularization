@@ -49,6 +49,9 @@ the file COPYING.Google.
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_down.h>
+#include <innodb/sync_event/os_event_wait_low.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_wait_for.h>
 
 #include "ha_prototypes.h"
 

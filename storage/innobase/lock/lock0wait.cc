@@ -39,6 +39,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time.h>
 #include <innodb/time/ut_usectime.h>
 #include <innodb/time/ut_difftime.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_wait.h>
+#include <innodb/sync_event/os_event_wait_time_low.h>
 
 #include "ha_prototypes.h"
 #include "lock0lock.h"

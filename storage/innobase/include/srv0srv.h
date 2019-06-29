@@ -58,7 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef UNIV_HOTBACKUP
 #include "log0ddl.h"
-#include "os0event.h"
+
 #include "os0file.h"
 #include "que0types.h"
 #include "srv0conc.h"

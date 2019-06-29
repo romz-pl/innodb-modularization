@@ -36,6 +36,8 @@ The tablespace memory cache */
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
 #include <innodb/formatting/hex.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_wait_low.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
@@ -65,7 +67,7 @@ The tablespace memory cache */
 #ifndef UNIV_HOTBACKUP
 #include "buf0lru.h"
 #include "ibuf0ibuf.h"
-#include "os0event.h"
+
 #include "row0mysql.h"
 #include "sql_backup_lock.h"
 #include "sql_class.h"

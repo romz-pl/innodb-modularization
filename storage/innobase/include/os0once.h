@@ -35,8 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define os0once_h
 
 #include <innodb/univ/univ.h>
-
 #include <innodb/atomic/atomic.h>
+#include <innodb/wait/UT_RELAX_CPU.h>
 
 /** Execute a given function exactly once in a multi-threaded environment
 or wait for the function to be executed by another thread.

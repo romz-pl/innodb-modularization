@@ -37,6 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <vector>
 
 #include <innodb/time/ut_difftime.h>
+#include <innodb/sync_event/os_event_wait_time.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_wait.h>
 
 #include "dict0dd.h"
 #include "dict0dict.h"

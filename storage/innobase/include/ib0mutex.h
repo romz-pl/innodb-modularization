@@ -40,8 +40,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_policy/NoPolicy.h>
 #include <innodb/thread/os_thread_yield.h>
 #include <innodb/wait/ut_delay.h>
+#include <innodb/sync_event/os_event_create.h>
+#include <innodb/sync_event/os_event_destroy.h>
 
-#include "os0event.h"
+
 
 #include "sync0types.h"
 

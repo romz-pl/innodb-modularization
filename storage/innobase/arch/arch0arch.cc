@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/allocator/ut_malloc.h>
 #include <innodb/logger/info.h>
+#include <innodb/sync_event/os_event_destroy.h>
+#include <innodb/sync_event/os_event_wait.h>
+#include <innodb/sync_event/os_event_reset.h>
 
 #include "arch0arch.h"
 #include "os0thread-create.h"

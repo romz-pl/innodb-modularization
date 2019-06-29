@@ -45,7 +45,8 @@ SET( INNODB_COMPONENT_LIBS
 
     # S
     string
-    sync_latch
+    sync_event
+    #sync_latch
     #sync_os
     sync_policy
 
@@ -57,5 +58,5 @@ SET( INNODB_COMPONENT_LIBS
     #univ
 
     #W
-    wait
+    #wait
 )

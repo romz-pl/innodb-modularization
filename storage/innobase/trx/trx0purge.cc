@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/time/ut_time_us.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_wait_low.h>
 
 #include "clone0api.h"
 #include "dict0dd.h"

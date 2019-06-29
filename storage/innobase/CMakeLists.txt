@@ -153,7 +153,6 @@ SET(INNOBASE_SOURCES
     mtr/mtr0mtr.cc
     os/os0file.cc
     os/os0proc.cc
-    os/os0event.cc
     page/page0cur.cc
     page/page0page.cc
     page/page0zip.cc

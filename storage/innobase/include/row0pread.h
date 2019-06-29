@@ -47,7 +47,7 @@ struct dict_table_t;
 
 #include <innodb/error/dberr_t.h>
 #include "fil0fil.h"
-#include "os0event.h"
+
 #include "page0size.h"
 #include "rem0types.h"
 #include "row0mysql.h"

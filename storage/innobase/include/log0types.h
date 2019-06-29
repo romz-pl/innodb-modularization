@@ -43,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/allocator/aligned_array_pointer.h>
+#include <innodb/sync_event/os_event_t.h>
 
 #include <atomic>
 #include <chrono>
@@ -51,7 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <mutex>
 #include <string>
 
-#include "os0event.h"
+
 #include "os0file.h"
 #include "sync0sharded_rw.h"
 #include "ut0link_buf.h"

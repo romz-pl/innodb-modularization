@@ -103,7 +103,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0load.h"
 #include "dict0stats_bg.h"
 #include "lock0lock.h"
-#include "os0event.h"
+
 #include "os0proc.h"
 #include "pars0pars.h"
 #include "que0que.h"
