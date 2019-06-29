@@ -10,6 +10,7 @@
 #include <innodb/sync_event/os_event_t.h>
 #include <innodb/sync_event/os_event_create.h>
 #include <innodb/sync_event/os_event_destroy.h>
+#include <innodb/sync_event/os_event_set.h>
 #include <innodb/sync_latch/sync_latch_get_name.h>
 #include <innodb/sync_mutex/mutex_state_t.h>
 #include <innodb/sync_policy/NoPolicy.h>
@@ -241,5 +242,95 @@ struct TTASEventMutex {
   /** Policy data */
   MutexPolicy m_policy;
 };
+
+#ifndef UNIV_HOTBACKUP
+
+/** Synchronization wait array cell */
+struct sync_cell_t;
+
+/** Synchronization wait array */
+struct sync_array_t;
+
+UNIV_INLINE
+sync_array_t *sync_array_get_and_reserve_cell(void *object, ulint type,
+                                              const char *file, ulint line,
+                                              sync_cell_t **cell);
+
+void sync_array_free_cell(sync_array_t *arr,   /*!< in: wait array */
+                          sync_cell_t *&cell); /*!< in: the reserved cell */
+
+void sync_array_wait_event(sync_array_t *arr,   /*!< in: wait array */
+                           sync_cell_t *&cell); /*!< in: the reserved cell */
+
+void sync_array_object_signalled();
+
+/**
+Wait in the sync array.
+@return true if the mutex acquisition was successful. */
+
+template <template <typename> class Policy>
+bool TTASEventMutex<Policy>::wait(const char *filename, uint32_t line,
+                                  uint32_t spin) UNIV_NOTHROW {
+  sync_cell_t *cell;
+  sync_array_t *sync_arr;
+
+  sync_arr = sync_array_get_and_reserve_cell(
+      this,
+      (m_policy.get_id() == LATCH_ID_BUF_BLOCK_MUTEX ||
+       m_policy.get_id() == LATCH_ID_BUF_POOL_ZIP)
+          ? SYNC_BUF_BLOCK
+          : SYNC_MUTEX,
+      filename, line, &cell);
+
+  /* The memory order of the array reservation and
+  the change in the waiters field is important: when
+  we suspend a thread, we first reserve the cell and
+  then set waiters field to 1. When threads are released
+  in mutex_exit, the waiters field is first set to zero
+  and then the event is set to the signaled state. */
+
+  set_waiters();
+
+  /* Try to reserve still a few times. */
+
+  for (uint32_t i = 0; i < spin; ++i) {
+    if (try_lock()) {
+      sync_array_free_cell(sync_arr, cell);
+
+      /* Note that in this case we leave
+      the waiters field set to 1. We cannot
+      reset it to zero, as we do not know if
+      there are other waiters. */
+
+      return (true);
+    }
+  }
+
+  /* Now we know that there has been some thread
+  holding the mutex after the change in the wait
+  array and the waiters field was made.  Now there
+  is no risk of infinite wait on the event. */
+
+  sync_array_wait_event(sync_arr, cell);
+
+  return (false);
+}
+
+/** Wakeup any waiting thread(s). */
+
+template <template <typename> class Policy>
+void TTASEventMutex<Policy>::signal() UNIV_NOTHROW {
+  clear_waiters();
+
+  /* The memory order of resetting the waiters field and
+  signaling the object is important. See LEMMA 1 above. */
+  os_event_set(m_event);
+
+  sync_array_object_signalled();
+}
+
+
+#endif
+
 
 #endif

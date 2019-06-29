@@ -44,6 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/allocator/aligned_array_pointer.h>
 #include <innodb/sync_event/os_event_t.h>
+#include <innodb/sync_mutex/ib_mutex_t.h>
 
 #include <atomic>
 #include <chrono>
@@ -56,7 +57,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0file.h"
 #include "sync0sharded_rw.h"
 #include "ut0link_buf.h"
-#include "ut0mutex.h"
 
 /** Type used for all log sequence number storage and arithmetics. */
 typedef uint64_t lsn_t;

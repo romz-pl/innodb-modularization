@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/sync_mutex/mutex_own.h>
+
 #include "arch0log.h"
 #include "arch0page.h"
 #include "clone0desc.h"

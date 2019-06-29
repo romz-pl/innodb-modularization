@@ -44,7 +44,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0types.h"
 #include "ut0byte.h"
 #include "ut0lst.h"
-#include "ut0mutex.h"
 #endif /* !UNIV_HOTBACKUP */
 #include <atomic>
 #include "trx0trx.h"

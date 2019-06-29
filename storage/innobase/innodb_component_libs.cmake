@@ -15,7 +15,7 @@ ADD_SUBDIRECTORY( libs )
 SET( INNODB_COMPONENT_LIBS
     # A
     #align
-    allocator
+    #allocator
     #assert
     #atomic
 
@@ -41,15 +41,15 @@ SET( INNODB_COMPONENT_LIBS
     #memory_check
 
     # R
-    random
+    #random
 
     # S
     string
-    sync_event
+    #sync_event
     #sync_latch
     sync_mutex
     #sync_os
-    sync_policy
+    #sync_policy
 
     # T
     #thread

@@ -39,6 +39,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/sync_mutex/MutexMonitor.h>
+#include <innodb/sync_mutex/mutex_enter.h>
+#include <innodb/sync_mutex/mutex_exit.h>
+
 #include "sync0rw.h"
 #include "sync0sync.h"
 #include <innodb/formatting/formatting.h>

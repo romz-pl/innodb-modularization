@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_free.h>
 #include <innodb/math/ut_is_2pow.h>
 #include <innodb/sync_latch/sync_latch_get_level.h>
+#include <innodb/sync_mutex/mutex_create.h>
 
 #include "hash0hash.h"
 #include "mem0mem.h"

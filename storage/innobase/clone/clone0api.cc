@@ -44,6 +44,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql/dd/types/schema.h"
 #include "sql/dd/types/table.h"
 
+#include <innodb/sync_mutex/IB_mutex_guard.h>
+
 void innodb_clone_get_capability(Ha_clone_flagset &flags) {
   flags.reset();
 

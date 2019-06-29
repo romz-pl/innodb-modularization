@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/sync_latch/latch_id_t.h>
+#include <innodb/sync_mutex/ib_mutex_t.h>
 
 #include <stddef.h>
 

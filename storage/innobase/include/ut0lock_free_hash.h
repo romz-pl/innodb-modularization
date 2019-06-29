@@ -45,7 +45,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <list>
 
 #include "os0numa.h"  /* os_numa_*() */
-#include "ut0mutex.h" /* ib_mutex_t */
 #include <innodb/random/random.h>   /* ut_fold_ull() */
 
 /** An interface class to a basic hash table, that ut_lock_free_hash_t is. */

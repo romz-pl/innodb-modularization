@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_zalloc_nokey_nofatal.h>
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_mutex/mutex_own.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

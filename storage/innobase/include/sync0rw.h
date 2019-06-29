@@ -42,12 +42,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/sync_event/os_event_t.h>
+#include <innodb/sync_mutex/ib_mutex_t.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/counter/counter.h>
 #endif /* !UNIV_HOTBACKUP */
-#include "ut0mutex.h"
 
 struct rw_lock_t;
 

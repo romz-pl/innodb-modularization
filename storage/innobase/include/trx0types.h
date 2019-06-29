@@ -40,7 +40,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0rw.h"
 #include "ut0byte.h"
 #include <innodb/formatting/formatting.h>
-#include "ut0mutex.h"
 
 #include <algorithm>
 #include <atomic>

@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/align/ut_align_offset.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/memory/ut_memcpy.h>
+#include <innodb/sync_mutex/mutex_enter.h>
+#include <innodb/sync_mutex/mutex_exit.h>
 
 #include "mtr0mtr.h"
 

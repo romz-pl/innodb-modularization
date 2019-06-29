@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_latch/create_tracker.h>
 #include <innodb/sync_latch/LATCH_ADD_MUTEX.h>
 #include <innodb/sync_latch/LATCH_ADD_RWLOCK.h>
+#include <innodb/sync_mutex/MutexMonitor.h>
 
 #include "sync0debug.h"
 
@@ -52,7 +53,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_inttypes.h"
 
 #include "sync0rw.h"
-#include "ut0mutex.h"
 
 #ifndef UNIV_NO_ERR_MSGS
 #include "srv0start.h"
@@ -1504,7 +1504,8 @@ static void sync_latch_meta_destroy() {
 
 
 
-
+/** Defined in sync0sync.cc */
+extern MutexMonitor *mutex_monitor;
 
 
 /** Initializes the synchronization data structures.

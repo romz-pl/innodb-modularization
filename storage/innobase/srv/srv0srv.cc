@@ -542,8 +542,6 @@ ulong srv_doublewrite_batch_size = 120;
 ulong srv_replication_delay = 0;
 
 /*-------------------------------------------*/
-ulong srv_n_spin_wait_rounds = 30;
-ulong srv_spin_wait_delay = 6;
 ibool srv_priority_boost = TRUE;
 
 #ifndef UNIV_HOTBACKUP

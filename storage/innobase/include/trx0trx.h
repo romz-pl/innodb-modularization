@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define trx0trx_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/sync_mutex/mutex_enter.h>
+#include <innodb/sync_mutex/mutex_exit.h>
 
 #include <list>
 #include <set>

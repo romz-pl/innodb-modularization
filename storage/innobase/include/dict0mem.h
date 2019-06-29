@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/string/ut_strcmp.h>
+#include <innodb/sync_mutex/mutex_free.h>
+#include <innodb/sync_mutex/mutex_destroy.h>
 
 #include "sql/dd/object_id.h"
 #include "sql/dd/types/column.h"

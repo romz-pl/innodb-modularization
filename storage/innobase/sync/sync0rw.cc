@@ -37,6 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/11/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/sync_mutex/mutex_enter.h>
+#include <innodb/sync_mutex/mutex_exit.h>
+
 #include "sync0rw.h"
 
 #include <my_sys.h>
