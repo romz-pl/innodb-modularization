@@ -2,8 +2,13 @@
 
 #include <innodb/univ/univ.h>
 #include <innodb/sync_latch/latch_id_t.h>
-#include <innodb/sync_latch/LatchMetaData.h>
+#include <innodb/sync_latch/sync_latch_get_meta.h>
+#include <innodb/sync_latch/sync_file_created_register.h>
+#include <innodb/sync_latch/sync_file_created_deregister.h>
+#include <innodb/sync_latch/sync_file_created_get.h>
+#include <innodb/sync_latch/sync_mutex_to_string.h>
 #include <innodb/sync_policy/MutexDebug.h>
+
 
 #ifndef UNIV_LIBRARY
 

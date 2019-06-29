@@ -42,12 +42,32 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/wait/ut_delay.h>
 #include <innodb/sync_event/os_event_create.h>
 #include <innodb/sync_event/os_event_destroy.h>
+#include <innodb/sync_latch/sync_latch_get_name.h>
+#include <innodb/sync_latch/sync_latch_get_pfs_key.h>
 
 
-
-#include "sync0types.h"
+// #include "sync0types.h"
 
 #include <atomic>
+
+/** The new (C++11) syntax allows the following and we should use it when it
+is available on platforms that we support.
+
+        enum class mutex_state_t : lock_word_t { ... };
+*/
+
+/** Mutex states. */
+enum mutex_state_t {
+  /** Mutex is free */
+  MUTEX_STATE_UNLOCKED = 0,
+
+  /** Mutex is acquired by some thread. */
+  MUTEX_STATE_LOCKED = 1,
+
+  /** Mutex is contended and there are threads waiting on the lock. */
+  MUTEX_STATE_WAITERS = 2
+};
+
 
 /** OS mutex for tracking lock/unlock for debugging */
 template <template <typename> class Policy = NoPolicy>

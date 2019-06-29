@@ -36,29 +36,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#ifdef UNIV_DEBUG
-/** Set when InnoDB has invoked exit(). */
-extern bool innodb_calling_exit;
-#endif /* UNIV_DEBUG */
+//#ifdef UNIV_DEBUG
+///** Set when InnoDB has invoked exit(). */
+//extern bool innodb_calling_exit;
+//#endif /* UNIV_DEBUG */
 
 
-/** The new (C++11) syntax allows the following and we should use it when it
-is available on platforms that we support.
-
-        enum class mutex_state_t : lock_word_t { ... };
-*/
-
-/** Mutex states. */
-enum mutex_state_t {
-  /** Mutex is free */
-  MUTEX_STATE_UNLOCKED = 0,
-
-  /** Mutex is acquired by some thread. */
-  MUTEX_STATE_LOCKED = 1,
-
-  /** Mutex is contended and there are threads waiting on the lock. */
-  MUTEX_STATE_WAITERS = 2
-};
 
 
 
@@ -66,21 +49,10 @@ enum mutex_state_t {
 #ifndef UNIV_LIBRARY
 
 
-/** Register a latch, called when it is created
-@param[in]	ptr		Latch instance that was created
-@param[in]	filename	Filename where it was created
-@param[in]	line		Line number in filename */
-void sync_file_created_register(const void *ptr, const char *filename,
-                                uint16_t line);
 
-/** Deregister a latch, called when it is destroyed
-@param[in]	ptr		Latch to be destroyed */
-void sync_file_created_deregister(const void *ptr);
 
-/** Get the string where the file was created. Its format is "name:line"
-@param[in]	ptr		Latch instance
-@return created information or "" if can't be found */
-std::string sync_file_created_get(const void *ptr);
+
+
 
 #endif /* !UNIV_LIBRARY */
 
