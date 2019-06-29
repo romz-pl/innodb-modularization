@@ -49,6 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define srv0srv_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/time/ib_time_t.h>
 
 #include "buf0checksum.h"
 #include "fil0fil.h"

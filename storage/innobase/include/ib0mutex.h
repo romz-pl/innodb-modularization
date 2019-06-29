@@ -37,11 +37,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/atomic/atomic.h>
 #include <innodb/random/random.h>
+#include <innodb/sync_policy/NoPolicy.h>
 #include <innodb/thread/os_thread_yield.h>
 #include <innodb/wait/ut_delay.h>
 
 #include "os0event.h"
-#include "sync0policy.h"
+
 #include "sync0types.h"
 
 #include <atomic>

@@ -35,8 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/sync_os/OSMutex.h>
+#include <innodb/sync_policy/GenericPolicy.h>
+#include <innodb/sync_policy/BlockMutexPolicy.h>
 
-#include "my_inttypes.h"
 
 
 extern ulong srv_spin_wait_delay;
@@ -67,7 +68,7 @@ typedef OSMutex ib_bpmutex_t;
 #include <set>
 #include "ib0mutex.h"
 #include <innodb/atomic/atomic.h>
-#include "sync0policy.h"
+
 
 /** Create a typedef using the MutexType<PolicyType>
 @param[in]	M		Mutex type

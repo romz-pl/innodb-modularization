@@ -47,6 +47,7 @@ SET( INNODB_COMPONENT_LIBS
     string
     sync_latch
     #sync_os
+    sync_policy
 
     # T
     #thread
