@@ -1,9 +1,10 @@
 #pragma once
 
 #include <innodb/univ/univ.h>
-#include <innodb/sync_latch/latch_id_t.h>
 
 #ifndef UNIV_LIBRARY
+
+#include <innodb/sync_latch/latch_id_t.h>
 
 /* Do nothing */
 template <typename Mutex>

@@ -37,7 +37,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_os/OSMutex.h>
 #include <innodb/sync_policy/GenericPolicy.h>
 #include <innodb/sync_policy/BlockMutexPolicy.h>
-
+#include <innodb/sync_mutex/PolicyMutex.h>
+#include <innodb/sync_mutex/TTASFutexMutex.h>
+#include <innodb/sync_mutex/TTASMutex.h>
+#include <innodb/sync_mutex/OSTrackMutex.h>
+#include <innodb/sync_mutex/TTASEventMutex.h>
 
 
 extern ulong srv_spin_wait_delay;
@@ -66,7 +70,6 @@ typedef OSMutex ib_bpmutex_t;
 #else /* UNIV_LIBRARY */
 
 #include <set>
-#include "ib0mutex.h"
 #include <innodb/atomic/atomic.h>
 
 

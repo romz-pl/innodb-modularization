@@ -29,7 +29,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0tmp.h"
 #include <algorithm>
 #include "dict0dict.h"
-#include "ib0mutex.h"
 #include "srv0srv.h"
 #include "srv0start.h"
 

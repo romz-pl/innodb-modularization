@@ -2,6 +2,7 @@
 
 #include <innodb/univ/univ.h>
 #include <innodb/sync_latch/latch_meta.h>
+#include <innodb/sync_latch/latch_meta_t.h>
 #include <innodb/sync_latch/sync_latch_get_meta.h>
 
 #ifndef UNIV_LIBRARY

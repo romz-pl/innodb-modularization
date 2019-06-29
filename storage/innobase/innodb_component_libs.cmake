@@ -47,6 +47,7 @@ SET( INNODB_COMPONENT_LIBS
     string
     sync_event
     #sync_latch
+    sync_mutex
     #sync_os
     sync_policy
 

@@ -23,6 +23,7 @@ add_subdirectory( random )
 add_subdirectory( string )
 add_subdirectory( sync_event )
 add_subdirectory( sync_latch )
+add_subdirectory( sync_mutex )
 add_subdirectory( sync_os )
 add_subdirectory( sync_policy )
 
