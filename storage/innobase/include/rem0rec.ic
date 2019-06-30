@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0boot.h"
 #include "dict0dict.h"
 #include "mach0data.h"
-#include "ut0byte.h"
+
 
 /* Offsets of the bit-fields in an old-style record. NOTE! In the table the
 most significant bytes and bits are written below less significant.

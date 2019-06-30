@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "lot0buf.h"
 #include "mach0data.h"
-#include "ut0byte.h"
+
 #include "ut0ut.h"
 
 #ifdef UNIV_DEBUG

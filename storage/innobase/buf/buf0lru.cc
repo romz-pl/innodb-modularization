@@ -55,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "sync0rw.h"
 #include "trx0trx.h"
-#include "ut0byte.h"
+
 #include <innodb/formatting/formatting.h>
 #include <innodb/random/random.h>
 #include "ut/ut.h"

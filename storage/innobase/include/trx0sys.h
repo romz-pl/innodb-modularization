@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mem0mem.h"
 #include "mtr0mtr.h"
 #include "page0types.h"
-#include "ut0byte.h"
+
 #include "ut0lst.h"
 #endif /* !UNIV_HOTBACKUP */
 #include <atomic>

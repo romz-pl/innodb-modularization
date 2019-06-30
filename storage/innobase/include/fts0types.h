@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fut0fut.h"
 #include "pars0pars.h"
 #include "que0types.h"
-#include "ut0byte.h"
+
 #include "ut0rbt.h"
 
 /** Types used within FTS. */

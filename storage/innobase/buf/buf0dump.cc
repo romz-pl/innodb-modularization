@@ -57,7 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "sync0rw.h"
 #include <innodb/univ/univ.h>
-#include "ut0byte.h"
+
 #include "ut/ut.h"
 
 enum status_severity { STATUS_VERBOSE, STATUS_INFO, STATUS_ERR };

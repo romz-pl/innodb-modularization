@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0proc.h"
 #include "page0types.h"
 #include "srv0srv.h"
-#include "ut0byte.h"
+
 #include "ut0rbt.h"
 
 #include "buf/buf.h"

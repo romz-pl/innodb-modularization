@@ -57,7 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "hash0hash.h"
 #include "sync0rw.h"
 #include "trx0types.h"
-#include "ut0byte.h"
+
 #include <innodb/random/random.h>
 #ifndef UNIV_HOTBACKUP
 #include "fts0fts.h"

@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0rw.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "trx0purge.h"
-#include "ut0byte.h"
+
 
 // Forward declaration
 struct dict_table_t;

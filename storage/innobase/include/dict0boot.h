@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0fsp.h"
 #include "mtr0log.h"
 #include "mtr0mtr.h"
-#include "ut0byte.h"
+
 
 typedef byte dict_hdr_t;
 

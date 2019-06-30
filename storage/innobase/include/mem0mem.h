@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include "mach0data.h"
-#include "ut0byte.h"
+
 #include <innodb/random/random.h>
 
 #include <limits.h>

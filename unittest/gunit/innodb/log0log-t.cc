@@ -40,7 +40,7 @@
 #include "log0recv.h"
 #include "srv0srv.h"
 #include "srv0start.h" /* srv_is_being_started */
-#include "ut0byte.h"
+
 #include 
 #include <innodb/random/random.h>
 

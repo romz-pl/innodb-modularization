@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "rem0cmp.h"
 #include "trx0trx.h"
-#include "ut0byte.h"
+
 
 void btr_pcur_t::store_position(mtr_t *mtr) {
   ut_ad(m_pos_state == BTR_PCUR_IS_POSITIONED);

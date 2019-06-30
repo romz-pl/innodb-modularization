@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/components/services/mysql_mutex_bits.h"
 #include "page0types.h"
 #include "rem0types.h"
-#include "ut0byte.h"
+
 
 #include "fsp0types.h"
 

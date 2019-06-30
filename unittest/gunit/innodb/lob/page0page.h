@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef _page0page_h_
 #define _page0page_h_
 
-#include "ut0byte.h"
+
 
 inline page_t *page_align(const void *ptr) {
   return ((page_t *)ut_align_down(ptr, UNIV_PAGE_SIZE));

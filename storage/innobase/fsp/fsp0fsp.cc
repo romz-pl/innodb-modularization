@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_inttypes.h"
 #include "page0page.h"
 #include "page0zip.h"
-#include "ut0byte.h"
+
 #ifdef UNIV_HOTBACKUP
 #include "fut0lst.h"
 #endif /* UNIV_HOTBACKUP */

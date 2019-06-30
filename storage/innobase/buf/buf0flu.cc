@@ -68,7 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "trx0sys.h"
-#include "ut0byte.h"
+
 #include <innodb/formatting/formatting.h>
 #include "ut0stage.h"
 #include "ut/ut.h"

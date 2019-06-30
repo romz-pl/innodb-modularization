@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0types.h"
 #include "mtr0types.h"
 #include "os0file.h" /* OS_FILE_LOG_BLOCK_SIZE */
-#include "ut0byte.h"
+
 
 #include <list>
 #include <map>

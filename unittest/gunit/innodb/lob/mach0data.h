@@ -28,7 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "lot0types.h"
 #include "mtr0types.h"
-#include "ut0byte.h"
+
 #include "ut0dbg.h"
 
 inline uint8_t mach_read_from_1(const byte *b) {

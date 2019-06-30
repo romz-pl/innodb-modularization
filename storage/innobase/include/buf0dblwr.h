@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0types.h"
 #include "log0log.h"
 #include "log0recv.h"
-#include "ut0byte.h"
+
 
 /** Doublewrite system */
 extern buf_dblwr_t *buf_dblwr;

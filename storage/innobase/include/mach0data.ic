@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0types.h"
 #include "ut0byte.h"
 
+
 /** The following function is used to store data in one byte.
 @param[in]	b	pointer to byte where to store
 @param[in]	n	ulint integer to be stored, >= 0, < 256 */

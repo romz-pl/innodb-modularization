@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mach0data.h"
 #include "mtr0log.h"
 #include "mtr0types.h"
-#include "ut0byte.h"
+
 #include "ut0dbg.h"
 
 /* We define the field offsets of a node for the list */

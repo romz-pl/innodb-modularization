@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0types.h"
 #ifndef UNIV_HOTBACKUP
-#include "ut0byte.h"
+
 
 // Forward declaration
 struct trx_t;

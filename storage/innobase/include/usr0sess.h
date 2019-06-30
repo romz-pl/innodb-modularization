@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "trx0types.h"
 #include "usr0types.h"
-#include "ut0byte.h"
+
 
 /** Opens a session.
  @return own: session object */

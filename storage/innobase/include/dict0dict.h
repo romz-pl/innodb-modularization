@@ -53,7 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql/dd/object_id.h"
 #include "sync0rw.h"
 #include "trx0types.h"
-#include "ut0byte.h"
+
 #include <innodb/random/random.h>
 
 #define DICT_HEAP_SIZE                   \

@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/atomic/atomic.h>
 #include "buf0types.h"
 #include "log0log.h"
-#include "ut0byte.h"
+
 
 #ifndef UNIV_HOTBACKUP
 /** Flag indicating if the page_cleaner is in active state. */

@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0types.h"
 
 #ifdef UNIV_HOTBACKUP
-#include "ut0byte.h"
+
 #endif /* UNIV_HOTBACKUP */
 
 /* The data and all fields are always stored in a database file
