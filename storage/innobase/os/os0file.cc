@@ -45,15 +45,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/sync_event/os_event_is_set.h>
 
 #include "os0file.h"
-#include "fil0fil.h"
-#include "ha_prototypes.h"
-#include "log0log.h"
 #include "my_compiler.h"
 #include "my_dbug.h"
 #include "my_inttypes.h"
 #include "my_io.h"
 #include "sql_const.h"
-#include "srv0srv.h"
 #include "srv0start.h"
 #ifndef UNIV_HOTBACKUP
 
