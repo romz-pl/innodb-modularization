@@ -51,6 +51,7 @@ SET( INNODB_COMPONENT_LIBS
     sync_mutex
     #sync_os
     #sync_policy
+    sync_rw
 
     # T
     #thread

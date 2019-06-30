@@ -27,6 +27,7 @@ add_subdirectory( sync_latch )
 add_subdirectory( sync_mutex )
 add_subdirectory( sync_os )
 add_subdirectory( sync_policy )
+add_subdirectory( sync_rw )
 
 add_subdirectory( thread )
 add_subdirectory( time )

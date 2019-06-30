@@ -43,6 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_wait_time_low.h>
 #include <innodb/sync_event/OS_SYNC_TIME_EXCEEDED.h>
 #include <innodb/sync_mutex/mutex_enter_nowait.h>
+#include <innodb/sync_rw/rw_lock_sx_lock_nowait.h>
+#include <innodb/sync_rw/rw_lock_sx_lock_gen.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0buf.h"

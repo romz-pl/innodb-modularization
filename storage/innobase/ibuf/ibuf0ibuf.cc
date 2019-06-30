@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/formatting/formatting.h>
 #include <innodb/bit/ut_bit_set_nth.h>
+#include <innodb/sync_rw/rw_lock_x_lock_move_ownership.h>
 
 #include "buf/buf.h"
 #include "btr0sea.h"

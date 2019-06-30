@@ -30,6 +30,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/26/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/sync_rw/rw_lock_sx_unlock.h>
+#include <innodb/sync_rw/rw_lock_sx_lock.h>
+#include <innodb/sync_rw/rw_lock_s_lock_inline.h>
+#include <innodb/sync_rw/rw_lock_x_lock_inline.h>
+#include <innodb/sync_rw/rw_lock_sx_lock_inline.h>
+
+
 #include "buf0buf.h"
 
 /**

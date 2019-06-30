@@ -32,6 +32,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/math/ut_2pow_remainder.h>
 #include <innodb/random/random.h>
+#include <innodb/sync_rw/rw_lock_s_unlock.h>
+#include <innodb/sync_rw/rw_lock_s_lock.h>
+#include <innodb/sync_rw/rw_lock_x_unlock.h>
+#include <innodb/sync_rw/rw_lock_x_lock.h>
 
 /** Gets the nth cell in a hash table.
  @return pointer to cell */

@@ -49,6 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/sync_rw/rw_lock_get_writer.h>
 #include "btr0cur.h"
 
 #include <assert.h>

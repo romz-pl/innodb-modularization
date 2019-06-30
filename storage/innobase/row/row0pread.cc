@@ -35,6 +35,8 @@ Created 2018-01-27 by Sunny Bains */
 #include <innodb/sync_event/OS_SYNC_INFINITE_TIME.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_time_low.h>
+#include <innodb/sync_rw/rw_lock_get_waiters.h>
+
 #include "btr0pcur.h"
 #include "dict0dict.h"
 #include "row0pread.h"

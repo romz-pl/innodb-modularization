@@ -39,6 +39,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
+#include <innodb/sync_rw/rw_lock_set_waiter_flag.h>
+#include <innodb/sync_rw/rw_lock_set_writer_id_and_recursion_flag.h>
 
 #include "sync0rw.h"
 

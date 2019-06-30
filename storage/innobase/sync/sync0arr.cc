@@ -57,6 +57,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/UT_NEW_ARRAY_NOKEY.h>
 #include <innodb/allocator/UT_DELETE_ARRAY.h>
 #include <innodb/formatting/formatting.h>
+#include <innodb/sync_rw/rw_lock_get_writer.h>
+#include <innodb/sync_rw/rw_lock_get_reader_count.h>
 
 #ifndef UNIV_NO_ERR_MSGS
 #include "lock0lock.h"

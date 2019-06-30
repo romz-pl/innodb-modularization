@@ -41,6 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_set.h>
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_rw/rw_lock_x_lock_move_ownership.h>
 
 #include "ha_prototypes.h"
 

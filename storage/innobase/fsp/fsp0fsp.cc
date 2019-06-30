@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_calc_align_down.h>
 #include <innodb/bit/ut_bit_set_nth.h>
+#include <innodb/sync_rw/rw_lock_get_x_lock_count.h>
+#include <innodb/sync_rw/rw_lock_get_sx_lock_count.h>
 
 #include "fsp0fsp.h"
 #include "buf0buf.h"

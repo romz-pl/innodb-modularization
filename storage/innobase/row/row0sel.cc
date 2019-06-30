@@ -43,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
+#include <innodb/sync_rw/rw_lock_get_writer.h>
 
 #include "btr0btr.h"
 #include "btr0cur.h"

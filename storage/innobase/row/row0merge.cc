@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/warn.h>
 #include <innodb/sync_event/os_event_wait_time_low.h>
 #include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_rw/rw_lock_get_waiters.h>
 
 #include <sql_class.h>
 #include "btr0bulk.h"

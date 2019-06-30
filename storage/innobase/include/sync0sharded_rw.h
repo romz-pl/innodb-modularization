@@ -45,6 +45,13 @@ the file COPYING.Google.
 
 #include <innodb/univ/univ.h>
 #include <innodb/sync_latch/latch_level_t.h>
+#include <innodb/sync_rw/rw_lock_create.h>
+#include <innodb/sync_rw/rw_lock_free.h>
+#include <innodb/sync_rw/rw_lock_s_lock_nowait.h>
+#include <innodb/sync_rw/rw_lock_s_lock.h>
+#include <innodb/sync_rw/rw_lock_s_unlock.h>
+#include <innodb/sync_rw/rw_lock_x_lock.h>
+#include <innodb/sync_rw/rw_lock_x_unlock.h>
 
 #include <algorithm>
 
