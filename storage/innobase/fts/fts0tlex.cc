@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  * Created 2007/5/9 Sunny Bains
  */
 #include <innodb/univ/univ.h>
-
+#include <innodb/error/ut_error.h>
 
 
 #line 32 "fts0tlex.cc"

@@ -27,12 +27,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/allocator/ut_free.h>
 #include <innodb/sync_event/OS_SYNC_TIME_EXCEEDED.h>
+#include <innodb/sync_event/os_event_create.h>
+#include <innodb/sync_event/os_event_destroy.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_time_low.h>
 #include <innodb/sync_mutex/mutex_create.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
+#include <innodb/sync_mutex/ib_mutex_t.h>
 
 #include "ut0wqueue.h"
 

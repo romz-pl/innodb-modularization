@@ -251,7 +251,7 @@ struct sync_cell_t;
 /** Synchronization wait array */
 struct sync_array_t;
 
-UNIV_INLINE
+
 sync_array_t *sync_array_get_and_reserve_cell(void *object, ulint type,
                                               const char *file, ulint line,
                                               sync_cell_t **cell);

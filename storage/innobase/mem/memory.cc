@@ -36,12 +36,13 @@ external tools. */
 
 
 #include <innodb/allocator/ut_free.h>
-#include "ha_prototypes.h"
+
+#include <innodb/error/ut_error.h>
+
 #include "mem0mem.h"
 
 #ifndef UNIV_LIBRARY
 #include "buf0buf.h"
-#include "srv0srv.h"
 #endif /* UNIV_LIBRARY */
 #include <stdarg.h>
 

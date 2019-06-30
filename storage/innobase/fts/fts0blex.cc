@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include <innodb/univ/univ.h>
-
+#include <innodb/error/ut_error.h>
 
 
 #line 33 "fts0blex.cc"

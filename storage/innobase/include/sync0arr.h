@@ -54,7 +54,6 @@ we can reserve an empty cell of it.
 @param[in]	line	line where requested
 @param[out]	cell	the cell reserved, never NULL
 @return the sync array found, never NULL. */
-UNIV_INLINE
 sync_array_t *sync_array_get_and_reserve_cell(void *object, ulint type,
                                               const char *file, ulint line,
                                               sync_cell_t **cell);
