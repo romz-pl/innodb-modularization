@@ -30,7 +30,7 @@ SET( INNODB_COMPONENT_LIBS
     #error
 
     # F
-    formatting
+    #formatting
 
     # L
     #logger
@@ -45,13 +45,14 @@ SET( INNODB_COMPONENT_LIBS
     #random
 
     # S
-    string
+    #string
+    sync_array
     #sync_event
     #sync_latch
     #sync_mutex
     #sync_os
     #sync_policy
-    sync_rw
+    #sync_rw
 
     # T
     #thread

@@ -64,6 +64,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/OS_SYNC_TIME_EXCEEDED.h>
 #include <innodb/thread/os_thread_eq.h>
+#include <innodb/sync_array/sync_arr_wake_threads_if_sema_free.h>
+#include <innodb/sync_array/sync_array_print_long_waits.h>
 
 #include "btr0sea.h"
 #include "buf0flu.h"
@@ -93,7 +95,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "sync0arr.h"
+
 #include "sync0sync.h"
 #ifndef UNIV_HOTBACKUP
 #include "trx0i_s.h"

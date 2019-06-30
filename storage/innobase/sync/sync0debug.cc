@@ -43,6 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_list_mutex.h>
 #include <innodb/sync_rw/rw_lock_t.h>
 #include <innodb/sync_rw/rw_lock_list.h>
+#include <innodb/sync_array/sync_array_init.h>
+#include <innodb/sync_array/sync_array_close.h>
 
 #include "sync0debug.h"
 
@@ -56,7 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_inttypes.h"
 
 
-#include "sync0arr.h"
+
 
 #ifndef UNIV_NO_ERR_MSGS
 #include "srv0start.h"

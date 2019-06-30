@@ -46,9 +46,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_list_mutex.h>
 #include <innodb/sync_rw/rw_lock_t.h>
 #include <innodb/sync_rw/rw_lock_list.h>
+#include <innodb/sync_array/sync_array_print.h>
 
 #include "sync0sync.h"
-#include "sync0arr.h"
+
 #include <innodb/formatting/formatting.h>
 
 #ifdef HAVE_PSI_INTERFACE

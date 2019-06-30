@@ -72,6 +72,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/wait/spin_wait_pause_multiplier.h>
 #include <innodb/sync_rw/rw_lock_list_mutex.h>
 #include <innodb/sync_rw/rw_lock_list.h>
+#include <innodb/string/innobase_basename.h>
 
 
 #ifndef UNIV_HOTBACKUP
@@ -2177,14 +2178,7 @@ static int innobase_wildcasecmp(
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Strip dir name from a full path name and return only the file name
-@param[in]	path_name	full path name
-@return file name or "null" if no file name */
-const char *innobase_basename(const char *path_name) {
-  const char *name = base_name(path_name);
 
-  return ((name) ? name : "null");
-}
 
 #ifndef UNIV_HOTBACKUP
 

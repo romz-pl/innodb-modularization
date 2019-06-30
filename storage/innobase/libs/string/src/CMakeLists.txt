@@ -1,6 +1,7 @@
 set( LIB_NAME string )
 
 add_library( ${LIB_NAME} STATIC
+    innobase_basename.cpp
     ut_strcmp_functor.cpp
     ut_strcmp.cpp
     ut_strcpy.cpp
