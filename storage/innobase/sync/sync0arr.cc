@@ -47,17 +47,22 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_low.h>
+#include <innodb/sync_mutex/BlockSyncArrayMutex.h>
+#include <innodb/sync_mutex/mutex_create.h>
+#include <innodb/sync_mutex/mutex_enter.h>
+#include <innodb/sync_mutex/mutex_exit.h>
+#include <innodb/sync_mutex/mutex_free.h>
+#include <innodb/sync_mutex/SyncArrayMutex.h>
+#include <innodb/sync_mutex/SysMutex.h>
+#include <innodb/allocator/UT_NEW_ARRAY_NOKEY.h>
+#include <innodb/allocator/UT_DELETE_ARRAY.h>
+#include <innodb/formatting/formatting.h>
 
 #ifndef UNIV_NO_ERR_MSGS
 #include "lock0lock.h"
 #endif /* !UNIV_NO_ERR_MSGS */
 
 
-#include "os0file.h"
-#include "srv0srv.h"
-#include "sync0debug.h"
-#include "sync0rw.h"
-#include "sync0sync.h"
 
 /*
                         WAIT ARRAY

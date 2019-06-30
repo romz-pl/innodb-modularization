@@ -92,6 +92,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 #include "srv0srv.h"
 #include "srv0start.h"
+#include "sync0arr.h"
 #include "sync0sync.h"
 #ifndef UNIV_HOTBACKUP
 #include "trx0i_s.h"

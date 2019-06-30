@@ -53,6 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_inttypes.h"
 
 #include "sync0rw.h"
+#include "sync0arr.h"
 
 #ifndef UNIV_NO_ERR_MSGS
 #include "srv0start.h"

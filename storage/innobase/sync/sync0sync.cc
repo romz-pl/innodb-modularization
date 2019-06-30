@@ -45,6 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "sync0rw.h"
 #include "sync0sync.h"
+#include "sync0arr.h"
 #include <innodb/formatting/formatting.h>
 
 #ifdef HAVE_PSI_INTERFACE
