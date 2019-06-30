@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0size.h"
 #include "page0types.h"
 #include "rem0types.h"
-#include "sync0rw.h"
+
 
 /** Persistent cursor */
 struct btr_pcur_t;

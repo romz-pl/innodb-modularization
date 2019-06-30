@@ -51,7 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "rem0types.h"
 #include "row0types.h"
 #include "sql/dd/object_id.h"
-#include "sync0rw.h"
+
 #include "trx0types.h"
 
 #include <innodb/random/random.h>

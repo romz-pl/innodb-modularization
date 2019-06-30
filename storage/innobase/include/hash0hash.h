@@ -36,12 +36,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/sync_latch/latch_id_t.h>
 #include <innodb/sync_mutex/ib_mutex_t.h>
+#include <innodb/sync_rw/rw_lock_t.h>
 
 #include <stddef.h>
 
 #include "mem0mem.h"
 #ifndef UNIV_HOTBACKUP
-#include "sync0rw.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 struct hash_table_t;

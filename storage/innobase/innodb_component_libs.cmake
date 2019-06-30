@@ -34,7 +34,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # L
     #logger
-    lst
+    #lst
 
     # M
     #math
@@ -48,7 +48,7 @@ SET( INNODB_COMPONENT_LIBS
     string
     #sync_event
     #sync_latch
-    sync_mutex
+    #sync_mutex
     #sync_os
     #sync_policy
     sync_rw

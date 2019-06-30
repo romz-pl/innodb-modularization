@@ -60,7 +60,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "rem0rec.h"
 #include "row0row.h"
 #include "srv0srv.h"
-#include "sync0rw.h"
+
 #include "sync0sync.h"
 #include "trx0i_s.h"
 #include "trx0sys.h"

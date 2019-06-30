@@ -55,7 +55,7 @@ the file COPYING.Google.
 
 #include <algorithm>
 
-#include "sync0rw.h"
+
 #include <innodb/random/random.h>
 
 #ifndef UNIV_HOTBACKUP

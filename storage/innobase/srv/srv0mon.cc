@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 
 #include <innodb/logger/info.h>
+#include <innodb/sync_rw/rw_lock_stats.h>
 
 #include "arch0arch.h"
 #include "buf0buf.h"

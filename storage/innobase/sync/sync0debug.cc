@@ -40,6 +40,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_latch/LATCH_ADD_MUTEX.h>
 #include <innodb/sync_latch/LATCH_ADD_RWLOCK.h>
 #include <innodb/sync_mutex/MutexMonitor.h>
+#include <innodb/sync_rw/rw_lock_list_mutex.h>
+#include <innodb/sync_rw/rw_lock_t.h>
+#include <innodb/sync_rw/rw_lock_list.h>
 
 #include "sync0debug.h"
 
@@ -52,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_inttypes.h"
 
-#include "sync0rw.h"
+
 #include "sync0arr.h"
 
 #ifndef UNIV_NO_ERR_MSGS

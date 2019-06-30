@@ -71,7 +71,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ibuf0ibuf.h"
 #include "lock0lock.h"
 #include "log0log.h"
-#include "sync0rw.h"
+
 #include "trx0purge.h"
 #include "trx0undo.h"
 #include <innodb/formatting/formatting.h>

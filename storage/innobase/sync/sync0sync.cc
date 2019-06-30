@@ -42,8 +42,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/MutexMonitor.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
+#include <innodb/sync_rw/rw_lock_stats.h>
+#include <innodb/sync_rw/rw_lock_list_mutex.h>
+#include <innodb/sync_rw/rw_lock_t.h>
+#include <innodb/sync_rw/rw_lock_list.h>
 
-#include "sync0rw.h"
 #include "sync0sync.h"
 #include "sync0arr.h"
 #include <innodb/formatting/formatting.h>

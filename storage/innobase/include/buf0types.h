@@ -37,8 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/sync_mutex/ib_mutex_t.h>
 #include <innodb/sync_mutex/ib_bpmutex_t.h>
+#include <innodb/sync_rw/rw_lock_t.h>
 
-#include "sync0rw.h"
+
 
 /** Magic value to use instead of checksums when they are disabled */
 #define BUF_NO_CHECKSUM_MAGIC 0xDEADBEEFUL

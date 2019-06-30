@@ -53,7 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0zip.h"
 #include "srv0mon.h"
 #include "srv0srv.h"
-#include "sync0rw.h"
+
 #include "trx0trx.h"
 
 #include <innodb/formatting/formatting.h>

@@ -70,6 +70,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time_us.h>
 #include <innodb/wait/UT_WAIT_FOR.h>
 #include <innodb/wait/spin_wait_pause_multiplier.h>
+#include <innodb/sync_rw/rw_lock_list_mutex.h>
+#include <innodb/sync_rw/rw_lock_list.h>
 
 
 #ifndef UNIV_HOTBACKUP

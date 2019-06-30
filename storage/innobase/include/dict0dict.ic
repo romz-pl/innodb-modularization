@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0sysspace.h"
 #include "rem0types.h"
 #include "srv0srv.h"
-#include "sync0rw.h"
+
 
 /** Gets the column number.
  @return col->ind, table column position (starting from 0) */

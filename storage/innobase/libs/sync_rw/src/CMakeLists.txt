@@ -1,6 +1,9 @@
 set( LIB_NAME sync_rw )
 
 add_library( ${LIB_NAME} STATIC
+    Infos.cpp
+    X_LOCK_DECR.cpp
+    X_LOCK_HALF_DECR.cpp
     pfs_rw_lock_create_func.cpp
     pfs_rw_lock_free_func.cpp
     pfs_rw_lock_s_lock_func.cpp
@@ -15,10 +18,13 @@ add_library( ${LIB_NAME} STATIC
     rw_lock_add_debug_info.cpp
     rw_lock_create.cpp
     rw_lock_create_func.cpp
+    rw_lock_debug_create.cpp
+    rw_lock_debug_free.cpp
     rw_lock_debug_print.cpp
     rw_lock_debug_t.cpp
     rw_lock_free.cpp
     rw_lock_free_func.cpp
+    rw_lock_get_debug_info.cpp
     rw_lock_get_mutex.cpp
     rw_lock_get_reader_count.cpp
     rw_lock_get_sx_lock_count.cpp
@@ -26,12 +32,15 @@ add_library( ${LIB_NAME} STATIC
     rw_lock_get_writer.cpp
     rw_lock_get_x_lock_count.cpp
     rw_lock_is_locked.cpp
+    rw_lock_list.cpp
+    rw_lock_list_mutex.cpp
     rw_lock_list_print_info.cpp
     rw_lock_list_t.cpp
     rw_lock_lock_word_decr.cpp
     rw_lock_lock_word_incr.cpp
     rw_lock_own.cpp
     rw_lock_own_flagged.cpp
+    rw_lock_remove_debug_info.cpp
     rw_lock_reset_waiter_flag.cpp
     rw_lock_s_lock.cpp
     rw_lock_s_lock_func.cpp
@@ -46,6 +55,7 @@ add_library( ${LIB_NAME} STATIC
     rw_lock_s_unlock_inline.cpp
     rw_lock_set_waiter_flag.cpp
     rw_lock_set_writer_id_and_recursion_flag.cpp
+    rw_lock_stats.cpp
     rw_lock_stats_t.cpp
     rw_lock_sx_lock.cpp
     rw_lock_sx_lock_func.cpp
@@ -66,16 +76,17 @@ add_library( ${LIB_NAME} STATIC
     rw_lock_x_lock_func_nowait_inline.cpp
     rw_lock_x_lock_gen.cpp
     rw_lock_x_lock_inline.cpp
+    rw_lock_x_lock_low.cpp
     rw_lock_x_lock_move_ownership.cpp
     rw_lock_x_lock_nowait.cpp
+    rw_lock_x_lock_wait.cpp
+    rw_lock_x_lock_wait_func.cpp
     rw_lock_x_unlock.cpp
     rw_lock_x_unlock_func.cpp
     rw_lock_x_unlock_gen.cpp
     rw_lock_x_unlock_inline.cpp
     sync_check_iterate.cpp
     sync_check_lock.cpp
-    X_LOCK_DECR.cpp
-    X_LOCK_HALF_DECR.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -90,9 +101,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     lst
-    sync_event
     sync_mutex
-    thread
     PRIVATE
 )
 

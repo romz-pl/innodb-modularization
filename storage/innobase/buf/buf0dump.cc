@@ -55,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "sync0rw.h"
+
 #include <innodb/univ/univ.h>
 
 #include "ut/ut.h"

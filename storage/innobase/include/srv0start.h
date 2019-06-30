@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0types.h"
 #include "os0thread-create.h"
 #ifndef UNIV_HOTBACKUP
-#include "sync0rw.h"
+
 #endif /* !UNIV_HOTBACKUP */
 #include "trx0purge.h"
 

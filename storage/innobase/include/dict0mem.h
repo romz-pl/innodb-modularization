@@ -55,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "hash0hash.h"
-#include "sync0rw.h"
+
 #include "trx0types.h"
 
 #include <innodb/random/random.h>

@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  ***********************************************************************/
 
 #include "buf0buf.h"
-#include "sync0rw.h"
+
 
 /** Gets a pointer to a file address and latches the page.
 @param[in]	space		space id

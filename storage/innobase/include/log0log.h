@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dyn0buf.h"
 #ifndef UNIV_HOTBACKUP
-#include "sync0rw.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 #include "log0test.h"
