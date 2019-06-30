@@ -35,6 +35,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+/** Creates a 64-bit integer out of two 32-bit integers.
+ @return created integer */
+ib_uint64_t ut_ull_create(ulint high, /*!< in: high-order 32 bits */
+                          ulint low)  /*!< in: low-order 32 bits */
+{
+  ut_ad(high <= ULINT32_MASK);
+  ut_ad(low <= ULINT32_MASK);
+  return (((ib_uint64_t)high) << 32 | low);
+}
+
 /** Read a 64-bit integer in a much compressed form.
 @param[in,out]	ptr	pointer to memory where to read,
 advanced by the number of bytes consumed, or set NULL if out of space

@@ -32,7 +32,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  ***********************************************************************/
 
 #include "mtr0types.h"
-#include "ut0byte.h"
+
+/** Creates a 64-bit integer out of two 32-bit integers.
+ @return created integer */
+
+ib_uint64_t ut_ull_create(ulint high, /*!< in: high-order 32 bits */
+                          ulint low)  /*!< in: low-order 32 bits */
+    MY_ATTRIBUTE((const));
 
 
 /** The following function is used to store data in one byte.
