@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/formatting/formatting.h>
 #include <innodb/bit/ut_bit_set_nth.h>
 
+#include "buf/buf.h"
 #include "btr0sea.h"
 #include "ha_prototypes.h"
 #include "ibuf0ibuf.h"

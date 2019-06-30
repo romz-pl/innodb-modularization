@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_wait_low.h>
 
 #include "buf0buf.h"
+#include "buf/buf.h"
 #include "buf0checksum.h"
 #include "buf0dblwr.h"
 #include "ha_prototypes.h"

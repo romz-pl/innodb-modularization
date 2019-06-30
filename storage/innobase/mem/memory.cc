@@ -355,6 +355,7 @@ mem_block_t *mem_heap_create_block_func(
   return (block);
 }
 
+
 /** Adds a new block to a memory heap.
  @return created block, NULL if did not succeed (only possible for
  MEM_HEAP_BTR_SEARCH type heaps) */

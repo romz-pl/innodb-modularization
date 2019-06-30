@@ -68,6 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "welcome_copyright_notice.h"
 
 #include "btr0cur.h"
+#include "buf/buf.h"
 #include "dict0sdi-decompress.h"
 #include "fil0fil.h"
 #include "fsp0fsp.h"
