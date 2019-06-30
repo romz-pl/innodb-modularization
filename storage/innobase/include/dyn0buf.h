@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dyn0types.h"
 #include "mem0mem.h"
-#include "ut0lst.h"
+#include <innodb/lst/lst.h>
 
 /** Class that manages dynamic buffers. It uses a UT_LIST of
 dyn_buf_t::block_t instances. We don't use STL containers in

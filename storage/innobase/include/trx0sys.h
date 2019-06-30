@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0mtr.h"
 #include "page0types.h"
 
-#include "ut0lst.h"
+#include <innodb/lst/lst.h>
 #endif /* !UNIV_HOTBACKUP */
 #include <atomic>
 #include "trx0trx.h"

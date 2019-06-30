@@ -13,6 +13,7 @@ add_subdirectory( error )
 add_subdirectory( formatting )
 
 add_subdirectory( logger )
+add_subdirectory( lst )
 
 add_subdirectory( math )
 add_subdirectory( memory )

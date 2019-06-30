@@ -150,7 +150,7 @@ of concurrent read locks before the rw_lock breaks. */
 struct rw_lock_debug_t;
 #endif /* UNIV_DEBUG */
 
-#include "ut0lst.h"
+#include <innodb/lst/lst.h>
 typedef UT_LIST_BASE_NODE_T(rw_lock_t) rw_lock_list_t;
 
 extern rw_lock_list_t rw_lock_list;

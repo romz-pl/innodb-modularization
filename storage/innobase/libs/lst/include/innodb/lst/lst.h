@@ -34,10 +34,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef ut0lst_h
 #define ut0lst_h
 
-/* Do not include univ.i because univ.i includes this. */
-// #include <innodb/univ/univ.h>
+#include <innodb/univ/univ.h>
 
-#include <innodb/error/ut_error.h>
+#include <innodb/assert/assert.h>
 
 /* This module implements the two-way linear list. Note that a single
 list node may belong to two or more lists, but is only on one list

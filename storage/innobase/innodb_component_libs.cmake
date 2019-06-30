@@ -34,6 +34,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # L
     #logger
+    lst
 
     # M
     #math
