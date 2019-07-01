@@ -31,7 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "ha_prototypes.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
+#include <innodb/assert/assert.h>
+#include <innodb/error/ut_error.h>
 
 #include <string.h>
 

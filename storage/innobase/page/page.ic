@@ -37,7 +37,7 @@ external tools. */
 #ifndef page_page_h
 #define page_page_h
 
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 /** Reads the given header field. */
 UNIV_INLINE
 ulint page_header_get_field(const page_t *page, /*!< in: page */

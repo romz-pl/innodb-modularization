@@ -148,7 +148,6 @@ SET(INNOBASE_SOURCES
     log/log0recv.cc
     log/log0test.cc
     log/log0write.cc
-    mach/mach0data.cc
     mtr/mtr0log.cc
     mtr/mtr0mtr.cc
     os/os0file.cc

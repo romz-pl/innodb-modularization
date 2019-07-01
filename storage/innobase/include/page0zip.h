@@ -48,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0checksum.h"
 #include "buf0types.h"
 #include "dict0types.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mem0mem.h"
 #include "mtr0types.h"
 #include "page/zipdecompress.h"

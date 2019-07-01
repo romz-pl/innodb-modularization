@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fut0lst.h"
 #include "lob0first.h"
 #include "lob0lob.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mtr0log.h"
 #include "mtr0mtr.h"
 #include "mtr0types.h"

@@ -15,6 +15,7 @@ add_subdirectory( formatting )
 add_subdirectory( logger )
 add_subdirectory( lst )
 
+add_subdirectory( machine )
 add_subdirectory( math )
 add_subdirectory( memory )
 add_subdirectory( memory_check )

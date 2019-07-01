@@ -36,8 +36,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/sync_rw/rw_lock_type_t.h>
+#include <innodb/error/ut_error.h>
 
-
+#include <innodb/machine/data.h>
 
 struct mtr_t;
 
@@ -250,6 +251,27 @@ enum mlog_id_t {
 };
 
 /* @} */
+
+
+/** Read 1 to 4 bytes from a file page buffered in the buffer pool.
+@param[in]	ptr	pointer where to read
+@param[in]	type	MLOG_1BYTE, MLOG_2BYTES, or MLOG_4BYTES
+@return value read */
+UNIV_INLINE
+uint32_t mach_read_ulint(const byte *ptr, mlog_id_t type) {
+  switch (type) {
+    case MLOG_1BYTE:
+      return (mach_read_from_1(ptr));
+    case MLOG_2BYTES:
+      return (mach_read_from_2(ptr));
+    case MLOG_4BYTES:
+      return (mach_read_from_4(ptr));
+    default:
+      break;
+  }
+
+  ut_error;
+}
 
 /** Types for the mlock objects to store in the mtr memo; NOTE that the
 first 3 values must be RW_S_LATCH, RW_X_LATCH, RW_NO_LATCH */

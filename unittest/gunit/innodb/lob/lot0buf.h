@@ -29,7 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0types.h"
 #include "fil0fil.h"
 #include "lot0types.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 
 struct buf_block_t {
   byte *m_frame;

@@ -53,7 +53,7 @@ The tablespace memory cache */
 #include "ha_prototypes.h"
 #include "hash0hash.h"
 #include "log0recv.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mem0mem.h"
 #include "mtr0log.h"
 #include "my_dbug.h"

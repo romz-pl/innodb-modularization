@@ -103,7 +103,7 @@ extern uint ibuf_debug;
 #include "fts0types.h"
 #include "lock0lock.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mem0mem.h"
 #include "os0once.h"
 #include "page0page.h"

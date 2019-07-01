@@ -28,7 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "fil0types.h"
 #include "lot0types.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 
 /** File space address */
 struct fil_addr_t {

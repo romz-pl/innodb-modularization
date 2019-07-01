@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "clone0desc.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 
 /** Maximum supported descriptor version. The version represents the current
 set of descriptors and its elements. */

@@ -51,7 +51,7 @@ Data dictionary interface */
 #endif /* !UNIV_HOTBACKUP */
 #include "data0type.h"
 #include "dict0dict.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "rem0rec.h"
 #ifndef UNIV_HOTBACKUP
 #include "fts0priv.h"

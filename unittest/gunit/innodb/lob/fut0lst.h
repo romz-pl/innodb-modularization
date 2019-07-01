@@ -28,7 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "fil0fil.h"
 #include "lot0types.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mtr0log.h"
 #include "mtr0types.h"
 

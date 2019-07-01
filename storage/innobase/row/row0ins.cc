@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lock0lock.h"
 #include "log0log.h"
 #include "m_string.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "que0que.h"
 #include "rem0cmp.h"
 #include "row0ins.h"

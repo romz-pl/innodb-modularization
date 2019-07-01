@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0dblwr.h"
 #include "fsp0types.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "trx0types.h"
 
 #include "mysqld_error.h"

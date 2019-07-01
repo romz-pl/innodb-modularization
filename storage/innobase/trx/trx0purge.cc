@@ -47,7 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0types.h"
 #include "fut0fut.h"
 #include "ha_prototypes.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mtr0log.h"
 #include "my_compiler.h"
 #include "my_dbug.h"

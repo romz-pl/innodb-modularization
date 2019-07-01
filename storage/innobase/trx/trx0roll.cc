@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0fsp.h"
 #include "ha_prototypes.h"
 #include "lock0lock.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "os0thread-create.h"
 #include "pars0pars.h"
 #include "que0que.h"

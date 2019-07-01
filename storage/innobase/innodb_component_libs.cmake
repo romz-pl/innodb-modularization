@@ -37,6 +37,7 @@ SET( INNODB_COMPONENT_LIBS
     #lst
 
     # M
+    machine
     #math
     memory
     #memory_check

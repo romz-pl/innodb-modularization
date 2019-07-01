@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <set>
 
 #include "lot0buf.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 
 #include "ut0ut.h"
 

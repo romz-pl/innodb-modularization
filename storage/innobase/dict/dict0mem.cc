@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0mem.h"
 #ifndef UNIV_HOTBACKUP
 #include "fts0priv.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "my_dbug.h"
 #include "rem0rec.h"
 #include "ut0crc32.h"

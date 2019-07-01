@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "fsp0fsp.h"
 #include "ha_prototypes.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "que0que.h"
 #include "row0mysql.h"
 #include "row0row.h"

@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 
 #include "fsp0fsp.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mtr0log.h"
 #include "trx0undo.h"
 #ifndef UNIV_HOTBACKUP

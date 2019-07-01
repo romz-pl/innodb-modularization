@@ -24,7 +24,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 #include "lot0types.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mtr0types.h"
 
 void mlog_write_ulint(

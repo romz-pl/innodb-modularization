@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "current_thd.h"
 #include "dict0dd.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "mtr0log.h"
 #include "srv0mon.h"
 #include "srv0srv.h"

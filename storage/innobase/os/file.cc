@@ -44,7 +44,7 @@ external tools. */
 
 #include <innodb/error/dberr_t.h>
 #include "fil0fil.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "os0file.h"
 #include <innodb/univ/univ.h>
 

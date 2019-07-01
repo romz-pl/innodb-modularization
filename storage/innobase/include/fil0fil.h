@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0types.h"
 #include "fil0types.h"
 #include "log0recv.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "page0size.h"
 #ifndef UNIV_HOTBACKUP
 #include "ibuf0types.h"

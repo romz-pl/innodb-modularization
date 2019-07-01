@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "handler.h"
 #include "lob0lob.h"
 #include "log0log.h"
-#include "mach0data.h"
+#include <innodb/machine/data.h>
 #include "que0que.h"
 #include "row0log.h"
 #include "row0mysql.h"
