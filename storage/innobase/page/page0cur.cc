@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/math/ut_pair_cmp.h>
 #include <innodb/math/ut_pair_min.h>
 #include <innodb/time/ut_time_us.h>
+#include <innodb/page/cursor_movement.h>
 
 #include "page0cur.h"
 

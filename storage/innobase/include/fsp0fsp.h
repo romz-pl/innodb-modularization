@@ -35,12 +35,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/FSEG_PAGE_DATA.h>
+
 #include "fsp0space.h"
 #include "fut0lst.h"
 #include "mtr0mtr.h"
 #include "mysql/components/services/mysql_cond_bits.h"
 #include "mysql/components/services/mysql_mutex_bits.h"
-#include "page0types.h"
 #include "rem0types.h"
 
 

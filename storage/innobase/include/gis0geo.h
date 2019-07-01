@@ -31,7 +31,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 #include <innodb/univ/univ.h>
 
-#include "page0types.h"
+#include <innodb/page/page_cur_mode_t.h>
+
 #include "sql/gis/rtree_support.h"
 
 #define SPTYPE HA_KEYTYPE_DOUBLE

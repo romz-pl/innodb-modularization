@@ -35,9 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/page_t.h>
+
 #include "buf0types.h"
 #include "hash0hash.h"
-#include "page0types.h"
 #include "rem0types.h"
 
 /** Looks for an element in a hash table.

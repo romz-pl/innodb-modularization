@@ -3,18 +3,18 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/page/type.h>
+#include <innodb/page/FSEG_PAGE_DATA.h>
+#include <innodb/page/page_t.h>
 
 
 /*			PAGE HEADER
-                        ===========
+            ===========
 
 Index page header starts at the first offset left free by the FIL-module */
 
 typedef byte page_header_t;
 
-/** On a page of any file segment, data may be put starting from this
-offset */
-#define FSEG_PAGE_DATA FIL_PAGE_DATA
+
 
 #define PAGE_HEADER                                  \
   FSEG_PAGE_DATA /* index page header starts at this \
@@ -93,4 +93,10 @@ new-style compact page */
 /* offset of the page supremum record end on
 a new-style compact page */
 /*-----------------------------*/
+
+
+/** Reads the given header field. */
+ulint page_header_get_field(const page_t *page, /*!< in: page */
+                            ulint field);        /*!< in: PAGE_LEVEL, ... */
+
 

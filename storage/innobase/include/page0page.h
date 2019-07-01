@@ -44,7 +44,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fil0fil.h"
 #include "fsp0fsp.h"
 #include "mtr0mtr.h"
-#include "page0types.h"
 #include "rem0rec.h"
 
 #ifdef UNIV_MATERIALIZE
@@ -154,11 +153,6 @@ UNIV_INLINE
 void page_set_ssn_id(buf_block_t *block, page_zip_des_t *page_zip,
                      node_seq_t ssn_id, mtr_t *mtr);
 
-/** Reads the given header field.
-@param[in]	page	page
-@param[in]	field	PAGE_N_DIR_SLOTS, ... */
-UNIV_INLINE
-ulint page_header_get_field(const page_t *page, ulint field);
 
 /** Sets the given header field.
 @param[in,out]	page		page

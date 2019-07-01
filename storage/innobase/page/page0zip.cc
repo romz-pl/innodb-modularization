@@ -71,14 +71,14 @@ const byte field_ref_zero[FIELD_REF_SIZE] = {
 
 #include <algorithm>
 #include <map>
+#include <innodb/page/page_zip_stat.h>
 
 static_assert(DATA_TRX_ID_LEN == 6, "DATA_TRX_ID_LEN != 6");
 static_assert(DATA_ROLL_PTR_LEN == 7, "DATA_ROLL_PTR_LEN != 7");
 static_assert(DATA_TRX_ID + 1 == DATA_ROLL_PTR, "DATA_TRX_ID invalid value!");
 
 #ifndef UNIV_HOTBACKUP
-/** Statistics on compression, indexed by page_zip_des_t::ssize - 1 */
-page_zip_stat_t page_zip_stat[PAGE_ZIP_SSIZE_MAX];
+
 /** Statistics on compression, indexed by index->id */
 page_zip_stat_per_index_t page_zip_stat_per_index;
 #endif /* !UNIV_HOTBACKUP */

@@ -42,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 #include "my_dbug.h"
 #ifndef UNIV_HOTBACKUP
-#include "page0types.h"
 #include "trx0purge.h"
 #endif /* !UNIV_HOTBACKUP */
 

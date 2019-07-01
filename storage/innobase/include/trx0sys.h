@@ -35,13 +35,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/FSEG_PAGE_DATA.h>
+
 #include "buf0buf.h"
 #include "fil0fil.h"
 #include "trx0types.h"
 #ifndef UNIV_HOTBACKUP
 #include "mem0mem.h"
 #include "mtr0mtr.h"
-#include "page0types.h"
 
 #include <innodb/lst/lst.h>
 #endif /* !UNIV_HOTBACKUP */

@@ -40,7 +40,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "data0data.h"
 #include "mtr0types.h"
-#include "page0types.h"
 #include "rem/rec.h"
 #include "rem0types.h"
 #include "trx0types.h"

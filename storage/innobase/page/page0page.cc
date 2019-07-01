@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
+#include <innodb/page/cursor_movement.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

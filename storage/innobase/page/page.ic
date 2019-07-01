@@ -38,16 +38,8 @@ external tools. */
 #define page_page_h
 
 #include <innodb/machine/data.h>
-/** Reads the given header field. */
-UNIV_INLINE
-ulint page_header_get_field(const page_t *page, /*!< in: page */
-                            ulint field)        /*!< in: PAGE_LEVEL, ... */
-{
-  ut_ad(page);
-  ut_ad(field <= PAGE_INDEX_ID);
+#include <innodb/page/header.h>
 
-  return (mach_read_from_2(page + PAGE_HEADER + field));
-}
 /** Gets the number of records in the heap.
  @return number of user records */
 UNIV_INLINE

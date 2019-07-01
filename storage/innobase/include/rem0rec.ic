@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "dict0boot.h"
 #include "dict0dict.h"
+#include "page0types.h"
 #include <innodb/machine/data.h>
 
 

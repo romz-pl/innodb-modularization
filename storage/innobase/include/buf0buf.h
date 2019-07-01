@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/page_zip_des_t.h>
+
 #include "buf0types.h"
 #include "srv0srv.h"
 #include "ut0rbt.h"

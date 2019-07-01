@@ -52,7 +52,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mem0mem.h"
 #include "mtr0types.h"
 #include "page/zipdecompress.h"
-#include "page0types.h"
 #include "srv0srv.h"
 #include "trx0types.h"
 #include "ut0crc32.h"

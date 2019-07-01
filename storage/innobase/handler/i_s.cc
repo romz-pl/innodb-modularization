@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created July 18, 2007 Vasil Dimov
  *******************************************************/
 
+#include <innodb/page/page_zip_stat.h>
+
 #include "storage/innobase/handler/i_s.h"
 
 #include <field.h>

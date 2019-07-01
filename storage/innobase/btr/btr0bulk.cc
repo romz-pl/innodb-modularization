@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 03/11/2014 Shaohua Wang
  *******************************************************/
 
+#include <innodb/page/cursor_movement.h>
+
 #include "btr0bulk.h"
 #include "btr0btr.h"
 #include "btr0cur.h"
