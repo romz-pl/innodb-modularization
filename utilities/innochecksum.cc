@@ -63,7 +63,7 @@
 The parts not included are excluded by #ifndef UNIV_INNOCHECKSUM. */
 
 #include "storage/innobase/include/buf0checksum.h"
-#include "storage/innobase/include/fil0types.h"
+#include <innodb/page/type.h>
 #include "storage/innobase/include/fsp0fsp.h"   /* fsp_flags_get_page_size() &
 
 					   fsp_flags_get_zip_size() */
@@ -71,7 +71,7 @@ The parts not included are excluded by #ifndef UNIV_INNOCHECKSUM. */
 #include <innodb/machine/data.h> /* mach_read_from_4() */
 #include "storage/innobase/include/os0file.h"
 #include "storage/innobase/include/page0page.h" /* PAGE_* */
-#include "storage/innobase/include/page0size.h" /* page_size_t */
+#include <innodb/page/page_size_t.h> /* page_size_t */
 #include "storage/innobase/include/page0zip.h"
 #include "storage/innobase/include/trx0undo.h" /* TRX_UNDO_* */
 #include "storage/innobase/include/ut0crc32.h" /* ut_crc32_init() */
@@ -87,7 +87,7 @@ static bool do_one_page;
 /* replaces declaration in srv0srv.c */
 ulong srv_page_size;
 ulong srv_page_size_shift;
-page_size_t univ_page_size(0, 0, false);
+
 extern ulong srv_checksum_algorithm;
 
 /* Current page number (0 based). */

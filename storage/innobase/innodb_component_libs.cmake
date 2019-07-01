@@ -37,10 +37,13 @@ SET( INNODB_COMPONENT_LIBS
     #lst
 
     # M
-    machine
+    #machine
     #math
     memory
     #memory_check
+
+    # P
+    page
 
     # R
     #random

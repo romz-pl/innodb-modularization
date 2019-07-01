@@ -1,3 +1,5 @@
+#pragma once
+
 /*****************************************************************************
 
 Copyright (c) 2013, 2019, Oracle and/or its affiliates. All Rights Reserved.
@@ -30,16 +32,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created Nov 14, 2013 Vasil Dimov
  *******************************************************/
 
-#ifndef page0size_t
-#define page0size_t
-
-#include <ostream>
-
 #include <innodb/univ/univ.h>
+
 #include <innodb/assert/assert.h>
 #include <innodb/math/ut_is_2pow.h>
+#include <innodb/page/flag.h>
+#include <innodb/page/page_no_t.h>
 
-#include "fsp0types.h"
+#include <ostream>
 
 #define FIELD_REF_SIZE 20
 
@@ -255,6 +255,6 @@ inline std::ostream &operator<<(std::ostream &out, const page_size_t &obj) {
   return (out);
 }
 
-extern page_size_t univ_page_size;
 
-#endif /* page0size_t */
+
+

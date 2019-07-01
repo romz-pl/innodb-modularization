@@ -62,7 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "mem0mem.h"
 #include "my_dbug.h"
-#include "page0size.h"
+#include <innodb/page/page_size_t.h>
 #ifndef UNIV_HOTBACKUP
 #include "btr0sea.h"
 #include "buf0buddy.h"

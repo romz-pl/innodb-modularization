@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time_us.h>
 #include "page0zip.h"
 
-#include "page0size.h"
+#include <innodb/page/page_size_t.h>
 
 /** A BLOB field reference full of zero, for use in assertions and tests.
 Initially, BLOB field references are set to zero, in

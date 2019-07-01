@@ -75,7 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0lob.h"
 #include <innodb/machine/data.h>
 #include "page0page.h"
-#include "page0size.h"
+#include <innodb/page/page_size_t.h>
 #include "page0types.h"
 #include <innodb/univ/univ.h>
 

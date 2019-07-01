@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <string.h>
 #include "db0err.h"
 #include "fil0fil.h"
-#include "fil0types.h"
+#include <innodb/page/type.h>
 #include "fut0lst.h"
 #include "lot0buf.h"
 #include "lot0lob.h"

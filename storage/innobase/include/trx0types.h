@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_x_unlock.h>
 #include <innodb/sync_rw/rw_lock_x_lock.h>
 
-#include "page0size.h"
+#include <innodb/page/page_size_t.h>
 
 
 #include <innodb/formatting/formatting.h>

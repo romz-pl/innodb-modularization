@@ -34,12 +34,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define fil0fil_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/page/page_type_t.h>
 
 #include "dict0types.h"
-#include "fil0types.h"
+#include <innodb/page/type.h>
 #include "log0recv.h"
 #include <innodb/machine/data.h>
-#include "page0size.h"
+#include <innodb/page/page_size_t.h>
 #ifndef UNIV_HOTBACKUP
 #include "ibuf0types.h"
 #endif /* !UNIV_HOTBACKUP */
@@ -824,121 +825,6 @@ inline std::ostream &operator<<(std::ostream &out, const fil_addr_t &obj) {
 /** The null file address */
 extern fil_addr_t fil_addr_null;
 
-using page_type_t = uint16_t;
-
-/** File page types (values of FIL_PAGE_TYPE) @{ */
-/** B-tree node */
-constexpr page_type_t FIL_PAGE_INDEX = 17855;
-
-/** R-tree node */
-constexpr page_type_t FIL_PAGE_RTREE = 17854;
-
-/** Tablespace SDI Index page */
-constexpr page_type_t FIL_PAGE_SDI = 17853;
-
-/** Undo log page */
-constexpr page_type_t FIL_PAGE_UNDO_LOG = 2;
-
-/** Index node */
-constexpr page_type_t FIL_PAGE_INODE = 3;
-
-/** Insert buffer free list */
-constexpr page_type_t FIL_PAGE_IBUF_FREE_LIST = 4;
-
-/* File page types introduced in MySQL/InnoDB 5.1.7 */
-/** Freshly allocated page */
-constexpr page_type_t FIL_PAGE_TYPE_ALLOCATED = 0;
-
-/** Insert buffer bitmap */
-constexpr page_type_t FIL_PAGE_IBUF_BITMAP = 5;
-
-/** System page */
-constexpr page_type_t FIL_PAGE_TYPE_SYS = 6;
-
-/** Transaction system data */
-constexpr page_type_t FIL_PAGE_TYPE_TRX_SYS = 7;
-
-/** File space header */
-constexpr page_type_t FIL_PAGE_TYPE_FSP_HDR = 8;
-
-/** Extent descriptor page */
-constexpr page_type_t FIL_PAGE_TYPE_XDES = 9;
-
-/** Uncompressed BLOB page */
-constexpr page_type_t FIL_PAGE_TYPE_BLOB = 10;
-
-/** First compressed BLOB page */
-constexpr page_type_t FIL_PAGE_TYPE_ZBLOB = 11;
-
-/** Subsequent compressed BLOB page */
-constexpr page_type_t FIL_PAGE_TYPE_ZBLOB2 = 12;
-
-/** In old tablespaces, garbage in FIL_PAGE_TYPE is replaced with
-this value when flushing pages. */
-constexpr page_type_t FIL_PAGE_TYPE_UNKNOWN = 13;
-
-/** Compressed page */
-constexpr page_type_t FIL_PAGE_COMPRESSED = 14;
-
-/** Encrypted page */
-constexpr page_type_t FIL_PAGE_ENCRYPTED = 15;
-
-/** Compressed and Encrypted page */
-constexpr page_type_t FIL_PAGE_COMPRESSED_AND_ENCRYPTED = 16;
-
-/** Encrypted R-tree page */
-constexpr page_type_t FIL_PAGE_ENCRYPTED_RTREE = 17;
-
-/** Uncompressed SDI BLOB page */
-constexpr page_type_t FIL_PAGE_SDI_BLOB = 18;
-
-/** Commpressed SDI BLOB page */
-constexpr page_type_t FIL_PAGE_SDI_ZBLOB = 19;
-
-/** Available for future use */
-constexpr page_type_t FIL_PAGE_TYPE_UNUSED = 20;
-
-/** Rollback Segment Array page */
-constexpr page_type_t FIL_PAGE_TYPE_RSEG_ARRAY = 21;
-
-/** Index pages of uncompressed LOB */
-constexpr page_type_t FIL_PAGE_TYPE_LOB_INDEX = 22;
-
-/** Data pages of uncompressed LOB */
-constexpr page_type_t FIL_PAGE_TYPE_LOB_DATA = 23;
-
-/** The first page of an uncompressed LOB */
-constexpr page_type_t FIL_PAGE_TYPE_LOB_FIRST = 24;
-
-/** The first page of a compressed LOB */
-constexpr page_type_t FIL_PAGE_TYPE_ZLOB_FIRST = 25;
-
-/** Data pages of compressed LOB */
-constexpr page_type_t FIL_PAGE_TYPE_ZLOB_DATA = 26;
-
-/** Index pages of compressed LOB. This page contains an array of
-z_index_entry_t objects.*/
-constexpr page_type_t FIL_PAGE_TYPE_ZLOB_INDEX = 27;
-
-/** Fragment pages of compressed LOB. */
-constexpr page_type_t FIL_PAGE_TYPE_ZLOB_FRAG = 28;
-
-/** Index pages of fragment pages (compressed LOB). */
-constexpr page_type_t FIL_PAGE_TYPE_ZLOB_FRAG_ENTRY = 29;
-
-/** Used by i_s.cc to index into the text description. */
-constexpr page_type_t FIL_PAGE_TYPE_LAST = FIL_PAGE_TYPE_ZLOB_FRAG_ENTRY;
-
-/** Check whether the page type is index (Btree or Rtree or SDI) type */
-#define fil_page_type_is_index(page_type)                      \
-  (page_type == FIL_PAGE_INDEX || page_type == FIL_PAGE_SDI || \
-   page_type == FIL_PAGE_RTREE)
-
-/** Check whether the page is index page (either regular Btree index or Rtree
-index */
-#define fil_page_index_page_check(page) \
-  fil_page_type_is_index(fil_page_get_type(page))
-
 /** The number of fsyncs done to the log */
 extern ulint fil_n_log_flushes;
 
@@ -1416,22 +1302,8 @@ bool fil_validate();
 bool fil_addr_is_null(const fil_addr_t &addr)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Get the predecessor of a file page.
-@param[in]	page		File page
-@return FIL_PAGE_PREV */
-page_no_t fil_page_get_prev(const byte *page)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Get the successor of a file page.
-@param[in]	page		File page
-@return FIL_PAGE_NEXT */
-page_no_t fil_page_get_next(const byte *page)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Sets the file page type.
-@param[in,out]	page		File page
-@param[in]	type		File page type to set */
-void fil_page_set_type(byte *page, ulint type);
 
 /** Reset the page type.
 Data files created before MySQL 5.1 may contain garbage in FIL_PAGE_TYPE.
@@ -1444,12 +1316,7 @@ Any other pages were written with uninitialized bytes in FIL_PAGE_TYPE.
 void fil_page_reset_type(const page_id_t &page_id, byte *page, ulint type,
                          mtr_t *mtr);
 
-/** Get the file page type.
-@param[in]	page		File page
-@return page type */
-inline page_type_t fil_page_get_type(const byte *page) {
-  return (static_cast<page_type_t>(mach_read_from_2(page + FIL_PAGE_TYPE)));
-}
+
 /** Check (and if needed, reset) the page type.
 Data files created before MySQL 5.1 may contain
 garbage in the FIL_PAGE_TYPE field.

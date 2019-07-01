@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/ib_mutex_t.h>
 #include <innodb/sync_mutex/ib_bpmutex_t.h>
 #include <innodb/sync_rw/rw_lock_t.h>
-
+#include <innodb/page/page_no_t.h>
 
 
 /** Magic value to use instead of checksums when they are disabled */

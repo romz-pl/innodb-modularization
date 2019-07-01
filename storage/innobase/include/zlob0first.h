@@ -28,7 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "fil0types.h"
+#include <innodb/page/type.h>
 #include "fut0lst.h"
 #include "lob0impl.h"
 

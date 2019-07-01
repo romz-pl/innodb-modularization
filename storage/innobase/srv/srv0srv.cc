@@ -108,7 +108,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #ifdef UNIV_HOTBACKUP
-#include "page0size.h"
+#include <innodb/page/page_size_t.h>
 #else
 /** Structure with state of srv background threads. */
 Srv_threads srv_threads;

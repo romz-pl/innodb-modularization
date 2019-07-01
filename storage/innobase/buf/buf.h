@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "page0size.h"
+#include <innodb/page/page_size_t.h>
 
 /** Checks if a page contains only zeroes.
 @param[in]	read_buf	database page

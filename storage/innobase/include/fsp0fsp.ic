@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/math/ut_2pow_round.h>
 #include <innodb/bit/ut_bit_get_nth.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
+#include <innodb/page/univ_page_size.h>
 
 /** Checks if a page address is an extent descriptor page address.
 @param[in]	page_id		page id

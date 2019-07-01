@@ -65,15 +65,6 @@ page. */
 /** lsn of the end of the newest modification log record to the page */
 #define FIL_PAGE_LSN 16
 
-/** file page type: FIL_PAGE_INDEX,..., 2 bytes. The contents of this field
-can only be trusted in the following case: if the page is an uncompressed
-B-tree index page, then it is guaranteed that the value is FIL_PAGE_INDEX.
-The opposite does not hold.
-
-In tablespaces created by MySQL/InnoDB 5.1.7 or later, the contents of this
-field is valid for all uncompressed pages. */
-#define FIL_PAGE_TYPE 24
-
 /** this is only defined for the first page of the system tablespace: the file
 has been flushed to disk at least up to this LSN. For FIL_PAGE_COMPRESSED
 pages, we store the compressed page control information in these 8 bytes. */

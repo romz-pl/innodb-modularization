@@ -7981,26 +7981,7 @@ bool fil_addr_is_null(const fil_addr_t &addr) {
   return (addr.page == FIL_NULL);
 }
 
-/** Get the predecessor of a file page.
-@param[in]	page		File page
-@return FIL_PAGE_PREV */
-page_no_t fil_page_get_prev(const byte *page) {
-  return (mach_read_from_4(page + FIL_PAGE_PREV));
-}
 
-/** Get the successor of a file page.
-@param[in]	page		File page
-@return FIL_PAGE_NEXT */
-page_no_t fil_page_get_next(const byte *page) {
-  return (mach_read_from_4(page + FIL_PAGE_NEXT));
-}
-
-/** Sets the file page type.
-@param[in,out]	page		File page
-@param[in]	type		Page type */
-void fil_page_set_type(byte *page, ulint type) {
-  mach_write_to_2(page + FIL_PAGE_TYPE, type);
-}
 
 /** Reset the page type.
 Data files created before MySQL 5.1 may contain garbage in FIL_PAGE_TYPE.
