@@ -40,11 +40,5 @@ external tools. */
 #include <innodb/machine/data.h>
 #include <innodb/page/header.h>
 
-/** Gets the number of records in the heap.
- @return number of user records */
-UNIV_INLINE
-ulint page_dir_get_n_heap(const page_t *page) /*!< in: index page */
-{
-  return (page_header_get_field(page, PAGE_N_HEAP) & 0x7fff);
-}
+
 #endif

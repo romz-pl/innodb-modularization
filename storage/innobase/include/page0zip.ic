@@ -108,26 +108,6 @@ In summary, the compressed page looks like this:
   - deleted records (free list) in link order
 */
 
-/** Set the size of a compressed page in bytes. */
-UNIV_INLINE
-void page_zip_set_size(page_zip_des_t *page_zip, /*!< in/out: compressed page */
-                       ulint size)               /*!< in: size in bytes */
-{
-  if (size) {
-    int ssize;
-
-    ut_ad(ut_is_2pow(size));
-
-    for (ssize = 1; size > (ulint)(512 << ssize); ssize++) {
-    }
-
-    page_zip->ssize = ssize;
-  } else {
-    page_zip->ssize = 0;
-  }
-
-  ut_ad(page_zip_get_size(page_zip) == size);
-}
 
 #ifndef UNIV_HOTBACKUP
 /** Determine if a record is so big that it needs to be stored externally.
@@ -251,13 +231,7 @@ ibool page_zip_available(
   return (length + trailer_len + page_zip->m_end < page_zip_get_size(page_zip));
 }
 
-/** Initialize a compressed page descriptor. */
-UNIV_INLINE
-void page_zip_des_init(page_zip_des_t *page_zip) /*!< in/out: compressed page
-                                                 descriptor */
-{
-  memset(page_zip, 0, sizeof *page_zip);
-}
+
 
 /** Write a log record of writing to the uncompressed header portion of a page.
  */

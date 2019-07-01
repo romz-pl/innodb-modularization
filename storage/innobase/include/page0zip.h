@@ -79,11 +79,7 @@ extern uint page_zip_level;
 compression algorithm changes in zlib. */
 extern bool page_zip_log_pages;
 
-/** Set the size of a compressed page in bytes.
-@param[in,out]	page_zip	compressed page
-@param[in]	size		size in bytes */
-UNIV_INLINE
-void page_zip_set_size(page_zip_des_t *page_zip, ulint size);
+
 
 /** Determine if a record is so big that it needs to be stored externally.
 @param[in]	rec_size	length of the record in bytes
@@ -112,10 +108,7 @@ ulint page_zip_empty_size(
 bool page_zip_is_too_big(const dict_index_t *index, const dtuple_t *entry);
 #endif /* !UNIV_HOTBACKUP */
 
-/** Initialize a compressed page descriptor. */
-UNIV_INLINE
-void page_zip_des_init(page_zip_des_t *page_zip); /*!< in/out: compressed page
-                                                  descriptor */
+
 
 /** Configure the zlib allocator to use the given memory heap. */
 void page_zip_set_alloc(void *stream,      /*!< in/out: zlib stream */

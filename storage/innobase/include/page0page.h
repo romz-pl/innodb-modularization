@@ -256,10 +256,7 @@ ulint page_get_n_recs(const page_t *page); /*!< in: index page */
  @return number of records */
 ulint page_rec_get_n_recs_before(
     const rec_t *rec); /*!< in: the physical record */
-/** Gets the number of records in the heap.
- @return number of user records */
-UNIV_INLINE
-ulint page_dir_get_n_heap(const page_t *page); /*!< in: index page */
+
 
 /** Sets the number of records in the heap.
 @param[in,out]	page		index page

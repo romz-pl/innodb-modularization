@@ -12,3 +12,10 @@ ulint page_header_get_field(const page_t *page, /*!< in: page */
 
   return (mach_read_from_2(page + PAGE_HEADER + field));
 }
+
+/** Gets the number of records in the heap.
+ @return number of user records */
+ulint page_dir_get_n_heap(const page_t *page) /*!< in: index page */
+{
+  return (page_header_get_field(page, PAGE_N_HEAP) & 0x7fff);
+}

@@ -60,25 +60,7 @@ external tools. */
 #define page_zip_dir_start(page_zip) \
   page_zip_dir_start_low(page_zip, page_zip_dir_elems(page_zip))
 
-/** Determine the size of a compressed page in bytes.
- @return size in bytes */
-UNIV_INLINE
-ulint page_zip_get_size(
-    const page_zip_des_t *page_zip) /*!< in: compressed page */
-{
-  ulint size;
 
-  if (!page_zip->ssize) {
-    return (0);
-  }
-
-  size = (UNIV_ZIP_SIZE_MIN >> 1) << page_zip->ssize;
-
-  ut_ad(size >= UNIV_ZIP_SIZE_MIN);
-  ut_ad(size <= UNIV_PAGE_SIZE);
-
-  return (size);
-}
 
 #ifdef UNIV_DEBUG
 /** Validate a compressed page descriptor.
