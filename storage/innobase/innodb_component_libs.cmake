@@ -47,6 +47,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # R
     #random
+    record
 
     # S
     #string

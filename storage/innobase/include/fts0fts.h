@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/error/dberr_t.h>
+#include <innodb/record/rec_t.h>
 
 #include "ha_prototypes.h"
 
@@ -46,7 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mem0mem.h"
 #include "mysql/plugin_ftparser.h"
 #include "que0types.h"
-#include "rem0types.h"
+
 #include "row0types.h"
 #include "trx0types.h"
 #include "ut0rbt.h"
@@ -658,19 +659,19 @@ void fts_startup(void);
 Signal FTS threads to initiate shutdown. */
 void
 fts_start_shutdown(
-	dict_table_t*	table,			/*!< in: table with FTS
-						indexes */
-	fts_t*		fts);			/*!< in: fts instance to
-						shutdown */
+    dict_table_t*	table,			/*!< in: table with FTS
+                        indexes */
+    fts_t*		fts);			/*!< in: fts instance to
+                        shutdown */
 
 /******************************************************************//**
 Wait for FTS threads to shutdown. */
 void
 fts_shutdown(
-	dict_table_t*	table,			/*!< in: table with FTS
-						indexes */
-	fts_t*		fts);			/*!< in: fts instance to
-						shutdown */
+    dict_table_t*	table,			/*!< in: table with FTS
+                        indexes */
+    fts_t*		fts);			/*!< in: fts instance to
+                        shutdown */
 #endif
 
 /** Create an instance of fts_t.

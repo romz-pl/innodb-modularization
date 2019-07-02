@@ -56,7 +56,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_compiler.h"
 #include "my_inttypes.h"
 #include "que0types.h"
-#include "rem0types.h"
+
 #include "row0types.h"
 #include "sess0sess.h"
 #include "sql_cmd.h"

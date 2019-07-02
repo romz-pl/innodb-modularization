@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0types.h"
 #include "mtr0types.h"
 #include "que0types.h"
-#include "rem0types.h"
+
 #include "row0types.h"
 #include "trx0types.h"
 

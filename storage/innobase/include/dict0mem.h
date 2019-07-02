@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/string/ut_strcmp.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
+#include <innodb/record/rec_t.h>
 
 #include "sql/dd/object_id.h"
 #include "sql/dd/types/column.h"
@@ -48,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "data0type.h"
 #include "dict0types.h"
 #include "mem0mem.h"
-#include "rem0types.h"
+
 #include "row0types.h"
 #ifndef UNIV_HOTBACKUP
 #include "lock0types.h"

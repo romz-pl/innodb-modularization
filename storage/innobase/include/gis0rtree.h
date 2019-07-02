@@ -46,7 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mem0mem.h"
 #include "page0page.h"
 #include "que0types.h"
-#include "rem0types.h"
+
 #include "row0types.h"
 #include "trx0types.h"
 #include "ut0vec.h"

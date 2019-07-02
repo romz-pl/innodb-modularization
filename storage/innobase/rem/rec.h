@@ -39,147 +39,11 @@ external tools. */
 
 #include <innodb/univ/univ.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
+#include <innodb/record/flag.h>
 
 #include "dict0boot.h"
 #include "dict0dict.h"
 
-/* Compact flag ORed to the extra size returned by rec_get_offsets() */
-#define REC_OFFS_COMPACT ((ulint)1 << 31)
-/* SQL NULL flag in offsets returned by rec_get_offsets() */
-#define REC_OFFS_SQL_NULL ((ulint)1 << 31)
-/* External flag in offsets returned by rec_get_offsets() */
-#define REC_OFFS_EXTERNAL ((ulint)1 << 30)
-/* Default value flag in offsets returned by rec_get_offsets() */
-#define REC_OFFS_DEFAULT ((ulint)1 << 29)
-/* Mask for offsets returned by rec_get_offsets() */
-#define REC_OFFS_MASK (REC_OFFS_DEFAULT - 1)
-
-/* The offset of heap_no in a compact record */
-#define REC_NEW_HEAP_NO 4
-/* The shift of heap_no in a compact record.
-The status is stored in the low-order bits. */
-#define REC_HEAP_NO_SHIFT 3
-
-/* We list the byte offsets from the origin of the record, the mask,
-and the shift needed to obtain each bit-field of the record. */
-
-#define REC_NEXT 2
-#define REC_NEXT_MASK 0xFFFFUL
-#define REC_NEXT_SHIFT 0
-
-#define REC_OLD_SHORT 3 /* This is single byte bit-field */
-#define REC_OLD_SHORT_MASK 0x1UL
-#define REC_OLD_SHORT_SHIFT 0
-
-#define REC_OLD_N_FIELDS 4
-#define REC_OLD_N_FIELDS_MASK 0x7FEUL
-#define REC_OLD_N_FIELDS_SHIFT 1
-
-#define REC_NEW_STATUS 3 /* This is single byte bit-field */
-#define REC_NEW_STATUS_MASK 0x7UL
-#define REC_NEW_STATUS_SHIFT 0
-
-#define REC_OLD_HEAP_NO 5
-#define REC_HEAP_NO_MASK 0xFFF8UL
-#if 0 /* defined in rem0rec.h for use of page0zip.cc */
-#define REC_NEW_HEAP_NO 4
-#define REC_HEAP_NO_SHIFT 3
-#endif
-
-#define REC_OLD_N_OWNED 6 /* This is single byte bit-field */
-#define REC_NEW_N_OWNED 5 /* This is single byte bit-field */
-#define REC_N_OWNED_MASK 0xFUL
-#define REC_N_OWNED_SHIFT 0
-
-#define REC_OLD_INFO_BITS 6 /* This is single byte bit-field */
-#define REC_NEW_INFO_BITS 5 /* This is single byte bit-field */
-#define REC_TMP_INFO_BITS 1 /* This is single byte bit-field */
-#define REC_INFO_BITS_MASK 0xF0UL
-#define REC_INFO_BITS_SHIFT 0
-
-#if REC_OLD_SHORT_MASK << (8 * (REC_OLD_SHORT - 3)) ^       \
-    REC_OLD_N_FIELDS_MASK << (8 * (REC_OLD_N_FIELDS - 4)) ^ \
-    REC_HEAP_NO_MASK << (8 * (REC_OLD_HEAP_NO - 4)) ^       \
-    REC_N_OWNED_MASK << (8 * (REC_OLD_N_OWNED - 3)) ^       \
-    REC_INFO_BITS_MASK << (8 * (REC_OLD_INFO_BITS - 3)) ^ 0xFFFFFFFFUL
-#error "sum of old-style masks != 0xFFFFFFFFUL"
-#endif
-#if REC_NEW_STATUS_MASK << (8 * (REC_NEW_STATUS - 3)) ^ \
-    REC_HEAP_NO_MASK << (8 * (REC_NEW_HEAP_NO - 4)) ^   \
-    REC_N_OWNED_MASK << (8 * (REC_NEW_N_OWNED - 3)) ^   \
-    REC_INFO_BITS_MASK << (8 * (REC_NEW_INFO_BITS - 3)) ^ 0xFFFFFFUL
-#error "sum of new-style masks != 0xFFFFFFUL"
-#endif
-
-/* Info bit denoting the predefined minimum record: this bit is set
-if and only if the record is the first user record on a non-leaf
-B-tree page that is the leftmost page on its level
-(PAGE_LEVEL is nonzero and FIL_PAGE_PREV is FIL_NULL). */
-#define REC_INFO_MIN_REC_FLAG 0x10UL
-/* The deleted flag in info bits */
-#define REC_INFO_DELETED_FLAG                  \
-  0x20UL /* when bit is set to 1, it means the \
-         record has been delete marked */
-/* The 0x40UL can also be used in the future */
-/* The instant ADD COLUMN flag. When it is set to 1, it means this record
-was inserted/updated after an instant ADD COLUMN. */
-#define REC_INFO_INSTANT_FLAG 0x80UL
-
-/* Number of extra bytes in an old-style record,
-in addition to the data and the offsets */
-#define REC_N_OLD_EXTRA_BYTES 6
-/* Number of extra bytes in a new-style record,
-in addition to the data and the offsets */
-#define REC_N_NEW_EXTRA_BYTES 5
-/* NUmber of extra bytes in a new-style temporary record,
-in addition to the data and the offsets.
-This is used only after instant ADD COLUMN. */
-#define REC_N_TMP_EXTRA_BYTES 1
-
-/* Record status values */
-#define REC_STATUS_ORDINARY 0
-#define REC_STATUS_NODE_PTR 1
-#define REC_STATUS_INFIMUM 2
-#define REC_STATUS_SUPREMUM 3
-
-/* The following four constants are needed in page0zip.cc in order to
-efficiently compress and decompress pages. */
-
-/* Length of a B-tree node pointer, in bytes */
-#define REC_NODE_PTR_SIZE 4
-
-/** SQL null flag in a 1-byte offset of ROW_FORMAT=REDUNDANT records */
-#define REC_1BYTE_SQL_NULL_MASK 0x80UL
-/** SQL null flag in a 2-byte offset of ROW_FORMAT=REDUNDANT records */
-#define REC_2BYTE_SQL_NULL_MASK 0x8000UL
-
-/** In a 2-byte offset of ROW_FORMAT=REDUNDANT records, the second most
-significant bit denotes that the tail of a field is stored off-page. */
-#define REC_2BYTE_EXTERN_MASK 0x4000UL
-
-#ifdef UNIV_DEBUG
-/* Length of the rec_get_offsets() header */
-#define REC_OFFS_HEADER_SIZE 4
-#else /* UNIV_DEBUG */
-/* Length of the rec_get_offsets() header */
-#define REC_OFFS_HEADER_SIZE 2
-#endif /* UNIV_DEBUG */
-
-/* Number of elements that should be initially allocated for the
-offsets[] array, first passed to rec_get_offsets() */
-#define REC_OFFS_NORMAL_SIZE 100
-#define REC_OFFS_SMALL_SIZE 10
-
-/* Get the base address of offsets.  The extra_size is stored at
-this position, and following positions hold the end offsets of
-the fields. */
-#define rec_offs_base(offsets) (offsets + REC_OFFS_HEADER_SIZE)
-
-/** Number of fields flag which means it occupies two bytes */
-static const uint8_t REC_N_FIELDS_TWO_BYTES_FLAG = 0x80;
-
-/** Max number of fields which can be stored in one byte */
-static const uint8_t REC_N_FIELDS_ONE_BYTE_MAX = 0x7F;
 
 /** The following function determines the offsets to each field
  in the record. It can reuse a previously allocated array.
@@ -218,100 +82,8 @@ void rec_get_offsets_reverse(
     ulint *offsets);           /*!< in/out: array consisting of
                               offsets[0] allocated elements */
 
-/** Gets a bit field from within 1 byte. */
-UNIV_INLINE
-ulint rec_get_bit_field_1(
-    const rec_t *rec, /*!< in: pointer to record origin */
-    ulint offs,       /*!< in: offset from the origin down */
-    ulint mask,       /*!< in: mask used to filter bits */
-    ulint shift)      /*!< in: shift right applied after masking */
-{
-  ut_ad(rec);
 
-  return ((mach_read_from_1(rec - offs) & mask) >> shift);
-}
 
-/** Gets a bit field from within 2 bytes. */
-UNIV_INLINE
-uint16_t rec_get_bit_field_2(
-    const rec_t *rec, /*!< in: pointer to record origin */
-    ulint offs,       /*!< in: offset from the origin down */
-    ulint mask,       /*!< in: mask used to filter bits */
-    ulint shift)      /*!< in: shift right applied after masking */
-{
-  ut_ad(rec);
-
-  return ((mach_read_from_2(rec - offs) & mask) >> shift);
-}
-
-/** The following function retrieves the status bits of a new-style record.
- @return status bits */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint
-    rec_get_status(const rec_t *rec) /*!< in: physical record */
-{
-  ulint ret;
-
-  ut_ad(rec);
-
-  ret = rec_get_bit_field_1(rec, REC_NEW_STATUS, REC_NEW_STATUS_MASK,
-                            REC_NEW_STATUS_SHIFT);
-  ut_ad((ret & ~REC_NEW_STATUS_MASK) == 0);
-
-  return (ret);
-}
-
-#ifdef UNIV_DEBUG
-/** Check if the info bits are valid.
-@param[in]	bits	info bits to check
-@return true if valid */
-inline bool rec_info_bits_valid(ulint bits) {
-  return (0 == (bits & ~(REC_INFO_DELETED_FLAG | REC_INFO_MIN_REC_FLAG |
-                         REC_INFO_INSTANT_FLAG)));
-}
-#endif /* UNIV_DEBUG */
-
-/** The following function is used to retrieve the info bits of a record.
-@param[in]	rec	physical record
-@param[in]	comp	nonzero=compact page format
-@return info bits */
-UNIV_INLINE
-ulint rec_get_info_bits(const rec_t *rec, ulint comp) {
-  const ulint val =
-      rec_get_bit_field_1(rec, comp ? REC_NEW_INFO_BITS : REC_OLD_INFO_BITS,
-                          REC_INFO_BITS_MASK, REC_INFO_BITS_SHIFT);
-  ut_ad(rec_info_bits_valid(val));
-  return (val);
-}
-
-/** The following function is used to retrieve the info bits of a temporary
-record.
-@param[in]	rec	physical record
-@return	info bits */
-UNIV_INLINE
-ulint rec_get_info_bits_temp(const rec_t *rec) {
-  const ulint val = rec_get_bit_field_1(
-      rec, REC_TMP_INFO_BITS, REC_INFO_BITS_MASK, REC_INFO_BITS_SHIFT);
-  ut_ad(rec_info_bits_valid(val));
-  return (val);
-}
-
-/** The following function is used to get the number of fields
- in an old-style record, which is stored in the rec
- @return number of data fields */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) uint16_t
-    rec_get_n_fields_old_raw(const rec_t *rec) /*!< in: physical record */
-{
-  uint16_t ret;
-
-  ut_ad(rec);
-
-  ret = rec_get_bit_field_2(rec, REC_OLD_N_FIELDS, REC_OLD_N_FIELDS_MASK,
-                            REC_OLD_N_FIELDS_SHIFT);
-  ut_ad(ret <= REC_MAX_N_FIELDS);
-  ut_ad(ret > 0);
-
-  return (ret);
-}
 
 /** The following function is used to get the number of fields
 in an old-style record. Have to consider the case that after
@@ -401,59 +173,8 @@ bool rec_n_fields_is_sane(dict_index_t *index, const rec_t *rec,
               rec_get_n_fields(rec, index) == dtuple_get_n_fields(entry) - 1));
 }
 
-/** The following function returns the number of allocated elements
- for an array of offsets.
- @return number of elements */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint rec_offs_get_n_alloc(
-    const ulint *offsets) /*!< in: array for rec_get_offsets() */
-{
-  ulint n_alloc;
-  ut_ad(offsets);
-  n_alloc = offsets[0];
-  ut_ad(n_alloc > REC_OFFS_HEADER_SIZE);
-  UNIV_MEM_ASSERT_W(offsets, n_alloc * sizeof *offsets);
-  return (n_alloc);
-}
 
-/** The following function sets the number of allocated elements
- for an array of offsets. */
-UNIV_INLINE
-void rec_offs_set_n_alloc(ulint *offsets, /*!< out: array for rec_get_offsets(),
-                                          must be allocated */
-                          ulint n_alloc)  /*!< in: number of elements */
-{
-  ut_ad(offsets);
-  ut_ad(n_alloc > REC_OFFS_HEADER_SIZE);
-  UNIV_MEM_ASSERT_AND_ALLOC(offsets, n_alloc * sizeof *offsets);
-  offsets[0] = n_alloc;
-}
 
-/** The following function sets the number of fields in offsets. */
-UNIV_INLINE
-void rec_offs_set_n_fields(ulint *offsets, /*!< in/out: array returned by
-                                           rec_get_offsets() */
-                           ulint n_fields) /*!< in: number of fields */
-{
-  ut_ad(offsets);
-  ut_ad(n_fields > 0);
-  ut_ad(n_fields <= REC_MAX_N_FIELDS);
-  ut_ad(n_fields + REC_OFFS_HEADER_SIZE <= rec_offs_get_n_alloc(offsets));
-  offsets[1] = n_fields;
-}
-
-/** The following function returns the number of fields in a record.
- @return number of fields */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint rec_offs_n_fields(
-    const ulint *offsets) /*!< in: array returned by rec_get_offsets() */
-{
-  ulint n_fields;
-  ut_ad(offsets);
-  n_fields = offsets[1];
-  ut_ad(n_fields > 0);
-  ut_ad(n_fields <= REC_MAX_N_FIELDS);
-  ut_ad(n_fields + REC_OFFS_HEADER_SIZE <= rec_offs_get_n_alloc(offsets));
-  return (n_fields);
-}
 
 /** Determine the offset of a specified field in the record, when this
 field is a field added after an instant ADD COLUMN
@@ -582,52 +303,6 @@ std::ostream &rec_offs_print(std::ostream &out, const ulint *offsets);
 #define rec_offs_make_valid(rec, index, offsets) ((void)0)
 #endif /* UNIV_DEBUG */
 
-/** The following function tells if a new-style record is instant record or not
-@param[in]	rec	new-style record
-@return true if it's instant affected */
-UNIV_INLINE
-bool rec_get_instant_flag_new(const rec_t *rec) {
-  ulint info = rec_get_info_bits(rec, TRUE);
-  return ((info & REC_INFO_INSTANT_FLAG) != 0);
-}
-
-/** The following function tells if a new-style temporary record is instant
-record or not
-@param[in]	rec	new-style temporary record
-@return	true if it's instant affected */
-UNIV_INLINE
-bool rec_get_instant_flag_new_temp(const rec_t *rec) {
-  ulint info = rec_get_info_bits_temp(rec);
-  return ((info & REC_INFO_INSTANT_FLAG) != 0);
-}
-
-/** Get the number of fields for one new style leaf page record.
-This is only needed for table after instant ADD COLUMN.
-@param[in]	rec		leaf page record
-@param[in]	extra_bytes	extra bytes of this record
-@param[in,out]	length		length of number of fields
-@return	number of fields */
-UNIV_INLINE
-uint32_t rec_get_n_fields_instant(const rec_t *rec, const ulint extra_bytes,
-                                  uint16_t *length) {
-  uint16_t n_fields;
-  const byte *ptr;
-
-  ptr = rec - (extra_bytes + 1);
-
-  if ((*ptr & REC_N_FIELDS_TWO_BYTES_FLAG) == 0) {
-    *length = 1;
-    return (*ptr);
-  }
-
-  *length = 2;
-  n_fields = ((*ptr-- & REC_N_FIELDS_ONE_BYTE_MAX) << 8);
-  n_fields |= *ptr;
-  ut_ad(n_fields < REC_MAX_N_FIELDS);
-  ut_ad(n_fields != 0);
-
-  return (n_fields);
-}
 
 /** Determines the information about null bytes and variable length bytes
 for a new-style temporary record
@@ -832,49 +507,6 @@ void rec_init_offsets_comp_ordinary(
   } while (++i < rec_offs_n_fields(offsets));
 
   *rec_offs_base(offsets) = (rec - (lens + 1)) | REC_OFFS_COMPACT | any_ext;
-}
-
-/** The following function is used to test whether the data offsets in the
- record are stored in one-byte or two-byte format.
- @return true if 1-byte form */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ibool
-    rec_get_1byte_offs_flag(const rec_t *rec) /*!< in: physical record */
-{
-#if TRUE != 1
-#error "TRUE != 1"
-#endif
-
-  return (rec_get_bit_field_1(rec, REC_OLD_SHORT, REC_OLD_SHORT_MASK,
-                              REC_OLD_SHORT_SHIFT));
-}
-
-/** Returns the offset of nth field end if the record is stored in the 1-byte
- offsets form. If the field is SQL null, the flag is ORed in the returned
- value.
- @return offset of the start of the field, SQL null flag ORed */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint
-    rec_1_get_field_end_info(const rec_t *rec, /*!< in: record */
-                             ulint n)          /*!< in: field index */
-{
-  ut_ad(rec_get_1byte_offs_flag(rec));
-  ut_ad(n < rec_get_n_fields_old_raw(rec));
-
-  return (mach_read_from_1(rec - (REC_N_OLD_EXTRA_BYTES + n + 1)));
-}
-
-/** Returns the offset of nth field end if the record is stored in the 2-byte
- offsets form. If the field is SQL null, the flag is ORed in the returned
- value.
- @return offset of the start of the field, SQL null flag and extern
- storage flag ORed */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint
-    rec_2_get_field_end_info(const rec_t *rec, /*!< in: record */
-                             ulint n)          /*!< in: field index */
-{
-  ut_ad(!rec_get_1byte_offs_flag(rec));
-  ut_ad(n < rec_get_n_fields_old_raw(rec));
-
-  return (mach_read_from_2(rec - (REC_N_OLD_EXTRA_BYTES + 2 * n + 2)));
 }
 
 #endif

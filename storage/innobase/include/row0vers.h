@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0undo.h"
 #include "mtr0mtr.h"
 #include "que0types.h"
-#include "rem0types.h"
+
 #include "trx0types.h"
 
 // Forward declaration

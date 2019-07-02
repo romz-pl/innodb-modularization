@@ -125,12 +125,6 @@ void dfield_write_mbr(dfield_t *field, const double *mbr);
 UNIV_INLINE
 void dfield_set_null(dfield_t *field); /*!< in/out: field */
 
-/** Writes an SQL null field full of zeros.
-@param[in]	data	pointer to a buffer of size len
-@param[in]	len	SQL null size in bytes */
-UNIV_INLINE
-void data_write_sql_null(byte *data, ulint len);
-
 /** Copies the data and len fields.
 @param[out]	field1	field to copy to
 @param[in]	field2	field to copy from */

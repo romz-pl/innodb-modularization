@@ -41,6 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/allocator/UT_DELETE.h>
+#include <innodb/record/rec_t.h>
 
 /** DDL log types defined as uint32_t because it costs 4 bytes in
 mysql.innodb_ddl_log. */

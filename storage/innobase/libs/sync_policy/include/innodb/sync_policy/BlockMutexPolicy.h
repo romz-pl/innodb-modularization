@@ -3,6 +3,7 @@
 #include <innodb/univ/univ.h>
 #include <innodb/sync_latch/LatchMetaData.h>
 #include <innodb/sync_policy/MutexDebug.h>
+#include <innodb/sync_latch/sync_latch_get_meta.h>
 
 #ifndef UNIV_LIBRARY
 

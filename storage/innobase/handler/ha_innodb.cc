@@ -155,7 +155,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "p_s.h"
 #include "page0zip.h"
 #include "pars0pars.h"
-#include "rem0types.h"
+
 #include "row0ext.h"
 #include "row0import.h"
 #include "row0ins.h"

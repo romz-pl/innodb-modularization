@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define dict0dict_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/record/rec_format_t.h>
 
 #include <set>
 
@@ -48,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0sysspace.h"
 #include "hash0hash.h"
 #include "mem0mem.h"
-#include "rem0types.h"
+
 #include "row0types.h"
 #include "sql/dd/object_id.h"
 

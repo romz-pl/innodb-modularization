@@ -88,7 +88,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lock0lock.h"
 #include "pars0pars.h"
 #include "partition_info.h"
-#include "rem0types.h"
+
 #include "row0ins.h"
 #include "row0log.h"
 #include "row0merge.h"

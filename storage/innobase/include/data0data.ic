@@ -629,13 +629,7 @@ ulint dtuple_fold(const dtuple_t *tuple, ulint n_fields, ulint n_bytes,
   return (fold);
 }
 
-/** Writes an SQL null field full of zeros. */
-UNIV_INLINE
-void data_write_sql_null(byte *data, /*!< in: pointer to a buffer of size len */
-                         ulint len)  /*!< in: SQL null size in bytes */
-{
-  memset(data, 0, len);
-}
+
 
 /** Checks if a dtuple contains an SQL null value.
  @return true if some field is SQL null */

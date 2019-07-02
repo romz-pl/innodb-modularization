@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0mtr.h"
 #include "que0types.h"
 #include "rem0rec.h"
-#include "rem0types.h"
+
 #include "row0mysql.h"
 #include "srv0srv.h"
 #include "trx0types.h"

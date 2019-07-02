@@ -23,6 +23,7 @@ add_subdirectory( memory_check )
 add_subdirectory( page )
 
 add_subdirectory( random )
+add_subdirectory( record )
 
 add_subdirectory( string )
 add_subdirectory( sync_array )

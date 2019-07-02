@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "btr0types.h"
-#include "rem0types.h"
+
 
 /** Looks up a column prefix of an externally stored column.
  @return column prefix, or NULL if the column is not stored externally,

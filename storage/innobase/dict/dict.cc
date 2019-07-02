@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 other files in library. The code in this file is used to make a library for
 external tools. */
 
+#include <innodb/record/flag.h>
+
 #include <stddef.h>
 
 #include "dict0dict.h"

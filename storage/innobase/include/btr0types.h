@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/page/page_size_t.h>
-#include "rem0types.h"
+
 
 
 /** Persistent cursor */

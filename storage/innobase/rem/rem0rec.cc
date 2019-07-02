@@ -240,54 +240,6 @@ ulint rec_get_n_extern_new(
   return (n_extern);
 }
 
-/** The following function is used to get the offset to the nth
- data field in an old-style record.
- @return offset to the field */
-ulint rec_get_nth_field_offs_old(const rec_t *rec, /*!< in: record */
-                                 ulint n,    /*!< in: index of the field */
-                                 ulint *len) /*!< out: length of the field;
-                                             UNIV_SQL_NULL if SQL null */
-{
-  ulint os;
-  ulint next_os;
-
-  ut_ad(len);
-  ut_a(rec);
-  ut_a(n < rec_get_n_fields_old_raw(rec));
-
-  if (rec_get_1byte_offs_flag(rec)) {
-    os = rec_1_get_field_start_offs(rec, n);
-
-    next_os = rec_1_get_field_end_info(rec, n);
-
-    if (next_os & REC_1BYTE_SQL_NULL_MASK) {
-      *len = UNIV_SQL_NULL;
-
-      return (os);
-    }
-
-    next_os = next_os & ~REC_1BYTE_SQL_NULL_MASK;
-  } else {
-    os = rec_2_get_field_start_offs(rec, n);
-
-    next_os = rec_2_get_field_end_info(rec, n);
-
-    if (next_os & REC_2BYTE_SQL_NULL_MASK) {
-      *len = UNIV_SQL_NULL;
-
-      return (os);
-    }
-
-    next_os = next_os & ~(REC_2BYTE_SQL_NULL_MASK | REC_2BYTE_EXTERN_MASK);
-  }
-
-  *len = next_os - os;
-
-  ut_ad(*len < UNIV_PAGE_SIZE);
-
-  return (os);
-}
-
 /** Determines the size of a data tuple prefix in ROW_FORMAT=COMPACT.
  @return total size */
 UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint
@@ -527,51 +479,8 @@ ulint rec_get_converted_size_comp(
                      index, fields, n_fields, NULL, extra, &status, false));
 }
 
-/** Sets the value of the ith field SQL null bit of an old-style record. */
-void rec_set_nth_field_null_bit(rec_t *rec, /*!< in: record */
-                                ulint i,    /*!< in: ith field */
-                                ibool val)  /*!< in: value to set */
-{
-  ulint info;
 
-  if (rec_get_1byte_offs_flag(rec)) {
-    info = rec_1_get_field_end_info(rec, i);
 
-    if (val) {
-      info = info | REC_1BYTE_SQL_NULL_MASK;
-    } else {
-      info = info & ~REC_1BYTE_SQL_NULL_MASK;
-    }
-
-    rec_1_set_field_end_info(rec, i, info);
-
-    return;
-  }
-
-  info = rec_2_get_field_end_info(rec, i);
-
-  if (val) {
-    info = info | REC_2BYTE_SQL_NULL_MASK;
-  } else {
-    info = info & ~REC_2BYTE_SQL_NULL_MASK;
-  }
-
-  rec_2_set_field_end_info(rec, i, info);
-}
-
-/** Sets an old-style record field to SQL null.
- The physical size of the field is not changed. */
-void rec_set_nth_field_sql_null(rec_t *rec, /*!< in: record */
-                                ulint n)    /*!< in: index of the field */
-{
-  ulint offset;
-
-  offset = rec_get_field_start_offs(rec, n);
-
-  data_write_sql_null(rec + offset, rec_get_nth_field_size(rec, n));
-
-  rec_set_nth_field_null_bit(rec, n, TRUE);
-}
 
 /** Builds an old-style physical record out of a data tuple and
  stores it beginning from the start of the given buffer.

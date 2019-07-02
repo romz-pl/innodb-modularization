@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define dict0load_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/record/rec_t.h>
 
 #include "btr0types.h"
 #include "dict0types.h"

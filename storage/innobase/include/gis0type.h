@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "hash0hash.h"
 #include "mem0mem.h"
 #include "que0types.h"
-#include "rem0types.h"
+
 #include "row0types.h"
 #include "trx0types.h"
 #include "ut0vec.h"
