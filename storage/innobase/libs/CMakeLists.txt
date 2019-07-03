@@ -12,6 +12,8 @@ add_subdirectory( error )
 
 add_subdirectory( formatting )
 
+add_subdirectory( io )
+
 add_subdirectory( logger )
 add_subdirectory( lst )
 

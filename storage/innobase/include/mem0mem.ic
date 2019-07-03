@@ -548,19 +548,7 @@ char *mem_strdup(const char *str) /*!< in: string to be copied */
   return (static_cast<char *>(memcpy(ut_malloc_nokey(len), str, len)));
 }
 
-/** Makes a NUL-terminated copy of a nonterminated string.
- @return own: a copy of the string, must be deallocated with ut_free */
-UNIV_INLINE
-char *mem_strdupl(const char *str, /*!< in: string to be copied */
-                  ulint len)       /*!< in: length of str, in bytes */
-{
-  char *s = static_cast<char *>(ut_malloc_nokey(len + 1));
-  s[len] = 0;
-  if (len > 0) {
-    memcpy(s, str, len);
-  }
-  return s;
-}
+
 
 /** Makes a NUL-terminated copy of a nonterminated string,
  allocated from a memory heap.

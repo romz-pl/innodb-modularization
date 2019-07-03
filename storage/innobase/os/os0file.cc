@@ -95,6 +95,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <new>
 #include <vector>
 
+#include <innodb/io/Block.h>
+#include <innodb/io/Blocks.h>
+#include <innodb/io/block_cache.h>
+
+
 #ifdef UNIV_HOTBACKUP
 #include <data0type.h>
 #endif /* UNIV_HOTBACKUP */
@@ -111,29 +116,7 @@ static const ulint IO_LOG_SEGMENT = 1;
 /** Number of retries for partial I/O's */
 static const ulint NUM_RETRIES_ON_PARTIAL_IO = 10;
 
-/** Blocks for doing IO, used in the transparent compression
-and encryption code. */
-struct Block {
-  /** Default constructor */
-  Block() : m_ptr(), m_in_use() {}
 
-  byte *m_ptr;
-
-  byte pad[INNOBASE_CACHE_LINE_SIZE - sizeof(ulint)];
-  lock_word_t m_in_use;
-};
-
-/** For storing the allocated blocks */
-typedef std::vector<Block> Blocks;
-
-/** Block collection */
-static Blocks *block_cache;
-
-/** Number of blocks to allocate for sync read/writes */
-static const size_t MAX_BLOCKS = 128;
-
-/** Block buffer size */
-#define BUFFER_BLOCK_SIZE ((ulint)(UNIV_PAGE_SIZE * 1.3))
 
 /** Disk sector size of aligning write buffer for DIRECT_IO */
 static ulint os_io_ptr_align = UNIV_SECTOR_SIZE;
@@ -202,16 +185,8 @@ bool os_is_o_direct_supported() {
 #endif /* !NO_FALLOCATE && UNIV_LINUX */
 }
 
-  /* This specifies the file permissions InnoDB uses when it creates files in
-  Unix; the value of os_innodb_umask is initialized in ha_innodb.cc to
-  my_umask */
 
-#ifndef _WIN32
-/** Umask for creating files */
-static ulint os_innodb_umask = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
-#else
-/** Umask for creating files */
-static ulint os_innodb_umask = 0;
+#ifdef _WIN32
 
 /* On Windows when using native AIO the number of AIO requests
 that a thread can handle at a given time is limited to 32
@@ -812,12 +787,6 @@ static_assert(DATA_TRX_ID_LEN <= 6, "COMPRESSION_ALGORITHM will not fit!");
 @return true if ok */
 static bool os_aio_validate();
 
-/** Does error handling when a file operation fails.
-@param[in]	name		File name or NULL
-@param[in]	operation	Name of operation e.g., "read", "write"
-@return true if we should retry the operation */
-static bool os_file_handle_error(const char *name, const char *operation);
-
 /** Free storage space associated with a section of the file.
 @param[in]      fh              Open file handle
 @param[in]      off             Starting offset (SEEK_SET)
@@ -825,15 +794,6 @@ static bool os_file_handle_error(const char *name, const char *operation);
 @return DB_SUCCESS or error code */
 dberr_t os_file_punch_hole(os_file_t fh, os_offset_t off, os_offset_t len);
 
-/**
-Does error handling when a file operation fails.
-@param[in]	name		File name or NULL
-@param[in]	operation	Name of operation e.g., "read", "write"
-@param[in]	on_error_silent	if true then don't print any message to the log.
-@return true if we should retry the operation */
-static bool os_file_handle_error_no_exit(const char *name,
-                                         const char *operation,
-                                         bool on_error_silent);
 
 /** Decompress after a read and punch a hole in the file if it was a write
 @param[in]	type		IO context
@@ -947,65 +907,9 @@ static bool os_file_can_delete(const char *name) {
   return (false);
 }
 
-/** Allocate a page for sync IO
-@return pointer to page */
-static Block *os_alloc_block() {
-  size_t pos;
-  Blocks &blocks = *block_cache;
-  size_t i = static_cast<size_t>(my_timer_cycles());
-  const size_t size = blocks.size();
-  ulint retry = 0;
-  Block *block;
 
-  DBUG_EXECUTE_IF("os_block_cache_busy", retry = MAX_BLOCKS * 3;);
 
-  for (;;) {
-    /* After go through the block cache for 3 times,
-    allocate a new temporary block. */
-    if (retry == MAX_BLOCKS * 3) {
-      byte *ptr;
 
-      ptr = static_cast<byte *>(
-          ut_malloc_nokey(sizeof(*block) + BUFFER_BLOCK_SIZE));
-
-      block = new (ptr) Block();
-      block->m_ptr = static_cast<byte *>(ptr + sizeof(*block));
-      block->m_in_use = 1;
-
-      break;
-    }
-
-    pos = i++ % size;
-
-    if (TAS(&blocks[pos].m_in_use, 1) == 0) {
-      block = &blocks[pos];
-      break;
-    }
-
-    os_thread_yield();
-
-    ++retry;
-  }
-
-  ut_a(block->m_in_use != 0);
-
-  return (block);
-}
-
-/** Free a page after sync IO
-@param[in,out]	block		The block to free/release */
-static void os_free_block(Block *block) {
-  ut_ad(block->m_in_use == 1);
-
-  TAS(&block->m_in_use, 0);
-
-  /* When this block is not in the block cache, and it's
-  a temporary block, we need to free it directly. */
-  if (std::less<Block *>()(block, &block_cache->front()) ||
-      std::greater<Block *>()(block, &block_cache->back())) {
-    ut_free(block);
-  }
-}
 
 /** Generic AIO Handler methods. Currently handles IO post processing. */
 class AIOHandler {
@@ -1324,134 +1228,6 @@ ulint AIO::pending_io_count() const {
   return (reserved);
 }
 
-/** Compress a data page
-@param[in]	compression	Compression algorithm
-@param[in]	block_size	File system block size
-@param[in]	src		Source contents to compress
-@param[in]	src_len		Length in bytes of the source
-@param[out]	dst		Compressed page contents
-@param[out]	dst_len		Length in bytes of dst contents
-@return buffer data, dst_len will have the length of the data */
-static byte *os_file_compress_page(Compression compression, ulint block_size,
-                                   byte *src, ulint src_len, byte *dst,
-                                   ulint *dst_len) {
-  ulint len = 0;
-  ulint compression_level = page_zip_level;
-  ulint page_type = mach_read_from_2(src + FIL_PAGE_TYPE);
-
-  /* The page size must be a multiple of the OS punch hole size. */
-  ut_ad(!(src_len % block_size));
-
-  /* Shouldn't compress an already compressed page. */
-  ut_ad(page_type != FIL_PAGE_COMPRESSED);
-
-  /* The page must be at least twice as large as the file system
-  block size if we are to save any space. Ignore R-Tree pages for now,
-  they repurpose the same 8 bytes in the page header. No point in
-  compressing if the file system block size >= our page size. */
-
-  if (page_type == FIL_PAGE_RTREE || block_size == ULINT_UNDEFINED ||
-      compression.m_type == Compression::NONE || src_len < block_size * 2) {
-    *dst_len = src_len;
-
-    return (src);
-  }
-
-  /* Leave the header alone when compressing. */
-  ut_ad(block_size >= FIL_PAGE_DATA * 2);
-
-  ut_ad(src_len > FIL_PAGE_DATA + block_size);
-
-  /* Must compress to <= N-1 FS blocks. */
-  ulint out_len = src_len - (FIL_PAGE_DATA + block_size);
-
-  /* This is the original data page size - the page header. */
-  ulint content_len = src_len - FIL_PAGE_DATA;
-
-  ut_ad(out_len >= block_size - FIL_PAGE_DATA);
-  ut_ad(out_len <= src_len - (block_size + FIL_PAGE_DATA));
-
-  /* Only compress the data + trailer, leave the header alone */
-
-  switch (compression.m_type) {
-    case Compression::NONE:
-      ut_error;
-
-    case Compression::ZLIB: {
-      uLongf zlen = static_cast<uLongf>(out_len);
-
-      if (compress2(dst + FIL_PAGE_DATA, &zlen, src + FIL_PAGE_DATA,
-                    static_cast<uLong>(content_len),
-                    static_cast<int>(compression_level)) != Z_OK) {
-        *dst_len = src_len;
-
-        return (src);
-      }
-
-      len = static_cast<ulint>(zlen);
-
-      break;
-    }
-
-    case Compression::LZ4:
-
-      len = LZ4_compress_default(reinterpret_cast<char *>(src) + FIL_PAGE_DATA,
-                                 reinterpret_cast<char *>(dst) + FIL_PAGE_DATA,
-                                 static_cast<int>(content_len),
-                                 static_cast<int>(out_len));
-
-      ut_a(len <= src_len - FIL_PAGE_DATA);
-
-      if (len == 0 || len >= out_len) {
-        *dst_len = src_len;
-
-        return (src);
-      }
-
-      break;
-
-    default:
-      *dst_len = src_len;
-      return (src);
-  }
-
-  ut_a(len <= out_len);
-
-  ut_ad(memcmp(src + FIL_PAGE_LSN + 4,
-               src + src_len - FIL_PAGE_END_LSN_OLD_CHKSUM + 4, 4) == 0);
-
-  /* Copy the header as is. */
-  memmove(dst, src, FIL_PAGE_DATA);
-
-  /* Add compression control information. Required for decompressing. */
-  mach_write_to_2(dst + FIL_PAGE_TYPE, FIL_PAGE_COMPRESSED);
-
-  mach_write_to_1(dst + FIL_PAGE_VERSION, 1);
-
-  mach_write_to_1(dst + FIL_PAGE_ALGORITHM_V1, compression.m_type);
-
-  mach_write_to_2(dst + FIL_PAGE_ORIGINAL_TYPE_V1, page_type);
-
-  mach_write_to_2(dst + FIL_PAGE_ORIGINAL_SIZE_V1, content_len);
-
-  mach_write_to_2(dst + FIL_PAGE_COMPRESS_SIZE_V1, len);
-
-  /* Round to the next full block size */
-
-  len += FIL_PAGE_DATA;
-
-  *dst_len = ut_calc_align(len, block_size);
-
-  ut_ad(*dst_len >= len && *dst_len <= out_len + FIL_PAGE_DATA);
-
-  /* Clear out the unused portion of the page. */
-  if (len % block_size) {
-    memset(dst + len, 0x0, block_size - (len % block_size));
-  }
-
-  return (dst);
-}
-
 #ifdef UNIV_DEBUG
 #ifndef UNIV_HOTBACKUP
 /** Validates the consistency the aio system some of the time.
@@ -1480,42 +1256,6 @@ static bool os_aio_validate_skip() {
 #endif /* !UNIV_HOTBACKUP */
 #endif /* UNIV_DEBUG */
 
-#undef USE_FILE_LOCK
-#define USE_FILE_LOCK
-#if defined(UNIV_HOTBACKUP) || defined(_WIN32)
-/* InnoDB Hot Backup does not lock the data files.
- * On Windows, mandatory locking is used.
- */
-#undef USE_FILE_LOCK
-#endif /* UNIV_HOTBACKUP || _WIN32 */
-#ifdef USE_FILE_LOCK
-/** Obtain an exclusive lock on a file.
-@param[in]	fd		file descriptor
-@param[in]	name		file name
-@return 0 on success */
-static int os_file_lock(int fd, const char *name) {
-  struct flock lk;
-
-  lk.l_type = F_WRLCK;
-  lk.l_whence = SEEK_SET;
-  lk.l_start = lk.l_len = 0;
-
-  if (fcntl(fd, F_SETLK, &lk) == -1) {
-    ib::error(ER_IB_MSG_749)
-        << "Unable to lock " << name << " error: " << errno;
-
-    if (errno == EAGAIN || errno == EACCES) {
-      ib::info(ER_IB_MSG_750) << "Check that you do not already have"
-                                 " another mysqld process using the"
-                                 " same InnoDB data or log files.";
-    }
-
-    return (-1);
-  }
-
-  return (0);
-}
-#endif /* USE_FILE_LOCK */
 
 /** Calculates local segment number and aio array from global segment number.
 @param[out]	array		aio wait array
@@ -1720,81 +1460,9 @@ static dberr_t os_file_io_complete(const IORequest &type, os_file_t fh,
   return (DB_SUCCESS);
 }
 
-/** Check if the path refers to the root of a drive using a pointer
-to the last directory separator that the caller has fixed.
-@param[in]	path		path name
-@param[in]	last_slash	last directory separator in the path
-@return true if this path is a drive root, false if not */
-UNIV_INLINE
-bool os_file_is_root(const char *path, const char *last_slash) {
-  return (
-#ifdef _WIN32
-      (last_slash == path + 2 && path[1] == ':') ||
-#endif /* _WIN32 */
-      last_slash == path);
-}
 
-/** Return the parent directory component of a null-terminated path.
-Return a new buffer containing the string up to, but not including,
-the final component of the path.
-The path returned will not contain a trailing separator.
-Do not return a root path, return NULL instead.
-The final component trimmed off may be a filename or a directory name.
-If the final component is the only component of the path, return NULL.
-It is the caller's responsibility to free the returned string after it
-is no longer needed.
-@param[in]	path		Path name
-@return own: parent directory of the path */
-static char *os_file_get_parent_dir(const char *path) {
-  bool has_trailing_slash = false;
 
-  /* Find the offset of the last slash */
-  const char *last_slash = strrchr(path, OS_PATH_SEPARATOR);
 
-  if (!last_slash) {
-    /* No slash in the path, return NULL */
-    return (NULL);
-  }
-
-  /* Ok, there is a slash. Is there anything after it? */
-  if (static_cast<size_t>(last_slash - path + 1) == strlen(path)) {
-    has_trailing_slash = true;
-  }
-
-  /* Reduce repetative slashes. */
-  while (last_slash > path && last_slash[-1] == OS_PATH_SEPARATOR) {
-    last_slash--;
-  }
-
-  /* Check for the root of a drive. */
-  if (os_file_is_root(path, last_slash)) {
-    return (NULL);
-  }
-
-  /* If a trailing slash prevented the first strrchr() from trimming
-  the last component of the path, trim that component now. */
-  if (has_trailing_slash) {
-    /* Back up to the previous slash. */
-    last_slash--;
-    while (last_slash > path && last_slash[0] != OS_PATH_SEPARATOR) {
-      last_slash--;
-    }
-
-    /* Reduce repetative slashes. */
-    while (last_slash > path && last_slash[-1] == OS_PATH_SEPARATOR) {
-      last_slash--;
-    }
-  }
-
-  /* Check for the root of a drive. */
-  if (os_file_is_root(path, last_slash)) {
-    return (NULL);
-  }
-
-  /* Non-trivial directory component */
-
-  return (mem_strdupl(path, last_slash - path));
-}
 #ifdef UNIV_ENABLE_UNIT_TEST_GET_PARENT_DIR
 
 /* Test the function os_file_get_parent_dir. */
@@ -1850,48 +1518,6 @@ void unit_test_os_file_get_parent_dir() {
 #endif /* _WIN32 */
 }
 #endif /* UNIV_ENABLE_UNIT_TEST_GET_PARENT_DIR */
-
-/** Creates all missing subdirectories along the given path.
-@param[in]	path		Path name
-@return DB_SUCCESS if OK, otherwise error code. */
-dberr_t os_file_create_subdirs_if_needed(const char *path) {
-  if (srv_read_only_mode) {
-    ib::error(ER_IB_MSG_753) << "read only mode set. Can't create "
-                             << "subdirectories '" << path << "'";
-
-    return (DB_READ_ONLY);
-  }
-
-  char *subdir = os_file_get_parent_dir(path);
-
-  if (subdir == NULL) {
-    /* subdir is root or cwd, nothing to do */
-    return (DB_SUCCESS);
-  }
-
-  /* Test if subdir exists */
-  os_file_type_t type;
-  bool subdir_exists;
-  bool success = os_file_status(subdir, &subdir_exists, &type);
-
-  if (success && !subdir_exists) {
-    /* Subdir does not exist, create it */
-    dberr_t err = os_file_create_subdirs_if_needed(subdir);
-
-    if (err != DB_SUCCESS) {
-      ut_free(subdir);
-
-      return (err);
-    }
-
-    success = os_file_create_directory(subdir, false);
-  }
-
-  ut_free(subdir);
-
-  return (success ? DB_SUCCESS : DB_ERROR);
-}
-
 /** Allocate the buffer for IO on a transparently compressed table.
 @param[in]	type		IO flags
 @param[out]	buf		buffer to read or write
@@ -2737,82 +2363,6 @@ bool AIO::is_linux_native_aio_supported() {
 
 #endif /* LINUX_NATIVE_AIO */
 
-/** Retrieves the last error number if an error occurs in a file io function.
-The number should be retrieved before any other OS calls (because they may
-overwrite the error number). If the number is not known to this program,
-the OS error number + 100 is returned.
-@param[in]	report_all_errors	true if we want an error message
-                                        printed of all errors
-@param[in]	on_error_silent		true then don't print any diagnostic
-                                        to the log
-@return error number, or OS error number + 100 */
-static ulint os_file_get_last_error_low(bool report_all_errors,
-                                        bool on_error_silent) {
-  int err = errno;
-
-  if (err == 0) {
-    return (0);
-  }
-
-  if (report_all_errors ||
-      (err != ENOSPC && err != EEXIST && !on_error_silent)) {
-    ib::error(ER_IB_MSG_767)
-        << "Operating system error number " << err << " in a file operation.";
-
-    if (err == ENOENT) {
-      ib::error(ER_IB_MSG_768) << "The error means the system"
-                                  " cannot find the path specified.";
-
-#ifndef UNIV_HOTBACKUP
-      if (srv_is_being_started) {
-        ib::error(ER_IB_MSG_769) << "If you are installing InnoDB,"
-                                    " remember that you must create"
-                                    " directories yourself, InnoDB"
-                                    " does not create them.";
-      }
-#endif /* !UNIV_HOTBACKUP */
-    } else if (err == EACCES) {
-      ib::error(ER_IB_MSG_770) << "The error means mysqld does not have"
-                                  " the access rights to the directory.";
-
-    } else {
-      if (strerror(err) != NULL) {
-        ib::error(ER_IB_MSG_771)
-            << "Error number " << err << " means '" << strerror(err) << "'";
-      }
-
-      ib::info(ER_IB_MSG_772) << OPERATING_SYSTEM_ERROR_MSG;
-    }
-  }
-
-  switch (err) {
-    case ENOSPC:
-      return (OS_FILE_DISK_FULL);
-    case ENOENT:
-      return (OS_FILE_NOT_FOUND);
-    case EEXIST:
-      return (OS_FILE_ALREADY_EXISTS);
-    case EXDEV:
-    case ENOTDIR:
-    case EISDIR:
-      return (OS_FILE_PATH_ERROR);
-    case EAGAIN:
-      if (srv_use_native_aio) {
-        return (OS_FILE_AIO_RESOURCES_RESERVED);
-      }
-      break;
-    case EINTR:
-      if (srv_use_native_aio) {
-        return (OS_FILE_AIO_INTERRUPTED);
-      }
-      break;
-    case EACCES:
-      return (OS_FILE_ACCESS_VIOLATION);
-    case ENAMETOOLONG:
-      return (OS_FILE_NAME_TOO_LONG);
-  }
-  return (OS_FILE_ERROR_MAX + err);
-}
 
 /** Wrapper to fsync(2) that retries the call on some errors.
 Returns the value 0 if successful; otherwise the value -1 is returned and
@@ -2877,65 +2427,6 @@ static int os_file_fsync_posix(os_file_t file) {
   return (-1);
 }
 
-/** Check the existence and type of the given file.
-@param[in]	path		path name of file
-@param[out]	exists		true if the file exists
-@param[out]	type		Type of the file, if it exists
-@return true if call succeeded */
-static bool os_file_status_posix(const char *path, bool *exists,
-                                 os_file_type_t *type) {
-  struct stat statinfo;
-
-  int ret = stat(path, &statinfo);
-
-  *exists = !ret;
-
-  if (!ret) {
-    /* file exists, everything OK */
-
-  } else if (errno == ENOENT || errno == ENOTDIR) {
-    if (exists != nullptr) {
-      *exists = false;
-    }
-
-    /* file does not exist */
-    *type = OS_FILE_TYPE_MISSING;
-    return (true);
-
-  } else if (errno == ENAMETOOLONG) {
-    *type = OS_FILE_TYPE_NAME_TOO_LONG;
-    return (false);
-  } else if (errno == EACCES) {
-    *type = OS_FILE_PERMISSION_ERROR;
-    return (false);
-  } else {
-    *type = OS_FILE_TYPE_FAILED;
-
-    /* file exists, but stat call failed */
-    os_file_handle_error_no_exit(path, "stat", false);
-    return (false);
-  }
-
-  if (exists != nullptr) {
-    *exists = true;
-  }
-
-  if (S_ISDIR(statinfo.st_mode)) {
-    *type = OS_FILE_TYPE_DIR;
-
-  } else if (S_ISLNK(statinfo.st_mode)) {
-    *type = OS_FILE_TYPE_LINK;
-
-  } else if (S_ISREG(statinfo.st_mode)) {
-    *type = OS_FILE_TYPE_FILE;
-
-  } else {
-    *type = OS_FILE_TYPE_UNKNOWN;
-  }
-
-  return (true);
-}
-
 /** NOTE! Use the corresponding macro os_file_flush(), not directly this
 function!
 Flushes the write buffers of a given file to the disk.
@@ -2968,390 +2459,12 @@ bool os_file_flush_func(os_file_t file) {
   return (false);
 }
 
-/** NOTE! Use the corresponding macro os_file_create_simple(), not directly
-this function!
-A simple function to open or create a file.
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	access_type	OS_FILE_READ_ONLY or OS_FILE_READ_WRITE
-@param[in]	read_only	if true, read only checks are enforced
-@param[out]	success		true if succeed, false if error
-@return handle to the file, not defined if error, error number
-        can be retrieved with os_file_get_last_error */
-os_file_t os_file_create_simple_func(const char *name, ulint create_mode,
-                                     ulint access_type, bool read_only,
-                                     bool *success) {
-  os_file_t file;
 
-  *success = false;
 
-  int create_flag;
 
-  ut_a(!(create_mode & OS_FILE_ON_ERROR_SILENT));
-  ut_a(!(create_mode & OS_FILE_ON_ERROR_NO_EXIT));
 
-  if (create_mode == OS_FILE_OPEN) {
-    if (access_type == OS_FILE_READ_ONLY) {
-      create_flag = O_RDONLY;
 
-    } else if (read_only) {
-      create_flag = O_RDONLY;
 
-    } else {
-      create_flag = O_RDWR;
-    }
-
-  } else if (read_only) {
-    create_flag = O_RDONLY;
-
-  } else if (create_mode == OS_FILE_CREATE) {
-    create_flag = O_RDWR | O_CREAT | O_EXCL;
-
-  } else if (create_mode == OS_FILE_CREATE_PATH) {
-    /* Create subdirs along the path if needed. */
-    dberr_t err;
-
-    err = os_file_create_subdirs_if_needed(name);
-
-    if (err != DB_SUCCESS) {
-      *success = false;
-      ib::error(ER_IB_MSG_776)
-          << "Unable to create subdirectories '" << name << "'";
-
-      return (OS_FILE_CLOSED);
-    }
-
-    create_flag = O_RDWR | O_CREAT | O_EXCL;
-    create_mode = OS_FILE_CREATE;
-  } else {
-    ib::error(ER_IB_MSG_777) << "Unknown file create mode (" << create_mode
-                             << " for file '" << name << "'";
-
-    return (OS_FILE_CLOSED);
-  }
-
-  bool retry;
-
-  do {
-    file = ::open(name, create_flag, os_innodb_umask);
-
-    if (file == -1) {
-      *success = false;
-
-      retry = os_file_handle_error(
-          name, create_mode == OS_FILE_OPEN ? "open" : "create");
-    } else {
-      *success = true;
-      retry = false;
-    }
-
-  } while (retry);
-
-#ifdef USE_FILE_LOCK
-  if (!read_only && *success && access_type == OS_FILE_READ_WRITE &&
-      os_file_lock(file, name)) {
-    *success = false;
-    close(file);
-    file = -1;
-  }
-#endif /* USE_FILE_LOCK */
-
-  return (file);
-}
-
-/** This function attempts to create a directory named pathname. The new
-directory gets default permissions. On Unix the permissions are
-(0770 & ~umask). If the directory exists already, nothing is done and
-the call succeeds, unless the fail_if_exists arguments is true.
-If another error occurs, such as a permission error, this does not crash,
-but reports the error and returns false.
-@param[in]	pathname	directory name as null-terminated string
-@param[in]	fail_if_exists	if true, pre-existing directory is treated as
-                                an error.
-@return true if call succeeds, false on error */
-bool os_file_create_directory(const char *pathname, bool fail_if_exists) {
-  int rcode = mkdir(pathname, 0770);
-
-  if (!(rcode == 0 || (errno == EEXIST && !fail_if_exists))) {
-    /* failure */
-    os_file_handle_error_no_exit(pathname, "mkdir", false);
-
-    return (false);
-  }
-
-  return (true);
-}
-
-/** This function scans the contents of a directory and invokes the callback
-for each entry.
-@param[in]	path		directory name as null-terminated string
-@param[in]	scan_cbk	use callback to be called for each entry
-@param[in]	is_drop		attempt to drop the directory after scan
-@return true if call succeeds, false on error */
-bool os_file_scan_directory(const char *path, os_dir_cbk_t scan_cbk,
-                            bool is_drop) {
-  DIR *directory;
-  dirent *entry;
-
-  directory = opendir(path);
-
-  if (directory == nullptr) {
-    os_file_handle_error_no_exit(path, "opendir", false);
-    return (false);
-  }
-
-  entry = readdir(directory);
-
-  while (entry != nullptr) {
-    scan_cbk(path, entry->d_name);
-    entry = readdir(directory);
-  }
-
-  closedir(directory);
-
-  if (is_drop) {
-    int err;
-    err = rmdir(path);
-
-    if (err != 0) {
-      os_file_handle_error_no_exit(path, "rmdir", false);
-      return (false);
-    }
-  }
-
-  return (true);
-}
-
-/** NOTE! Use the corresponding macro os_file_create(), not directly
-this function!
-Opens an existing file or creates a new.
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	purpose		OS_FILE_AIO, if asynchronous, non-buffered I/O
-                                is desired, OS_FILE_NORMAL, if any normal file;
-                                NOTE that it also depends on type, os_aio_..
-                                and srv_.. variables whether we really use async
-                                I/O or unbuffered I/O: look in the function
-                                source code for the exact rules
-@param[in]	type		OS_DATA_FILE or OS_LOG_FILE
-@param[in]	read_only	true, if read only checks should be enforcedm
-@param[in]	success		true if succeeded
-@return handle to the file, not defined if error, error number
-        can be retrieved with os_file_get_last_error */
-pfs_os_file_t os_file_create_func(const char *name, ulint create_mode,
-                                  ulint purpose, ulint type, bool read_only,
-                                  bool *success) {
-  bool on_error_no_exit;
-  bool on_error_silent;
-  pfs_os_file_t file;
-
-  *success = false;
-
-  DBUG_EXECUTE_IF("ib_create_table_fail_disk_full", *success = false;
-                  errno = ENOSPC; file.m_file = OS_FILE_CLOSED; return (file););
-
-  int create_flag;
-  const char *mode_str = NULL;
-
-  on_error_no_exit = create_mode & OS_FILE_ON_ERROR_NO_EXIT ? true : false;
-  on_error_silent = create_mode & OS_FILE_ON_ERROR_SILENT ? true : false;
-
-  create_mode &= ~OS_FILE_ON_ERROR_NO_EXIT;
-  create_mode &= ~OS_FILE_ON_ERROR_SILENT;
-
-  if (create_mode == OS_FILE_OPEN || create_mode == OS_FILE_OPEN_RAW ||
-      create_mode == OS_FILE_OPEN_RETRY) {
-    mode_str = "OPEN";
-
-    create_flag = read_only ? O_RDONLY : O_RDWR;
-
-  } else if (read_only) {
-    mode_str = "OPEN";
-
-    create_flag = O_RDONLY;
-
-  } else if (create_mode == OS_FILE_CREATE) {
-    mode_str = "CREATE";
-    create_flag = O_RDWR | O_CREAT | O_EXCL;
-
-  } else if (create_mode == OS_FILE_CREATE_PATH) {
-    /* Create subdirs along the path if needed. */
-    dberr_t err;
-
-    err = os_file_create_subdirs_if_needed(name);
-
-    if (err != DB_SUCCESS) {
-      *success = false;
-      ib::error(ER_IB_MSG_778)
-          << "Unable to create subdirectories '" << name << "'";
-
-      file.m_file = OS_FILE_CLOSED;
-      return (file);
-    }
-
-    create_flag = O_RDWR | O_CREAT | O_EXCL;
-    create_mode = OS_FILE_CREATE;
-
-  } else {
-    ib::error(ER_IB_MSG_779)
-        << "Unknown file create mode (" << create_mode << ")"
-        << " for file '" << name << "'";
-
-    file.m_file = OS_FILE_CLOSED;
-    return (file);
-  }
-
-  ut_a(type == OS_LOG_FILE || type == OS_DATA_FILE ||
-       type == OS_CLONE_DATA_FILE || type == OS_CLONE_LOG_FILE ||
-       type == OS_BUFFERED_FILE);
-
-  ut_a(purpose == OS_FILE_AIO || purpose == OS_FILE_NORMAL);
-
-#ifdef O_SYNC
-  /* We let O_SYNC only affect log files; note that we map O_DSYNC to
-  O_SYNC because the datasync options seemed to corrupt files in 2001
-  in both Linux and Solaris */
-
-  if (!read_only && type == OS_LOG_FILE &&
-      srv_unix_file_flush_method == SRV_UNIX_O_DSYNC) {
-    create_flag |= O_SYNC;
-  }
-#endif /* O_SYNC */
-
-  bool retry;
-
-  do {
-    file.m_file = ::open(name, create_flag, os_innodb_umask);
-
-    if (file.m_file == -1) {
-      const char *operation;
-
-      operation =
-          (create_mode == OS_FILE_CREATE && !read_only) ? "create" : "open";
-
-      *success = false;
-
-      if (on_error_no_exit) {
-        retry = os_file_handle_error_no_exit(name, operation, on_error_silent);
-      } else {
-        retry = os_file_handle_error(name, operation);
-      }
-    } else {
-      *success = true;
-      retry = false;
-    }
-
-  } while (retry);
-
-  /* We disable OS caching (O_DIRECT) only on data files. For clone we
-  need to set O_DIRECT even for read_only mode. */
-
-  if ((!read_only || type == OS_CLONE_DATA_FILE) && *success &&
-      (type == OS_DATA_FILE || type == OS_CLONE_DATA_FILE) &&
-      (srv_unix_file_flush_method == SRV_UNIX_O_DIRECT ||
-       srv_unix_file_flush_method == SRV_UNIX_O_DIRECT_NO_FSYNC)) {
-    os_file_set_nocache(file.m_file, name, mode_str);
-  }
-
-#ifdef USE_FILE_LOCK
-  if (!read_only && *success && create_mode != OS_FILE_OPEN_RAW &&
-      /* Don't acquire file lock while cloning files. */
-      type != OS_CLONE_DATA_FILE && type != OS_CLONE_LOG_FILE &&
-      os_file_lock(file.m_file, name)) {
-    if (create_mode == OS_FILE_OPEN_RETRY) {
-      ib::info(ER_IB_MSG_780) << "Retrying to lock the first data file";
-
-      for (int i = 0; i < 100; i++) {
-        os_thread_sleep(1000000);
-
-        if (!os_file_lock(file.m_file, name)) {
-          *success = true;
-          return (file);
-        }
-      }
-
-      ib::info(ER_IB_MSG_781) << "Unable to open the first data file";
-    }
-
-    *success = false;
-    close(file.m_file);
-    file.m_file = -1;
-  }
-#endif /* USE_FILE_LOCK */
-
-  return (file);
-}
-
-/** NOTE! Use the corresponding macro
-os_file_create_simple_no_error_handling(), not directly this function!
-A simple function to open or create a file.
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	access_type	OS_FILE_READ_ONLY, OS_FILE_READ_WRITE, or
-                                OS_FILE_READ_ALLOW_DELETE; the last option
-                                is used by a backup program reading the file
-@param[in]	read_only	if true read only mode checks are enforced
-@param[out]	success		true if succeeded
-@return own: handle to the file, not defined if error, error number
-        can be retrieved with os_file_get_last_error */
-pfs_os_file_t os_file_create_simple_no_error_handling_func(const char *name,
-                                                           ulint create_mode,
-                                                           ulint access_type,
-                                                           bool read_only,
-                                                           bool *success) {
-  pfs_os_file_t file;
-  int create_flag;
-
-  ut_a(!(create_mode & OS_FILE_ON_ERROR_SILENT));
-  ut_a(!(create_mode & OS_FILE_ON_ERROR_NO_EXIT));
-
-  *success = false;
-
-  if (create_mode == OS_FILE_OPEN) {
-    if (access_type == OS_FILE_READ_ONLY) {
-      create_flag = O_RDONLY;
-
-    } else if (read_only) {
-      create_flag = O_RDONLY;
-
-    } else {
-      ut_a(access_type == OS_FILE_READ_WRITE ||
-           access_type == OS_FILE_READ_ALLOW_DELETE);
-
-      create_flag = O_RDWR;
-    }
-
-  } else if (read_only) {
-    create_flag = O_RDONLY;
-
-  } else if (create_mode == OS_FILE_CREATE) {
-    create_flag = O_RDWR | O_CREAT | O_EXCL;
-
-  } else {
-    ib::error(ER_IB_MSG_782) << "Unknown file create mode " << create_mode
-                             << " for file '" << name << "'";
-    file.m_file = OS_FILE_CLOSED;
-    return (file);
-  }
-
-  file.m_file = ::open(name, create_flag, os_innodb_umask);
-
-  *success = (file.m_file != -1);
-
-#ifdef USE_FILE_LOCK
-  if (!read_only && *success && access_type == OS_FILE_READ_WRITE &&
-      os_file_lock(file.m_file, name)) {
-    *success = false;
-    close(file.m_file);
-    file.m_file = -1;
-  }
-#endif /* USE_FILE_LOCK */
-
-  return (file);
-}
 
 /** Deletes a file if it exists. The file has to be closed before calling this.
 @param[in]	name		file path as a null-terminated string
@@ -3382,70 +2495,10 @@ bool os_file_delete_if_exists_func(const char *name, bool *exist) {
   return (true);
 }
 
-/** Deletes a file. The file has to be closed before calling this.
-@param[in]	name		file path as a null-terminated string
-@return true if success */
-bool os_file_delete_func(const char *name) {
-  int ret = unlink(name);
 
-  if (ret != 0) {
-    os_file_handle_error_no_exit(name, "delete", false);
 
-    return (false);
-  }
 
-  return (true);
-}
 
-/** NOTE! Use the corresponding macro os_file_rename(), not directly this
-function!
-Renames a file (can also move it to another directory). It is safest that the
-file is closed before calling this function.
-@param[in]	oldpath		old file path as a null-terminated string
-@param[in]	newpath		new file path
-@return true if success */
-bool os_file_rename_func(const char *oldpath, const char *newpath) {
-#ifdef UNIV_DEBUG
-  os_file_type_t type;
-  bool exists;
-
-  /* New path must not exist. */
-  ut_ad(os_file_status(newpath, &exists, &type));
-  ut_ad(!exists);
-
-  /* Old path must exist. */
-  ut_ad(os_file_status(oldpath, &exists, &type));
-  ut_ad(exists);
-#endif /* UNIV_DEBUG */
-
-  int ret = rename(oldpath, newpath);
-
-  if (ret != 0) {
-    os_file_handle_error_no_exit(oldpath, "rename", false);
-
-    return (false);
-  }
-
-  return (true);
-}
-
-/** NOTE! Use the corresponding macro os_file_close(), not directly this
-function!
-Closes a file handle. In case of error, error number can be retrieved with
-os_file_get_last_error.
-@param[in]	file		Handle to close
-@return true if success */
-bool os_file_close_func(os_file_t file) {
-  int ret = close(file);
-
-  if (ret == -1) {
-    os_file_handle_error(NULL, "close");
-
-    return (false);
-  }
-
-  return (true);
-}
 
 /** Gets a file size.
 @param[in]	file		handle to an open file
@@ -3459,92 +2512,7 @@ os_offset_t os_file_get_size(pfs_os_file_t file) {
   return (file_size);
 }
 
-/** Gets a file size.
-@param[in]	filename	Full path to the filename to check
-@return file size if OK, else set m_total_size to ~0 and m_alloc_size to
-        errno */
-os_file_size_t os_file_get_size(const char *filename) {
-  struct stat s;
-  os_file_size_t file_size;
 
-  int ret = stat(filename, &s);
-
-  if (ret == 0) {
-    file_size.m_total_size = s.st_size;
-    /* st_blocks is in 512 byte sized blocks */
-    file_size.m_alloc_size = s.st_blocks * 512;
-  } else {
-    file_size.m_total_size = ~0;
-    file_size.m_alloc_size = (os_offset_t)errno;
-  }
-
-  return (file_size);
-}
-
-/** This function returns information about the specified file
-@param[in]	path		pathname of the file
-@param[out]	stat_info	information of a file in a directory
-@param[in,out]	statinfo	information of a file in a directory
-@param[in]	check_rw_perm	for testing whether the file can be opened
-                                in RW mode
-@param[in]	read_only	if true read only mode checks are enforced
-@return DB_SUCCESS if all OK */
-static dberr_t os_file_get_status_posix(const char *path,
-                                        os_file_stat_t *stat_info,
-                                        struct stat *statinfo,
-                                        bool check_rw_perm, bool read_only) {
-  int ret = stat(path, statinfo);
-
-  if (ret && (errno == ENOENT || errno == ENOTDIR)) {
-    /* file does not exist */
-
-    return (DB_NOT_FOUND);
-
-  } else if (ret) {
-    /* file exists, but stat call failed */
-
-    os_file_handle_error_no_exit(path, "stat", false);
-
-    return (DB_FAIL);
-  }
-
-  switch (statinfo->st_mode & S_IFMT) {
-    case S_IFDIR:
-      stat_info->type = OS_FILE_TYPE_DIR;
-      break;
-    case S_IFLNK:
-      stat_info->type = OS_FILE_TYPE_LINK;
-      break;
-    case S_IFBLK:
-      /* Handle block device as regular file. */
-    case S_IFCHR:
-      /* Handle character device as regular file. */
-    case S_IFREG:
-      stat_info->type = OS_FILE_TYPE_FILE;
-      break;
-    default:
-      stat_info->type = OS_FILE_TYPE_UNKNOWN;
-  }
-
-  stat_info->size = statinfo->st_size;
-  stat_info->block_size = statinfo->st_blksize;
-  stat_info->alloc_size = statinfo->st_blocks * 512;
-
-  if (check_rw_perm && (stat_info->type == OS_FILE_TYPE_FILE ||
-                        stat_info->type == OS_FILE_TYPE_BLOCK)) {
-    int access = !read_only ? O_RDWR : O_RDONLY;
-    int fh = ::open(path, access, os_innodb_umask);
-
-    if (fh == -1) {
-      stat_info->rw_perm = false;
-    } else {
-      stat_info->rw_perm = true;
-      close(fh);
-    }
-  }
-
-  return (DB_SUCCESS);
-}
 
 /** Truncates a file to a specified size in bytes.
 Do nothing if the size to preserve is greater or equal to the current
@@ -5184,182 +4152,13 @@ static MY_ATTRIBUTE((warn_unused_result)) dberr_t
   return (err);
 }
 
-/** Retrieves the last error number if an error occurs in a file io function.
-The number should be retrieved before any other OS calls (because they may
-overwrite the error number). If the number is not known to this program,
-the OS error number + 100 is returned.
-@param[in]	report_all_errors	true if we want an error printed
-                                        for all errors
-@return error number, or OS error number + 100 */
-ulint os_file_get_last_error(bool report_all_errors) {
-  return (os_file_get_last_error_low(report_all_errors, false));
-}
 
-/** Does error handling when a file operation fails.
-Conditionally exits (calling srv_fatal_error()) based on should_exit value
-and the error type, if should_exit is true then on_error_silent is ignored.
-@param[in]	name		name of a file or NULL
-@param[in]	operation	operation
-@param[in]	should_exit	call srv_fatal_error() on an unknown error,
-                                if this parameter is true
-@param[in]	on_error_silent	if true then don't print any message to the log
-                                iff it is an unknown non-fatal error
-@return true if we should retry the operation */
-static MY_ATTRIBUTE((warn_unused_result)) bool os_file_handle_error_cond_exit(
-    const char *name, const char *operation, bool should_exit,
-    bool on_error_silent) {
-  ulint err;
 
-  err = os_file_get_last_error_low(false, on_error_silent);
 
-  switch (err) {
-    case OS_FILE_DISK_FULL:
-      /* We only print a warning about disk full once */
 
-      if (os_has_said_disk_full) {
-        return (false);
-      }
 
-      /* Disk full error is reported irrespective of the
-      on_error_silent setting. */
 
-      if (name) {
-        ib::error(ER_IB_MSG_819)
-            << "Encountered a problem with file '" << name << "'";
-      }
 
-      ib::error(ER_IB_MSG_820)
-          << "Disk is full. Try to clean the disk to free space.";
-
-      os_has_said_disk_full = true;
-
-      return (false);
-
-    case OS_FILE_AIO_RESOURCES_RESERVED:
-    case OS_FILE_AIO_INTERRUPTED:
-
-      return (true);
-
-    case OS_FILE_PATH_ERROR:
-    case OS_FILE_ALREADY_EXISTS:
-    case OS_FILE_ACCESS_VIOLATION:
-
-      return (false);
-
-    case OS_FILE_SHARING_VIOLATION:
-
-      os_thread_sleep(10000000); /* 10 sec */
-      return (true);
-
-    case OS_FILE_OPERATION_ABORTED:
-    case OS_FILE_INSUFFICIENT_RESOURCE:
-
-      os_thread_sleep(100000); /* 100 ms */
-      return (true);
-
-    case OS_FILE_NAME_TOO_LONG:
-      return (false);
-
-    default:
-
-      /* If it is an operation that can crash on error then it
-      is better to ignore on_error_silent and print an error message
-      to the log. */
-
-      if (should_exit || !on_error_silent) {
-        ib::error(ER_IB_MSG_821)
-            << "File " << (name != NULL ? name : "(unknown)") << ": '"
-            << operation
-            << "'"
-               " returned OS error "
-            << err << "." << (should_exit ? " Cannot continue operation" : "");
-      }
-
-      if (should_exit) {
-#ifndef UNIV_HOTBACKUP
-        srv_fatal_error();
-#else  /* !UNIV_HOTBACKUP */
-        ib::fatal(ER_IB_MSG_822) << "Internal error,"
-                                 << " cannot continue operation.";
-#endif /* !UNIV_HOTBACKUP */
-      }
-  }
-
-  return (false);
-}
-
-/** Does error handling when a file operation fails.
-@param[in]	name		name of a file or NULL
-@param[in]	operation	operation name that failed
-@return true if we should retry the operation */
-static bool os_file_handle_error(const char *name, const char *operation) {
-  /* Exit in case of unknown error */
-  return (os_file_handle_error_cond_exit(name, operation, true, false));
-}
-
-/** Does error handling when a file operation fails.
-@param[in]	name		name of a file or NULL
-@param[in]	operation	operation name that failed
-@param[in]	on_error_silent	if true then don't print any message to the log.
-@return true if we should retry the operation */
-static bool os_file_handle_error_no_exit(const char *name,
-                                         const char *operation,
-                                         bool on_error_silent) {
-  /* Don't exit in case of unknown error */
-  return (
-      os_file_handle_error_cond_exit(name, operation, false, on_error_silent));
-}
-
-/** Tries to disable OS caching on an opened file descriptor.
-@param[in]	fd		file descriptor to alter
-@param[in]	file_name	file name, used in the diagnostic message
-@param[in]	operation_name	"open" or "create"; used in the diagnostic
-                                message */
-void os_file_set_nocache(int fd MY_ATTRIBUTE((unused)),
-                         const char *file_name MY_ATTRIBUTE((unused)),
-                         const char *operation_name MY_ATTRIBUTE((unused))) {
-/* some versions of Solaris may not have DIRECTIO_ON */
-#if defined(UNIV_SOLARIS) && defined(DIRECTIO_ON)
-  if (directio(fd, DIRECTIO_ON) == -1) {
-    int errno_save = errno;
-
-    ib::error(ER_IB_MSG_823)
-        << "Failed to set DIRECTIO_ON on file " << file_name << "; "
-        << operation_name << ": " << strerror(errno_save)
-        << ","
-           " continuing anyway.";
-  }
-#elif defined(O_DIRECT)
-  if (fcntl(fd, F_SETFL, O_DIRECT) == -1) {
-    int errno_save = errno;
-    static bool warning_message_printed = false;
-    if (errno_save == EINVAL) {
-      if (!warning_message_printed) {
-        warning_message_printed = true;
-#ifdef UNIV_LINUX
-        ib::warn(ER_IB_MSG_824)
-            << "Failed to set O_DIRECT on file" << file_name << "; "
-            << operation_name << ": " << strerror(errno_save)
-            << ", "
-               "continuing anyway. O_DIRECT is "
-               "known to result in 'Invalid argument' "
-               "on Linux on tmpfs, "
-               "see MySQL Bug#26662.";
-#else  /* UNIV_LINUX */
-        goto short_warning;
-#endif /* UNIV_LINUX */
-      }
-    } else {
-#ifndef UNIV_LINUX
-    short_warning:
-#endif
-      ib::warn(ER_IB_MSG_825) << "Failed to set O_DIRECT on file " << file_name
-                              << "; " << operation_name << " : "
-                              << strerror(errno_save) << ", continuing anyway.";
-    }
-  }
-#endif /* defined(UNIV_SOLARIS) && defined(DIRECTIO_ON) */
-}
 
 /**  Write the specified number of zeros to a file from specific offset.
 @param[in]	name		name of the file or path as a null-terminated
@@ -5741,18 +4540,7 @@ dberr_t os_file_write_func(IORequest &type, const char *name, os_file_t file,
   return (os_file_write_page(type, name, file, ptr, offset, n));
 }
 
-/** Check the existence and type of the given file.
-@param[in]	path		path name of file
-@param[out]	exists		true if the file exists
-@param[out]	type		Type of the file, if it exists
-@return true if call succeeded */
-bool os_file_status(const char *path, bool *exists, os_file_type_t *type) {
-#ifdef _WIN32
-  return (os_file_status_win32(path, exists, type));
-#else
-  return (os_file_status_posix(path, exists, type));
-#endif /* _WIN32 */
-}
+
 
 /** Free storage space associated with a section of the file.
 @param[in]	fh		Open file handle
@@ -6287,51 +5075,9 @@ void os_fusionio_get_sector_size() {
 }
 #endif /* !NO_FALLOCATE && UNIV_LINUX */
 
-/** Creates and initializes block_cache. Creates array of MAX_BLOCKS
-and allocates the memory in each block to hold BUFFER_BLOCK_SIZE
-of data.
 
-This function is called by InnoDB during srv_start().
-It is also called by MEB while applying the redo logs on TDE tablespaces,
-the "Blocks" allocated in this block_cache are used to hold the decrypted
-page data. */
-void os_create_block_cache() {
-  ut_a(block_cache == NULL);
 
-  block_cache = UT_NEW_NOKEY(Blocks(MAX_BLOCKS));
 
-  for (Blocks::iterator it = block_cache->begin(); it != block_cache->end();
-       ++it) {
-    ut_a(it->m_in_use == 0);
-    ut_a(it->m_ptr == NULL);
-
-    /* Allocate double of max page size memory, since
-    compress could generate more bytes than orgininal
-    data. */
-    it->m_ptr = static_cast<byte *>(ut_malloc_nokey(BUFFER_BLOCK_SIZE));
-
-    ut_a(it->m_ptr != NULL);
-  }
-}
-
-#ifdef UNIV_HOTBACKUP
-/** De-allocates block cache at InnoDB shutdown. */
-void meb_free_block_cache() {
-  if (block_cache == NULL) {
-    return;
-  }
-
-  for (Blocks::iterator it = block_cache->begin(); it != block_cache->end();
-       ++it) {
-    ut_a(it->m_in_use == 0);
-    ut_free(it->m_ptr);
-  }
-
-  UT_DELETE(block_cache);
-
-  block_cache = NULL;
-}
-#endif /* UNIV_HOTBACKUP */
 
 /** Initializes the asynchronous io system. Creates one array each for ibuf
 and log i/o. Also creates one array each for read and write where each
@@ -7860,10 +6606,7 @@ void os_aio_print_pending_io(FILE *file) { AIO::print_to_file(file); }
 
 #endif /* UNIV_DEBUG */
 
-/**
-Set the file create umask
-@param[in]	umask		The umask to use for file creation. */
-void os_file_set_umask(ulint umask) { os_innodb_umask = umask; }
+
 
 /**
 @param[in]      type            The encryption type

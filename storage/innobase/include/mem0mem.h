@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <limits.h>
+#include <innodb/allocator/mem_strdupl.h>
 
 
 /* -------------------- MEMORY HEAPS ----------------------------- */
@@ -273,13 +274,6 @@ ulint mem_heap_get_size(mem_heap_t *heap); /*!< in: heap */
 @return own: a copy of the string, must be deallocated with ut_free */
 UNIV_INLINE
 char *mem_strdup(const char *str);
-
-/** Makes a NUL-terminated copy of a nonterminated string.
-@param[in]	str	string to be copied
-@param[in]	len	length of str, in bytes
-@return own: a copy of the string, must be deallocated with ut_free */
-UNIV_INLINE
-char *mem_strdupl(const char *str, ulint len);
 
 /** Duplicates a NUL-terminated string, allocated from a memory heap.
 @param[in]	heap	memory heap where string is allocated

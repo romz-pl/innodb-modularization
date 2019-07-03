@@ -32,6 +32,9 @@ SET( INNODB_COMPONENT_LIBS
     # F
     #formatting
 
+    # I
+    io
+
     # L
     #logger
     #lst

@@ -6,6 +6,7 @@ add_library( ${LIB_NAME} STATIC
     aligned_pointer.cpp
     alloc_max_retries.cpp
     MAP_ANON.cpp
+    mem_strdupl.cpp
     OUT_OF_MEMORY_MSG.cpp
     os_large_page_size.cpp
     os_mem_alloc_large.cpp
