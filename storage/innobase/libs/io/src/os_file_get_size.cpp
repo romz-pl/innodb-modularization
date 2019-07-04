@@ -1,5 +1,7 @@
 #include <innodb/io/os_file_get_size.h>
 
+#include <innodb/io/pfs_os_file_t.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -23,5 +25,17 @@ os_file_size_t os_file_get_size(const char *filename) {
     file_size.m_alloc_size = (os_offset_t)errno;
   }
 
+  return (file_size);
+}
+
+/** Gets a file size.
+@param[in]	file		handle to an open file
+@return file size, or (os_offset_t) -1 on failure */
+os_offset_t os_file_get_size(pfs_os_file_t file) {
+  /* Store current position */
+  os_offset_t pos = lseek(file.m_file, 0, SEEK_CUR);
+  os_offset_t file_size = lseek(file.m_file, 0, SEEK_END);
+  /* Restore current position as the function should not change it */
+  lseek(file.m_file, pos, SEEK_SET);
   return (file_size);
 }

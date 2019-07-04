@@ -82,6 +82,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/io/os_free_block.h>
 #include <innodb/io/meb_free_block_cache.h>
 #include <innodb/io/os_file_compress_page.h>
+#include <innodb/io/os_file_fsync_posix.h>
+#include <innodb/io/os_file_flush_func.h>
+#include <innodb/io/os_file_can_delete.h>
+#include <innodb/io/os_file_delete_if_exists_func.h>
 
 #include "my_dbug.h"
 #include "my_io.h"
@@ -283,13 +287,6 @@ FILE *os_file_create_tmpfile(const char *path);
 #endif /* !UNIV_HOTBACKUP */
 
 
-
-
-/** Deletes a file if it exists. The file has to be closed before calling this.
-@param[in]	name		file path as a null-terminated string
-@param[out]	exist		indicate if file pre-exist
-@return true if success */
-bool os_file_delete_if_exists_func(const char *name, bool *exist);
 
 
 #ifdef UNIV_PFS_IO
@@ -868,12 +865,6 @@ bool os_file_close_no_error_handling(os_file_t file);
 #endif /* UNIV_HOTBACKUP */
 
 
-/** Gets a file size.
-@param[in]	file		handle to a file
-@return file size, or (os_offset_t) -1 on failure */
-os_offset_t os_file_get_size(pfs_os_file_t file)
-    MY_ATTRIBUTE((warn_unused_result));
-
 /** Write the specified number of zeros to a file from specific offset.
 @param[in]	name		name of the file or path as a null-terminated
                                 string
@@ -908,12 +899,6 @@ bool os_file_truncate(const char *pathname, pfs_os_file_t file,
 @return true if success */
 bool os_file_seek(const char *pathname, os_file_t file, os_offset_t offset);
 
-/** NOTE! Use the corresponding macro os_file_flush(), not directly this
-function!
-Flushes the write buffers of a given file to the disk.
-@param[in]	file		handle to a file
-@return true if success */
-bool os_file_flush_func(os_file_t file);
 
 /** Retrieves the last error number if an error occurs in a file io function.
 The number should be retrieved before any other OS calls (because they may

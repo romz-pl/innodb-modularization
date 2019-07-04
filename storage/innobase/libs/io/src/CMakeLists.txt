@@ -8,6 +8,8 @@ add_library( ${LIB_NAME} STATIC
     Blocks.cpp
     Compression.cpp
     Encryption.cpp
+    Fil_path.cpp
+    ib_file_suffix.cpp
     IORequest.cpp
     pfs_os_file_t.cpp
     os_alloc_block.cpp
@@ -15,6 +17,7 @@ add_library( ${LIB_NAME} STATIC
     os_file_compress_page.cpp
     meb_free_block_cache.cpp
     os_create_block_cache.cpp
+    os_file_can_delete.cpp
     os_file_close_func.cpp
     os_file_create_directory.cpp
     os_file_create_func.cpp
@@ -23,6 +26,9 @@ add_library( ${LIB_NAME} STATIC
     os_file_create_simple_no_error_handling_func.cpp
     os_file_create_t.cpp
     os_file_delete_func.cpp
+    os_file_delete_if_exists_func.cpp
+    os_file_flush_func.cpp
+    os_file_fsync_posix.cpp
     os_file_get_last_error.cpp
     os_file_get_size.cpp
     os_file_get_status_posix.cpp
@@ -60,10 +66,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     allocator
-    error
-    logger
     page
-    thread
     PRIVATE
 )
 

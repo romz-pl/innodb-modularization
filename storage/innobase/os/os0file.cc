@@ -856,57 +856,6 @@ static dberr_t os_aio_windows_handler(ulint segment, ulint pos, fil_node_t **m1,
                                       void **m2, IORequest *type);
 #endif /* WIN_ASYNC_IO */
 
-/** Check the file type and determine if it can be deleted.
-@param[in]	name		Filename/Path to check
-@return true if it's a file or a symlink and can be deleted */
-static bool os_file_can_delete(const char *name) {
-  switch (Fil_path::get_file_type(name)) {
-    case OS_FILE_TYPE_FILE:
-    case OS_FILE_TYPE_LINK:
-      return (true);
-
-    case OS_FILE_TYPE_DIR:
-
-      ib::warn(ER_IB_MSG_743) << "'" << name << "'"
-                              << " is a directory, can't delete!";
-      break;
-
-    case OS_FILE_TYPE_BLOCK:
-
-      ib::warn(ER_IB_MSG_744) << "'" << name << "'"
-                              << " is a block device, can't delete!";
-      break;
-
-    case OS_FILE_TYPE_FAILED:
-
-      ib::warn(ER_IB_MSG_745) << "'" << name << "'"
-                              << " get file type failed, won't delete!";
-      break;
-
-    case OS_FILE_TYPE_UNKNOWN:
-
-      ib::warn(ER_IB_MSG_746) << "'" << name << "'"
-                              << " unknown file type, won't delete!";
-      break;
-
-    case OS_FILE_TYPE_NAME_TOO_LONG:
-
-      ib::warn(ER_IB_MSG_747) << "'" << name << "'"
-                              << " name too long, can't delete!";
-      break;
-
-    case OS_FILE_PERMISSION_ERROR:
-      ib::warn(ER_IB_MSG_748) << "'" << name << "'"
-                              << " permission error, can't delete!";
-      break;
-
-    case OS_FILE_TYPE_MISSING:
-      break;
-  }
-
-  return (false);
-}
-
 
 
 
@@ -2364,100 +2313,6 @@ bool AIO::is_linux_native_aio_supported() {
 #endif /* LINUX_NATIVE_AIO */
 
 
-/** Wrapper to fsync(2) that retries the call on some errors.
-Returns the value 0 if successful; otherwise the value -1 is returned and
-the global variable errno is set to indicate the error.
-@param[in]	file		open file handle
-@return 0 if success, -1 otherwise */
-static int os_file_fsync_posix(os_file_t file) {
-  ulint failures = 0;
-#ifdef UNIV_HOTBACKUP
-  static meb::Mutex meb_mutex;
-#endif /* UNIV_HOTBACKUP */
-
-  for (;;) {
-#ifdef UNIV_HOTBACKUP
-    meb_mutex.lock();
-#endif /* UNIV_HOTBACKUP */
-    ++os_n_fsyncs;
-#ifdef UNIV_HOTBACKUP
-    meb_mutex.unlock();
-#endif /* UNIV_HOTBACKUP */
-
-    int ret = fsync(file);
-
-    if (ret == 0) {
-      return (ret);
-    }
-
-    switch (errno) {
-      case ENOLCK:
-
-        ++failures;
-        ut_a(failures < 1000);
-
-        if (!(failures % 100)) {
-          ib::warn(ER_IB_MSG_773) << "fsync(): "
-                                  << "No locks available; retrying";
-        }
-
-        /* 0.2 sec */
-        os_thread_sleep(200000);
-        break;
-
-      case EIO:
-
-        ib::fatal() << "fsync() returned EIO, aborting.";
-        break;
-
-      case EINTR:
-
-        ++failures;
-        ut_a(failures < 2000);
-        break;
-
-      default:
-        ut_error;
-        break;
-    }
-  }
-
-  ut_error;
-
-  return (-1);
-}
-
-/** NOTE! Use the corresponding macro os_file_flush(), not directly this
-function!
-Flushes the write buffers of a given file to the disk.
-@param[in]	file		handle to a file
-@return true if success */
-bool os_file_flush_func(os_file_t file) {
-  int ret;
-
-  ret = os_file_fsync_posix(file);
-
-  if (ret == 0) {
-    return (true);
-  }
-
-  /* Since Linux returns EINVAL if the 'file' is actually a raw device,
-  we choose to ignore that error if we are using raw disks */
-
-  if (srv_start_raw_disk_in_use && errno == EINVAL) {
-    return (true);
-  }
-
-  ib::error(ER_IB_MSG_775) << "The OS said file flush did not succeed";
-
-  os_file_handle_error(NULL, "flush");
-
-  /* It is a fatal error if a file flush does not succeed, because then
-  the database can get corrupt on disk */
-  ut_error;
-
-  return (false);
-}
 
 
 
@@ -2466,51 +2321,9 @@ bool os_file_flush_func(os_file_t file) {
 
 
 
-/** Deletes a file if it exists. The file has to be closed before calling this.
-@param[in]	name		file path as a null-terminated string
-@param[out]	exist		indicate if file pre-exist
-@return true if success */
-bool os_file_delete_if_exists_func(const char *name, bool *exist) {
-  if (!os_file_can_delete(name)) {
-    return (false);
-  }
-
-  if (exist != nullptr) {
-    *exist = true;
-  }
-
-  int ret = unlink(name);
-
-  if (ret != 0 && errno == ENOENT) {
-    if (exist != nullptr) {
-      *exist = false;
-    }
-
-  } else if (ret != 0 && errno != ENOENT) {
-    os_file_handle_error_no_exit(name, "delete", false);
-
-    return (false);
-  }
-
-  return (true);
-}
 
 
 
-
-
-
-/** Gets a file size.
-@param[in]	file		handle to an open file
-@return file size, or (os_offset_t) -1 on failure */
-os_offset_t os_file_get_size(pfs_os_file_t file) {
-  /* Store current position */
-  os_offset_t pos = lseek(file.m_file, 0, SEEK_CUR);
-  os_offset_t file_size = lseek(file.m_file, 0, SEEK_END);
-  /* Restore current position as the function should not change it */
-  lseek(file.m_file, pos, SEEK_SET);
-  return (file_size);
-}
 
 
 

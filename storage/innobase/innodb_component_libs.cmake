@@ -46,7 +46,7 @@ SET( INNODB_COMPONENT_LIBS
     #memory_check
 
     # P
-    page
+    #page
 
     # R
     #random
