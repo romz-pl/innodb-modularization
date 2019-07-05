@@ -46,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/wait/Wait_stats.h>
+#include <innodb/page/type.h>
 
 #include "dyn0buf.h"
 #ifndef UNIV_HOTBACKUP
@@ -220,8 +221,6 @@ constexpr uint32_t LOG_CHECKPOINT_1 = OS_FILE_LOG_BLOCK_SIZE;
 /** Second checkpoint field in the header of the first log file. */
 constexpr uint32_t LOG_CHECKPOINT_2 = 3 * OS_FILE_LOG_BLOCK_SIZE;
 
-/** Size of log file's header. */
-constexpr uint32_t LOG_FILE_HDR_SIZE = 4 * OS_FILE_LOG_BLOCK_SIZE;
 
 /** Constants related to server variables (default, min and max values). */
 

@@ -113,78 +113,12 @@ static const ulint IO_IBUF_SEGMENT = 0;
 /** Log segment id */
 static const ulint IO_LOG_SEGMENT = 1;
 
-/** Number of retries for partial I/O's */
-static const ulint NUM_RETRIES_ON_PARTIAL_IO = 10;
+
 
 
 
 /** Disk sector size of aligning write buffer for DIRECT_IO */
 static ulint os_io_ptr_align = UNIV_SECTOR_SIZE;
-
-/** Determine if O_DIRECT is supported
-@retval	true	if O_DIRECT is supported.
-@retval	false	if O_DIRECT is not supported. */
-bool os_is_o_direct_supported() {
-#if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
-  char *path = srv_data_home;
-  char *file_name;
-  os_file_t file_handle;
-  ulint dir_len;
-  ulint path_len;
-  bool add_os_path_separator = false;
-
-  /* If the srv_data_home is empty, set the path to current dir. */
-  char current_dir[3];
-  if (*path == 0) {
-    current_dir[0] = FN_CURLIB;
-    current_dir[1] = FN_LIBCHAR;
-    current_dir[2] = 0;
-    path = current_dir;
-  }
-
-  /* Get the path length. */
-  if (path[strlen(path) - 1] == OS_PATH_SEPARATOR) {
-    /* path is ended with OS_PATH_SEPARATOR */
-    dir_len = strlen(path);
-  } else {
-    /* path is not ended with OS_PATH_SEPARATOR */
-    dir_len = strlen(path) + 1;
-    add_os_path_separator = true;
-  }
-
-  /* Allocate a new path and move the directory path to it. */
-  path_len = dir_len + sizeof "o_direct_test";
-  file_name = static_cast<char *>(ut_zalloc_nokey(path_len));
-  if (add_os_path_separator == true) {
-    memcpy(file_name, path, dir_len - 1);
-    file_name[dir_len - 1] = OS_PATH_SEPARATOR;
-  } else {
-    memcpy(file_name, path, dir_len);
-  }
-
-  /* Construct a temp file name. */
-  strcat(file_name + dir_len, "o_direct_test");
-
-  /* Try to create a temp file with O_DIRECT flag. */
-  file_handle =
-      ::open(file_name, O_CREAT | O_TRUNC | O_WRONLY | O_DIRECT, S_IRWXU);
-
-  /* If Failed */
-  if (file_handle == -1) {
-    ut_free(file_name);
-    return (false);
-  }
-
-  ::close(file_handle);
-  unlink(file_name);
-  ut_free(file_name);
-
-  return (true);
-#else
-  return (false);
-#endif /* !NO_FALLOCATE && UNIV_LINUX */
-}
-
 
 #ifdef _WIN32
 
@@ -788,21 +722,6 @@ static_assert(DATA_TRX_ID_LEN <= 6, "COMPRESSION_ALGORITHM will not fit!");
 static bool os_aio_validate();
 
 
-
-/** Decompress after a read and punch a hole in the file if it was a write
-@param[in]	type		IO context
-@param[in]	fh		Open file handle
-@param[in,out]	buf		Buffer to transform
-@param[in,out]	scratch		Scratch area for read decompression
-@param[in]	src_len		Length of the buffer before compression
-@param[in]	offset		file offset from the start where to read
-@param[in]	len		Compressed buffer length for write and size
-                                of buf len for read
-@return DB_SUCCESS or error code */
-static dberr_t os_file_io_complete(const IORequest &type, os_file_t fh,
-                                   byte *buf, byte *scratch, ulint src_len,
-                                   os_offset_t offset, ulint len);
-
 /** Does simulated AIO. This function should be called by an i/o-handler
 thread.
 
@@ -929,61 +848,6 @@ class AIOHandler {
   @param[in]	n_bytes		Total bytes read so far
   @return DB_SUCCESS or error code */
   static dberr_t check_read(Slot *slot, ulint n_bytes);
-};
-
-/** Helper class for doing synchronous file IO. Currently, the objective
-is to hide the OS specific code, so that the higher level functions aren't
-peppered with "#ifdef". Makes the code flow difficult to follow.  */
-class SyncFileIO {
- public:
-  /** Constructor
-  @param[in]	fh	File handle
-  @param[in,out]	buf	Buffer to read/write
-  @param[in]	n	Number of bytes to read/write
-  @param[in]	offset	Offset where to read or write */
-  SyncFileIO(os_file_t fh, void *buf, ulint n, os_offset_t offset)
-      : m_fh(fh), m_buf(buf), m_n(static_cast<ssize_t>(n)), m_offset(offset) {
-    ut_ad(m_n > 0);
-  }
-
-  /** Destructor */
-  ~SyncFileIO() { /* No op */
-  }
-
-  /** Do the read/write
-  @param[in]	request	The IO context and type
-  @return the number of bytes read/written or negative value on error */
-  ssize_t execute(const IORequest &request);
-
-  /** Do the read/write
-  @param[in,out]	slot	The IO slot, it has the IO context
-  @return the number of bytes read/written or negative value on error */
-  static ssize_t execute(Slot *slot);
-
-  /** Move the read/write offset up to where the partial IO succeeded.
-  @param[in]	n_bytes	The number of bytes to advance */
-  void advance(ssize_t n_bytes) {
-    m_offset += n_bytes;
-
-    ut_ad(m_n >= n_bytes);
-
-    m_n -= n_bytes;
-
-    m_buf = reinterpret_cast<uchar *>(m_buf) + n_bytes;
-  }
-
- private:
-  /** Open file handle */
-  os_file_t m_fh;
-
-  /** Buffer to read/write */
-  void *m_buf;
-
-  /** Number of bytes to read/write */
-  ssize_t m_n;
-
-  /** Offset from where to read/write */
-  os_offset_t m_offset;
 };
 
 
@@ -1302,79 +1166,6 @@ void os_file_read_string(FILE *file, char *str, ulint size) {
   }
 }
 
-/** Decompress after a read and punch a hole in the file if it was a write
-@param[in]	type		IO context
-@param[in]	fh		Open file handle
-@param[in,out]	buf		Buffer to transform
-@param[in,out]	scratch		Scratch area for read decompression
-@param[in]	src_len		Length of the buffer before compression
-@param[in]	offset		file offset from the start where to read
-@param[in]	len		Used buffer length for write and output
-                                buf len for read
-@return DB_SUCCESS or error code */
-static dberr_t os_file_io_complete(const IORequest &type, os_file_t fh,
-                                   byte *buf, byte *scratch, ulint src_len,
-                                   os_offset_t offset, ulint len) {
-  dberr_t ret = DB_SUCCESS;
-
-  /* We never compress/decompress the first page */
-  ut_a(offset > 0);
-  ut_ad(type.validate());
-
-  if (!type.is_compression_enabled()) {
-    if (type.is_log() && offset >= LOG_FILE_HDR_SIZE) {
-      Encryption encryption(type.encryption_algorithm());
-
-      ret = encryption.decrypt_log(type, buf, src_len, scratch, len);
-    }
-
-    return (ret);
-  } else if (type.is_read()) {
-    Encryption encryption(type.encryption_algorithm());
-
-    ret = encryption.decrypt(type, buf, src_len, scratch, len);
-    if (ret == DB_SUCCESS) {
-      return (
-          os_file_decompress_page(type.is_dblwr_recover(), buf, scratch, len));
-    } else {
-      return (ret);
-    }
-  } else if (type.punch_hole()) {
-    ut_ad(len <= src_len);
-    ut_ad(!type.is_log());
-    ut_ad(type.is_write());
-    ut_ad(type.is_compressed());
-
-    /* Nothing to do. */
-    if (len == src_len) {
-      return (DB_SUCCESS);
-    }
-
-#ifdef UNIV_DEBUG
-    const ulint block_size = type.block_size();
-#endif /* UNIV_DEBUG */
-
-    /* We don't support multiple page sizes in the server
-    at the moment. */
-    ut_ad(src_len == srv_page_size);
-
-    /* Must be a multiple of the compression unit size. */
-    ut_ad((len % block_size) == 0);
-    ut_ad((offset % block_size) == 0);
-
-    ut_ad(len + block_size <= src_len);
-
-    offset += len;
-
-    return (os_file_punch_hole(fh, offset, src_len - len));
-  }
-
-  ut_ad(!type.is_log());
-
-  return (DB_SUCCESS);
-}
-
-
 
 
 #ifdef UNIV_ENABLE_UNIT_TEST_GET_PARENT_DIR
@@ -1432,160 +1223,10 @@ void unit_test_os_file_get_parent_dir() {
 #endif /* _WIN32 */
 }
 #endif /* UNIV_ENABLE_UNIT_TEST_GET_PARENT_DIR */
-/** Allocate the buffer for IO on a transparently compressed table.
-@param[in]	type		IO flags
-@param[out]	buf		buffer to read or write
-@param[in,out]	n		number of bytes to read/write, starting from
-                                offset
-@return pointer to allocated page, compressed data is written to the offset
-        that is aligned on the disk sector size */
-static Block *os_file_compress_page(IORequest &type, void *&buf, ulint *n) {
-  ut_ad(!type.is_log());
-  ut_ad(type.is_write());
-  ut_ad(type.is_compressed());
-
-  ulint n_alloc = *n * 2;
-
-  ut_a(n_alloc <= UNIV_PAGE_SIZE_MAX * 2);
-  ut_a(type.compression_algorithm().m_type != Compression::LZ4 ||
-       static_cast<ulint>(LZ4_COMPRESSBOUND(*n)) < n_alloc);
-
-  Block *block = os_alloc_block();
-
-  ulint old_compressed_len;
-  ulint compressed_len = *n;
-
-  old_compressed_len = mach_read_from_2(reinterpret_cast<byte *>(buf) +
-                                        FIL_PAGE_COMPRESS_SIZE_V1);
-
-  if (old_compressed_len > 0) {
-    old_compressed_len =
-        ut_calc_align(old_compressed_len + FIL_PAGE_DATA, type.block_size());
-  } else {
-    old_compressed_len = *n;
-  }
-
-  byte *compressed_page;
-
-  compressed_page =
-      static_cast<byte *>(ut_align(block->m_ptr, os_io_ptr_align));
-
-  byte *buf_ptr;
-
-  buf_ptr = os_file_compress_page(
-      type.compression_algorithm(), type.block_size(),
-      reinterpret_cast<byte *>(buf), *n, compressed_page, &compressed_len);
-
-  if (buf_ptr != buf) {
-    /* Set new compressed size to uncompressed page. */
-    memcpy(reinterpret_cast<byte *>(buf) + FIL_PAGE_COMPRESS_SIZE_V1,
-           buf_ptr + FIL_PAGE_COMPRESS_SIZE_V1, 2);
-
-    buf = buf_ptr;
-    *n = compressed_len;
-
-    if (compressed_len >= old_compressed_len) {
-      ut_ad(old_compressed_len <= UNIV_PAGE_SIZE);
-
-      type.clear_punch_hole();
-    }
-  }
-
-  return (block);
-}
-
-/** Encrypt a page content when write it to disk.
-@param[in]	type		IO flags
-@param[out]	buf		buffer to read or write
-@param[in,out]	n		number of bytes to read/write, starting from
-                                offset
-@return pointer to the encrypted page */
-static Block *os_file_encrypt_page(const IORequest &type, void *&buf,
-                                   ulint *n) {
-  byte *encrypted_page;
-  ulint encrypted_len = *n;
-  byte *buf_ptr;
-  Encryption encryption(type.encryption_algorithm());
-
-  ut_ad(type.is_write());
-  ut_ad(type.is_encrypted());
-
-  Block *block = os_alloc_block();
-
-  encrypted_page = static_cast<byte *>(ut_align(block->m_ptr, os_io_ptr_align));
-
-  buf_ptr = encryption.encrypt(type, reinterpret_cast<byte *>(buf), *n,
-                               encrypted_page, &encrypted_len);
-
-  bool encrypted = buf_ptr != buf;
-
-  if (encrypted) {
-    buf = buf_ptr;
-    *n = encrypted_len;
-  }
-
-  return (block);
-}
-
-/** Encrypt log blocks content when write it to disk.
-@param[in]	type		IO flags
-@param[in,out]	buf		buffer to read or write
-@param[in,out]	scratch		buffer for encrypting log
-@param[in,out]	n		number of bytes to read/write, starting from
-                                offset
-@return pointer to the encrypted log blocks */
-static Block *os_file_encrypt_log(const IORequest &type, void *&buf,
-                                  byte *&scratch, ulint *n) {
-  byte *encrypted_log;
-  ulint encrypted_len = *n;
-  byte *buf_ptr;
-  Encryption encryption(type.encryption_algorithm());
-  Block *block = NULL;
-
-  ut_ad(type.is_write() && type.is_encrypted() && type.is_log());
-  ut_ad(*n % OS_FILE_LOG_BLOCK_SIZE == 0);
-
-  if (*n <= BUFFER_BLOCK_SIZE - os_io_ptr_align) {
-    block = os_alloc_block();
-    buf_ptr = block->m_ptr;
-    scratch = NULL;
-  } else {
-    buf_ptr = static_cast<byte *>(ut_malloc_nokey(*n + os_io_ptr_align));
-    scratch = buf_ptr;
-  }
-
-  encrypted_log = static_cast<byte *>(ut_align(buf_ptr, os_io_ptr_align));
-
-  encrypted_log = encryption.encrypt_log(type, reinterpret_cast<byte *>(buf),
-                                         *n, encrypted_log, &encrypted_len);
-
-  bool encrypted = encrypted_log != buf;
-
-  if (encrypted) {
-    buf = encrypted_log;
-    *n = encrypted_len;
-  }
-
-  return (block);
-}
 
 #ifndef _WIN32
 
-/** Do the read/write
-@param[in]	request	The IO context and type
-@return the number of bytes read/written or negative value on error */
-ssize_t SyncFileIO::execute(const IORequest &request) {
-  ssize_t n_bytes;
 
-  if (request.is_read()) {
-    n_bytes = pread(m_fh, m_buf, m_n, m_offset);
-  } else {
-    ut_ad(request.is_write());
-    n_bytes = pwrite(m_fh, m_buf, m_n, m_offset);
-  }
-
-  return (n_bytes);
-}
 
 
 #if defined(LINUX_NATIVE_AIO)
@@ -2255,35 +1896,8 @@ bool AIO::is_linux_native_aio_supported() {
 
 
 
-/** Truncates a file to a specified size in bytes.
-Do nothing if the size to preserve is greater or equal to the current
-size of the file.
-@param[in]	pathname	file path
-@param[in]	file		file to be truncated
-@param[in]	size		size to preserve in bytes
-@return true if success */
-static bool os_file_truncate_posix(const char *pathname, pfs_os_file_t file,
-                                   os_offset_t size) {
-  int res = ftruncate(file.m_file, size);
-  if (res == -1) {
-    bool retry;
 
-    retry = os_file_handle_error_no_exit(pathname, "truncate", false);
 
-    if (retry) {
-      ib::warn(ER_IB_MSG_783) << "Truncate failed for '" << pathname << "'";
-    }
-  }
-
-  return (res == 0);
-}
-
-/** Truncates a file at its current position.
-@return true if success */
-bool os_file_set_eof(FILE *file) /*!< in: file to be truncated */
-{
-  return (!ftruncate(fileno(file), ftell(file)));
-}
 
 #ifdef UNIV_HOTBACKUP
 /** Closes a file handle.
@@ -3516,123 +3130,6 @@ void Dir_Walker::walk_win32(const Path &basedir, bool recursive, Function &&f) {
 }
 #endif /* !_WIN32*/
 
-/** Does a syncronous read or write depending upon the type specified
-In case of partial reads/writes the function tries
-NUM_RETRIES_ON_PARTIAL_IO times to read/write the complete data.
-@param[in]	in_type		IO flags
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset from the start where to read
-@param[in]	n		number of bytes to read, starting from offset
-@param[out]	err		DB_SUCCESS or error code
-@return number of bytes read/written, -1 if error */
-static MY_ATTRIBUTE((warn_unused_result)) ssize_t
-    os_file_io(const IORequest &in_type, os_file_t file, void *buf, ulint n,
-               os_offset_t offset, dberr_t *err) {
-  Block *block = NULL;
-  ulint original_n = n;
-  IORequest type = in_type;
-  ssize_t bytes_returned = 0;
-  byte *encrypt_log_buf = NULL;
-
-  if (type.is_compressed()) {
-    /* We don't compress the first page of any file. */
-    ut_ad(offset > 0);
-
-    block = os_file_compress_page(type, buf, &n);
-  } else {
-    block = NULL;
-  }
-
-  /* We do encryption after compression, since if we do encryption
-  before compression, the encrypted data will cause compression fail
-  or low compression rate. */
-  if (type.is_encrypted() && type.is_write()) {
-    if (!type.is_log()) {
-      /* We don't encrypt the first page of any file. */
-      Block *compressed_block = block;
-      ut_ad(offset > 0);
-
-      block = os_file_encrypt_page(type, buf, &n);
-
-      if (compressed_block != NULL) {
-        os_free_block(compressed_block);
-      }
-    } else {
-      /* Skip encrypt log file header */
-      if (offset >= LOG_FILE_HDR_SIZE) {
-        block = os_file_encrypt_log(type, buf, encrypt_log_buf, &n);
-      }
-    }
-  }
-
-  SyncFileIO sync_file_io(file, buf, n, offset);
-
-  for (ulint i = 0; i < NUM_RETRIES_ON_PARTIAL_IO; ++i) {
-    ssize_t n_bytes = sync_file_io.execute(type);
-
-    /* Check for a hard error. Not much we can do now. */
-    if (n_bytes < 0) {
-      break;
-
-    } else if ((ulint)n_bytes + bytes_returned == n) {
-      bytes_returned += n_bytes;
-
-      if (offset > 0 && (type.is_compressed() || type.is_read())) {
-        *err = os_file_io_complete(type, file, reinterpret_cast<byte *>(buf),
-                                   NULL, original_n, offset, n);
-      } else {
-        *err = DB_SUCCESS;
-      }
-
-      if (block != NULL) {
-        os_free_block(block);
-      }
-
-      if (encrypt_log_buf != NULL) {
-        ut_free(encrypt_log_buf);
-      }
-
-      return (original_n);
-    }
-
-    /* Handle partial read/write. */
-
-    ut_ad((ulint)n_bytes + bytes_returned < n);
-
-    bytes_returned += (ulint)n_bytes;
-
-    if (!type.is_partial_io_warning_disabled()) {
-      const char *op = type.is_read() ? "read" : "written";
-
-      ib::warn(ER_IB_MSG_812)
-          << n << " bytes should have been " << op << ". Only "
-          << bytes_returned << " bytes " << op << ". Retrying"
-          << " for the remaining bytes.";
-    }
-
-    /* Advance the offset and buffer by n_bytes */
-    sync_file_io.advance(n_bytes);
-  }
-
-  if (block != NULL) {
-    os_free_block(block);
-  }
-
-  if (encrypt_log_buf != NULL) {
-    ut_free(encrypt_log_buf);
-  }
-
-  *err = DB_IO_ERROR;
-
-  if (!type.is_partial_io_warning_disabled()) {
-    ib::warn(ER_IB_MSG_813)
-        << "Retry attempts for " << (type.is_read() ? "reading" : "writing")
-        << " partial data failed.";
-  }
-
-  return (bytes_returned);
-}
 
 /** Does a synchronous write operation in Posix.
 @param[in]	type		IO context
@@ -3948,61 +3445,6 @@ bool os_file_set_size(const char *name, pfs_os_file_t file, os_offset_t offset,
   return (true);
 }
 
-/** Truncates a file to a specified size in bytes.
-Do nothing if the size to preserve is greater or equal to the current
-size of the file.
-@param[in]	pathname	file path
-@param[in]	file		file to be truncated
-@param[in]	size		size to preserve in bytes
-@return true if success */
-bool os_file_truncate(const char *pathname, pfs_os_file_t file,
-                      os_offset_t size) {
-  /* Do nothing if the size preserved is larger than or equal to the
-  current size of file */
-  os_offset_t size_bytes = os_file_get_size(file);
-
-  if (size >= size_bytes) {
-    return (true);
-  }
-
-#ifdef _WIN32
-  return (os_file_truncate_win32(pathname, file, size));
-#else  /* _WIN32 */
-  return (os_file_truncate_posix(pathname, file, size));
-#endif /* _WIN32 */
-}
-
-/** Set read/write position of a file handle to specific offset.
-@param[in]	pathname	file path
-@param[in]	file		file handle
-@param[in]	offset		read/write offset
-@return true if success */
-bool os_file_seek(const char *pathname, os_file_t file, os_offset_t offset) {
-  bool success = true;
-
-#ifdef _WIN32
-  LARGE_INTEGER length;
-
-  length.QuadPart = offset;
-
-  success = SetFilePointerEx(file, length, NULL, FILE_BEGIN);
-
-#else  /* _WIN32 */
-  off_t ret;
-
-  ret = lseek(file, offset, SEEK_SET);
-
-  if (ret == -1) {
-    success = false;
-  }
-#endif /* _WIN32 */
-
-  if (!success) {
-    os_file_handle_error_no_exit(pathname, "os_file_set", false);
-  }
-
-  return (success);
-}
 
 /** NOTE! Use the corresponding macro os_file_read(), not directly this
 function!

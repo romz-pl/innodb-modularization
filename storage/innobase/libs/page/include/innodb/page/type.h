@@ -120,4 +120,15 @@ constexpr size_t FIL_ADDR_SIZE = 6;
 /** Path separator e.g., 'dir;...;dirN' */
 constexpr char FIL_PATH_SEPARATOR = ';';
 
+/** The next value should be smaller or equal to the smallest sector size used
+on any disk. A log block is required to be a portion of disk which is written
+so that if the start and the end of a block get written to disk, then the
+whole block gets written. This should be true even in most cases of a crash:
+if this fails for a log block, then it is equivalent to a media failure in the
+log. */
+#define OS_FILE_LOG_BLOCK_SIZE 512
+
+/** Size of log file's header. */
+constexpr uint32_t LOG_FILE_HDR_SIZE = 4 * OS_FILE_LOG_BLOCK_SIZE;
+
 #endif /* fil0types_h */

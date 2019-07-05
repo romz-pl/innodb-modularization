@@ -45,6 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/aligned_array_pointer.h>
 #include <innodb/sync_event/os_event_t.h>
 #include <innodb/sync_mutex/ib_mutex_t.h>
+#include <innodb/page/type.h>
 
 #include <atomic>
 #include <chrono>

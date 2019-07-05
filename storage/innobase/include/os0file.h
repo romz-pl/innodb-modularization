@@ -94,6 +94,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/io/os_file_original_page_size.h>
 #include <innodb/io/os_file_compressed_page_size.h>
 #include <innodb/io/os_file_get_status.h>
+#include <innodb/io/os_file_create_subdirs_if_needed.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/os_file_encrypt_page.h>
+#include <innodb/io/os_file_encrypt_log.h>
+#include <innodb/io/SyncFileIO.h>
+#include <innodb/io/os_file_io_complete.h>
+#include <innodb/io/os_file_io.h>
+#include <innodb/io/os_file_seek.h>
+#include <innodb/io/os_file_truncate_posix.h>
+#include <innodb/io/os_file_set_eof.h>
+#include <innodb/io/os_file_truncate.h>
+
 
 
 #include "my_dbug.h"
@@ -179,14 +191,7 @@ the OS actually supports it: Win 95 does not, NT does. */
 
 
 
-/** The next value should be smaller or equal to the smallest sector size used
-on any disk. A log block is required to be a portion of disk which is written
-so that if the start and the end of a block get written to disk, then the
-whole block gets written. This should be true even in most cases of a crash:
-if this fails for a log block, then it is equivalent to a media failure in the
-log. */
 
-#define OS_FILE_LOG_BLOCK_SIZE 512
 
 
 
@@ -887,36 +892,14 @@ bool os_file_set_size(const char *name, pfs_os_file_t file, os_offset_t offset,
                       os_offset_t size, bool read_only, bool flush)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Truncates a file at its current position.
-@param[in,out]	file	file to be truncated
-@return true if success */
-bool os_file_set_eof(FILE *file); /*!< in: file to be truncated */
-
-/** Truncates a file to a specified size in bytes. Do nothing if the size
-preserved is smaller or equal than current size of file.
-@param[in]	pathname	file path
-@param[in]	file		file to be truncated
-@param[in]	size		size preserved in bytes
-@return true if success */
-bool os_file_truncate(const char *pathname, pfs_os_file_t file,
-                      os_offset_t size);
-
-/** Set read/write position of a file handle to specific offset.
-@param[in]	pathname	file path
-@param[in]	file		file handle
-@param[in]	offset		read/write offset
-@return true if success */
-bool os_file_seek(const char *pathname, os_file_t file, os_offset_t offset);
 
 
-/** Retrieves the last error number if an error occurs in a file io function.
-The number should be retrieved before any other OS calls (because they may
-overwrite the error number). If the number is not known to this program,
-the OS error number + 100 is returned.
-@param[in]	report_all_errors	true if we want an error message printed
-                                        for all errors
-@return error number, or OS error number + 100 */
-ulint os_file_get_last_error(bool report_all_errors);
+
+
+
+
+
+
 
 /** NOTE! Use the corresponding macro os_file_read(), not directly this
 function!
@@ -994,16 +977,7 @@ dberr_t os_file_write_func(IORequest &type, const char *name, os_file_t file,
                            const void *buf, os_offset_t offset, ulint n)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Check the existence and type of the given file.
-@param[in]	path		pathname of the file
-@param[out]	exists		true if file exists
-@param[out]	type		type of the file (if it exists)
-@return true if call succeeded */
-bool os_file_status(const char *path, bool *exists, os_file_type_t *type);
 
-/** Create all missing subdirectories along the given path.
-@return DB_SUCCESS if OK, otherwise error code. */
-dberr_t os_file_create_subdirs_if_needed(const char *path);
 
 #ifdef UNIV_ENABLE_UNIT_TEST_GET_PARENT_DIR
 /* Test the function os_file_get_parent_dir. */

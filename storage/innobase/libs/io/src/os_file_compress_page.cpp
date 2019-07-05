@@ -1,11 +1,13 @@
 #include <innodb/io/os_file_compress_page.h>
 
+#include <innodb/align/ut_align.h>
+#include <innodb/align/ut_calc_align.h>
 #include <innodb/assert/assert.h>
+#include <innodb/error/ut_error.h>
+#include <innodb/io/os_alloc_block.h>
 #include <innodb/machine/data.h>
 #include <innodb/page/page_type_t.h>
 #include <innodb/page/type.h>
-#include <innodb/error/ut_error.h>
-#include <innodb/align/ut_calc_align.h>
 
 #include <string.h>
 #include <lz4.h>
@@ -13,6 +15,9 @@
 
 /* Compression level to be used by zlib. Settable by user. */
 extern uint page_zip_level;
+
+/** Disk sector size of aligning write buffer for DIRECT_IO */
+static const ulint os_io_ptr_align = UNIV_SECTOR_SIZE;
 
 /** Compress a data page
 @param[in]	compression	Compression algorithm
@@ -141,3 +146,69 @@ byte *os_file_compress_page(Compression compression, ulint block_size,
 
   return (dst);
 }
+
+
+
+
+/** Allocate the buffer for IO on a transparently compressed table.
+@param[in]	type		IO flags
+@param[out]	buf		buffer to read or write
+@param[in,out]	n		number of bytes to read/write, starting from
+                                offset
+@return pointer to allocated page, compressed data is written to the offset
+        that is aligned on the disk sector size */
+Block *os_file_compress_page(IORequest &type, void *&buf, ulint *n) {
+  ut_ad(!type.is_log());
+  ut_ad(type.is_write());
+  ut_ad(type.is_compressed());
+
+  ulint n_alloc = *n * 2;
+
+  ut_a(n_alloc <= UNIV_PAGE_SIZE_MAX * 2);
+  ut_a(type.compression_algorithm().m_type != Compression::LZ4 ||
+       static_cast<ulint>(LZ4_COMPRESSBOUND(*n)) < n_alloc);
+
+  Block *block = os_alloc_block();
+
+  ulint old_compressed_len;
+  ulint compressed_len = *n;
+
+  old_compressed_len = mach_read_from_2(reinterpret_cast<byte *>(buf) +
+                                        FIL_PAGE_COMPRESS_SIZE_V1);
+
+  if (old_compressed_len > 0) {
+    old_compressed_len =
+        ut_calc_align(old_compressed_len + FIL_PAGE_DATA, type.block_size());
+  } else {
+    old_compressed_len = *n;
+  }
+
+  byte *compressed_page;
+
+  compressed_page =
+      static_cast<byte *>(ut_align(block->m_ptr, os_io_ptr_align));
+
+  byte *buf_ptr;
+
+  buf_ptr = os_file_compress_page(
+      type.compression_algorithm(), type.block_size(),
+      reinterpret_cast<byte *>(buf), *n, compressed_page, &compressed_len);
+
+  if (buf_ptr != buf) {
+    /* Set new compressed size to uncompressed page. */
+    memcpy(reinterpret_cast<byte *>(buf) + FIL_PAGE_COMPRESS_SIZE_V1,
+           buf_ptr + FIL_PAGE_COMPRESS_SIZE_V1, 2);
+
+    buf = buf_ptr;
+    *n = compressed_len;
+
+    if (compressed_len >= old_compressed_len) {
+      ut_ad(old_compressed_len <= UNIV_PAGE_SIZE);
+
+      type.clear_punch_hole();
+    }
+  }
+
+  return (block);
+}
+
