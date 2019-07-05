@@ -1,6 +1,6 @@
 #pragma once
 
-#include <innodb/sync_mutex/SysMutex.h>
+#include <innodb/univ/univ.h>
 #include <innodb/sync_mutex/UT_MUTEX_TYPE.h>
 #include <innodb/sync_mutex/OSTrackMutex.h>
 #include <innodb/sync_policy/GenericPolicy.h>

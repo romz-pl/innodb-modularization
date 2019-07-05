@@ -1,7 +1,6 @@
 set( LIB_NAME io )
 
 add_library( ${LIB_NAME} STATIC
-    AIO_mode.cpp
     Block.cpp
     Blocks.cpp
     Compression.cpp

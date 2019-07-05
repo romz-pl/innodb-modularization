@@ -33,7 +33,8 @@ SET( INNODB_COMPONENT_LIBS
     #formatting
 
     # I
-    io
+    #io
+    ioasync
 
     # L
     #logger

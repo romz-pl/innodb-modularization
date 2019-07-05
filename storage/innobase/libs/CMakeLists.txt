@@ -13,6 +13,7 @@ add_subdirectory( error )
 add_subdirectory( formatting )
 
 add_subdirectory( io )
+add_subdirectory( ioasync )
 
 add_subdirectory( logger )
 add_subdirectory( lst )
