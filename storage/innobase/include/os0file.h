@@ -86,6 +86,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/io/os_file_flush_func.h>
 #include <innodb/io/os_file_can_delete.h>
 #include <innodb/io/os_file_delete_if_exists_func.h>
+#include <innodb/io/Dir_Walker.h>
+#include <innodb/io/os_is_o_direct_supported.h>
+#include <innodb/io/os_file_punch_hole_posix.h>
+#include <innodb/io/os_file_punch_hole.h>
+#include <innodb/io/os_is_sparse_file_supported.h>
+#include <innodb/io/os_file_original_page_size.h>
+#include <innodb/io/os_file_compressed_page_size.h>
+#include <innodb/io/os_file_get_status.h>
+
 
 #include "my_dbug.h"
 #include "my_io.h"
@@ -1102,15 +1111,7 @@ void os_aio_print_pending_io(FILE *file);
 
 #endif /* UNIV_DEBUG */
 
-/** This function returns information about the specified file
-@param[in]	path		pathname of the file
-@param[in]	stat_info	information of a file in a directory
-@param[in]	check_rw_perm	for testing whether the file can be opened
-                                in RW mode
-@param[in]	read_only	if true read only mode checks are enforced
-@return DB_SUCCESS if all OK */
-dberr_t os_file_get_status(const char *path, os_file_stat_t *stat_info,
-                           bool check_rw_perm, bool read_only);
+
 
 #ifndef UNIV_HOTBACKUP
 
@@ -1124,43 +1125,17 @@ This function is defined in ha_innodb.cc.
 int innobase_mysql_tmpfile(const char *path);
 #endif /* !UNIV_HOTBACKUP */
 
-/** If it is a compressed page return the compressed page data + footer size
-@param[in]	buf		Buffer to check, must include header + 10 bytes
-@return ULINT_UNDEFINED if the page is not a compressed page or length
-        of the compressed data (including footer) if it is a compressed page */
-ulint os_file_compressed_page_size(const byte *buf);
 
-/** If it is a compressed page return the original page data + footer size
-@param[in]	buf		Buffer to check, must include header + 10 bytes
-@return ULINT_UNDEFINED if the page is not a compressed page or length
-        of the original data + footer if it is a compressed page */
-ulint os_file_original_page_size(const byte *buf);
 
-/** Set the file create umask
-@param[in]	umask		The umask to use for file creation. */
-void os_file_set_umask(ulint umask);
 
-/** Free storage space associated with a section of the file.
-@param[in]	fh		Open file handle
-@param[in]	off		Starting offset (SEEK_SET)
-@param[in]	len		Size of the hole
-@return DB_SUCCESS or error code */
-dberr_t os_file_punch_hole(os_file_t fh, os_offset_t off, os_offset_t len)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Check if the file system supports sparse files.
 
-Warning: On POSIX systems we try and punch a hole from offset 0 to
-the system configured page size. This should only be called on an empty
-file.
 
-Note: On Windows we use the name and on Unices we use the file handle.
 
-@param[in]	path	File name
-@param[in]	fh	File handle for the file - if opened
-@return true if the file system supports sparse files */
-bool os_is_sparse_file_supported(const char *path, pfs_os_file_t fh)
-    MY_ATTRIBUTE((warn_unused_result));
+
+
+
+
 
 /** Decompress the page data contents. Page type must be FIL_PAGE_COMPRESSED, if
 not then the source contents are left unchanged and DB_SUCCESS is returned.
@@ -1174,64 +1149,7 @@ dberr_t os_file_decompress_page(bool dblwr_recover, byte *src, byte *dst,
                                 ulint dst_len)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Determine if O_DIRECT is supported.
-@retval	true	if O_DIRECT is supported.
-@retval	false	if O_DIRECT is not supported. */
-bool os_is_o_direct_supported() MY_ATTRIBUTE((warn_unused_result));
 
-/** Class to scan the directory heirarch using a depth first scan. */
-class Dir_Walker {
- public:
-  using Path = std::string;
-
-  /** Check if the path is a directory. The file/directory must exist.
-  @param[in]	path		The path to check
-  @return true if it is a directory */
-  static bool is_directory(const Path &path);
-
-  /** Depth first traversal of the directory starting from basedir
-  @param[in]	basedir		Start scanning from this directory
-  @param[in]    recursive       True if scan should be recursive
-  @param[in]	f		Function to call for each entry */
-  template <typename F>
-  static void walk(const Path &basedir, bool recursive, F &&f) {
-#ifdef _WIN32
-    walk_win32(basedir, recursive,
-               [&](const Path &path, size_t depth) { f(path); });
-#else
-    walk_posix(basedir, recursive,
-               [&](const Path &path, size_t depth) { f(path); });
-#endif /* _WIN32 */
-  }
-
- private:
-  /** Directory names for the depth first directory scan. */
-  struct Entry {
-    /** Constructor
-    @param[in]	path		Directory to traverse
-    @param[in]	depth		Relative depth to the base
-                                    directory in walk() */
-    Entry(const Path &path, size_t depth) : m_path(path), m_depth(depth) {}
-
-    /** Path to the directory */
-    Path m_path;
-
-    /** Relative depth of m_path */
-    size_t m_depth;
-  };
-
-  using Function = std::function<void(const Path &, size_t)>;
-
-  /** Depth first traversal of the directory starting from basedir
-  @param[in]	basedir		Start scanning from this directory
-  @param[in]    recursive       True if scan should be recursive
-  @param[in]	f		Function to call for each entry */
-#ifdef _WIN32
-  static void walk_win32(const Path &basedir, bool recursive, Function &&f);
-#else
-  static void walk_posix(const Path &basedir, bool recursive, Function &&f);
-#endif /* _WIN32 */
-};
 
 #include "os0file.ic"
 

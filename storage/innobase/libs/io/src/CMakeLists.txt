@@ -7,6 +7,7 @@ add_library( ${LIB_NAME} STATIC
     block_cache.cpp
     Blocks.cpp
     Compression.cpp
+    Dir_Walker.cpp
     Encryption.cpp
     Fil_path.cpp
     ib_file_suffix.cpp
@@ -39,6 +40,8 @@ add_library( ${LIB_NAME} STATIC
     os_file_handle_error_no_exit.cpp
     os_file_is_root.cpp
     os_file_lock.cpp
+    os_file_punch_hole.cpp
+    os_file_punch_hole_posix.cpp
     os_file_rename_func.cpp
     os_file_scan_directory.cpp
     os_file_set_nocache.cpp
@@ -50,8 +53,13 @@ add_library( ${LIB_NAME} STATIC
     os_file_t.cpp
     os_file_type_t.cpp
     os_innodb_umask.cpp
+    os_is_o_direct_supported.cpp
+    os_is_sparse_file_supported.cpp
     os_offset_t.cpp
     srv_unix_flush_t.cpp
+    os_file_original_page_size.cpp
+    os_file_compressed_page_size.cpp
+    os_file_get_status.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

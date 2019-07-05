@@ -787,12 +787,6 @@ static_assert(DATA_TRX_ID_LEN <= 6, "COMPRESSION_ALGORITHM will not fit!");
 @return true if ok */
 static bool os_aio_validate();
 
-/** Free storage space associated with a section of the file.
-@param[in]      fh              Open file handle
-@param[in]      off             Starting offset (SEEK_SET)
-@param[in]      len             Size of the hole
-@return DB_SUCCESS or error code */
-dberr_t os_file_punch_hole(os_file_t fh, os_offset_t off, os_offset_t len);
 
 
 /** Decompress after a read and punch a hole in the file if it was a write
@@ -992,38 +986,9 @@ class SyncFileIO {
   os_offset_t m_offset;
 };
 
-/** If it is a compressed page return the compressed page data + footer size
-@param[in]	buf		Buffer to check, must include header + 10 bytes
-@return ULINT_UNDEFINED if the page is not a compressed page or length
-        of the compressed data (including footer) if it is a compressed page */
-ulint os_file_compressed_page_size(const byte *buf) {
-  ulint type = mach_read_from_2(buf + FIL_PAGE_TYPE);
 
-  if (type == FIL_PAGE_COMPRESSED) {
-    ulint version = mach_read_from_1(buf + FIL_PAGE_VERSION);
-    ut_a(version == 1);
-    return (mach_read_from_2(buf + FIL_PAGE_COMPRESS_SIZE_V1));
-  }
 
-  return (ULINT_UNDEFINED);
-}
 
-/** If it is a compressed page return the original page data + footer size
-@param[in] buf		Buffer to check, must include header + 10 bytes
-@return ULINT_UNDEFINED if the page is not a compressed page or length
-        of the original data + footer if it is a compressed page */
-ulint os_file_original_page_size(const byte *buf) {
-  ulint type = mach_read_from_2(buf + FIL_PAGE_TYPE);
-
-  if (type == FIL_PAGE_COMPRESSED) {
-    ulint version = mach_read_from_1(buf + FIL_PAGE_VERSION);
-    ut_a(version == 1);
-
-    return (mach_read_from_2(buf + FIL_PAGE_ORIGINAL_SIZE_V1));
-  }
-
-  return (ULINT_UNDEFINED);
-}
 
 /** Check if we need to read some more data.
 @param[in]	slot		The slot that contains the IO request
@@ -1622,43 +1587,6 @@ ssize_t SyncFileIO::execute(const IORequest &request) {
   return (n_bytes);
 }
 
-/** Free storage space associated with a section of the file.
-@param[in]	fh		Open file handle
-@param[in]	off		Starting offset (SEEK_SET)
-@param[in]	len		Size of the hole
-@return DB_SUCCESS or error code */
-static dberr_t os_file_punch_hole_posix(os_file_t fh, os_offset_t off,
-                                        os_offset_t len) {
-#ifdef HAVE_FALLOC_PUNCH_HOLE_AND_KEEP_SIZE
-  const int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
-
-  int ret = fallocate(fh, mode, off, len);
-
-  if (ret == 0) {
-    return (DB_SUCCESS);
-  }
-
-  ut_a(ret == -1);
-
-  if (errno == ENOTSUP) {
-    return (DB_IO_NO_PUNCH_HOLE);
-  }
-
-  ib::warn(ER_IB_MSG_754) << "fallocate(" << fh
-                          << ", FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, "
-                          << off << ", " << len
-                          << ") returned errno: " << errno;
-
-  return (DB_IO_ERROR);
-
-#elif defined(UNIV_SOLARIS)
-
-// Use F_FREESP
-
-#endif /* HAVE_FALLOC_PUNCH_HOLE_AND_KEEP_SIZE */
-
-  return (DB_IO_NO_PUNCH_HOLE);
-}
 
 #if defined(LINUX_NATIVE_AIO)
 
@@ -2371,69 +2299,6 @@ prefers an i/o-handler thread to handle them all at once later. You must
 call os_aio_simulated_wake_handler_threads later to ensure the threads
 are not left sleeping! */
 void os_aio_simulated_put_read_threads_to_sleep() { /* No op on non Windows */
-}
-
-/** Depth first traversal of the directory starting from basedir
-@param[in]	basedir		Start scanning from this directory
-@param[in]      recursive       True if scan should be recursive
-@param[in]	f		Function to call for each entry */
-void Dir_Walker::walk_posix(const Path &basedir, bool recursive, Function &&f) {
-  using Stack = std::stack<Entry>;
-
-  Stack directories;
-
-  directories.push(Entry(basedir, 0));
-
-  while (!directories.empty()) {
-    Entry current = directories.top();
-
-    directories.pop();
-
-    DIR *parent = opendir(current.m_path.c_str());
-
-    if (parent == nullptr) {
-      ib::info(ER_IB_MSG_784) << "Failed to walk directory"
-                              << " '" << current.m_path << "'";
-
-      continue;
-    }
-
-    if (!is_directory(current.m_path)) {
-      f(current.m_path, current.m_depth);
-    }
-
-    struct dirent *dirent = nullptr;
-
-    for (;;) {
-      dirent = readdir(parent);
-
-      if (dirent == nullptr) {
-        break;
-      }
-
-      if (strcmp(dirent->d_name, ".") == 0 ||
-          strcmp(dirent->d_name, "..") == 0) {
-        continue;
-      }
-
-      Path path(current.m_path);
-
-      if (path.back() != '/' && path.back() != '\\') {
-        path += OS_PATH_SEPARATOR;
-      }
-
-      path.append(dirent->d_name);
-
-      if (is_directory(path) && recursive) {
-        directories.push(Entry(path, current.m_depth + 1));
-
-      } else {
-        f(path, current.m_depth + 1);
-      }
-    }
-
-    closedir(parent);
-  }
 }
 
 #else /* !_WIN32 */
@@ -4355,88 +4220,8 @@ dberr_t os_file_write_func(IORequest &type, const char *name, os_file_t file,
 
 
 
-/** Free storage space associated with a section of the file.
-@param[in]	fh		Open file handle
-@param[in]	off		Starting offset (SEEK_SET)
-@param[in]	len		Size of the hole
-@return DB_SUCCESS or error code */
-dberr_t os_file_punch_hole(os_file_t fh, os_offset_t off, os_offset_t len) {
-  /* In this debugging mode, we act as if punch hole is supported,
-  and then skip any calls to actually punch a hole here.
-  In this way, Transparent Page Compression is still being tested. */
-  DBUG_EXECUTE_IF("ignore_punch_hole", return (DB_SUCCESS););
 
-#ifdef _WIN32
-  return (os_file_punch_hole_win32(fh, off, len));
-#else
-  return (os_file_punch_hole_posix(fh, off, len));
-#endif /* _WIN32 */
-}
 
-/** Check if the file system supports sparse files.
-
-Warning: On POSIX systems we try and punch a hole from offset 0 to
-the system configured page size. This should only be called on an empty
-file.
-
-Note: On Windows we use the name and on Unices we use the file handle.
-
-@param[in]	path		File name
-@param[in]	fh		File handle for the file - if opened
-@return true if the file system supports sparse files */
-bool os_is_sparse_file_supported(const char *path, pfs_os_file_t fh) {
-  /* In this debugging mode, we act as if punch hole is supported,
-  then we skip any calls to actually punch a hole.  In this way,
-  Transparent Page Compression is still being tested. */
-  DBUG_EXECUTE_IF("ignore_punch_hole", return (true););
-
-#ifdef _WIN32
-  return (os_is_sparse_file_supported_win32(path));
-#else
-  dberr_t err;
-
-  /* We don't know the FS block size, use the sector size. The FS
-  will do the magic. */
-  err = os_file_punch_hole(fh.m_file, 0, UNIV_PAGE_SIZE);
-
-  return (err == DB_SUCCESS);
-#endif /* _WIN32 */
-}
-
-/** This function returns information about the specified file
-@param[in]	path		pathname of the file
-@param[out]	stat_info	information of a file in a directory
-@param[in]	check_rw_perm	for testing whether the file can be opened
-                                in RW mode
-@param[in]	read_only	true if file is opened in read-only mode
-@return DB_SUCCESS if all OK */
-dberr_t os_file_get_status(const char *path, os_file_stat_t *stat_info,
-                           bool check_rw_perm, bool read_only) {
-  dberr_t ret;
-
-#ifdef _WIN32
-  struct _stat64 info;
-
-  ret = os_file_get_status_win32(path, stat_info, &info, check_rw_perm,
-                                 read_only);
-
-#else
-  struct stat info;
-
-  ret = os_file_get_status_posix(path, stat_info, &info, check_rw_perm,
-                                 read_only);
-
-#endif /* _WIN32 */
-
-  if (ret == DB_SUCCESS) {
-    stat_info->ctime = info.st_ctime;
-    stat_info->atime = info.st_atime;
-    stat_info->mtime = info.st_mtime;
-    stat_info->size = info.st_size;
-  }
-
-  return (ret);
-}
 
 /** Waits for an AIO operation to complete. This function is used to wait
 for completed requests. The aio array of pending requests is divided

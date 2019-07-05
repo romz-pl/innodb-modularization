@@ -222,7 +222,7 @@ fatal::~fatal() {
   ut_error;
 }
 
-fatal_or_error::~fatal_or_error() { ut_a(!m_fatal); }
+// fatal_or_error::~fatal_or_error() { ut_a(!m_fatal); }
 
 #endif /* !UNIV_NO_ERR_MSGS */
 
