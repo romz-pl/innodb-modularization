@@ -229,3 +229,57 @@ struct Encryption {
   static char s_uuid[ENCRYPTION_SERVER_UUID_LEN + 1];
 };
 
+/** Encryption key length */
+static const ulint ENCRYPTION_KEY_LEN = 32;
+
+/** Encryption magic bytes size */
+static const ulint ENCRYPTION_MAGIC_SIZE = 3;
+
+/** Encryption magic bytes for 5.7.11, it's for checking the encryption
+information version. */
+static const char ENCRYPTION_KEY_MAGIC_V1[] = "lCA";
+
+/** Encryption magic bytes for 5.7.12+, it's for checking the encryption
+information version. */
+static const char ENCRYPTION_KEY_MAGIC_V2[] = "lCB";
+
+/** Encryption magic bytes for 8.0.5+, it's for checking the encryption
+information version. */
+static const char ENCRYPTION_KEY_MAGIC_V3[] = "lCC";
+
+/** Encryption master key prifix */
+static const char ENCRYPTION_MASTER_KEY_PRIFIX[] = "INNODBKey";
+
+/** Encryption master key prifix size */
+static const ulint ENCRYPTION_MASTER_KEY_PRIFIX_LEN = 9;
+
+/** Encryption master key prifix size */
+static const ulint ENCRYPTION_MASTER_KEY_NAME_MAX_LEN = 100;
+
+
+/** Encryption information total size: magic number + master_key_id +
+key + iv + server_uuid + checksum */
+static const ulint ENCRYPTION_INFO_SIZE =
+    (ENCRYPTION_MAGIC_SIZE + sizeof(uint32) + (ENCRYPTION_KEY_LEN * 2) +
+     ENCRYPTION_SERVER_UUID_LEN + sizeof(uint32));
+
+/** Maximum size of Encryption information considering all formats v1, v2 & v3.
+ */
+static const ulint ENCRYPTION_INFO_MAX_SIZE =
+    (ENCRYPTION_INFO_SIZE + sizeof(uint32));
+
+/** Default master key for bootstrap */
+static const char ENCRYPTION_DEFAULT_MASTER_KEY[] = "DefaultMasterKey";
+
+/** Default master key id for bootstrap */
+static const ulint ENCRYPTION_DEFAULT_MASTER_KEY_ID = 0;
+
+/** (Un)Encryption Operation information size */
+static const uint ENCRYPTION_OPERATION_INFO_SIZE = 1;
+
+/** Encryption Progress information size */
+static const uint ENCRYPTION_PROGRESS_INFO_SIZE = sizeof(uint);
+
+/** Flag bit to indicate if Encryption/Decryption is in progress */
+#define ENCRYPTION_IN_PROGRESS (1 << 0)
+#define UNENCRYPTION_IN_PROGRESS (1 << 1)

@@ -39,7 +39,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 
 #include "handler.h"
-#include "os0file.h"
 #include "que0que.h"
 #include "trx0trx.h"
 

@@ -43,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/string/ut_strcpy.h>
 
+#include "os0file.h"
 #include "auth_acls.h"
 #include "btr0btr.h"
 #include "btr0pcur.h"

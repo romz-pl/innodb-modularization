@@ -42,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0recv.h"
 
 #include "dict0dd.h"
-#include "os0file.h"
 #include "srv0srv.h"
 #include "trx0trx.h"
 

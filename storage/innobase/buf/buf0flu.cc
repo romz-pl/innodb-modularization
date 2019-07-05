@@ -63,7 +63,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ibuf0ibuf.h"
 #include "log0log.h"
 #include "my_compiler.h"
-#include "os0file.h"
 #include "os0thread-create.h"
 #include "page0page.h"
 #include "srv0mon.h"

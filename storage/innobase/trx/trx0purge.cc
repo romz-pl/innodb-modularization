@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_low.h>
 
+#include "os0file.h"
 #include "clone0api.h"
 #include "dict0dd.h"
 #include "fil0fil.h"

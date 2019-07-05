@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <algorithm>
 #include <map>
 
+#include "os0file.h"
 #include "data0data.h"
 #include "handler0alter.h"
 #include "lob0lob.h"

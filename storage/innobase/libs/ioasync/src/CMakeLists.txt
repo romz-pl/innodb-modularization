@@ -4,6 +4,9 @@ add_library( ${LIB_NAME} STATIC
     AIO.cpp
     AIO_mode.cpp
     Slot.cpp
+    os_aio_n_segments.cpp
+    SRV_MAX_N_IO_THREADS.cpp
+    srv_io_thread_function.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

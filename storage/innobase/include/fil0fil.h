@@ -37,6 +37,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_type_t.h>
 #include <innodb/io/Fil_path.h>
 #include <innodb/io/ib_file_suffix.h>
+#include <innodb/io/Encryption.h>
+#include <innodb/io/Compression.h>
+#include <innodb/io/pfs_os_file_t.h>
+#include <innodb/io/os_offset_t.h>
 
 #include "dict0types.h"
 #include <innodb/page/type.h>
@@ -51,6 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <list>
 #include <vector>
+#include <functional>
 
 /** This tablespace name is used internally during file discovery to open a
 general tablespace before the data dictionary is recovered and available. */

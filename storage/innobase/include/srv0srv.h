@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/time/ib_time_t.h>
+#include <innodb/io/os_file_stat_t.h>
 
 #include "buf0checksum.h"
 #include "fil0fil.h"
@@ -59,7 +60,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "log0ddl.h"
 
-#include "os0file.h"
 #include "que0types.h"
 #include "srv0conc.h"
 #include "trx0types.h"
@@ -579,17 +579,12 @@ extern ulint srv_fatal_semaphore_wait_threshold;
 #define SRV_SEMAPHORE_WAIT_EXTENSION 7200
 extern ulint srv_dml_needed_delay;
 
-#ifdef UNIV_HOTBACKUP
-// MAHI: changed from 130 to 1 assuming the apply-log is single threaded
-#define SRV_MAX_N_IO_THREADS 1
-#else /* UNIV_HOTBACKUP */
-#define SRV_MAX_N_IO_THREADS 130
-#endif /* UNIV_HOTBACKUP */
+#include <innodb/ioasync/SRV_MAX_N_IO_THREADS.h>
 
 /* Array of English strings describing the current state of an
 i/o handler thread */
 extern const char *srv_io_thread_op_info[];
-extern const char *srv_io_thread_function[];
+#include <innodb/ioasync/srv_io_thread_function.h>
 
 /* the number of purge threads to use from the worker pool (currently 0 or 1) */
 extern ulong srv_n_purge_threads;

@@ -35,12 +35,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/io/os_file_create_t.h>
+
 #include <vector>
 #include "fil0fil.h" /* SPACE_UNKNOWN */
 #include "ha_prototypes.h"
 #include "log0log.h"
 #include "mem0mem.h"
-#include "os0file.h"
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #ifdef UNIV_HOTBACKUP
 #include "fil0fil.h"

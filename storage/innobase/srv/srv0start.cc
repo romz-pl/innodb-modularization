@@ -79,7 +79,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_psi_config.h"
 #include "mysql/psi/mysql_stage.h"
 #include "mysqld.h"
-#include "os0file.h"
 #include "os0thread-create.h"
 
 #include "page0cur.h"

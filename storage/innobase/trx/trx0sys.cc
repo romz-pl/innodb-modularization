@@ -48,7 +48,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0log.h"
 #include "log0recv.h"
 #include "mtr0log.h"
-#include "os0file.h"
 #include "read0read.h"
 #include "srv0srv.h"
 #include "srv0start.h"

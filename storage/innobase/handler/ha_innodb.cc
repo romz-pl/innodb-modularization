@@ -193,7 +193,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 
 #include "log0log.h"
-#include "os0file.h"
 
 #include <mutex>
 #include <vector>

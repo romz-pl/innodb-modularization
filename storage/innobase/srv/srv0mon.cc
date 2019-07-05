@@ -42,7 +42,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ibuf0ibuf.h"
 #include "lock0lock.h"
 #include <innodb/machine/data.h>
-#include "os0file.h"
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "trx0purge.h"

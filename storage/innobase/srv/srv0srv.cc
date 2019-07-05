@@ -67,6 +67,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_array/sync_arr_wake_threads_if_sema_free.h>
 #include <innodb/sync_array/sync_array_print_long_waits.h>
 
+#include "os0file.h"
 #include "btr0sea.h"
 #include "buf0flu.h"
 #include "buf0lru.h"
@@ -564,7 +565,7 @@ bool srv_print_innodb_lock_monitor = FALSE;
 i/o handler thread */
 
 const char *srv_io_thread_op_info[SRV_MAX_N_IO_THREADS];
-const char *srv_io_thread_function[SRV_MAX_N_IO_THREADS];
+
 
 #ifndef UNIV_HOTBACKUP
 static time_t srv_last_monitor_time;

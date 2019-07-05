@@ -51,6 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/sync_rw/rw_lock_get_writer.h>
 #include "btr0cur.h"
+#include "os0file.h"
 
 #include <assert.h>
 

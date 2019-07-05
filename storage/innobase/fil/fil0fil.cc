@@ -39,6 +39,7 @@ The tablespace memory cache */
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_low.h>
 
+#include "os0file.h"
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "buf0flu.h"
@@ -58,7 +59,6 @@ The tablespace memory cache */
 #include "mtr0log.h"
 #include "my_dbug.h"
 #include "my_inttypes.h"
-#include "os0file.h"
 #include "page0zip.h"
 #include "srv0start.h"
 #include "ut0call_destructor.h"

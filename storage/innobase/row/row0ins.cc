@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include "os0file.h"
 #include "btr0btr.h"
 #include "btr0cur.h"
 #include "buf0lru.h"

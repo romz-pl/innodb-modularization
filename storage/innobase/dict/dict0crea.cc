@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0sysspace.h"
 #include "fts0priv.h"
 #include "ha_prototypes.h"
+#include "os0file.h"
 #include <innodb/machine/data.h>
 
 #include "my_dbug.h"

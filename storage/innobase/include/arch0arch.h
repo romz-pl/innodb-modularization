@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <mysql/components/services/page_track_service.h>
 #include "log0log.h"
+#include "os0file.h"
 
 #include <list>
 

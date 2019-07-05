@@ -43,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "my_compiler.h"
 #include "my_inttypes.h"
+#include "os0file.h"
 #include "page0zip.h"
 #include "srv0srv.h"
 #include "srv0start.h"

@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 
+#include "os0file.h"
 #include "dict0load.h"
 #include "fsp0sysspace.h"
 #ifndef UNIV_HOTBACKUP
@@ -47,7 +48,6 @@ If server passes the option for create/open DB to SE, we should remove such
 direct reference to server header and global variable */
 #include "mysqld.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "os0file.h"
 #ifndef UNIV_HOTBACKUP
 #include "row0mysql.h"
 #endif /* !UNIV_HOTBACKUP */

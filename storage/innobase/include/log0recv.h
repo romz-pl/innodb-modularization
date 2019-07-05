@@ -41,7 +41,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "hash0hash.h"
 #include "log0types.h"
 #include "mtr0types.h"
-#include "os0file.h" /* OS_FILE_LOG_BLOCK_SIZE */
 
 
 #include <list>
