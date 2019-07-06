@@ -8,6 +8,12 @@
 
 #include <algorithm>
 
+#if defined(__SUNPRO_CC)
+char *Fil_path::SEPARATOR = "\\/";
+char *Fil_path::DOT_SLASH = "./";
+char *Fil_path::DOT_DOT_SLASH = "../";
+#endif /* defined(__SUNPRO_CC) */
+
 /** The MySQL server --datadir value */
 extern Fil_path MySQL_datadir_path;
 

@@ -37,6 +37,7 @@ add_subdirectory( sync_os )
 add_subdirectory( sync_policy )
 add_subdirectory( sync_rw )
 
+add_subdirectory( tablespace )
 add_subdirectory( thread )
 add_subdirectory( time )
 

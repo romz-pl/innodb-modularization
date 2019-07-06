@@ -38,6 +38,15 @@ The tablespace memory cache */
 #include <innodb/formatting/hex.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_low.h>
+#include <innodb/tablespace/fil_load_status.h>
+#include <innodb/tablespace/fil_operation_t.h>
+#include <innodb/tablespace/fil_load_status.h>
+#include <innodb/tablespace/Char_Ptr_Compare.h>
+#include <innodb/tablespace/Tablespaces.h>
+#include <innodb/tablespace/Dirs.h>
+#include <innodb/tablespace/Space_id_set.h>
+#include <innodb/tablespace/Scanned_files.h>
+#include <innodb/tablespace/Char_Ptr_Hash.h>
 
 #include "os0file.h"
 #include "btr0btr.h"
@@ -92,53 +101,16 @@ The tablespace memory cache */
 #include <tuple>
 #include <unordered_map>
 
-using Dirs = std::vector<std::string>;
-using Space_id_set = std::set<space_id_t>;
 
-#if defined(__SUNPRO_CC)
-char *Fil_path::SEPARATOR = "\\/";
-char *Fil_path::DOT_SLASH = "./";
-char *Fil_path::DOT_DOT_SLASH = "../";
-#endif /* defined(__SUNPRO_CC) */
 
-/** Used for collecting the data in boot_tablespaces() */
-namespace dd_fil {
 
-enum {
-  /** DD Object ID */
-  OBJECT_ID,
 
-  /** InnoDB tablspace ID */
-  SPACE_ID,
 
-  /** DD/InnoDB tablespace name */
-  SPACE_NAME,
-
-  /** Path in DD tablespace */
-  OLD_PATH,
-
-  /** Path where it was found during the scan. */
-  NEW_PATH
-};
-
-using Moved = std::tuple<dd::Object_id, space_id_t, std::string, std::string,
-                         std::string>;
-
-using Tablespaces = std::vector<Moved>;
-}  // namespace dd_fil
-
-/* uint16_t is the index into Tablespace_dirs::m_dirs */
-using Scanned_files = std::vector<std::pair<uint16_t, std::string>>;
 
 #ifdef UNIV_PFS_IO
 mysql_pfs_key_t innodb_tablespace_open_file_key;
 #endif /* UNIV_PFS_IO */
 
-/** System tablespace. */
-fil_space_t *fil_space_t::s_sys_space;
-
-/** Redo log tablespace */
-fil_space_t *fil_space_t::s_redo_space;
 
 #ifdef UNIV_HOTBACKUP
 /** Directories in which remote general tablespaces have been found in the
@@ -259,33 +231,9 @@ ulint fil_n_pending_tablespace_flushes = 0;
 /** Number of files currently open */
 ulint fil_n_file_opened = 0;
 
-enum fil_load_status {
-  /** The tablespace file(s) were found and valid. */
-  FIL_LOAD_OK,
 
-  /** The name no longer matches space_id */
-  FIL_LOAD_ID_CHANGED,
 
-  /** The file(s) were not found */
-  FIL_LOAD_NOT_FOUND,
 
-  /** The file(s) were not valid */
-  FIL_LOAD_INVALID,
-
-  /** The tablespace file ID in the first page doesn't match
-  expected value. */
-  FIL_LOAD_MISMATCH
-};
-
-/** File operations for tablespace */
-enum fil_operation_t {
-
-  /** delete a single-table tablespace */
-  FIL_OPERATION_DELETE,
-
-  /** close a single-table tablespace */
-  FIL_OPERATION_CLOSE
-};
 
 /** The null file address */
 fil_addr_t fil_addr_null = {FIL_NULL, 0};
@@ -326,24 +274,9 @@ static const size_t EMPTY_OPEN_SLOT = std::numeric_limits<size_t>::max();
 /** We want to store the line number from where it was called. */
 #define mutex_acquire() acquire(__LINE__)
 
-/** Hash a NUL terminated 'string' */
-struct Char_Ptr_Hash {
-  /** Hashing function
-  @param[in]	ptr		NUL terminated string to hash
-  @return the hash */
-  size_t operator()(const char *ptr) const { return (ut_fold_string(ptr)); }
-};
 
-/** Compare two 'strings' */
-struct Char_Ptr_Compare {
-  /** Compare two NUL terminated strings
-  @param[in]	lhs		Left hand side
-  @param[in]	rhs		Right hand side
-  @return true if the contents match */
-  bool operator()(const char *lhs, const char *rhs) const {
-    return (strcmp(lhs, rhs) == 0);
-  }
-};
+
+
 
 /** Tablespace files disovered during startup. */
 class Tablespace_files {

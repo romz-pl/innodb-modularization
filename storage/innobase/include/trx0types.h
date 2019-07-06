@@ -34,15 +34,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define trx0types_h
 
 #include <innodb/univ/univ.h>
+
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/sync_rw/rw_lock_s_unlock.h>
 #include <innodb/sync_rw/rw_lock_s_lock.h>
 #include <innodb/sync_rw/rw_lock_x_unlock.h>
 #include <innodb/sync_rw/rw_lock_x_lock.h>
-
+#include <innodb/tablespace/space_id_t.h>
 #include <innodb/page/page_size_t.h>
-
-
 #include <innodb/formatting/formatting.h>
 
 #include <algorithm>

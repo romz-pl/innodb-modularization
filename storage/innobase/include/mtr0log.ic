@@ -30,9 +30,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/7/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/tablespace/space_id_t.h>
+#include <innodb/machine/data.h>
+
 #include "buf0dblwr.h"
 #include "fsp0types.h"
-#include <innodb/machine/data.h>
 #include "trx0types.h"
 
 #include "mysqld_error.h"

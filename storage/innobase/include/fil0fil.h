@@ -41,6 +41,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/Compression.h>
 #include <innodb/io/pfs_os_file_t.h>
 #include <innodb/io/os_offset_t.h>
+#include <innodb/tablespace/fil_type_t.h>
+#include <innodb/tablespace/Fil_state.h>
+#include <innodb/tablespace/space_id_t.h>
+#include <innodb/tablespace/fil_node_t.h>
+#include <innodb/tablespace/encryption_op_type.h>
+#include <innodb/tablespace/fil_space_t.h>
+#include <innodb/tablespace/fil_faddr_t.h>
+#include <innodb/tablespace/fil_addr_t.h>
 
 #include "dict0types.h"
 #include <innodb/page/type.h>
@@ -82,247 +90,10 @@ class page_id_t;
 using Filenames = std::vector<std::string, ut_allocator<std::string>>;
 using Space_ids = std::vector<space_id_t, ut_allocator<space_id_t>>;
 
-/** File types */
-enum fil_type_t : uint8_t {
-  /** temporary tablespace (temporary undo log or tables) */
-  FIL_TYPE_TEMPORARY = 1,
-  /** a tablespace that is being imported (no logging until finished) */
-  FIL_TYPE_IMPORT = 2,
-  /** persistent tablespace (for system, undo log or tables) */
-  FIL_TYPE_TABLESPACE = 4,
-  /** redo log covering changes to files of FIL_TYPE_TABLESPACE */
-  FIL_TYPE_LOG = 8
-};
 
-/** Result of comparing a path. */
-enum class Fil_state {
-  /** The path matches what was found during the scan. */
-  MATCHES,
 
-  /** No MLOG_FILE_DELETE record and the file could not be found. */
-  MISSING,
 
-  /** A MLOG_FILE_DELETE was found, file was deleted. */
-  DELETED,
 
-  /** Space ID matches but the paths don't match. */
-  MOVED,
-
-  /** Tablespace and/or filename was renamed. The DDL log will handle
-  this case. */
-  RENAMED
-};
-
-/** Check if fil_type is any of FIL_TYPE_TEMPORARY, FIL_TYPE_IMPORT
-or FIL_TYPE_TABLESPACE.
-@param[in]	type	variable of type fil_type_t
-@return true if any of FIL_TYPE_TEMPORARY, FIL_TYPE_IMPORT
-or FIL_TYPE_TABLESPACE */
-inline bool fil_type_is_data(fil_type_t type) {
-  return (type == FIL_TYPE_TEMPORARY || type == FIL_TYPE_IMPORT ||
-          type == FIL_TYPE_TABLESPACE);
-}
-
-struct fil_space_t;
-
-/** File node of a tablespace or the log data space */
-struct fil_node_t {
-  using List_node = UT_LIST_NODE_T(fil_node_t);
-
-  /** tablespace containing this file */
-  fil_space_t *space;
-
-  /** file name; protected by Fil_shard::m_mutex and log_sys->mutex. */
-  char *name;
-
-  /** whether this file is open. Note: We set the is_open flag after
-  we increase the write the MLOG_FILE_OPEN record to redo log. Therefore
-  we increment the in_use reference count before setting the OPEN flag. */
-  bool is_open;
-
-  /** file handle (valid if is_open) */
-  pfs_os_file_t handle;
-
-  /** event that groups and serializes calls to fsync */
-  os_event_t sync_event;
-
-  /** whether the file actually is a raw device or disk partition */
-  bool is_raw_disk;
-
-  /** size of the file in database pages (0 if not known yet);
-  the possible last incomplete megabyte may be ignored
-  if space->id == 0 */
-  page_no_t size;
-
-  /** Size of the file when last flushed, used to force the flush when file
-  grows to keep the filesystem metadata synced when using O_DIRECT_NO_FSYNC */
-  page_no_t flush_size;
-
-  /** initial size of the file in database pages;
-  FIL_IBD_FILE_INITIAL_SIZE by default */
-  page_no_t init_size;
-
-  /** maximum size of the file in database pages */
-  page_no_t max_size;
-
-  /** count of pending i/o's; is_open must be true if nonzero */
-  size_t n_pending;
-
-  /** count of pending flushes; is_open must be true if nonzero */
-  size_t n_pending_flushes;
-
-  /** e.g., when a file is being extended or just opened. */
-  size_t in_use;
-
-  /** number of writes to the file since the system was started */
-  int64_t modification_counter;
-
-  /** the modification_counter of the latest flush to disk */
-  int64_t flush_counter;
-
-  /** link to the fil_system->LRU list (keeping track of open files) */
-  List_node LRU;
-
-  /** whether the file system of this file supports PUNCH HOLE */
-  bool punch_hole;
-
-  /** block size to use for punching holes */
-  size_t block_size;
-
-  /** whether atomic write is enabled for this file */
-  bool atomic_write;
-
-  /** FIL_NODE_MAGIC_N */
-  size_t magic_n;
-};
-
-/* Type of (un)encryption operation in progress for Tablespace. */
-enum encryption_op_type { ENCRYPTION = 1, UNENCRYPTION = 2, NONE };
-
-/** Tablespace or log data space */
-struct fil_space_t {
-  using List_node = UT_LIST_NODE_T(fil_space_t);
-  using Files = std::vector<fil_node_t, ut_allocator<fil_node_t>>;
-
-  /** Tablespace name */
-  char *name;
-
-  /** Tablespace ID */
-  space_id_t id;
-
-  /** true if we want to rename the .ibd file of tablespace and
-  want to stop temporarily posting of new i/o requests on the file */
-  bool stop_ios;
-
-  /** We set this true when we start deleting a single-table
-  tablespace.  When this is set following new ops are not allowed:
-  * read IO request
-  * ibuf merge
-  * file flush
-  Note that we can still possibly have new write operations because we
-  don't check this flag when doing flush batches. */
-  bool stop_new_ops;
-
-#ifdef UNIV_DEBUG
-  /** Reference count for operations who want to skip redo log in
-  the file space in order to make fsp_space_modify_check pass. */
-  ulint redo_skipped_count;
-#endif /* UNIV_DEBUG */
-
-  /** Purpose */
-  fil_type_t purpose;
-
-  /** Files attached to this tablespace. Note: Only the system tablespace
-  can have multiple files, this is a legacy issue. */
-  Files files;
-
-  /** Tablespace file size in pages; 0 if not known yet */
-  page_no_t size;
-
-  /** FSP_SIZE in the tablespace header; 0 if not known yet */
-  page_no_t size_in_header;
-
-  /** Length of the FSP_FREE list */
-  uint32_t free_len;
-
-  /** Contents of FSP_FREE_LIMIT */
-  page_no_t free_limit;
-
-  /** Tablespace flags; see fsp_flags_is_valid() and
-  page_size_t(ulint) (constructor).
-  This is protected by space->latch and tablespace MDL */
-  uint32_t flags;
-
-  /** Number of reserved free extents for ongoing operations like
-  B-tree page split */
-  uint32_t n_reserved_extents;
-
-  /** This is positive when flushing the tablespace to disk;
-  dropping of the tablespace is forbidden if this is positive */
-  uint32_t n_pending_flushes;
-
-  /** This is positive when we have pending operations against this
-  tablespace. The pending operations can be ibuf merges or lock
-  validation code trying to read a block.  Dropping of the tablespace
-  is forbidden if this is positive.  Protected by Fil_shard::m_mutex. */
-  uint32_t n_pending_ops;
-
-#ifndef UNIV_HOTBACKUP
-  /** Latch protecting the file space storage allocation */
-  rw_lock_t latch;
-#endif /* !UNIV_HOTBACKUP */
-
-  /** List of spaces with at least one unflushed file we have
-  written to */
-  List_node unflushed_spaces;
-
-  /** true if this space is currently in unflushed_spaces */
-  bool is_in_unflushed_spaces;
-
-  /** Compression algorithm */
-  Compression::Type compression_type;
-
-  /** Encryption algorithm */
-  Encryption::Type encryption_type;
-
-  /** Encrypt key */
-  byte encryption_key[ENCRYPTION_KEY_LEN];
-
-  /** Encrypt key length*/
-  ulint encryption_klen;
-
-  /** Encrypt initial vector */
-  byte encryption_iv[ENCRYPTION_KEY_LEN];
-
-  /** Encryption is in progress */
-  encryption_op_type encryption_op_in_progress;
-
-  /** Release the reserved free extents.
-  @param[in]	n_reserved	number of reserved extents */
-  void release_free_extents(ulint n_reserved);
-
-  /** FIL_SPACE_MAGIC_N */
-  ulint magic_n;
-
-  /** System tablespace */
-  static fil_space_t *s_sys_space;
-
-  /** Redo log tablespace */
-  static fil_space_t *s_redo_space;
-
-#ifdef UNIV_DEBUG
-  /** Print the extent descriptor pages of this tablespace into
-  the given output stream.
-  @param[in]	out	the output stream.
-  @return	the output stream. */
-  std::ostream &print_xdes_pages(std::ostream &out) const;
-
-  /** Print the extent descriptor pages of this tablespace into
-  the given file.
-  @param[in]	filename	the output file name. */
-  void print_xdes_pages(const char *filename) const;
-#endif /* UNIV_DEBUG */
-};
 
 /** Value of fil_space_t::magic_n */
 constexpr size_t FIL_SPACE_MAGIC_N = 89472;
@@ -354,65 +125,8 @@ of 4 pages and an empty CREATE TABLE (file_per_table) has 6 pages.
 Minimum of these two is 4 */
 constexpr size_t FIL_IBD_FILE_INITIAL_SIZE_5_7 = 4;
 
-/** 'null' (undefined) page offset in the context of file spaces */
-constexpr page_no_t FIL_NULL = std::numeric_limits<page_no_t>::max();
 
-/** Maximum Page Number, one less than FIL_NULL */
-constexpr page_no_t PAGE_NO_MAX = std::numeric_limits<page_no_t>::max() - 1;
 
-/** Unknown space id */
-constexpr space_id_t SPACE_UNKNOWN = std::numeric_limits<space_id_t>::max();
-
-/* Space address data type; this is intended to be used when
-addresses accurate to a byte are stored in file pages. If the page part
-of the address is FIL_NULL, the address is considered undefined. */
-
-/** 'type' definition in C: an address stored in a file page is a
-string of bytes */
-using fil_faddr_t = byte;
-
-/** File space address */
-struct fil_addr_t {
-  /* Default constructor */
-  fil_addr_t() : page(FIL_NULL), boffset(0) {}
-
-  /** Constructor
-  @param[in]	p	Logical page number
-  @param[in]	boff	Offset within the page */
-  fil_addr_t(page_no_t p, uint32_t boff) : page(p), boffset(boff) {}
-
-  /** Compare to instances
-  @param[in]	rhs	Instance to compare with
-  @return true if the page number and page offset are equal */
-  bool is_equal(const fil_addr_t &rhs) const {
-    return (page == rhs.page && boffset == rhs.boffset);
-  }
-
-  /** Check if the file address is null.
-  @return true if null */
-  bool is_null() const { return (page == FIL_NULL && boffset == 0); }
-
-  /** Print a string representation.
-  @param[in,out]	out		Stream to write to */
-  std::ostream &print(std::ostream &out) const {
-    out << "[fil_addr_t: page=" << page << ", boffset=" << boffset << "]";
-
-    return (out);
-  }
-
-  /** Page number within a space */
-  page_no_t page;
-
-  /** Byte offset within the page */
-  uint32_t boffset;
-};
-
-/* For printing fil_addr_t to a stream.
-@param[in,out]	out		Stream to write to
-@param[in]	obj		fil_addr_t instance to write */
-inline std::ostream &operator<<(std::ostream &out, const fil_addr_t &obj) {
-  return (obj.print(out));
-}
 
 /** The null file address */
 extern fil_addr_t fil_addr_null;

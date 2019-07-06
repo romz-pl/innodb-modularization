@@ -43,7 +43,7 @@ SET( INNODB_COMPONENT_LIBS
     # M
     #machine
     #math
-    memory
+    #memory
     #memory_check
 
     # P
@@ -64,6 +64,7 @@ SET( INNODB_COMPONENT_LIBS
     #sync_rw
 
     # T
+    tablespace
     #thread
     #time
 

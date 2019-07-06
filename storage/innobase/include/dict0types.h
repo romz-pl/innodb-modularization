@@ -34,9 +34,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define dict0types_h
 
 #include <innodb/univ/univ.h>
+
 #include <innodb/record/rec_t.h>
 #include <innodb/record/flag.h>
-
+#include <innodb/tablespace/space_id_t.h>
 #include <innodb/sync_mutex/ib_mutex_t.h>
 
 #include "ibuf0types.h" /* IBUF_SPACE_ID */
