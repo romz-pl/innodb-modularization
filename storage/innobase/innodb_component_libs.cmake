@@ -21,6 +21,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # B
     bit
+    buffer
 
     # C
     #compiler_hints

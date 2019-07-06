@@ -49,6 +49,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fil_space_t.h>
 #include <innodb/tablespace/fil_faddr_t.h>
 #include <innodb/tablespace/fil_addr_t.h>
+#include <innodb/buffer/buf_frame_t.h>
+#include <innodb/tablespace/buf_remove_t.h>
 
 #include "dict0types.h"
 #include <innodb/page/type.h>
@@ -64,6 +66,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <list>
 #include <vector>
 #include <functional>
+
+struct buf_block_t;
 
 /** This tablespace name is used internally during file discovery to open a
 general tablespace before the data dictionary is recovered and available. */

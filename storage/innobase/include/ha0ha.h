@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_t.h>
 #include <innodb/record/rec_t.h>
 
-#include "buf0types.h"
+
 #include "hash0hash.h"
 
 

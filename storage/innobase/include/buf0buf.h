@@ -36,8 +36,21 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/page/page_zip_des_t.h>
+#include <innodb/buffer/buf_page_state.h>
+#include <innodb/buffer/Page_fetch.h>
+#include <innodb/buffer/Cache_hint.h>
+#include <innodb/buffer/buf_pool_info_t.h>
+#include <innodb/buffer/buf_pools_list_size_t.h>
+#include <innodb/buffer/macros.h>
+#include <innodb/buffer/buf_page_print_flags.h>
+#include <innodb/buffer/BPageMutex.h>
+#include <innodb/buffer/BPageLock.h>
+#include <innodb/buffer/BufListMutex.h>
+#include <innodb/buffer/BufPoolZipMutex.h>
+#include <innodb/buffer/buf_io_fix.h>
 
-#include "buf0types.h"
+
+
 #include "srv0srv.h"
 #include <innodb/rbt/rbt.h>
 
@@ -45,65 +58,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 // Forward declaration
 struct fil_addr_t;
+class buf_page_t;
+struct buf_pool_stat_t;
+class FlushObserver;
+struct buf_chunk_t;
 
-/** @name Modes for buf_page_get_gen */
-/* @{ */
-enum class Page_fetch {
-  /** Get always */
-  NORMAL,
-
-  /** Same as NORMAL, but hint that the fetch is part of a large scan.
-  Try not to flood the buffer pool with pages that may not be accessed again
-  any time soon. */
-  SCAN,
-
-  /** get if in pool */
-  IF_IN_POOL,
-
-  /** get if in pool, do not make the block young in the LRU list */
-  PEEK_IF_IN_POOL,
-
-  /** get and bufferfix, but set no latch; we have separated this case, because
-  it is error-prone programming not to set a latch, and it  should be used with
-  care */
-  NO_LATCH,
-
-  /** Get the page only if it's in the buffer pool, if not then set a watch on
-  the page. */
-  IF_IN_POOL_OR_WATCH,
-
-  /** Like Page_fetch::NORMAL, but do not mind if the file page has been
-  freed. */
-  POSSIBLY_FREED
-};
-/* @} */
 
 /** @name Modes for buf_page_get_known_nowait */
 
-/* @{ */
-enum class Cache_hint {
-  /** Move the block to the start of the LRU list if there is a danger that the
-  block would drift out of the buffer  pool*/
-  MAKE_YOUNG = 51,
 
-  /** Preserve the current LRU position of the block. */
-  KEEP_OLD = 52
-};
 
-/* @} */
-
-/** Number of bits to representing a buffer pool ID */
-constexpr ulint MAX_BUFFER_POOLS_BITS = 6;
-
-/** The maximum number of buffer pools that can be defined */
-constexpr ulint MAX_BUFFER_POOLS = (1 << MAX_BUFFER_POOLS_BITS);
-
-/** Maximum number of concurrent buffer pool watches */
-#define BUF_POOL_WATCH_SIZE (srv_n_purge_threads + 1)
-
-/** The maximum number of page_hash locks */
-constexpr ulint MAX_PAGE_HASH_LOCKS = 1024;
-
+struct buf_pool_t;
 /** The buffer pools of the database */
 extern buf_pool_t *buf_pool_ptr;
 
@@ -121,111 +86,10 @@ extern buf_block_t *back_block1;
 extern buf_block_t *back_block2;
 #endif /* UNIV_HOTBACKUP */
 
-/** @brief States of a control block
-@see buf_page_t
 
-The enumeration values must be 0..7. */
-enum buf_page_state {
-  BUF_BLOCK_POOL_WATCH, /*!< a sentinel for the buffer pool
-                        watch, element of buf_pool->watch[] */
-  BUF_BLOCK_ZIP_PAGE,   /*!< contains a clean
-                        compressed page */
-  BUF_BLOCK_ZIP_DIRTY,  /*!< contains a compressed
-                        page that is in the
-                        buf_pool->flush_list */
 
-  BUF_BLOCK_NOT_USED,      /*!< is in the free list;
-                           must be after the BUF_BLOCK_ZIP_
-                           constants for compressed-only pages
-                           @see buf_block_state_valid() */
-  BUF_BLOCK_READY_FOR_USE, /*!< when buf_LRU_get_free_block
-                           returns a block, it is in this state */
-  BUF_BLOCK_FILE_PAGE,     /*!< contains a buffered file page */
-  BUF_BLOCK_MEMORY,        /*!< contains some main memory
-                           object */
-  BUF_BLOCK_REMOVE_HASH    /*!< hash index should be removed
-                           before putting to the free list */
-};
 
-/** This structure defines information we will fetch from each buffer pool. It
-will be used to print table IO stats */
-struct buf_pool_info_t {
-  /* General buffer pool info */
-  ulint pool_unique_id;              /*!< Buffer Pool ID */
-  ulint pool_size;                   /*!< Buffer Pool size in pages */
-  ulint lru_len;                     /*!< Length of buf_pool->LRU */
-  ulint old_lru_len;                 /*!< buf_pool->LRU_old_len */
-  ulint free_list_len;               /*!< Length of buf_pool->free list */
-  ulint flush_list_len;              /*!< Length of buf_pool->flush_list */
-  ulint n_pend_unzip;                /*!< buf_pool->n_pend_unzip, pages
-                                     pending decompress */
-  ulint n_pend_reads;                /*!< buf_pool->n_pend_reads, pages
-                                     pending read */
-  ulint n_pending_flush_lru;         /*!< Pages pending flush in LRU */
-  ulint n_pending_flush_single_page; /*!< Pages pending to be
-                                 flushed as part of single page
-                                 flushes issued by various user
-                                 threads */
-  ulint n_pending_flush_list;        /*!< Pages pending flush in FLUSH
-                                     LIST */
-  ulint n_pages_made_young;          /*!< number of pages made young */
-  ulint n_pages_not_made_young;      /*!< number of pages not made young */
-  ulint n_pages_read;                /*!< buf_pool->n_pages_read */
-  ulint n_pages_created;             /*!< buf_pool->n_pages_created */
-  ulint n_pages_written;             /*!< buf_pool->n_pages_written */
-  ulint n_page_gets;                 /*!< buf_pool->n_page_gets */
-  ulint n_ra_pages_read_rnd;         /*!< buf_pool->n_ra_pages_read_rnd,
-                                     number of pages readahead */
-  ulint n_ra_pages_read;             /*!< buf_pool->n_ra_pages_read, number
-                                     of pages readahead */
-  ulint n_ra_pages_evicted;          /*!< buf_pool->n_ra_pages_evicted,
-                                     number of readahead pages evicted
-                                     without access */
-  ulint n_page_get_delta;            /*!< num of buffer pool page gets since
-                                     last printout */
 
-  /* Buffer pool access stats */
-  double page_made_young_rate;     /*!< page made young rate in pages
-                                   per second */
-  double page_not_made_young_rate; /*!< page not made young rate
-                                  in pages per second */
-  double pages_read_rate;          /*!< num of pages read per second */
-  double pages_created_rate;       /*!< num of pages create per second */
-  double pages_written_rate;       /*!< num of  pages written per second */
-  ulint page_read_delta;           /*!< num of pages read since last
-                                   printout */
-  ulint young_making_delta;        /*!< num of pages made young since
-                                   last printout */
-  ulint not_young_making_delta;    /*!< num of pages not make young since
-                                   last printout */
-
-  /* Statistics about read ahead algorithm.  */
-  double pages_readahead_rnd_rate; /*!< random readahead rate in pages per
-                                  second */
-  double pages_readahead_rate;     /*!< readahead rate in pages per
-                                   second */
-  double pages_evicted_rate;       /*!< rate of readahead page evicted
-                                   without access, in pages per second */
-
-  /* Stats about LRU eviction */
-  ulint unzip_lru_len; /*!< length of buf_pool->unzip_LRU
-                       list */
-  /* Counters for LRU policy */
-  ulint io_sum;    /*!< buf_LRU_stat_sum.io */
-  ulint io_cur;    /*!< buf_LRU_stat_cur.io, num of IO
-                   for current interval */
-  ulint unzip_sum; /*!< buf_LRU_stat_sum.unzip */
-  ulint unzip_cur; /*!< buf_LRU_stat_cur.unzip, num
-                   pages decompressed in current
-                   interval */
-};
-
-/** The occupied bytes of lists in all buffer pools */
-struct buf_pools_list_size_t {
-  ulint LRU_bytes;        /*!< LRU size in bytes */
-  ulint unzip_LRU_bytes;  /*!< unzip_LRU size in bytes */
-  ulint flush_list_bytes; /*!< flush_list size in bytes */
-};
 
 #ifndef UNIV_HOTBACKUP
 /** Creates the buffer pool.
@@ -664,12 +528,8 @@ ibool buf_validate(void);
 void buf_print(void);
 #endif /* UNIV_DEBUG_PRINT || UNIV_DEBUG || UNIV_BUF_DEBUG */
 #endif /* !UNIV_HOTBACKUP */
-enum buf_page_print_flags {
-  /** Do not crash at the end of buf_page_print(). */
-  BUF_PAGE_PRINT_NO_CRASH = 1,
-  /** Do not print the full page dump. */
-  BUF_PAGE_PRINT_NO_FULL = 2
-};
+
+
 
 /** Prints a page to stderr.
 @param[in]	read_buf	a database page

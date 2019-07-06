@@ -36,13 +36,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define buf0lru_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/tablespace/space_id_t.h>
+#include <innodb/tablespace/buf_remove_t.h>
 
-#include "buf0types.h"
+
 #ifndef UNIV_HOTBACKUP
 
 
 // Forward declaration
 struct trx_t;
+struct buf_pool_t;
+struct buf_block_t;
+class buf_page_t;
 
 /** Returns TRUE if less than 25 % of the buffer pool is available. This can be
  used in heuristics to prevent huge transactions eating up the whole buffer

@@ -35,8 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/allocator/ut_allocator.h>
+#include <innodb/buffer/buf_flush_t.h>
 
-#include "buf0types.h"
+
 #include "dict0types.h"
 #include "hash0hash.h"
 #include "log0types.h"
@@ -51,6 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 class MetadataRecover;
 class PersistentTableMetadata;
+struct buf_block_t;
 
 #ifdef UNIV_HOTBACKUP
 

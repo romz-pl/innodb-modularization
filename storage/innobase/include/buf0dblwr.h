@@ -35,11 +35,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "buf0types.h"
+
 #include "log0log.h"
 #include "log0recv.h"
 
-
+struct buf_dblwr_t;
 /** Doublewrite system */
 extern buf_dblwr_t *buf_dblwr;
 /** Set to TRUE when the doublewrite buffer is being created */

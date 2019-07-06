@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/atomic/atomic.h>
-#include "buf0types.h"
+
 #include "log0log.h"
 
 

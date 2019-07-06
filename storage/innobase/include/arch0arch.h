@@ -44,6 +44,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <list>
 
+class buf_page_t;
+
 /** @name Archive file name prefix and constant length parameters. */
 /* @{ */
 /** Archive directory prefix */

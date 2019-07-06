@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "buf0types.h"
+
 #include "dict0types.h"
 #include "hash0hash.h"
 #include "lock0types.h"

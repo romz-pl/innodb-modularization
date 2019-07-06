@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef _lot0buf_h_
 #define _lot0buf_h_
 
-#include "buf0types.h"
+
 #include "fil0fil.h"
 #include "lot0types.h"
 #include <innodb/machine/data.h>

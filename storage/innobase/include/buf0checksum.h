@@ -34,8 +34,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define buf0checksum_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/buffer/srv_checksum_algorithm_t.h>
+#include <innodb/buffer/page_id_t.h>
 
-#include "buf0types.h"
+
 #include <innodb/page/page_size_t.h>
 
 /** Calculates the CRC32 checksum of a page. The value is stored to the page

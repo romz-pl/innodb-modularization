@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "buf0types.h"
+
 #include "data0data.h"
 #include "gis0type.h"
 #include "mtr0mtr.h"

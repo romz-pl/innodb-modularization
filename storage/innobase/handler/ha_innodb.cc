@@ -190,7 +190,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0xa.h"
 #else
 #include <typelib.h>
-#include "buf0types.h"
+
 #include <innodb/univ/univ.h>
 #endif /* !UNIV_HOTBACKUP */
 

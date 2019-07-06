@@ -40,7 +40,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define UNIV_INLINE
 #endif
 
-#include "buf0types.h"
+
+
+struct buf_pool_t;
 
 /** Allocate a block. This function should only be used for allocating
 compressed page frames. The thread calling this function must hold
