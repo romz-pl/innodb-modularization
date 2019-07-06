@@ -20,6 +20,10 @@ add_library( ${LIB_NAME} STATIC
     ut_memcmp.cpp
     ut_memcpy.cpp
     ut_memmove.cpp
+    mem_heap_get_heap_top.cpp
+    mem_heap_is_top.cpp
+    validate_no_mans_land.cpp
+    mem_heap_get_top.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

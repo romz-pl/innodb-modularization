@@ -51,6 +51,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/memory/mem_block_get_free.h>
 #include <innodb/memory/mem_block_get_start.h>
 #include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/memory/mem_heap_get_heap_top.h>
+#include <innodb/memory/mem_heap_is_top.h>
+#include <innodb/memory/validate_no_mans_land.h>
+#include <innodb/memory/mem_heap_get_top.h>
 
 
 
@@ -125,11 +129,6 @@ MEM_HEAP_BTR_SEARCH type heaps) */
 UNIV_INLINE
 void *mem_heap_alloc(mem_heap_t *heap, ulint n);
 
-/** Returns a pointer to the heap top.
-@param[in]	heap		memory heap
-@return pointer to the heap top */
-UNIV_INLINE
-byte *mem_heap_get_heap_top(mem_heap_t *heap);
 
 /** Frees the space in a memory heap exceeding the pointer given.
 The pointer must have been acquired from mem_heap_get_heap_top.
@@ -145,24 +144,6 @@ The first memory block of the heap is not freed.
 UNIV_INLINE
 void mem_heap_empty(mem_heap_t *heap);
 
-/** Returns a pointer to the topmost element in a memory heap.
-The size of the element must be given.
-@param[in]	heap	memory heap
-@param[in]	n	size of the topmost element
-@return pointer to the topmost element */
-UNIV_INLINE
-void *mem_heap_get_top(mem_heap_t *heap, ulint n);
-
-/** Checks if a given chunk of memory is the topmost element stored in the
-heap. If this is the case, then calling mem_heap_free_top() would free
-that element from the heap.
-@param[in]	heap	memory heap
-@param[in]	buf	presumed topmost element
-@param[in]	buf_sz	size of buf in bytes
-@return true if topmost */
-UNIV_INLINE
-bool mem_heap_is_top(mem_heap_t *heap, const void *buf, ulint buf_sz)
-    MY_ATTRIBUTE((warn_unused_result));
 
 /** Allocate a new chunk of memory from a memory heap, possibly discarding the
 topmost element. If the memory chunk specified with (top, top_sz) is the
