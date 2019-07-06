@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_t.h>
 #include <innodb/page/page_no_t.h>
 #include <innodb/tablespace/space_id_t.h>
-
+#include <innodb/tablespace/buf_remove_t.h>
 
 /** Magic value to use instead of checksums when they are disabled */
 #define BUF_NO_CHECKSUM_MAGIC 0xDEADBEEFUL
@@ -75,16 +75,7 @@ enum buf_flush_t {
   BUF_FLUSH_N_TYPES      /*!< index of last element + 1  */
 };
 
-/** Algorithm to remove the pages for a tablespace from the buffer pool.
-See buf_LRU_flush_or_remove_pages(). */
-enum buf_remove_t {
-  BUF_REMOVE_ALL_NO_WRITE,   /*!< Remove all pages from the buffer
-                             pool, don't write or sync to disk */
-  BUF_REMOVE_FLUSH_NO_WRITE, /*!< Remove only, from the flush list,
-                             don't write or sync to disk */
-  BUF_REMOVE_FLUSH_WRITE     /*!< Flush dirty pages to disk only
-                             don't remove from the buffer pool */
-};
+
 
 /** Flags for io_fix types */
 enum buf_io_fix {

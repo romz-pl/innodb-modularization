@@ -1,6 +1,7 @@
 set( LIB_NAME tablespace )
 
 add_library( ${LIB_NAME} STATIC
+    buf_remove_t.cpp
     Char_Ptr_Compare.cpp
     Char_Ptr_Hash.cpp
     Dirs.cpp
@@ -16,6 +17,8 @@ add_library( ${LIB_NAME} STATIC
     Scanned_files.cpp
     Space_id_set.cpp
     space_id_t.cpp
+    Tablespace_dirs.cpp
+    Tablespace_files.cpp
     Tablespaces.cpp
 )
 
