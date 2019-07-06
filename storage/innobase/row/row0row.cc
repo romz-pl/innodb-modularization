@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/string/ut_str_sql_format.h>
+#include <innodb/string/ut_raw_to_hex.h>
+
 #include "row0row.h"
 
 #include <sys/types.h>
@@ -53,7 +56,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rseg.h"
 #include "trx0trx.h"
 #include "trx0undo.h"
-#include "ut0mem.h"
+
 
 /** When an insert or purge to a table is performed, this function builds
  the entry to be inserted into or purged from an index on the table.

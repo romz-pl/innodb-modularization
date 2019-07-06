@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2007-03-27 Sunny Bains
  *******************************************************/
 
+#include <innodb/string/ut_str3cat.h>
+
 #include <sys/types.h>
 
 #include "dict0dd.h"
@@ -39,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "pars0pars.h"
 #include "que0que.h"
 #include "trx0roll.h"
-#include "ut0mem.h"
+
 
 #include <algorithm>
 #include <string>

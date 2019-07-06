@@ -46,6 +46,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/string/ut_str_sql_format.h>
+
 #include <auto_thd.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -150,7 +152,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/psi/mysql_data_lock.h"
 #include "mysys_err.h"
 #include "os0thread-create.h"
-#include "ut0mem.h"
+
 
 #include "p_s.h"
 #include "page0zip.h"
