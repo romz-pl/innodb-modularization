@@ -3,7 +3,7 @@
 
 //
 // This is defined in file ut0ut.cc
-// Moving the code here causes linker error, cince the circular deendency!
+// Moving the code here causes linker error: undefined reference to 'log_bi' and undefined reference to 'log_bs'
 //
 #if 0
 
