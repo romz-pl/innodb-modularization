@@ -80,61 +80,20 @@ void mem_heap_free_block_free(mem_heap_t *heap); /*!< in: heap */
  MEM_HEAP_BTR_SEARCH type heaps) */
 mem_block_t *mem_heap_add_block(mem_heap_t *heap, ulint n);
 
-UNIV_INLINE
-void mem_block_set_len(mem_block_t *block, ulint len) {
-  ut_ad(len > 0);
 
-  block->len = len;
-}
 
-UNIV_INLINE
-ulint mem_block_get_len(mem_block_t *block) { return (block->len); }
 
-UNIV_INLINE
-void mem_block_set_type(mem_block_t *block, ulint type) {
-  ut_ad((type == MEM_HEAP_DYNAMIC) || (type == MEM_HEAP_BUFFER) ||
-        (type == MEM_HEAP_BUFFER + MEM_HEAP_BTR_SEARCH));
 
-  block->type = type;
-}
 
-UNIV_INLINE
-ulint mem_block_get_type(mem_block_t *block) { return (block->type); }
 
-UNIV_INLINE
-void mem_block_set_free(mem_block_t *block, ulint free) {
-  ut_ad(free >= block->start);
-  ut_ad(free <= mem_block_get_len(block));
 
-  block->free = free;
-}
 
-UNIV_INLINE
-ulint mem_block_get_free(mem_block_t *block) { return (block->free); }
 
-UNIV_INLINE
-void mem_block_set_start(mem_block_t *block, ulint start) {
-  ut_ad(start > 0);
 
-  block->start = start;
-}
 
-UNIV_INLINE
-ulint mem_block_get_start(mem_block_t *block) { return (block->start); }
 
-/** Checks that an object is a memory heap block
-@param[in]	block	Memory block to check. */
-UNIV_INLINE
-void mem_block_validate(const mem_block_t *block) {
-  if (block->magic_n != MEM_BLOCK_MAGIC_N) {
-    ib::fatal error;
-    error << "Memory block is invalid (correctness field value"
-             " should be "
-          << MEM_BLOCK_MAGIC_N << ", but it is " << block->magic_n
-          << ") in a block of size " << block->len;
-    ut_d(error << ", allocated at " << block->file_name << ":" << block->line);
-  }
-}
+
+
 
 /** Allocates and zero-fills n bytes of memory from a memory heap.
 @param[in]	heap	memory heap
@@ -520,24 +479,11 @@ void mem_heap_free(mem_heap_t *heap) {
   }
 }
 
-/** Returns the space in bytes occupied by a memory heap. */
-UNIV_INLINE
-ulint mem_heap_get_size(mem_heap_t *heap) /*!< in: heap */
-{
-  ulint size = 0;
 
-  ut_d(mem_block_validate(heap));
 
-  size = heap->total_size;
 
-#ifndef UNIV_LIBRARY
-  if (heap->free_block) {
-    size += UNIV_PAGE_SIZE;
-  }
-#endif /* !UNIV_LIBRARY */
 
-  return (size);
-}
+
 
 /** Duplicates a NUL-terminated string.
  @return own: a copy of the string, must be deallocated with ut_free */

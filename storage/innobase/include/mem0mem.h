@@ -37,78 +37,29 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <limits.h>
 #include <innodb/allocator/mem_strdupl.h>
+#include <innodb/memory/mem_block_t.h>
+#include <innodb/memory/mem_heap_t.h>
+#include <innodb/memory/macros.h>
+#include <innodb/memory/mem_block_validate.h>
+#include <innodb/memory/mem_block_info_t.h>
+#include <innodb/memory/mem_heap_validate.h>
+#include <innodb/memory/mem_block_set_len.h>
+#include <innodb/memory/mem_block_get_len.h>
+#include <innodb/memory/mem_block_set_type.h>
+#include <innodb/memory/mem_block_set_start.h>
+#include <innodb/memory/mem_block_set_free.h>
+#include <innodb/memory/mem_block_get_free.h>
+#include <innodb/memory/mem_block_get_start.h>
+#include <innodb/memory/mem_heap_get_size.h>
+
 
 
 /* -------------------- MEMORY HEAPS ----------------------------- */
 
-/** A block of a memory heap consists of the info structure
-followed by an area of memory */
-typedef struct mem_block_info_t mem_block_t;
 
-/** A memory heap is a nonempty linear list of memory blocks */
-typedef mem_block_t mem_heap_t;
 
-/** Types of allocation for memory heaps: DYNAMIC means allocation from the
-dynamic memory pool of the C compiler, BUFFER means allocation from the
-buffer pool; the latter method is used for very big heaps */
 
-#define MEM_HEAP_DYNAMIC 0 /* the most common type */
-#define MEM_HEAP_BUFFER 1
-#define MEM_HEAP_BTR_SEARCH            \
-  2 /* this flag can optionally be     \
-    ORed to MEM_HEAP_BUFFER, in which  \
-    case heap->free_block is used in   \
-    some cases for memory allocations, \
-    and if it's NULL, the memory       \
-    allocation functions can return    \
-    NULL. */
 
-/** Different type of heaps in terms of which data structure is using them */
-#define MEM_HEAP_FOR_BTR_SEARCH (MEM_HEAP_BTR_SEARCH | MEM_HEAP_BUFFER)
-#define MEM_HEAP_FOR_PAGE_HASH (MEM_HEAP_DYNAMIC)
-#define MEM_HEAP_FOR_RECV_SYS (MEM_HEAP_BUFFER)
-#define MEM_HEAP_FOR_LOCK_HEAP (MEM_HEAP_BUFFER)
-
-/** The following start size is used for the first block in the memory heap if
-the size is not specified, i.e., 0 is given as the parameter in the call of
-create. The standard size is the maximum (payload) size of the blocks used for
-allocations of small buffers. */
-
-#define MEM_BLOCK_START_SIZE 64
-#define MEM_BLOCK_STANDARD_SIZE \
-  (UNIV_PAGE_SIZE >= 16384 ? 8000 : MEM_MAX_ALLOC_IN_BUF)
-
-/** If a memory heap is allowed to grow into the buffer pool, the following
-is the maximum size for a single allocated buffer
-(from UNIV_PAGE_SIZE we subtract MEM_BLOCK_HEADER_SIZE and 2*MEM_NO_MANS_LAND
-since it's something we always need to put. Since in MEM_SPACE_NEEDED we round
-n to the next multiple of UNIV_MEM_ALINGMENT, we need to cut from the rest the
-part that cannot be divided by UNIV_MEM_ALINGMENT): */
-#define MEM_MAX_ALLOC_IN_BUF                                         \
-  ((UNIV_PAGE_SIZE - MEM_BLOCK_HEADER_SIZE - 2 * MEM_NO_MANS_LAND) & \
-   ~(UNIV_MEM_ALIGNMENT - 1))
-
-/* Before and after any allocated object we will put MEM_NO_MANS_LAND bytes of
-some data (different before and after) which is supposed not to be modified by
-anyone. This way it would be much easier to determine whether anyone was
-writing on not his memory, especially that Valgrind can assure there was no
-reads or writes to this memory. */
-#ifdef UNIV_DEBUG
-const int MEM_NO_MANS_LAND = 16;
-#else
-const int MEM_NO_MANS_LAND = 0;
-#endif
-
-/* Byte that we would put before allocated object MEM_NO_MANS_LAND times.*/
-const byte MEM_NO_MANS_LAND_BEFORE_BYTE = 0xCE;
-/* Byte that we would put after allocated object MEM_NO_MANS_LAND times.*/
-const byte MEM_NO_MANS_LAND_AFTER_BYTE = 0xDF;
-
-/** Space needed when allocating for a user a field of length N.
-The space is allocated only in multiples of UNIV_MEM_ALIGNMENT. In debug mode
-contains two areas of no mans lands before and after the buffer requested. */
-#define MEM_SPACE_NEEDED(N) \
-  ut_calc_align(N + 2 * MEM_NO_MANS_LAND, UNIV_MEM_ALIGNMENT)
 
 #ifdef UNIV_DEBUG
 /** Macro for memory heap creation.
@@ -265,9 +216,6 @@ The size of the element must be given. */
 UNIV_INLINE
 void mem_heap_free_top(mem_heap_t *heap, ulint n);
 
-/** Returns the space in bytes occupied by a memory heap. */
-UNIV_INLINE
-ulint mem_heap_get_size(mem_heap_t *heap); /*!< in: heap */
 
 /** Duplicates a NUL-terminated string.
 @param[in]	str	string to be copied
@@ -313,62 +261,14 @@ char *mem_heap_printf(mem_heap_t *heap,   /*!< in: memory heap */
                       const char *format, /*!< in: format string */
                       ...) MY_ATTRIBUTE((format(printf, 2, 3)));
 
-/** Checks that an object is a memory heap (or a block of it)
-@param[in]	heap	Memory heap to check */
-UNIV_INLINE
-void mem_block_validate(const mem_heap_t *heap);
 
-#ifdef UNIV_DEBUG
-/** Validates the contents of a memory heap.
-Asserts that the memory heap is consistent
-@param[in]	heap	Memory heap to validate */
-void mem_heap_validate(const mem_heap_t *heap);
 
-#endif /* UNIV_DEBUG */
+
 
 /*#######################################################################*/
 #include <innodb/lst/lst.h>
 
-/** The info structure stored at the beginning of a heap block */
-struct mem_block_info_t {
-  uint64_t magic_n; /* magic number for debugging */
-#ifdef UNIV_DEBUG
-  char file_name[16]; /* file name where the mem heap was created */
-  ulint line;         /*!< line number where the mem heap was created */
-#endif                /* UNIV_DEBUG */
-  UT_LIST_BASE_NODE_T(mem_block_t)
-  base; /* In the first block in the
-the list this is the base node of the list of blocks;
-in subsequent blocks this is undefined */
-  UT_LIST_NODE_T(mem_block_t)
-  list;             /* This contains pointers to next
-  and prev in the list. The first block allocated
-  to the heap is also the first block in this list,
-  though it also contains the base node of the list. */
-  ulint len;        /*!< physical length of this block in bytes */
-  ulint total_size; /*!< physical length in bytes of all blocks
-                in the heap. This is defined only in the base
-                node and is set to ULINT_UNDEFINED in others. */
-  ulint type;       /*!< type of heap: MEM_HEAP_DYNAMIC, or
-                    MEM_HEAP_BUF possibly ORed to MEM_HEAP_BTR_SEARCH */
-  ulint free;       /*!< offset in bytes of the first free position for
-                    user data in the block */
-  ulint start;      /*!< the value of the struct field 'free' at the
-                    creation of the block */
-  void *free_block;
-  /* if the MEM_HEAP_BTR_SEARCH bit is set in type,
-  and this is the heap root, this can contain an
-  allocated buffer frame, which can be appended as a
-  free block to the heap, if we need more space;
-  otherwise, this is NULL */
-  void *buf_block;
-  /* if this block has been allocated from the buffer
-  pool, this contains the buf_block_t handle;
-  otherwise, this is NULL */
-};
 
-#define MEM_BLOCK_MAGIC_N 0x445566778899AABB
-#define MEM_FREED_BLOCK_MAGIC_N 0xBBAA998877665544
 
 /* Header size for a memory heap block */
 #define MEM_BLOCK_HEADER_SIZE \
