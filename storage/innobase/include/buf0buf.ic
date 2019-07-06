@@ -655,7 +655,7 @@ buf_block_t *buf_page_get_block(buf_page_t *bpage) {
 #ifdef UNIV_DEBUG
 /** Gets a pointer to the memory frame of a block.
  @return pointer to the frame */
-UNIV_INLINE
+inline
 buf_frame_t *buf_block_get_frame(
     const buf_block_t *block) /*!< in: pointer to the control block */
 {
@@ -680,7 +680,19 @@ buf_frame_t *buf_block_get_frame(
 ok:
   return ((buf_frame_t *)block->frame);
 }
+#else /* UNIV_DEBUG */
+inline
+buf_frame_t *buf_block_get_frame(const buf_block_t *block) {
+    ut_ad(block);
+    return (block->frame);
+}
 #endif /* UNIV_DEBUG */
+#else  /* !UNIV_HOTBACKUP */
+inline
+buf_frame_t *buf_block_get_frame(const buf_block_t *block) {
+    ut_ad(block);
+    return (block->frame);
+}
 #endif /* !UNIV_HOTBACKUP */
 
 /***********************************************************************
@@ -752,7 +764,7 @@ void buf_page_free_descriptor(
 }
 
 /** Frees a buffer block which does not contain a file page. */
-UNIV_INLINE
+inline
 void buf_block_free(buf_block_t *block) /*!< in, own: block to be freed */
 {
   ut_a(buf_block_get_state(block) != BUF_BLOCK_FILE_PAGE);

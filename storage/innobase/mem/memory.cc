@@ -46,6 +46,14 @@ external tools. */
 #endif /* UNIV_LIBRARY */
 #include <stdarg.h>
 
+
+struct buf_block_t;
+struct buf_pool_t;
+
+buf_block_t *buf_block_alloc(buf_pool_t *buf_pool);
+void buf_block_free(buf_block_t *block);
+byte *buf_block_get_frame(const buf_block_t *block);
+
 /** Like ut_strlcpy, but if src doesn't fit in dst completely, copies the last
  (size - 1) bytes of src, not the first.
  @return strlen(src) */
@@ -308,7 +316,8 @@ mem_block_t *mem_heap_create_block_func(
       buf_block = buf_block_alloc(NULL);
     }
 
-    block = (mem_block_t *)buf_block->frame;
+    // block = (mem_block_t *)buf_block->frame;
+    block = (mem_block_t *)buf_block_get_frame(buf_block);
   }
 
   if (block == NULL) {

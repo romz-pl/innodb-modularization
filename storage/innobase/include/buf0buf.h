@@ -339,7 +339,7 @@ buf_block_t *buf_block_alloc(
                            or NULL for round-robin selection
                            of the buffer pool */
 /** Frees a buffer block which does not contain a file page. */
-UNIV_INLINE
+inline
 void buf_block_free(buf_block_t *block); /*!< in, own: block to be freed */
 #endif                                   /* !UNIV_HOTBACKUP */
 
@@ -882,19 +882,16 @@ to make this pure.
 UNIV_INLINE
 buf_block_t *buf_page_get_block(buf_page_t *bpage)
     MY_ATTRIBUTE((warn_unused_result));
-#ifdef UNIV_DEBUG
+
+#endif /* !UNIV_HOTBACKUP */
+
 /** Gets a pointer to the memory frame of a block.
  @return pointer to the frame */
-UNIV_INLINE
+inline
 buf_frame_t *buf_block_get_frame(
     const buf_block_t *block) /*!< in: pointer to the control block */
     MY_ATTRIBUTE((warn_unused_result));
-#else /* UNIV_DEBUG */
-#define buf_block_get_frame(block) (block)->frame
-#endif /* UNIV_DEBUG */
-#else  /* !UNIV_HOTBACKUP */
-#define buf_block_get_frame(block) (block)->frame
-#endif /* !UNIV_HOTBACKUP */
+
 /** Gets the compressed page descriptor corresponding to an uncompressed page
  if applicable. */
 #define buf_block_get_page_zip(block) \
