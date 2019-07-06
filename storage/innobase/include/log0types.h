@@ -60,8 +60,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0sharded_rw.h"
 #include "ut0link_buf.h"
 
-/** Type used for all log sequence number storage and arithmetics. */
-typedef uint64_t lsn_t;
+#include <innodb/buffer/lsn_t.h>
+
 
 /** Print format for lsn_t values, used in functions like printf. */
 #define LSN_PF UINT64PF

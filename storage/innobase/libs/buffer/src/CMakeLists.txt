@@ -18,6 +18,14 @@ add_library( ${LIB_NAME} STATIC
     macros.cpp
     page_id_t.cpp
     srv_checksum_algorithm_t.cpp
+    lsn_t.cpp
+    buf_page_t.cpp
+    buf_block_t.cpp
+    HazardPointer.cpp
+    FlushHp.cpp
+    LRUHp.cpp
+    LRUItr.cpp
+    buf_buddy_free_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
