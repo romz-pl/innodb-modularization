@@ -202,7 +202,6 @@ SET(INNOBASE_SOURCES
     ut/ut0dbg.cc
     ut/ut0list.cc
     ut/ut0rbt.cc
-    ut/ut0rnd.cc
     ut/ut0ut.cc
     ut/ut0vec.cc
     ut/ut0wqueue.cc)
