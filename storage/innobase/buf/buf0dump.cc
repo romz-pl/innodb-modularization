@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/formatting/ut_vsnprintf.h>
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
+#include <innodb/print/ut_sprintf_timestamp.h>
 
 #include "buf0buf.h"
 #include "buf0dump.h"
@@ -58,7 +59,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "ut/ut.h"
+
 
 enum status_severity { STATUS_VERBOSE, STATUS_INFO, STATUS_ERR };
 

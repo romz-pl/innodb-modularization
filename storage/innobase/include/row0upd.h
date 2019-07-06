@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/print/PrintBuffer.h>
+
 #include <stack>
 #include "btr0types.h"
 #include "data0data.h"
@@ -43,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0types.h"
 #include "table.h"
 #include "trx0types.h"
-#include "ut/ut.h"
+
 
 #include "btr0pcur.h"
 #ifndef UNIV_HOTBACKUP

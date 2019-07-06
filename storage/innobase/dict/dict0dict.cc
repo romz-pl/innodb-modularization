@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/error_or_warn.h>
 #include <innodb/memory/ut_memcmp.h>
 #include <innodb/string/ut_strlen.h>
+#include <innodb/print/ut_print_timestamp.h>
 
 #include "mysql/components/services/log_builtins.h"
 

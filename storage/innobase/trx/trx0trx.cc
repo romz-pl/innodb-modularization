@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/print/ut_print_buf.h>
+
 #include <sys/types.h>
 #include <time.h>
 #include <new>
@@ -65,7 +67,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "usr0sess.h"
 #include "ut0pool.h"
 #include "ut0vec.h"
-#include "ut/ut.h"
+
 
 #include "my_dbug.h"
 #include "mysql/plugin.h"

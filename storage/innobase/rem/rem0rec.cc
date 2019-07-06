@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/print/ut_print_buf.h>
+#include <innodb/print/ut_print_buf_hex.h>
+
 #include "rem0rec.h"
 
 #include <sys/types.h>
@@ -43,7 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0mtr.h"
 #include "page0page.h"
 #include "trx0sys.h"
-#include "ut/ut.h"
+
 
 #include "my_dbug.h"
 

@@ -41,6 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
 #include <innodb/string/ut_strcmp_functor.h>
+#include <innodb/print/ut_print_timestamp.h>
 
 #include "dict0stats.h"
 #include "dyn0buf.h"
@@ -51,7 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0trx.h"
 #include <innodb/univ/univ.h>
 #include <innodb/random/random.h>
-#include "ut/ut.h"
+
 
 /* Sampling algorithm description @{
 

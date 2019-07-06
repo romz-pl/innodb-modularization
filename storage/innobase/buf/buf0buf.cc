@@ -54,6 +54,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_x_lock_func_nowait_inline.h>
 #include <innodb/sync_rw/rw_lock_x_lock_gen.h>
 #include <innodb/sync_rw/rw_lock_sx_unlock_gen.h>
+#include <innodb/print/ut_print_buf.h>
+#include <innodb/print/ut_sprintf_timestamp.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
@@ -94,7 +96,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "sync0sync.h"
-#include "ut/ut.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 #ifdef HAVE_LIBNUMA

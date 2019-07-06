@@ -24,12 +24,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 *****************************************************************************/
 
-
+#include <innodb/print/PrintBuffer.h>
 #include <innodb/allocator/UT_DELETE_ARRAY.h>
 #include "lob0undo.h"
 #include "dict0dict.h"
 #include "sql/json_binary.h"
-#include "ut/ut.h"
+
 
 namespace lob {
 

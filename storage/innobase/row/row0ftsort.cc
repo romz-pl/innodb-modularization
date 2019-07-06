@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 
 #include <innodb/logger/info.h>
+#include <innodb/print/ut_print_timestamp.h>
 
 #include "btr0bulk.h"
 #include "btr0cur.h"

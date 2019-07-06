@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/print/ut_print_timestamp.h>
+
 #include <mysql/service_thd_engine_lock.h>
 #include <sys/types.h>
 
@@ -61,7 +63,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "usr0sess.h"
 #include "ut0ut.h"
 #include "ut0vec.h"
-#include "ut/ut.h"
+
 
 
 #include "my_dbug.h"

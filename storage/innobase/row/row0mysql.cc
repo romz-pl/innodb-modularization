@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/print/ut_print_timestamp.h>
+
 #include <debug_sync.h>
 #include <gstream.h>
 #include <spatial.h>

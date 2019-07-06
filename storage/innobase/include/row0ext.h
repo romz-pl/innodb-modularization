@@ -35,12 +35,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/print/ut_print_buf.h>
+
 #include "data0types.h"
 #include "dict0types.h"
 #include "mem0mem.h"
 #include <innodb/page/page_size_t.h>
 #include "row0types.h"
-#include "ut/ut.h"
+
 
 #ifdef UNIV_DEBUG
 #define row_ext_create(index, n_ext, ext, flags, tuple, is_sdi, heap) \

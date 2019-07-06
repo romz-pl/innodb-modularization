@@ -24,6 +24,7 @@ add_subdirectory( memory )
 add_subdirectory( memory_check )
 
 add_subdirectory( page )
+add_subdirectory( print )
 
 add_subdirectory( random )
 add_subdirectory( record )

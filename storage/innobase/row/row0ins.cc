@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/print/ut_print_timestamp.h>
+
 #include <sys/types.h>
 
 #include "os0file.h"

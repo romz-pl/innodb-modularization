@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_rw/rw_lock_x_lock_move_ownership.h>
+#include <innodb/print/ut_print_buf.h>
 
 #include "ha_prototypes.h"
 
@@ -79,7 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rec.h"
 #include "trx0undo.h"
 #include "ut0call_destructor.h"
-#include "ut/ut.h"
+
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0rea.h"

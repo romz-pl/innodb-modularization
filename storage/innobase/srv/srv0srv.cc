@@ -45,6 +45,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/8/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/print/ut_print_timestamp.h>
+
 #ifndef UNIV_HOTBACKUP
 #include <mysqld.h>
 #include <sys/types.h>
@@ -105,7 +107,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ut0crc32.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "ut0ut.h"
-#include "ut/ut.h"
+
 
 
 #ifdef UNIV_HOTBACKUP

@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/bit/ut_bit_set_nth.h>
 #include <innodb/sync_rw/rw_lock_get_x_lock_count.h>
 #include <innodb/sync_rw/rw_lock_get_sx_lock_count.h>
+#include <innodb/print/ut_print_buf.h>
 
 #include "fsp0fsp.h"
 #include "buf0buf.h"
@@ -77,7 +78,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "thd_raii.h"
 #include "transaction.h"
 #include "ut0stage.h"
-#include "ut/ut.h"
+
 
 /** DDL records for tablespace (un)encryption. */
 std::vector<DDL_Record *> ts_encrypt_ddl_records;

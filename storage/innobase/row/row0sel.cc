@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/print/ut_print_buf.h>
+
 #include "row0sel.h"
 
 #include <sys/types.h>

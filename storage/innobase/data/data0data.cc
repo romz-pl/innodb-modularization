@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *************************************************************************/
 
 #include <innodb/logger/warn.h>
+#include <innodb/print/ut_print_buf_hex.h>
+#include <innodb/print/ut_print_buf.h>
 
 #include <sys/types.h>
 #include <new>

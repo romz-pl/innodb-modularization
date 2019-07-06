@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
-
+#include <innodb/print/ut_print_buf.h>
 #include "buf0lru.h"
 
 #include "btr0btr.h"
@@ -58,7 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/formatting/formatting.h>
 #include <innodb/random/random.h>
-#include "ut/ut.h"
+
 
 /** The number of blocks from the LRU_old pointer onward, including
 the block pointed to, must be buf_pool->LRU_old_ratio/BUF_LRU_OLD_RATIO_DIV

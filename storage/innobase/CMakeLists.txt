@@ -51,8 +51,7 @@ SET(INNOBASE_ZIP_DECOMPRESS_SOURCES
     os/os0thread.cc
     page/zipdecompress.cc
     rem/rec.cc
-    ut/crc32.cc
-    ut/ut.cc)
+    ut/crc32.cc)
 
 SET(INNOBASE_SOURCES
     api/api0api.cc
