@@ -1,3 +1,6 @@
+#pragma once
+
+
 /*****************************************************************************
 
 Copyright (c) 2007, 2018, Oracle and/or its affiliates. All Rights Reserved.
@@ -29,8 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2007-03-20 Sunny Bains
  *******************************************************/
 
-#ifndef INNOBASE_UT0RBT_H
-#define INNOBASE_UT0RBT_H
+
 
 #include <innodb/univ/univ.h>
 
@@ -195,4 +197,4 @@ ulint rbt_merge_uniq(ib_rbt_t *dst,        /*!< in: dst rb tree */
 ibool rbt_validate(const ib_rbt_t *tree); /*!< in: tree to validate */
 #endif                                    /* UNIV_DEBUG || IB_RBT_TESTING */
 
-#endif /* INNOBASE_UT0RBT_H */
+

@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "pars0pars.h"
 #include "que0types.h"
 
-#include "ut0rbt.h"
+#include <innodb/rbt/rbt.h>
 
 /** Types used within FTS. */
 struct fts_que_t;

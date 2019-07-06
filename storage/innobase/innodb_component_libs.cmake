@@ -52,6 +52,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # R
     #random
+    rbt
     record
 
     # S

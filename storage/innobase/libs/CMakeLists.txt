@@ -27,6 +27,7 @@ add_subdirectory( page )
 add_subdirectory( print )
 
 add_subdirectory( random )
+add_subdirectory( rbt )
 add_subdirectory( record )
 
 add_subdirectory( string )

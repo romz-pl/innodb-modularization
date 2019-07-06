@@ -29,7 +29,7 @@
  Created 2007-03-20 Sunny Bains
  ***********************************************************************/
 
-#include "ut0rbt.h"
+#include <innodb/rbt/rbt.h>
 
 #include <innodb/allocator/ut_free.h>
 #include <innodb/allocator/ut_zalloc_nokey.h>

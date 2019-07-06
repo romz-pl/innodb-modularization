@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0types.h"
 #include "srv0srv.h"
-#include "ut0rbt.h"
+#include <innodb/rbt/rbt.h>
 
 #include <ostream>
 
