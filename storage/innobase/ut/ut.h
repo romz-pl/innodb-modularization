@@ -58,12 +58,6 @@ void ut_print_buf_hex(std::ostream &o, /*!< in/out: output stream */
 void ut_print_buf(std::ostream &o, /*!< in/out: output stream */
                   const void *buf, /*!< in: memory buffer */
                   ulint len);      /*!< in: length of the buffer */
-/** Like ut_strlcpy, but if src doesn't fit in dst completely, copies the last
- (size - 1) bytes of src, not the first.
- @return strlen(src) */
-ulint ut_strlcpy_rev(char *dst,       /*!< in: destination buffer */
-                     const char *src, /*!< in: source buffer */
-                     ulint size);     /*!< in: size of destination buffer */
 
 struct PrintBuffer {
   PrintBuffer(const void *buf, ulint len) : m_buf(buf), m_len(len) {}

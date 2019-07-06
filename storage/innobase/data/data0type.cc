@@ -31,11 +31,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "data0type.h"
-#include "rem0rec.h"
+// #include "rem0rec.h"
 
 #include <sys/types.h>
 
-#include "ha_prototypes.h"
+// #include "ha_prototypes.h"
+
+bool rec_field_not_null_not_add_col_def(ulint len);
+
+ulint innobase_get_at_most_n_mbchars(ulint charset_id, ulint prefix_len, ulint data_len, const char *str);
 
 /* At the database startup we store the default-charset collation number of
 this MySQL installation to this global variable. If we have < 4.1.2 format

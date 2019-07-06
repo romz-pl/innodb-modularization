@@ -46,6 +46,14 @@ external tools. */
 #endif /* UNIV_LIBRARY */
 #include <stdarg.h>
 
+/** Like ut_strlcpy, but if src doesn't fit in dst completely, copies the last
+ (size - 1) bytes of src, not the first.
+ @return strlen(src) */
+ulint ut_strlcpy_rev(char *dst,       /*!< in: destination buffer */
+                     const char *src, /*!< in: source buffer */
+                     ulint size);     /*!< in: size of destination buffer */
+
+
 /** Duplicates a NUL-terminated string, allocated from a memory heap.
 @param[in]	heap	memory heap where string is allocated
 @param[in]	str)	string to be copied
@@ -476,3 +484,22 @@ void mem_heap_free_block_free(mem_heap_t *heap) /*!< in: heap */
 }
 #endif /* !UNIV_LIBRARY */
 #endif /* !UNIV_HOTBACKUP */
+
+/** Like ut_strlcpy, but if src doesn't fit in dst completely, copies the last
+ (size - 1) bytes of src, not the first.
+ @return strlen(src) */
+ulint ut_strlcpy_rev(char *dst,       /*!< in: destination buffer */
+                     const char *src, /*!< in: source buffer */
+                     ulint size)      /*!< in: size of destination buffer */
+{
+  ulint src_size = strlen(src);
+
+  if (size != 0) {
+    ulint n = std::min(src_size, size - 1);
+
+    memcpy(dst, src + src_size - n, n + 1);
+  }
+
+  return (src_size);
+}
+

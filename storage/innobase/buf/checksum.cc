@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <zlib.h>
 
+#include "ha_prototypes.h"
 #include "buf0buf.h"
 #include "buf0types.h"
 #include "fil0fil.h"

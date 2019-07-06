@@ -40,6 +40,10 @@ external tools. */
 
 #include <innodb/univ/univ.h>
 
+struct dict_table_t;
+struct dict_index_t;
+struct dict_col_t;
+
 /** Adds a column to index.
 @param[in,out]	index		index
 @param[in]	table		table

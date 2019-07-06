@@ -41,9 +41,9 @@ external tools. */
 #include <innodb/univ/univ.h>
 #include <innodb/thread/os_thread_handle.h>
 #include <innodb/formatting/formatting.h>
-
-#include "ut/ut.h"
 #include <innodb/memory_check/memory_check.h>
+
+#include <ostream>
 
 /** Prints the contents of a memory buffer in hex and ascii. */
 void ut_print_buf(FILE *file,      /*!< in: file where to print */
@@ -166,20 +166,3 @@ void ut_sprintf_timestamp(char *buf) /*!< in: buffer where to sprintf */
 #endif
 }
 
-/** Like ut_strlcpy, but if src doesn't fit in dst completely, copies the last
- (size - 1) bytes of src, not the first.
- @return strlen(src) */
-ulint ut_strlcpy_rev(char *dst,       /*!< in: destination buffer */
-                     const char *src, /*!< in: source buffer */
-                     ulint size)      /*!< in: size of destination buffer */
-{
-  ulint src_size = strlen(src);
-
-  if (size != 0) {
-    ulint n = std::min(src_size, size - 1);
-
-    memcpy(dst, src + src_size - n, n + 1);
-  }
-
-  return (src_size);
-}

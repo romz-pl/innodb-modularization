@@ -36,20 +36,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <new>
 
 #include "data0data.h"
-#include "ha_prototypes.h"
 
 #ifndef UNIV_HOTBACKUP
-#include "btr0cur.h"
-#include "dict0dict.h"
-#include "lob0lob.h"
-#include "page0page.h"
-#include "page0zip.h"
-#include "rem0cmp.h"
-#include "rem0rec.h"
-#include "row0mysql.h"
 #include "row0upd.h"
 
 #endif /* !UNIV_HOTBACKUP */
+
+void row_mysql_pad_col(ulint mbminlen, byte *pad, ulint len);
 
 #ifdef UNIV_DEBUG
 /** Dummy variable to catch access to uninitialized fields.  In the

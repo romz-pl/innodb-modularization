@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include "sql/mdl.h"
+
 #include "dict0types.h"
 #include "pars0types.h"
 #include "que0types.h"

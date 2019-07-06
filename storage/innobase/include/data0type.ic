@@ -30,12 +30,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/16/1996 Heikki Tuuri
  *******************************************************/
 
-#include "ha_prototypes.h"
+// #include "ha_prototypes.h"
 #include <innodb/machine/data.h>
 #include <innodb/assert/assert.h>
 #include <innodb/error/ut_error.h>
 
 #include <string.h>
+#include <cstdio>
+
+void innobase_get_cset_width(ulint cset, ulint *mbminlen, ulint *mbmaxlen);
 
 /** Gets the MySQL charset-collation code for MySQL string types.
  @return MySQL charset-collation code */

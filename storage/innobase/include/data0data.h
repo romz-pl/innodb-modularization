@@ -37,11 +37,30 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "data0type.h"
 #include "data0types.h"
-#include "dict0types.h"
 #include "mem0mem.h"
 #include "trx0types.h"
 
 #include <ostream>
+
+struct dict_index_t;
+struct dict_v_col_t;
+
+/** whether a col is used in spatial index or regular index
+Note: the spatial status is part of persistent undo log,
+so we should not modify the values in MySQL 5.7 */
+enum spatial_status_t {
+  /* Unkown status (undo format in 5.7.9) */
+  SPATIAL_UNKNOWN = 0,
+
+  /** Not used in gis index. */
+  SPATIAL_NONE = 1,
+
+  /** Used in both spatial index and regular index. */
+  SPATIAL_MIXED = 2,
+
+  /** Only used in spatial index. */
+  SPATIAL_ONLY = 3
+};
 
 /** Storage for overflow data in a big record, that is, a clustered
 index record which needs external storage of data fields */
