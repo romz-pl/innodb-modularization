@@ -58,6 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_sprintf_timestamp.h>
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
+#include <innodb/buffer/buf_block_set_io_fix.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

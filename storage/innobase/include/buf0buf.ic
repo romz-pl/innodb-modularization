@@ -174,93 +174,18 @@ bool buf_page_is_private(const buf_page_t *bpage, bool hold_block_mutex,
 #include <innodb/buffer/buf_page_get_mutex.h>
 #include <innodb/buffer/buf_page_get_flush_type.h>
 #include <innodb/buffer/buf_page_set_flush_type.h>
+#include <innodb/buffer/buf_block_set_file_page.h>
+#include <innodb/buffer/buf_page_get_io_fix.h>
+#include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
+#include <innodb/buffer/buf_block_get_io_fix.h>
+#include <innodb/buffer/buf_block_get_io_fix_unlocked.h>
+#include <innodb/buffer/buf_page_set_io_fix.h>
 
 #ifndef UNIV_HOTBACKUP
 
 
 
 
-/** Map a block to a file page.
-@param[in,out]	block	pointer to control block
-@param[in]	page_id	page id */
-UNIV_INLINE
-void buf_block_set_file_page(buf_block_t *block, const page_id_t &page_id) {
-  buf_block_set_state(block, BUF_BLOCK_FILE_PAGE);
-  block->page.id.copy_from(page_id);
-}
-
-/** Gets the io_fix state of a block.
- @return io_fix state */
-UNIV_INLINE
-enum buf_io_fix buf_page_get_io_fix(
-    const buf_page_t *bpage) /*!< in: pointer to the control block */
-{
-  ut_ad(mutex_own(buf_page_get_mutex(bpage)));
-  return buf_page_get_io_fix_unlocked(bpage);
-}
-
-/** Gets the io_fix state of a buffer page. Does not assert that the
-buf_page_get_mutex() mutex is held, to be used in the cases where it is safe
-not to hold it.
-@param[in]	bpage	pointer to the buffer page
-@return page io_fix state */
-UNIV_INLINE
-enum buf_io_fix buf_page_get_io_fix_unlocked(const buf_page_t *bpage) {
-  ut_ad(bpage != NULL);
-
-  enum buf_io_fix io_fix = bpage->io_fix;
-
-#ifdef UNIV_DEBUG
-  switch (io_fix) {
-    case BUF_IO_NONE:
-    case BUF_IO_READ:
-    case BUF_IO_WRITE:
-    case BUF_IO_PIN:
-      return (io_fix);
-  }
-  ut_error;
-#else  /* UNIV_DEBUG */
-  return (io_fix);
-#endif /* UNIV_DEBUG */
-}
-
-/** Gets the io_fix state of a block.
- @return io_fix state */
-UNIV_INLINE
-enum buf_io_fix buf_block_get_io_fix(
-    const buf_block_t *block) /*!< in: pointer to the control block */
-{
-  return (buf_page_get_io_fix(&block->page));
-}
-
-/** Gets the io_fix state of a buffer block. Does not assert that the
-buf_page_get_mutex() mutex is held, to be used in the cases where it is safe
-not to hold it.
-@param[in]	block	pointer to the buffer block
-@return page io_fix state */
-UNIV_INLINE
-enum buf_io_fix buf_block_get_io_fix_unlocked(const buf_block_t *block) {
-  return (buf_page_get_io_fix_unlocked(&block->page));
-}
-
-/** Sets the io_fix state of a block. */
-UNIV_INLINE
-void buf_page_set_io_fix(buf_page_t *bpage,      /*!< in/out: control block */
-                         enum buf_io_fix io_fix) /*!< in: io_fix state */
-{
-  ut_ad(mutex_own(buf_page_get_mutex(bpage)));
-
-  bpage->io_fix = io_fix;
-  ut_ad(buf_page_get_io_fix(bpage) == io_fix);
-}
-
-/** Sets the io_fix state of a block. */
-UNIV_INLINE
-void buf_block_set_io_fix(buf_block_t *block,     /*!< in/out: control block */
-                          enum buf_io_fix io_fix) /*!< in: io_fix state */
-{
-  buf_page_set_io_fix(&block->page, io_fix);
-}
 
 /** Makes a block sticky. A sticky block implies that even after we release
 the buf_pool->LRU_list_mutex and the block->mutex:

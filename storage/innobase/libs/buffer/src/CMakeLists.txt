@@ -57,6 +57,13 @@ add_library( ${LIB_NAME} STATIC
     buf_page_get_mutex.cpp
     buf_page_get_flush_type.cpp
     buf_page_set_flush_type.cpp
+    buf_block_set_file_page.cpp
+    buf_page_get_io_fix.cpp
+    buf_page_get_io_fix_unlocked.cpp
+    buf_block_get_io_fix.cpp
+    buf_block_get_io_fix_unlocked.cpp
+    buf_page_set_io_fix.cpp
+    buf_block_set_io_fix.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

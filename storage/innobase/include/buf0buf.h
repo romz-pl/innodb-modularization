@@ -592,12 +592,7 @@ void buf_block_dbg_add_level(buf_block_t *block, latch_level_t level);
 
 #ifndef UNIV_HOTBACKUP
 
-/** Gets the io_fix state of a block.
- @return io_fix state */
-UNIV_INLINE
-enum buf_io_fix buf_page_get_io_fix(
-    const buf_page_t *bpage) /*!< in: pointer to the control block */
-    MY_ATTRIBUTE((warn_unused_result));
+
 /** Gets the io_fix state of a block.
  @return io_fix state */
 UNIV_INLINE
@@ -605,17 +600,7 @@ enum buf_io_fix buf_block_get_io_fix(
     const buf_block_t *block) /*!< in: pointer to the control block */
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Sets the io_fix state of a block.
-@param[in,out]	bpage	control block
-@param[in]	io_fix	io_fix state */
-UNIV_INLINE
-void buf_page_set_io_fix(buf_page_t *bpage, enum buf_io_fix io_fix);
 
-/** Sets the io_fix state of a block.
-@param[in,out]	block	control block
-@param[in]	io_fix	io_fix state */
-UNIV_INLINE
-void buf_block_set_io_fix(buf_block_t *block, enum buf_io_fix io_fix);
 
 /** Makes a block sticky. A sticky block implies that even after we release
 the buf_pool->LRU_list_mutex and the block->mutex:
@@ -894,23 +879,6 @@ if the buffer pool is not currently being resized. */
 UNIV_INLINE
 ulint buf_get_withdraw_depth(buf_pool_t *buf_pool);
 
-/** Gets the io_fix state of a buffer block. Does not assert that the
-buf_page_get_mutex() mutex is held, to be used in the cases where it is safe
-not to hold it.
-@param[in]	block	pointer to the buffer block
-@return page io_fix state */
-UNIV_INLINE
-buf_io_fix buf_block_get_io_fix_unlocked(const buf_block_t *block)
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Gets the io_fix state of a buffer page. Does not assert that the
-buf_page_get_mutex() mutex is held, to be used in the cases where it is safe
-not to hold it.
-@param[in]	bpage	pointer to the buffer page
-@return page io_fix state */
-UNIV_INLINE
-enum buf_io_fix buf_page_get_io_fix_unlocked(const buf_page_t *bpage)
-    MY_ATTRIBUTE((warn_unused_result));
 
 
 /** Number of bits used for buffer page states. */
