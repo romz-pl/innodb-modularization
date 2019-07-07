@@ -69,6 +69,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get_n_pages.h>
 #include <innodb/buffer/buf_page_get_freed_page_clock.h>
 #include <innodb/buffer/buf_block_get_freed_page_clock.h>
+#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/buffer/buf_page_set_state.h>
+#include <innodb/buffer/buf_block_set_state.h>
 
 #ifndef UNIV_HOTBACKUP
 
@@ -129,41 +133,6 @@ ibool buf_page_peek_if_too_old(const buf_page_t *bpage) {
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Gets the state of a block.
- @return state */
-UNIV_INLINE
-enum buf_page_state buf_page_get_state(
-    const buf_page_t *bpage) /*!< in: pointer to the control block */
-{
-  enum buf_page_state state = bpage->state;
-
-#ifdef UNIV_DEBUG
-  switch (state) {
-    case BUF_BLOCK_POOL_WATCH:
-    case BUF_BLOCK_ZIP_PAGE:
-    case BUF_BLOCK_ZIP_DIRTY:
-    case BUF_BLOCK_NOT_USED:
-    case BUF_BLOCK_READY_FOR_USE:
-    case BUF_BLOCK_FILE_PAGE:
-    case BUF_BLOCK_MEMORY:
-    case BUF_BLOCK_REMOVE_HASH:
-      break;
-    default:
-      ut_error;
-  }
-#endif /* UNIV_DEBUG */
-
-  return (state);
-}
-/** Gets the state of a block.
- @return state */
-UNIV_INLINE
-enum buf_page_state buf_block_get_state(
-    const buf_block_t *block) /*!< in: pointer to the control block */
-{
-  return (buf_page_get_state(&block->page));
-}
-
 #ifndef UNIV_HOTBACKUP
 #ifdef UNIV_DEBUG
 /** Assert that a given buffer pool page is private to the caller: no pointers
@@ -197,159 +166,19 @@ bool buf_page_is_private(const buf_page_t *bpage, bool hold_block_mutex,
 #endif /* UNIV_DEBUG */
 #endif /* !UNIV_HOTBACKUP */
 
-/** Sets the state of a block.
-@param[in,out]	bpage	pointer to control block
-@param[in]	state	state */
-UNIV_INLINE
-void buf_page_set_state(buf_page_t *bpage, enum buf_page_state state) {
-#ifndef UNIV_HOTBACKUP
-#ifdef UNIV_DEBUG
-  enum buf_page_state old_state = buf_page_get_state(bpage);
-  buf_pool_t *buf_pool = buf_pool_from_bpage(bpage);
 
-  switch (old_state) {
-    case BUF_BLOCK_POOL_WATCH:
-      ut_error;
-      break;
-    case BUF_BLOCK_ZIP_PAGE:
-      ut_a(state == BUF_BLOCK_ZIP_DIRTY);
-      break;
-    case BUF_BLOCK_ZIP_DIRTY:
-      ut_a(state == BUF_BLOCK_ZIP_PAGE);
-      ut_a(mutex_own(buf_page_get_mutex(bpage)));
-      ut_a(buf_flush_list_mutex_own(buf_pool));
-      ut_a(bpage->in_flush_list);
-      break;
-    case BUF_BLOCK_NOT_USED:
-      ut_a(state == BUF_BLOCK_READY_FOR_USE);
-      ut_a(buf_page_is_private(bpage, false, false));
-      break;
-    case BUF_BLOCK_READY_FOR_USE:
-      ut_a(state == BUF_BLOCK_MEMORY || state == BUF_BLOCK_FILE_PAGE ||
-           state == BUF_BLOCK_NOT_USED);
-      ut_a(buf_page_is_private(bpage, state == BUF_BLOCK_FILE_PAGE,
-                               state == BUF_BLOCK_NOT_USED));
-      break;
-    case BUF_BLOCK_MEMORY:
-      ut_a(state == BUF_BLOCK_NOT_USED);
-      ut_a(buf_page_is_private(bpage, false, true));
-      break;
-    case BUF_BLOCK_FILE_PAGE:
-      ut_a(state == BUF_BLOCK_NOT_USED || state == BUF_BLOCK_REMOVE_HASH);
-      if (state == BUF_BLOCK_REMOVE_HASH) {
-        ut_a(!bpage->in_page_hash);
-        ut_a(!bpage->in_zip_hash);
-        ut_a(!bpage->in_LRU_list);
-        ut_a(!bpage->in_free_list);
-        ut_a(mutex_own(buf_page_get_mutex(bpage)));
-        ut_a(mutex_own(&buf_pool->LRU_list_mutex));
-        ut_a(buf_page_hash_lock_held_x(buf_pool, bpage));
-      }
-      break;
-    case BUF_BLOCK_REMOVE_HASH:
-      ut_a(state == BUF_BLOCK_MEMORY);
-      break;
-  }
-#endif /* UNIV_DEBUG */
-#endif /* !UNIV_HOTBACKUP */
-  bpage->state = state;
-  ut_ad(buf_page_get_state(bpage) == state);
-}
 
-/** Sets the state of a block. */
-UNIV_INLINE
-void buf_block_set_state(
-    buf_block_t *block,        /*!< in/out: pointer to control block */
-    enum buf_page_state state) /*!< in: state */
-{
-  buf_page_set_state(&block->page, state);
-}
 
-/** Determines if a block is mapped to a tablespace.
- @return true if mapped */
-UNIV_INLINE
-ibool buf_page_in_file(
-    const buf_page_t *bpage) /*!< in: pointer to control block */
-{
-  switch (buf_page_get_state(bpage)) {
-    case BUF_BLOCK_POOL_WATCH:
-      ut_error;
-      break;
-    case BUF_BLOCK_ZIP_PAGE:
-    case BUF_BLOCK_ZIP_DIRTY:
-    case BUF_BLOCK_FILE_PAGE:
-      return (TRUE);
-    case BUF_BLOCK_NOT_USED:
-    case BUF_BLOCK_READY_FOR_USE:
-    case BUF_BLOCK_MEMORY:
-    case BUF_BLOCK_REMOVE_HASH:
-      break;
-  }
-
-  return (FALSE);
-}
+#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buffer/buf_page_belongs_to_unzip_LRU.h>
+#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buffer/buf_page_get_flush_type.h>
+#include <innodb/buffer/buf_page_set_flush_type.h>
 
 #ifndef UNIV_HOTBACKUP
-/** Determines if a block should be on unzip_LRU list.
- @return true if block belongs to unzip_LRU */
-UNIV_INLINE
-ibool buf_page_belongs_to_unzip_LRU(
-    const buf_page_t *bpage) /*!< in: pointer to control block */
-{
-  ut_ad(buf_page_in_file(bpage));
 
-  return (bpage->zip.data && buf_page_get_state(bpage) == BUF_BLOCK_FILE_PAGE);
-}
 
-/** Gets the mutex of a block.
- @return pointer to mutex protecting bpage */
-UNIV_INLINE
-BPageMutex *buf_page_get_mutex(
-    const buf_page_t *bpage) /*!< in: pointer to control block */
-{
-  buf_pool_t *buf_pool = buf_pool_from_bpage(bpage);
 
-  switch (buf_page_get_state(bpage)) {
-    case BUF_BLOCK_POOL_WATCH:
-      ut_error;
-    case BUF_BLOCK_ZIP_PAGE:
-    case BUF_BLOCK_ZIP_DIRTY:
-      return (&buf_pool->zip_mutex);
-    default:
-      return (&((buf_block_t *)bpage)->mutex);
-  }
-}
-
-/** Get the flush type of a page.
- @return flush type */
-UNIV_INLINE
-buf_flush_t buf_page_get_flush_type(
-    const buf_page_t *bpage) /*!< in: buffer page */
-{
-  buf_flush_t flush_type = (buf_flush_t)bpage->flush_type;
-
-#ifdef UNIV_DEBUG
-  switch (flush_type) {
-    case BUF_FLUSH_LRU:
-    case BUF_FLUSH_LIST:
-    case BUF_FLUSH_SINGLE_PAGE:
-      return (flush_type);
-    case BUF_FLUSH_N_TYPES:
-      ut_error;
-  }
-  ut_error;
-#else  /* UNIV_DEBUG */
-  return (flush_type);
-#endif /* UNIV_DEBUG */
-}
-/** Set the flush type of a page. */
-UNIV_INLINE
-void buf_page_set_flush_type(buf_page_t *bpage,      /*!< in: buffer page */
-                             buf_flush_t flush_type) /*!< in: flush type */
-{
-  bpage->flush_type = flush_type;
-  ut_ad(buf_page_get_flush_type(bpage) == flush_type);
-}
 
 /** Map a block to a file page.
 @param[in,out]	block	pointer to control block

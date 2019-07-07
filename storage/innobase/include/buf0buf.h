@@ -587,69 +587,10 @@ void buf_block_dbg_add_level(buf_block_t *block, latch_level_t level);
 #define buf_block_dbg_add_level(block, level) /* nothing */
 #endif                                        /* UNIV_DEBUG */
 
-/** Gets the state of a block.
- @return state */
-UNIV_INLINE
-enum buf_page_state buf_page_get_state(
-    const buf_page_t *bpage); /*!< in: pointer to the control block */
-/** Gets the state of a block.
- @return state */
-UNIV_INLINE
-enum buf_page_state buf_block_get_state(
-    const buf_block_t *block) /*!< in: pointer to the control block */
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Sets the state of a block.
-@param[in,out]	bpage	pointer to control block
-@param[in]	state	state */
-UNIV_INLINE
-void buf_page_set_state(buf_page_t *bpage, enum buf_page_state state);
 
-/** Sets the state of a block.
-@param[in,out]	block	pointer to control block
-@param[in]	state	state */
-UNIV_INLINE
-void buf_block_set_state(buf_block_t *block, enum buf_page_state state);
 
-/** Determines if a block is mapped to a tablespace.
- @return true if mapped */
-UNIV_INLINE
-ibool buf_page_in_file(
-    const buf_page_t *bpage) /*!< in: pointer to control block */
-    MY_ATTRIBUTE((warn_unused_result));
 #ifndef UNIV_HOTBACKUP
-/** Determines if a block should be on unzip_LRU list.
- @return true if block belongs to unzip_LRU */
-UNIV_INLINE
-ibool buf_page_belongs_to_unzip_LRU(
-    const buf_page_t *bpage) /*!< in: pointer to control block */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Gets the mutex of a block.
- @return pointer to mutex protecting bpage */
-UNIV_INLINE
-BPageMutex *buf_page_get_mutex(
-    const buf_page_t *bpage) /*!< in: pointer to control block */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Get the flush type of a page.
- @return flush type */
-UNIV_INLINE
-buf_flush_t buf_page_get_flush_type(
-    const buf_page_t *bpage) /*!< in: buffer page */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Set the flush type of a page.
-@param[in]	bpage		buffer page
-@param[in]	flush_type	flush type */
-UNIV_INLINE
-void buf_page_set_flush_type(buf_page_t *bpage, buf_flush_t flush_type);
-
-/** Map a block to a file page.
-@param[in,out]	block	pointer to control block
-@param[in]	page_id	page id */
-UNIV_INLINE
-void buf_block_set_file_page(buf_block_t *block, const page_id_t &page_id);
 
 /** Gets the io_fix state of a block.
  @return io_fix state */

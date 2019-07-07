@@ -48,6 +48,15 @@ add_library( ${LIB_NAME} STATIC
     buf_pool_get_n_pages.cpp
     buf_page_get_freed_page_clock.cpp
     buf_block_get_freed_page_clock.cpp
+    buf_page_get_state.cpp
+    buf_block_get_state.cpp
+    buf_page_set_state.cpp
+    buf_block_set_state.cpp
+    buf_page_in_file.cpp
+    buf_page_belongs_to_unzip_LRU.cpp
+    buf_page_get_mutex.cpp
+    buf_page_get_flush_type.cpp
+    buf_page_set_flush_type.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
