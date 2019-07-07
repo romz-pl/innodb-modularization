@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/page_t.h>
 #include <innodb/page/FSEG_PAGE_DATA.h>
 
 #include "fsp0space.h"

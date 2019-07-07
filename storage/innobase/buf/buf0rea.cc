@@ -35,6 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/math/ut_ulint_cmp.h>
+#include <innodb/buffer/buf_pool_get.h>
+#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buffer/buf_page_is_accessed.h>
 
 #include "buf0buf.h"
 #include "buf0dblwr.h"

@@ -43,6 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_rw/rw_lock_x_lock_move_ownership.h>
 #include <innodb/print/ut_print_buf.h>
+#include <innodb/buffer/buf_page_get_newest_modification.h>
+#include <innodb/buffer/buf_pool_get_n_pages.h>
 
 #include "ha_prototypes.h"
 

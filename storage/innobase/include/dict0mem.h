@@ -40,6 +40,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/record/rec_t.h>
 
+#include "buf0flu.h"
+
 #include "sql/dd/object_id.h"
 #include "sql/dd/types/column.h"
 #ifdef UNIV_HOTBACKUP

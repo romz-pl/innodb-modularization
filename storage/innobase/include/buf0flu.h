@@ -36,9 +36,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/atomic/atomic.h>
-
+#include <innodb/buffer/buf_pool_t.h>
 #include "log0log.h"
 
+class FlushObserver;
 
 #ifndef UNIV_HOTBACKUP
 /** Flag indicating if the page_cleaner is in active state. */

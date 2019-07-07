@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/sync_rw/rw_lock_stats.h>
+#include <innodb/buffer/buf_pool_stat_t.h>
+#include <innodb/buffer/buf_pool_get_n_pages.h>
 
 #include "arch0arch.h"
 #include "buf0buf.h"

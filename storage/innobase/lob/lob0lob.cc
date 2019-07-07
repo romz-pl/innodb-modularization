@@ -24,6 +24,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+#include <innodb/buffer/buf_page_release_zip.h>
+#include <innodb/buffer/buf_pool_t.h>
+
 #include <sys/types.h>
 
 #include "btr0pcur.h"

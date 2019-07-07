@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/28/1995 Heikki Tuuri
  ***********************************************************************/
 
+#include <innodb/buffer/buf_ptr_get_fsp_addr.h>
+
 #include "fut0lst.h"
 
 #include "buf0buf.h"

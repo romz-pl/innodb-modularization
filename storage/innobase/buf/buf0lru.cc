@@ -36,6 +36,26 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
 #include <innodb/buffer/buf_page_set_sticky.h>
+#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buffer/buf_get_withdraw_depth.h>
+#include <innodb/buffer/buf_page_alloc_descriptor.h>
+#include <innodb/buffer/buf_page_free_descriptor.h>
+#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buffer/buf_page_unset_sticky.h>
+#include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
+#include <innodb/buffer/buf_page_get_io_fix.h>
+#include <innodb/buffer/buf_page_set_io_fix.h>
+#include <innodb/buffer/buf_page_set_old.h>
+#include <innodb/buffer/buf_page_is_old.h>
+#include <innodb/buffer/buf_page_can_relocate.h>
+#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buffer/buf_page_belongs_to_unzip_LRU.h>
+#include <innodb/buffer/buf_block_set_state.h>
+#include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/buffer/buf_page_set_state.h>
+#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buffer/buf_page_is_accessed.h>
 
 #include "buf0lru.h"
 

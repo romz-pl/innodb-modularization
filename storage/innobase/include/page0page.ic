@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/machine/data.h>
+#include <innodb/buffer/buf_block_get_frame.h>
+
+
 #ifdef UNIV_DEBUG
 #include "log0recv.h"
 #endif /* !UNIV_DEBUG */

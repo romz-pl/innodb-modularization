@@ -33,6 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define LOCK_MODULE_IMPLEMENTATION
 
 #include <innodb/print/ut_print_timestamp.h>
+#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buffer/buf_page_get_state.h>
 
 #include <mysql/service_thd_engine_lock.h>
 #include <sys/types.h>

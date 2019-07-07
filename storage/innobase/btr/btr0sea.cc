@@ -39,6 +39,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/math/ut_pair_cmp.h>
 #include <innodb/allocator/ut_malloc.h>
+#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buffer/buf_pool_t.h>
 
 #include "btr0sea.h"
 

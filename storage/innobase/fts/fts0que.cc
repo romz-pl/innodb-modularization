@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed 2011/7/10 Sunny and Jimmy Yang
  *******************************************************/
 
+#include <innodb/time/ut_time_ms.h>
+
 #include <math.h>
 #include <sys/types.h>
 #include <iomanip>

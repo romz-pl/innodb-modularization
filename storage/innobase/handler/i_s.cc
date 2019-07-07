@@ -31,6 +31,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/page/page_zip_stat.h>
+#include <innodb/buffer/buf_buddy_stat_t.h>
+#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buffer/buf_page_get_io_fix.h>
+#include <innodb/buffer/buf_get_nth_chunk_block.h>
 
 #include "storage/innobase/handler/i_s.h"
 

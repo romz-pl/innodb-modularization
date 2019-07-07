@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/buffer/buf_pool_is_obsolete.h>
+
 #include <new>
 
 #include "fsp0fsp.h"

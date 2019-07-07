@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/time/ut_time_us.h>
+#include <innodb/buffer/buf_frame_copy.h>
+
 #include "page0zip.h"
 
 #include <innodb/page/page_size_t.h>

@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
+#include <innodb/buffer/buf_frame_copy.h>
+#include <innodb/buffer/buf_pool_from_bpage.h>
 
 #include "btr0btr.h"
 

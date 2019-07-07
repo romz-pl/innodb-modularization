@@ -35,6 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
+#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
+#include <innodb/buffer/buf_pool_t.h>
 
 #include "arch0page.h"
 #include "arch0recv.h"

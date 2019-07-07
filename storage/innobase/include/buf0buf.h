@@ -184,7 +184,6 @@ buf_block_t *buf_block_alloc(
                            or NULL for round-robin selection
                            of the buffer pool */
 /** Frees a buffer block which does not contain a file page. */
-inline
 void buf_block_free(buf_block_t *block); /*!< in, own: block to be freed */
 #endif                                   /* !UNIV_HOTBACKUP */
 
@@ -321,7 +320,6 @@ NOTE that it is possible that the page is not yet read from disk,
 though.
 @param[in]	page_id	page id
 @return true if found in the page hash table */
-UNIV_INLINE
 ibool buf_page_peek(const page_id_t &page_id);
 
 #ifdef UNIV_DEBUG
@@ -360,7 +358,6 @@ implying that it has been accessed recently.
 The page must be either buffer-fixed, either its page hash must be locked.
 @param[in]	bpage	block
 @return true if block is close to MRU end of LRU */
-UNIV_INLINE
 ibool buf_page_peek_if_young(const buf_page_t *bpage);
 
 /** Recommends a move of a block to the start of the LRU list if there is
@@ -368,7 +365,6 @@ danger of dropping from the buffer pool.
 NOTE: does not reserve the LRU list mutex.
 @param[in]	bpage	block to make younger
 @return true if should be made younger */
-UNIV_INLINE
 ibool buf_page_peek_if_too_old(const buf_page_t *bpage);
 
 
@@ -379,13 +375,11 @@ The caller must
 (2) own X or SX latch on the block->lock, or
 (3) operate on a thread-private temporary table
 @param[in,out]	block	buffer block */
-UNIV_INLINE
 void buf_block_modify_clock_inc(buf_block_t *block);
 
 /** Read the modify clock.
 @param[in]	block	buffer block
 @return modify_clock value */
-UNIV_INLINE
 uint64_t buf_block_get_modify_clock(const buf_block_t *block);
 
 
@@ -513,7 +507,6 @@ should be called in the debug version after a successful latching of a page if
 we know the latching order level of the acquired latch.
 @param[in]	block	buffer page where we have acquired latch
 @param[in]	level	latching order level */
-UNIV_INLINE
 void buf_block_dbg_add_level(buf_block_t *block, latch_level_t level);
 #else                                         /* UNIV_DEBUG */
 #define buf_block_dbg_add_level(block, level) /* nothing */
@@ -577,7 +570,6 @@ bool buf_page_io_complete(buf_page_t *bpage, bool evict = false);
 @param[in]	buf_pool	buffer pool instance
 @param[in]	page_id		page id
 @return block, NULL if not found */
-UNIV_INLINE
 buf_page_t *buf_page_hash_get_low(buf_pool_t *buf_pool,
                                   const page_id_t &page_id);
 
@@ -597,7 +589,6 @@ lock == NULL
 @param[in]	watch		if true, return watch sentinel also.
 @return pointer to the bpage or NULL; if NULL, lock is also NULL or
 a watch sentinel. */
-UNIV_INLINE
 buf_page_t *buf_page_hash_get_locked(buf_pool_t *buf_pool,
                                      const page_id_t &page_id, rw_lock_t **lock,
                                      ulint lock_mode, bool watch = false);
@@ -616,7 +607,6 @@ this function.
 @param[in]	lock_mode	RW_LOCK_X or RW_LOCK_S. Ignored if
 lock == NULL
 @return pointer to the block or NULL; if NULL, lock is also NULL. */
-UNIV_INLINE
 buf_block_t *buf_block_hash_get_locked(buf_pool_t *buf_pool,
                                        const page_id_t &page_id,
                                        rw_lock_t **lock, ulint lock_mode);
@@ -701,6 +691,7 @@ void buf_flush_update_zip_checksum(buf_frame_t *page, ulint size, lsn_t lsn,
 
 #include <innodb/buffer/buf_page_t.h>
 #include <innodb/buffer/buf_block_t.h>
+#include <innodb/buffer/buf_block_get_state.h>
 
 /** Check if a buf_block_t object is in a valid state
 @param block buffer block
@@ -849,6 +840,13 @@ struct CheckUnzipLRUAndLRUList {
 #endif /* !UNIV_HOTBACKUP */
 #endif /* UNIV_DEBUG || defined UNIV_BUF_DEBUG */
 
-#include "buf0buf.ic"
+
+#ifndef UNIV_HOTBACKUP
+// #include "buf0lru.h"
+#include "buf0rea.h"
+#include "fsp0types.h"
+#include "sync0debug.h"
+#endif /* !UNIV_HOTBACKUP */
+
 
 #endif /* !buf0buf_h */

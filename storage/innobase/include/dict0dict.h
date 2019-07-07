@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/record/rec_format_t.h>
 
+#include "buf0flu.h"
+
 #include <set>
 
 #include <deque>
