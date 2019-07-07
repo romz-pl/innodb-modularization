@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
+#include <innodb/buffer/buf_page_set_sticky.h>
 
 #include "buf0lru.h"
 

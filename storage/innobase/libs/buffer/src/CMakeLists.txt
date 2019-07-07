@@ -6,64 +6,78 @@ add_library( ${LIB_NAME} STATIC
     BufListMutex.cpp
     BufPoolZipMutex.cpp
     Cache_hint.cpp
+    FlushHp.cpp
     FlushListMutex.cpp
+    HazardPointer.cpp
+    LRUHp.cpp
+    LRUItr.cpp
     Page_fetch.cpp
+    buf_block_get_frame.cpp
+    buf_block_get_freed_page_clock.cpp
+    buf_block_get_io_fix.cpp
+    buf_block_get_io_fix_unlocked.cpp
+    buf_block_get_lock_hash_val.cpp
+    buf_block_get_state.cpp
+    buf_block_set_file_page.cpp
+    buf_block_set_io_fix.cpp
+    buf_block_set_state.cpp
+    buf_block_t.cpp
+    buf_buddy_free_t.cpp
+    buf_buddy_stat_t.cpp
+    buf_chunk_map_reg.cpp
+    buf_chunk_t.cpp
+    buf_flush_list_mutex_enter.cpp
+    buf_flush_list_mutex_exit.cpp
+    buf_flush_list_mutex_own.cpp
     buf_flush_t.cpp
+    buf_frame_align.cpp
     buf_frame_t.cpp
     buf_io_fix.cpp
+    buf_page_alloc_descriptor.cpp
+    buf_page_belongs_to_unzip_LRU.cpp
+    buf_page_can_relocate.cpp
+    buf_page_free_descriptor.cpp
+    buf_page_get_block.cpp
+    buf_page_get_flush_type.cpp
+    buf_page_get_freed_page_clock.cpp
+    buf_page_get_io_fix.cpp
+    buf_page_get_io_fix_unlocked.cpp
+    buf_page_get_mutex.cpp
+    buf_page_get_state.cpp
+    buf_page_in_file.cpp
+    buf_page_is_accessed.cpp
+    buf_page_is_old.cpp
+    buf_page_mutex_enter.cpp
+    buf_page_mutex_exit.cpp
+    buf_page_mutex_own.cpp
     buf_page_print_flags.cpp
+    buf_page_set_accessed.cpp
+    buf_page_set_flush_type.cpp
+    buf_page_set_io_fix.cpp
+    buf_page_set_old.cpp
+    buf_page_set_state.cpp
+    buf_page_set_sticky.cpp
     buf_page_state.cpp
+    buf_page_t.cpp
+    buf_page_unset_sticky.cpp
+    buf_pool_chunk_map_t.cpp
+    buf_pool_from_block.cpp
+    buf_pool_from_bpage.cpp
+    buf_pool_get_curr_size.cpp
+    buf_pool_get_n_pages.cpp
+    buf_pool_index.cpp
     buf_pool_info_t.cpp
+    buf_pool_ptr.cpp
+    buf_pool_stat_t.cpp
+    buf_pool_t.cpp
+    buf_pool_withdrawing.cpp
     buf_pools_list_size_t.cpp
+    buf_ptr_get_fsp_addr.cpp
+    buf_withdraw_clock.cpp
+    lsn_t.cpp
     macros.cpp
     page_id_t.cpp
     srv_checksum_algorithm_t.cpp
-    lsn_t.cpp
-    buf_page_t.cpp
-    buf_block_t.cpp
-    HazardPointer.cpp
-    FlushHp.cpp
-    LRUHp.cpp
-    LRUItr.cpp
-    buf_buddy_free_t.cpp
-    buf_pool_stat_t.cpp
-    buf_buddy_stat_t.cpp
-    buf_pool_t.cpp
-    buf_flush_list_mutex_own.cpp
-    buf_flush_list_mutex_enter.cpp
-    buf_flush_list_mutex_exit.cpp
-    buf_page_mutex_own.cpp
-    buf_page_mutex_enter.cpp
-    buf_page_mutex_exit.cpp
-    buf_pool_ptr.cpp
-    buf_pool_withdrawing.cpp
-    buf_withdraw_clock.cpp
-    buf_pool_chunk_map_t.cpp
-    buf_chunk_map_reg.cpp
-    buf_chunk_t.cpp
-    buf_pool_get_curr_size.cpp
-    buf_pool_index.cpp
-    buf_pool_from_bpage.cpp
-    buf_pool_from_block.cpp
-    buf_pool_get_n_pages.cpp
-    buf_page_get_freed_page_clock.cpp
-    buf_block_get_freed_page_clock.cpp
-    buf_page_get_state.cpp
-    buf_block_get_state.cpp
-    buf_page_set_state.cpp
-    buf_block_set_state.cpp
-    buf_page_in_file.cpp
-    buf_page_belongs_to_unzip_LRU.cpp
-    buf_page_get_mutex.cpp
-    buf_page_get_flush_type.cpp
-    buf_page_set_flush_type.cpp
-    buf_block_set_file_page.cpp
-    buf_page_get_io_fix.cpp
-    buf_page_get_io_fix_unlocked.cpp
-    buf_block_get_io_fix.cpp
-    buf_block_get_io_fix_unlocked.cpp
-    buf_page_set_io_fix.cpp
-    buf_block_set_io_fix.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -77,6 +91,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    memory_check
     tablespace
     PRIVATE
 )

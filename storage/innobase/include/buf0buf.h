@@ -175,14 +175,7 @@ lsn_t buf_pool_get_oldest_modification_lwm(void);
 
 #ifndef UNIV_HOTBACKUP
 
-/** Allocates a buf_page_t descriptor. This function must succeed. In case
- of failure we assert in this function. */
-UNIV_INLINE
-buf_page_t *buf_page_alloc_descriptor(void) MY_ATTRIBUTE((malloc));
-/** Free a buf_page_t descriptor. */
-UNIV_INLINE
-void buf_page_free_descriptor(
-    buf_page_t *bpage); /*!< in: bpage descriptor to free. */
+
 
 /** Allocates a buffer block.
  @return own: the allocated block, in state BUF_BLOCK_MEMORY */
@@ -475,20 +468,7 @@ void buf_read_page_handle_error(buf_page_t *bpage);
 
 #ifndef UNIV_HOTBACKUP
 
-/** Gets the space id, page offset, and byte offset within page of a pointer
-pointing to a buffer frame containing a file page.
-@param[in]	ptr	pointer to a buffer frame
-@param[out]	space	space id
-@param[out]	addr	page offset and byte offset */
-UNIV_INLINE
-void buf_ptr_get_fsp_addr(const void *ptr, space_id_t *space, fil_addr_t *addr);
 
-/** Gets the hash value of a block. This can be used in searches in the
- lock hash table.
- @return lock hash value */
-UNIV_INLINE
-ulint buf_block_get_lock_hash_val(const buf_block_t *block) /*!< in: block */
-    MY_ATTRIBUTE((warn_unused_result));
 #ifdef UNIV_DEBUG
 /** Finds a block in the buffer pool that points to a
 given compressed page. Used only to confirm that buffer pool does not contain a
@@ -588,83 +568,6 @@ void buf_block_dbg_add_level(buf_block_t *block, latch_level_t level);
 #endif                                        /* UNIV_DEBUG */
 
 
-
-
-#ifndef UNIV_HOTBACKUP
-
-
-/** Gets the io_fix state of a block.
- @return io_fix state */
-UNIV_INLINE
-enum buf_io_fix buf_block_get_io_fix(
-    const buf_block_t *block) /*!< in: pointer to the control block */
-    MY_ATTRIBUTE((warn_unused_result));
-
-
-
-/** Makes a block sticky. A sticky block implies that even after we release
-the buf_pool->LRU_list_mutex and the block->mutex:
-* it cannot be removed from the flush_list
-* the block descriptor cannot be relocated
-* it cannot be removed from the LRU list
-Note that:
-* the block can still change its position in the LRU list
-* the next and previous pointers can change.
-@param[in,out]	bpage	control block */
-UNIV_INLINE
-void buf_page_set_sticky(buf_page_t *bpage);
-
-/** Removes stickiness of a block. */
-UNIV_INLINE
-void buf_page_unset_sticky(buf_page_t *bpage); /*!< in/out: control block */
-/** Determine if a buffer block can be relocated in memory.  The block
- can be dirty, but it must not be I/O-fixed or bufferfixed. */
-UNIV_INLINE
-ibool buf_page_can_relocate(
-    const buf_page_t *bpage) /*!< control block being relocated */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Determine if a block has been flagged old.
-@param[in]	bpage	control block
-@return true if old */
-UNIV_INLINE
-ibool buf_page_is_old(const buf_page_t *bpage)
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Flag a block old.
-@param[in,out]	bpage	control block
-@param[in]	old	old */
-UNIV_INLINE
-void buf_page_set_old(buf_page_t *bpage, ibool old);
-
-/** Determine the time of first access of a block in the buffer pool.
- @return ut_time_ms() at the time of first access, 0 if not accessed */
-UNIV_INLINE
-unsigned buf_page_is_accessed(const buf_page_t *bpage) /*!< in: control block */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Flag a block accessed. */
-UNIV_INLINE
-void buf_page_set_accessed(buf_page_t *bpage); /*!< in/out: control block */
-
-/** Gets the buf_block_t handle of a buffered file block if an uncompressed
-page frame exists, or NULL. page frame exists, or NULL. The caller must hold
-either the appropriate hash lock in any mode, either the LRU list mutex. Note:
-even though bpage is not declared a const we don't update its value. It is safe
-to make this pure.
-@param[in]	bpage	control block, or NULL
-@return control block, or NULL */
-UNIV_INLINE
-buf_block_t *buf_page_get_block(buf_page_t *bpage)
-    MY_ATTRIBUTE((warn_unused_result));
-
-#endif /* !UNIV_HOTBACKUP */
-
-/** Gets a pointer to the memory frame of a block.
- @return pointer to the frame */
-inline
-buf_frame_t *buf_block_get_frame(
-    const buf_block_t *block) /*!< in: pointer to the control block */
-    MY_ATTRIBUTE((warn_unused_result));
 
 /** Gets the compressed page descriptor corresponding to an uncompressed page
  if applicable. */
