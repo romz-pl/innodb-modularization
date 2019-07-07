@@ -70,7 +70,7 @@ struct buf_chunk_t;
 
 struct buf_pool_t;
 
-
+struct buf_block_t;
 
 
 
@@ -341,16 +341,8 @@ reallocated.
 buf_page_t *buf_page_reset_file_page_was_freed(const page_id_t &page_id);
 
 #endif /* UNIV_DEBUG */
-/** Reads the freed_page_clock of a buffer block.
- @return freed_page_clock */
-UNIV_INLINE
-ulint buf_page_get_freed_page_clock(const buf_page_t *bpage) /*!< in: block */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Reads the freed_page_clock of a buffer block.
- @return freed_page_clock */
-UNIV_INLINE
-ulint buf_block_get_freed_page_clock(const buf_block_t *block) /*!< in: block */
-    MY_ATTRIBUTE((warn_unused_result));
+
+
 
 /** Tells, for heuristics, if a block is still close enough to the MRU end of
 the LRU list meaning that it is not in danger of getting evicted and also
@@ -386,7 +378,8 @@ uint64_t buf_block_get_modify_clock(const buf_block_t *block);
 
 #endif /* !UNIV_HOTBACKUP */
 
-#include <innodb/buffer/buf_block_buf_fix_inc_func.h>
+
+
 
 
 #ifndef UNIV_HOTBACKUP
@@ -394,20 +387,6 @@ uint64_t buf_block_get_modify_clock(const buf_block_t *block);
 removes it from page_hash and removes it from LRU.
 @param[in,out]	bpage	pointer to the block */
 void buf_read_page_handle_error(buf_page_t *bpage);
-
-#ifdef UNIV_DEBUG
-/** Increments the bufferfix count.
-@param[in,out]	b	block to bufferfix
-@param[in]	f	file name where requested
-@param[in]	l	line number where requested */
-#define buf_block_buf_fix_inc(b, f, l) buf_block_buf_fix_inc_func(f, l, b)
-#else /* UNIV_DEBUG */
-/** Increments the bufferfix count.
-@param[in,out]	b	block to bufferfix
-@param[in]	f	file name where requested
-@param[in]	l	line number where requested */
-#define buf_block_buf_fix_inc(b, f, l) buf_block_buf_fix_inc_func(b)
-#endif /* UNIV_DEBUG */
 #else  /* !UNIV_HOTBACKUP */
 #define buf_block_modify_clock_inc(block) ((void)0)
 #endif /* !UNIV_HOTBACKUP */
@@ -658,19 +637,10 @@ has returned NULL and before invoking buf_pool_watch_unset(space,offset).
 ibool buf_pool_watch_occurred(const page_id_t &page_id)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Get total buffer pool statistics. */
-void buf_get_total_list_len(
-    ulint *LRU_len,         /*!< out: length of all LRU lists */
-    ulint *free_len,        /*!< out: length of all free lists */
-    ulint *flush_list_len); /*!< out: length of all flush lists */
-/** Get total list size in bytes from all buffer pools. */
-void buf_get_total_list_size_in_bytes(
-    buf_pools_list_size_t *buf_pools_list_size); /*!< out: list sizes
-                                                 in all buffer pools */
-/** Get total buffer pool statistics. */
-void buf_get_total_stat(
-    buf_pool_stat_t *tot_stat); /*!< out: buffer pool stats */
 
+#include <innodb/buffer/buf_get_total_stat.h>
+#include <innodb/buffer/buf_get_total_list_size_in_bytes.h>
+#include <innodb/buffer/buf_get_total_list_len.h>
 
 
 /** Calculate the checksum of a page from compressed table and update the
@@ -689,16 +659,7 @@ void buf_flush_update_zip_checksum(buf_frame_t *page, ulint size, lsn_t lsn,
 #define BUF_PAGE_STATE_BITS 3
 
 
-#include <innodb/buffer/buf_page_t.h>
-#include <innodb/buffer/buf_block_t.h>
-#include <innodb/buffer/buf_block_get_state.h>
 
-/** Check if a buf_block_t object is in a valid state
-@param block buffer block
-@return true if valid */
-#define buf_block_state_valid(block)                   \
-  (buf_block_get_state(block) >= BUF_BLOCK_NOT_USED && \
-   (buf_block_get_state(block) <= BUF_BLOCK_REMOVE_HASH))
 
 /** Compute the hash fold value for blocks in buf_pool->zip_hash. */
 /* @{ */
@@ -760,93 +721,6 @@ Use these instead of accessing buffer pool mutexes directly. */
 
 /* @} */
 
-/**********************************************************************
-Let us list the consistency conditions for different control block states.
-
-NOT_USED:	is in free list, not in LRU list, not in flush list, nor
-                page hash table
-READY_FOR_USE:	is not in free list, LRU list, or flush list, nor page
-                hash table
-MEMORY:		is not in free list, LRU list, or flush list, nor page
-                hash table
-FILE_PAGE:	space and offset are defined, is in page hash table
-                if io_fix == BUF_IO_WRITE,
-                        pool: no_flush[flush_type] is in reset state,
-                        pool: n_flush[flush_type] > 0
-
-                (1) if buf_fix_count == 0, then
-                        is in LRU list, not in free list
-                        is in flush list,
-                                if and only if oldest_modification > 0
-                        is x-locked,
-                                if and only if io_fix == BUF_IO_READ
-                        is s-locked,
-                                if and only if io_fix == BUF_IO_WRITE
-
-                (2) if buf_fix_count > 0, then
-                        is not in LRU list, not in free list
-                        is in flush list,
-                                if and only if oldest_modification > 0
-                        if io_fix == BUF_IO_READ,
-                                is x-locked
-                        if io_fix == BUF_IO_WRITE,
-                                is s-locked
-
-State transitions:
-
-NOT_USED => READY_FOR_USE
-READY_FOR_USE => MEMORY
-READY_FOR_USE => FILE_PAGE
-MEMORY => NOT_USED
-FILE_PAGE => NOT_USED	NOTE: This transition is allowed if and only if
-                                (1) buf_fix_count == 0,
-                                (2) oldest_modification == 0, and
-                                (3) io_fix == 0.
-*/
-
-#if defined UNIV_DEBUG || defined UNIV_BUF_DEBUG
-#ifndef UNIV_HOTBACKUP
-/** Functor to validate the LRU list. */
-struct CheckInLRUList {
-  void operator()(const buf_page_t *elem) const { ut_a(elem->in_LRU_list); }
-
-  static void validate(const buf_pool_t *buf_pool) {
-    CheckInLRUList check;
-    ut_list_validate(buf_pool->LRU, check);
-  }
-};
-
-/** Functor to validate the LRU list. */
-struct CheckInFreeList {
-  void operator()(const buf_page_t *elem) const { ut_a(elem->in_free_list); }
-
-  static void validate(const buf_pool_t *buf_pool) {
-    CheckInFreeList check;
-    ut_list_validate(buf_pool->free, check);
-  }
-};
-
-struct CheckUnzipLRUAndLRUList {
-  void operator()(const buf_block_t *elem) const {
-    ut_a(elem->page.in_LRU_list);
-    ut_a(elem->in_unzip_LRU_list);
-  }
-
-  static void validate(const buf_pool_t *buf_pool) {
-    CheckUnzipLRUAndLRUList check;
-    ut_list_validate(buf_pool->unzip_LRU, check);
-  }
-};
-#endif /* !UNIV_HOTBACKUP */
-#endif /* UNIV_DEBUG || defined UNIV_BUF_DEBUG */
-
-
-#ifndef UNIV_HOTBACKUP
-// #include "buf0lru.h"
-#include "buf0rea.h"
-#include "fsp0types.h"
-#include "sync0debug.h"
-#endif /* !UNIV_HOTBACKUP */
 
 
 #endif /* !buf0buf_h */

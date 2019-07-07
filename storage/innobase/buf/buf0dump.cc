@@ -48,6 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/buffer/buf_pool_t.h>
 
+#include "buf0rea.h"
 #include "buf0buf.h"
 #include "buf0dump.h"
 #include "dict0dict.h"

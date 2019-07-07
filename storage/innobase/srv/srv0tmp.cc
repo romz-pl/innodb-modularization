@@ -26,6 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 
+#include "buf0lru.h"
 #include "srv0tmp.h"
 #include <algorithm>
 #include "dict0dict.h"

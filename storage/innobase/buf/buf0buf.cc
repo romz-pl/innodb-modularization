@@ -85,8 +85,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_chunk_t.h>
 #include <innodb/buffer/buf_page_is_accessed.h>
 #include <innodb/time/ut_time_ms.h>
+#include <innodb/buffer/CheckInLRUList.h>
+#include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/buffer/buf_block_buf_fix_inc.h>
 
-
+#include "buf0rea.h"
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "fil0fil.h"
@@ -469,77 +472,6 @@ lsn_t buf_pool_get_oldest_modification_lwm(void) {
   }
 }
 
-/** Get total buffer pool statistics. */
-void buf_get_total_list_len(
-    ulint *LRU_len,        /*!< out: length of all LRU lists */
-    ulint *free_len,       /*!< out: length of all free lists */
-    ulint *flush_list_len) /*!< out: length of all flush lists */
-{
-  ulint i;
-
-  *LRU_len = 0;
-  *free_len = 0;
-  *flush_list_len = 0;
-
-  for (i = 0; i < srv_buf_pool_instances; i++) {
-    buf_pool_t *buf_pool;
-
-    buf_pool = buf_pool_from_array(i);
-
-    *LRU_len += UT_LIST_GET_LEN(buf_pool->LRU);
-    *free_len += UT_LIST_GET_LEN(buf_pool->free);
-    *flush_list_len += UT_LIST_GET_LEN(buf_pool->flush_list);
-  }
-}
-
-/** Get total list size in bytes from all buffer pools. */
-void buf_get_total_list_size_in_bytes(
-    buf_pools_list_size_t *buf_pools_list_size) /*!< out: list sizes
-                                                in all buffer pools */
-{
-  ut_ad(buf_pools_list_size);
-  memset(buf_pools_list_size, 0, sizeof(*buf_pools_list_size));
-
-  for (ulint i = 0; i < srv_buf_pool_instances; i++) {
-    buf_pool_t *buf_pool;
-
-    buf_pool = buf_pool_from_array(i);
-    /* We don't need mutex protection since this is
-    for statistics purpose */
-    buf_pools_list_size->LRU_bytes += buf_pool->stat.LRU_bytes;
-    buf_pools_list_size->unzip_LRU_bytes +=
-        UT_LIST_GET_LEN(buf_pool->unzip_LRU) * UNIV_PAGE_SIZE;
-    buf_pools_list_size->flush_list_bytes += buf_pool->stat.flush_list_bytes;
-  }
-}
-
-/** Get total buffer pool statistics. */
-void buf_get_total_stat(
-    buf_pool_stat_t *tot_stat) /*!< out: buffer pool stats */
-{
-  ulint i;
-
-  memset(tot_stat, 0, sizeof(*tot_stat));
-
-  for (i = 0; i < srv_buf_pool_instances; i++) {
-    buf_pool_stat_t *buf_stat;
-    buf_pool_t *buf_pool;
-
-    buf_pool = buf_pool_from_array(i);
-
-    buf_stat = &buf_pool->stat;
-    tot_stat->n_page_gets += buf_stat->n_page_gets;
-    tot_stat->n_pages_read += buf_stat->n_pages_read;
-    tot_stat->n_pages_written += buf_stat->n_pages_written;
-    tot_stat->n_pages_created += buf_stat->n_pages_created;
-    tot_stat->n_ra_pages_read_rnd += buf_stat->n_ra_pages_read_rnd;
-    tot_stat->n_ra_pages_read += buf_stat->n_ra_pages_read;
-    tot_stat->n_ra_pages_evicted += buf_stat->n_ra_pages_evicted;
-    tot_stat->n_pages_made_young += buf_stat->n_pages_made_young;
-
-    tot_stat->n_pages_not_made_young += buf_stat->n_pages_not_made_young;
-  }
-}
 
 /** Allocates a buffer block.
  @return own: the allocated block, in state BUF_BLOCK_MEMORY */

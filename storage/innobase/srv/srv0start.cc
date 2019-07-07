@@ -81,7 +81,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/psi/mysql_stage.h"
 #include "mysqld.h"
 #include "os0thread-create.h"
-
+#include "sync0debug.h"
 #include "page0cur.h"
 #include "page0page.h"
 #include "rem0rec.h"

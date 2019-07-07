@@ -56,6 +56,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_set_state.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/buffer/buf_page_is_accessed.h>
+#include <innodb/buffer/CheckInLRUList.h>
+#include <innodb/buffer/CheckInFreeList.h>
+#include <innodb/buffer/CheckUnzipLRUAndLRUList.h>
+#include <innodb/buffer/buf_block_get_state.h>
 
 #include "buf0lru.h"
 

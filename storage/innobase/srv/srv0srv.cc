@@ -71,6 +71,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_array/sync_arr_wake_threads_if_sema_free.h>
 #include <innodb/sync_array/sync_array_print_long_waits.h>
 
+#include "sync0debug.h"
 #include "os0file.h"
 #include "btr0sea.h"
 #include "buf0flu.h"

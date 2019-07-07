@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/buffer/buf_block_t.h>
+
 #include "buf0buf.h"
 #include "data0type.h"
 #include "data0types.h"

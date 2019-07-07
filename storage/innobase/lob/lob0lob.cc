@@ -26,9 +26,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/buffer/buf_page_release_zip.h>
 #include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buffer/buf_block_get_state.h>
 
 #include <sys/types.h>
 
+#include "buf0lru.h"
 #include "btr0pcur.h"
 #include "fil0fil.h"
 #include "lob0first.h"
