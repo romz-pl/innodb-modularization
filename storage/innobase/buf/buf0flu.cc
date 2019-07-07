@@ -46,6 +46,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_sx_lock_nowait.h>
 #include <innodb/sync_rw/rw_lock_sx_lock_gen.h>
 #include <innodb/print/ut_print_buf.h>
+#include <innodb/buffer/buf_flush_list_mutex_enter.h>
+#include <innodb/buffer/buf_flush_list_mutex_exit.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0buf.h"

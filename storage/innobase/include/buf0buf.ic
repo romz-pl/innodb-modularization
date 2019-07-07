@@ -44,6 +44,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
 #include <innodb/page/page_t.h>
+#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buffer/buf_pool_ptr.h>
+#include <innodb/buffer/buf_pool_withdrawing.h>
+#include <innodb/buffer/buf_withdraw_clock.h>
+#include <innodb/buffer/buf_chunk_t.h>
+
 
 #include "mtr0mtr.h"
 
@@ -55,91 +61,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0debug.h"
 #endif /* !UNIV_HOTBACKUP */
 
-/** A chunk of buffers. The buffer pool is allocated in chunks. */
-struct buf_chunk_t {
-  ulint size;           /*!< size of frames[] and blocks[] */
-  unsigned char *mem;   /*!< pointer to the memory area which
-                        was allocated for the frames */
-  ut_new_pfx_t mem_pfx; /*!< Auxiliary structure, describing
-                        "mem". It is filled by the allocator's
-                        alloc method and later passed to the
-                        deallocate method. */
-  buf_block_t *blocks;  /*!< array of buffer control blocks */
 
-  /** Get the size of 'mem' in bytes. */
-  size_t mem_size() const { return (mem_pfx.m_size); }
-
-  /** Advices the OS that this chunk should not be dumped to a core file.
-  Emits a warning to the log if could not succeed.
-  @return true iff succeeded, false if no OS support or failed */
-  bool madvise_dump();
-
-  /** Advices the OS that this chunk should be dumped to a core file.
-  Emits a warning to the log if could not succeed.
-  @return true iff succeeded, false if no OS support or failed */
-  bool madvise_dont_dump();
-};
-
-/** Gets the current size of buffer buf_pool in bytes.
- @return size in bytes */
-UNIV_INLINE
-ulint buf_pool_get_curr_size(void) { return (srv_buf_pool_curr_size); }
+#include <innodb/buffer/buf_pool_get_curr_size.h>
+#include <innodb/buffer/buf_pool_index.h>
+#include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/buffer/buf_pool_from_block.h>
+#include <innodb/buffer/buf_pool_get_n_pages.h>
+#include <innodb/buffer/buf_page_get_freed_page_clock.h>
+#include <innodb/buffer/buf_block_get_freed_page_clock.h>
 
 #ifndef UNIV_HOTBACKUP
-/** Calculates the index of a buffer pool to the buf_pool[] array.
- @return the position of the buffer pool in buf_pool[] */
-UNIV_INLINE
-ulint buf_pool_index(const buf_pool_t *buf_pool) /*!< in: buffer pool */
-{
-  ulint i = buf_pool - buf_pool_ptr;
-  ut_ad(i < MAX_BUFFER_POOLS);
-  ut_ad(i < srv_buf_pool_instances);
-  return (i);
-}
-
-/** Returns the buffer pool instance given a page instance
- @return buf_pool */
-UNIV_INLINE
-buf_pool_t *buf_pool_from_bpage(
-    const buf_page_t *bpage) /*!< in: buffer pool page */
-{
-  ulint i;
-  i = bpage->buf_pool_index;
-  ut_ad(i < srv_buf_pool_instances);
-  return (&buf_pool_ptr[i]);
-}
-
-/** Returns the buffer pool instance given a block instance
- @return buf_pool */
-UNIV_INLINE
-buf_pool_t *buf_pool_from_block(const buf_block_t *block) /*!< in: block */
-{
-  return (buf_pool_from_bpage(&block->page));
-}
-
-/** Gets the current size of buffer buf_pool in pages.
- @return size in pages*/
-UNIV_INLINE
-ulint buf_pool_get_n_pages(void) {
-  return (buf_pool_get_curr_size() / UNIV_PAGE_SIZE);
-}
-
-/** Reads the freed_page_clock of a buffer block.
- @return freed_page_clock */
-UNIV_INLINE
-ulint buf_page_get_freed_page_clock(const buf_page_t *bpage) /*!< in: block */
-{
-  /* This is sometimes read without holding any buffer pool mutex. */
-  return (bpage->freed_page_clock);
-}
-
-/** Reads the freed_page_clock of a buffer block.
- @return freed_page_clock */
-UNIV_INLINE
-ulint buf_block_get_freed_page_clock(const buf_block_t *block) /*!< in: block */
-{
-  return (buf_page_get_freed_page_clock(&block->page));
-}
 
 /** Tells, for heuristics, if a block is still close enough to the MRU end of
 the LRU list meaning that it is not in danger of getting evicted and also

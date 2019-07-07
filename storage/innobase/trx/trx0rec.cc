@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/buffer/buf_withdraw_clock.h>
+
 #include "trx0rec.h"
 
 #include <sys/types.h>

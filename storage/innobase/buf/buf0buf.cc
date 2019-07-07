@@ -56,6 +56,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_sx_unlock_gen.h>
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/print/ut_sprintf_timestamp.h>
+#include <innodb/buffer/buf_flush_list_mutex_enter.h>
+#include <innodb/buffer/buf_flush_list_mutex_exit.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"
@@ -308,30 +310,20 @@ static const ulint BUF_READ_AHEAD_PAGES = 64;
 read-ahead buffer.  (Divide buf_pool size by this amount) */
 static const ulint BUF_READ_AHEAD_PORTION = 32;
 
-/** The buffer pools of the database */
-buf_pool_t *buf_pool_ptr;
+#include <innodb/buffer/buf_pool_ptr.h>
+#include <innodb/buffer/buf_pool_withdrawing.h>
+#include <innodb/buffer/buf_withdraw_clock.h>
+#include <innodb/buffer/buf_chunk_map_reg.h>
 
 /** true when resizing buffer pool is in the critical path. */
 volatile bool buf_pool_resizing;
 
-/** true when withdrawing buffer pool pages might cause page relocation */
-volatile bool buf_pool_withdrawing;
 
-/** the clock is incremented every time a pointer to a page may become obsolete;
-if the withdrwa clock has not changed, the pointer is still valid in buffer
-pool. if changed, the pointer might not be in buffer pool any more. */
-volatile ulint buf_withdraw_clock;
 
-/** Map of buffer pool chunks by its first frame address
-This is newly made by initialization of buffer pool and buf_resize_thread.
-Note: mutex protection is required when creating multiple buffer pools
-in parallel. We don't use a mutex during resize because that is still single
-threaded. */
-typedef std::map<const byte *, buf_chunk_t *, std::less<const byte *>,
-                 ut_allocator<std::pair<const byte *const, buf_chunk_t *>>>
-    buf_pool_chunk_map_t;
 
-static buf_pool_chunk_map_t *buf_chunk_map_reg;
+
+
+
 
 /** Container for how many pages from each index are contained in the buffer
 pool(s). */
@@ -6272,38 +6264,6 @@ void meb_page_init(const page_id_t &page_id, const page_size_t &page_size,
 }
 
 #endif /* !UNIV_HOTBACKUP */
-
-/** Print the given buf_pool_t object.
-@param[in,out]	out		the output stream
-@param[in]	buf_pool	the buf_pool_t object to be printed
-@return the output stream */
-std::ostream &operator<<(std::ostream &out, const buf_pool_t &buf_pool) {
-#ifndef UNIV_HOTBACKUP
-  /* These locking requirements might be relaxed if desired */
-  ut_ad(mutex_own(&buf_pool.LRU_list_mutex));
-  ut_ad(mutex_own(&buf_pool.free_list_mutex));
-  ut_ad(mutex_own(&buf_pool.flush_state_mutex));
-  ut_ad(buf_flush_list_mutex_own(&buf_pool));
-
-  out << "[buffer pool instance: "
-      << "buf_pool size=" << buf_pool.curr_size
-      << ", database pages=" << UT_LIST_GET_LEN(buf_pool.LRU)
-      << ", free pages=" << UT_LIST_GET_LEN(buf_pool.free)
-      << ", modified database pages=" << UT_LIST_GET_LEN(buf_pool.flush_list)
-      << ", n pending decompressions=" << buf_pool.n_pend_unzip
-      << ", n pending reads=" << buf_pool.n_pend_reads
-      << ", n pending flush LRU=" << buf_pool.n_flush[BUF_FLUSH_LRU]
-      << " list=" << buf_pool.n_flush[BUF_FLUSH_LIST]
-      << " single page=" << buf_pool.n_flush[BUF_FLUSH_SINGLE_PAGE]
-      << ", pages made young=" << buf_pool.stat.n_pages_made_young
-      << ", not young=" << buf_pool.stat.n_pages_not_made_young
-      << ", pages read=" << buf_pool.stat.n_pages_read
-      << ", created=" << buf_pool.stat.n_pages_created
-      << ", written=" << buf_pool.stat.n_pages_written << "]";
-#endif /* !UNIV_HOTBACKUP */
-  return (out);
-}
-
 /** Get the page type as a string.
 @return the page type as a string. */
 const char *buf_block_t::get_page_type_str() const {

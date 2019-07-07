@@ -26,6 +26,28 @@ add_library( ${LIB_NAME} STATIC
     LRUHp.cpp
     LRUItr.cpp
     buf_buddy_free_t.cpp
+    buf_pool_stat_t.cpp
+    buf_buddy_stat_t.cpp
+    buf_pool_t.cpp
+    buf_flush_list_mutex_own.cpp
+    buf_flush_list_mutex_enter.cpp
+    buf_flush_list_mutex_exit.cpp
+    buf_page_mutex_own.cpp
+    buf_page_mutex_enter.cpp
+    buf_page_mutex_exit.cpp
+    buf_pool_ptr.cpp
+    buf_pool_withdrawing.cpp
+    buf_withdraw_clock.cpp
+    buf_pool_chunk_map_t.cpp
+    buf_chunk_map_reg.cpp
+    buf_chunk_t.cpp
+    buf_pool_get_curr_size.cpp
+    buf_pool_index.cpp
+    buf_pool_from_bpage.cpp
+    buf_pool_from_block.cpp
+    buf_pool_get_n_pages.cpp
+    buf_page_get_freed_page_clock.cpp
+    buf_block_get_freed_page_clock.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

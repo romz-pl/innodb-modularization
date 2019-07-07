@@ -47,6 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 
 #include <innodb/string/ut_str_sql_format.h>
+#include <innodb/buffer/buf_pool_ptr.h>
 
 #include <auto_thd.h>
 #include <errno.h>

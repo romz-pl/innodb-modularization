@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_malloc.h>
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
+#include <innodb/buffer/buf_flush_list_mutex_enter.h>
+#include <innodb/buffer/buf_flush_list_mutex_exit.h>
 
 #include "arch0page.h"
 #include "arch0recv.h"

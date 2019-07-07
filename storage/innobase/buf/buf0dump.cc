@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/print/ut_sprintf_timestamp.h>
+#include <innodb/buffer/buf_pool_from_block.h>
+#include <innodb/buffer/buf_pool_get_n_pages.h>
 
 #include "buf0buf.h"
 #include "buf0dump.h"
