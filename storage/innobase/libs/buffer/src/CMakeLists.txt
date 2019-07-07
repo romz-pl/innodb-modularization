@@ -78,6 +78,20 @@ add_library( ${LIB_NAME} STATIC
     macros.cpp
     page_id_t.cpp
     srv_checksum_algorithm_t.cpp
+    buf_frame_copy.cpp
+    buf_page_get_newest_modification.cpp
+    buf_block_fix.cpp
+    buf_block_buf_fix_inc_func.cpp
+    buf_block_unfix.cpp
+    buf_block_buf_fix_dec.cpp
+    buf_pool_get.cpp
+    buf_pool_from_array.cpp
+    buf_page_release_zip.cpp
+    buf_page_release_latch.cpp
+    buf_get_nth_chunk_block.cpp
+    buf_pool_is_obsolete.cpp
+    buf_pool_size_align.cpp
+    buf_get_withdraw_depth.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

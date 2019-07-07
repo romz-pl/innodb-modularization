@@ -188,12 +188,6 @@ inline
 void buf_block_free(buf_block_t *block); /*!< in, own: block to be freed */
 #endif                                   /* !UNIV_HOTBACKUP */
 
-/** Copies contents of a buffer frame to a given buffer.
-@param[in]	buf	buffer to copy to
-@param[in]	frame	buffer frame
-@return buf */
-UNIV_INLINE
-byte *buf_frame_copy(byte *buf, const buf_frame_t *frame);
 
 #ifndef UNIV_HOTBACKUP
 /** NOTE! The following macros should be used instead of buf_page_get_gen,
@@ -314,15 +308,7 @@ void meb_page_init(const page_id_t &page_id, const page_size_t &page_size,
 #endif /* !UNIV_HOTBACKUP */
 
 #ifndef UNIV_HOTBACKUP
-/** Releases a compressed-only page acquired with buf_page_get_zip(). */
-UNIV_INLINE
-void buf_page_release_zip(buf_page_t *bpage); /*!< in: buffer block */
 
-/** Releases a latch, if specified.
-@param[in]	block		buffer block
-@param[in]	rw_latch	RW_S_LATCH, RW_X_LATCH, RW_NO_LATCH */
-UNIV_INLINE
-void buf_page_release_latch(buf_block_t *block, ulint rw_latch);
 
 /** Moves a page to the start of the buffer pool LRU list. This high-level
 function can be used to prevent an important page from slipping out of
@@ -385,13 +371,7 @@ NOTE: does not reserve the LRU list mutex.
 UNIV_INLINE
 ibool buf_page_peek_if_too_old(const buf_page_t *bpage);
 
-/** Gets the youngest modification log sequence number for a frame.
- Returns zero if not file page or no modification occurred yet.
- @return newest modification to page */
-UNIV_INLINE
-lsn_t buf_page_get_newest_modification(
-    const buf_page_t *bpage); /*!< in: block containing the
-                              page frame */
+
 
 /** Increment the modify clock.
 The caller must
@@ -408,40 +388,12 @@ void buf_block_modify_clock_inc(buf_block_t *block);
 UNIV_INLINE
 uint64_t buf_block_get_modify_clock(const buf_block_t *block);
 
-/** Increments the bufferfix count.
-@param[in]	file	file name
-@param[in]	line	line
-@param[in,out]	block	block to bufferfix */
-UNIV_INLINE
-void buf_block_buf_fix_inc_func(
-#ifdef UNIV_DEBUG
-    const char *file, ulint line,
-#endif /* UNIV_DEBUG */
-    buf_block_t *block);
 
-/** Increments the bufferfix count.
-@param[in,out]	bpage	block to bufferfix
-@return the count */
-UNIV_INLINE
-ulint buf_block_fix(buf_page_t *bpage);
 
-/** Increments the bufferfix count.
-@param[in,out]	block	block to bufferfix
-@return the count */
-UNIV_INLINE
-ulint buf_block_fix(buf_block_t *block);
-
-/** Decrements the bufferfix count.
-@param[in,out]	bpage	block to bufferunfix
-@return	the remaining buffer-fix count */
-UNIV_INLINE
-ulint buf_block_unfix(buf_page_t *bpage);
 #endif /* !UNIV_HOTBACKUP */
-/** Decrements the bufferfix count.
-@param[in,out]	block	block to bufferunfix
-@return	the remaining buffer-fix count */
-UNIV_INLINE
-ulint buf_block_unfix(buf_block_t *block);
+
+#include <innodb/buffer/buf_block_buf_fix_inc_func.h>
+
 
 #ifndef UNIV_HOTBACKUP
 /** Unfixes the page, unlatches the page,
@@ -621,18 +573,6 @@ the buffer pool.
 bool buf_page_io_complete(buf_page_t *bpage, bool evict = false);
 
 
-/** Returns the buffer pool instance given a page id.
-@param[in]	page_id	page id
-@return buffer pool */
-UNIV_INLINE
-buf_pool_t *buf_pool_get(const page_id_t &page_id);
-
-/** Returns the buffer pool instance given its array index
- @return buffer pool */
-UNIV_INLINE
-buf_pool_t *buf_pool_from_array(ulint index); /*!< in: array index to get
-                                              buffer pool instance from */
-
 /** Returns the control block of a file page, NULL if not found.
 @param[in]	buf_pool	buffer pool instance
 @param[in]	page_id		page id
@@ -741,27 +681,7 @@ void buf_get_total_list_size_in_bytes(
 void buf_get_total_stat(
     buf_pool_stat_t *tot_stat); /*!< out: buffer pool stats */
 
-/** Get the nth chunk's buffer block in the specified buffer pool.
-@param[in]	buf_pool	buffer pool instance
-@param[in]	n		nth chunk in the buffer pool
-@param[in]	chunk_size	chunk_size
-@return the nth chunk's buffer block. */
-UNIV_INLINE
-buf_block_t *buf_get_nth_chunk_block(const buf_pool_t *buf_pool, ulint n,
-                                     ulint *chunk_size);
 
-/** Verify the possibility that a stored page is not in buffer pool.
-@param[in]	withdraw_clock	withdraw clock when stored the page
-@retval true	if the page might be relocated */
-UNIV_INLINE
-bool buf_pool_is_obsolete(ulint withdraw_clock);
-
-/** Calculate aligned buffer pool size based on srv_buf_pool_chunk_unit,
-if needed.
-@param[in]	size	size in bytes
-@return	aligned size */
-UNIV_INLINE
-ulint buf_pool_size_align(ulint size);
 
 /** Calculate the checksum of a page from compressed table and update the
 page.
@@ -773,15 +693,6 @@ void buf_flush_update_zip_checksum(buf_frame_t *page, ulint size, lsn_t lsn,
                                    bool skip_lsn_check);
 
 #endif /* !UNIV_HOTBACKUP */
-
-/** Return how many more pages must be added to the withdraw list to reach the
-withdraw target of the currently ongoing buffer pool resize.
-@param[in]	buf_pool	buffer pool instance
-@return page count to be withdrawn or zero if the target is already achieved or
-if the buffer pool is not currently being resized. */
-UNIV_INLINE
-ulint buf_get_withdraw_depth(buf_pool_t *buf_pool);
-
 
 
 /** Number of bits used for buffer page states. */
@@ -807,26 +718,11 @@ ulint buf_get_withdraw_depth(buf_pool_t *buf_pool);
 
 
 
-
-
-
-
-
-
-
-
 /** @name Accessors for buffer pool mutexes
 Use these instead of accessing buffer pool mutexes directly. */
 /* @{ */
 
 #ifndef UNIV_HOTBACKUP
-
-
-
-
-
-
-
 
 /** Get appropriate page_hash_lock. */
 #define buf_page_hash_lock_get(buf_pool, page_id) \
