@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0file.h"
 #include "dict0dd.h"
 #include "fil0fil.h"
-#include "fsp0file.h"
 #include "fsp0sysspace.h"
 #include "fsp0types.h"
 #include "page0page.h"

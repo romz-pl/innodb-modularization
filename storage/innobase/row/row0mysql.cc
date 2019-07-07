@@ -56,7 +56,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0stats.h"
 #include "dict0stats_bg.h"
 #include "fil0fil.h"
-#include "fsp0file.h"
 #include "fsp0sysspace.h"
 #include "fts0fts.h"
 #include "fts0types.h"

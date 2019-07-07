@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/tablespace/Datafile.h>
+
 #include "fsp0space.h"
 
 #ifdef UNIV_HOTBACKUP

@@ -198,12 +198,6 @@ UNIV_INLINE
 void mem_heap_free_top(mem_heap_t *heap, ulint n);
 
 
-/** Duplicates a NUL-terminated string.
-@param[in]	str	string to be copied
-@return own: a copy of the string, must be deallocated with ut_free */
-UNIV_INLINE
-char *mem_strdup(const char *str);
-
 /** Duplicates a NUL-terminated string, allocated from a memory heap.
 @param[in]	heap	memory heap where string is allocated
 @param[in]	str	string to be copied

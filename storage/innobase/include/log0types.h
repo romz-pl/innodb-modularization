@@ -60,7 +60,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0sharded_rw.h"
 #include "ut0link_buf.h"
 
-#include <innodb/buffer/lsn_t.h>
+#include <innodb/tablespace/lsn_t.h>
 
 
 /** Print format for lsn_t values, used in functions like printf. */

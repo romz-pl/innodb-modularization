@@ -2,6 +2,7 @@ set( LIB_NAME string )
 
 add_library( ${LIB_NAME} STATIC
     innobase_basename.cpp
+    mem_strdup.cpp
     ut_raw_to_hex.cpp
     ut_str_sql_format.cpp
     ut_str3cat.cpp

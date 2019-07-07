@@ -96,7 +96,6 @@ add_library( ${LIB_NAME} STATIC
     buf_pools_list_size_t.cpp
     buf_ptr_get_fsp_addr.cpp
     buf_withdraw_clock.cpp
-    lsn_t.cpp
     macros.cpp
     page_id_t.cpp
     srv_checksum_algorithm_t.cpp

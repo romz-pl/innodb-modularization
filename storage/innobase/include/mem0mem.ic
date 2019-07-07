@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/align/ut_calc_align.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/memory_check/memory_check.h>
+#include <innodb/string/mem_strdup.h>
 
 #include <string.h>
 
@@ -412,21 +413,6 @@ void mem_heap_free(mem_heap_t *heap) {
 
     block = prev_block;
   }
-}
-
-
-
-
-
-
-
-/** Duplicates a NUL-terminated string.
- @return own: a copy of the string, must be deallocated with ut_free */
-UNIV_INLINE
-char *mem_strdup(const char *str) /*!< in: string to be copied */
-{
-  ulint len = strlen(str) + 1;
-  return (static_cast<char *>(memcpy(ut_malloc_nokey(len), str, len)));
 }
 
 

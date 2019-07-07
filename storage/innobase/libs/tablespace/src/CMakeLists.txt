@@ -20,6 +20,9 @@ add_library( ${LIB_NAME} STATIC
     Tablespace_dirs.cpp
     Tablespace_files.cpp
     Tablespaces.cpp
+    device_t.cpp
+    Datafile.cpp
+    lsn_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -34,6 +37,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     io
+    string
     sync_rw
     PRIVATE
 )

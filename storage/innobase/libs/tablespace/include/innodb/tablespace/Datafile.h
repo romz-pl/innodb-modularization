@@ -1,79 +1,24 @@
-/*****************************************************************************
-
-Copyright (c) 2013, 2019, Oracle and/or its affiliates. All Rights Reserved.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License, version 2.0, as published by the
-Free Software Foundation.
-
-This program is also distributed with certain software (including but not
-limited to OpenSSL) that is licensed under separate terms, as designated in a
-particular file or component or in included license documentation. The authors
-of MySQL hereby grant you an additional permission to link the program and
-your derivative works with the separately licensed software that they have
-included with MySQL.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License, version 2.0,
-for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-*****************************************************************************/
-
-/** @file include/fsp0file.h
- Tablespace data file implementation.
-
- Created 2013-7-26 by Kevin Lewis
- *******************************************************/
-
-#ifndef fsp0file_h
-#define fsp0file_h
+#pragma once
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/tablespace/encryption_op_type.h>
+#include <innodb/tablespace/lsn_t.h>
+#include <innodb/tablespace/space_id_t.h>
+#include <innodb/page/page_no_t.h>
+#include <innodb/tablespace/device_t.h>
 #include <innodb/io/os_file_create_t.h>
-
-#include <vector>
-#include "fil0fil.h" /* SPACE_UNKNOWN */
-#include "ha_prototypes.h"
-#include "log0log.h"
-#include "mem0mem.h"
+#include <innodb/io/pfs_os_file_t.h>
+#include <innodb/assert/assert.h>
+#include <innodb/error/dberr_t.h>
+#include <innodb/io/ib_file_suffix.h>
+#include <innodb/string/mem_strdup.h>
+#include <innodb/allocator/ut_free.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-#ifdef UNIV_HOTBACKUP
-#include "fil0fil.h"
-#include "fsp0types.h"
-
-/** MEB routine to get the master key. MEB will extract
-the key from the keyring encrypted file stored in backup.
-@param[in]	key_id		the id of the master key
-@param[in]	key_type	master key type
-@param[out]	key		the master key being returned
-@param[out]	key_length	the length of the returned key
-@retval	0 if the key is being returned, 1 otherwise. */
-extern int meb_key_fetch(const char *key_id, char **key_type,
-                         const char *user_id, void **key, size_t *key_length);
-#endif /* UNIV_HOTBACKUP */
-
-/** Types of raw partitions in innodb_data_file_path */
-enum device_t {
-
-  /** Not a raw partition */
-  SRV_NOT_RAW = 0,
-
-  /** A 'newraw' partition, only to be initialized */
-  SRV_NEW_RAW,
-
-  /** An initialized raw partition */
-  SRV_OLD_RAW
-};
 
 /** Data file control information. */
 class Datafile {
@@ -509,4 +454,3 @@ class Datafile {
   /** Encryption operation in progress */
   encryption_op_type m_encryption_op_in_progress;
 };
-#endif /* fsp0file_h */
