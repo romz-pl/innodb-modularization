@@ -80,6 +80,15 @@ add_library( ${LIB_NAME} STATIC
     pfs_os_file_create_simple_no_error_handling_func.cpp
     pfs_os_file_create_func.cpp
     pfs_os_file_close_func.cpp
+    os_file_pwrite.cpp
+    os_n_pending_writes.cpp
+    os_n_file_writes.cpp
+    os_file_write_page.cpp
+    os_file_pread.cpp
+    os_n_file_reads.cpp
+    os_n_pending_reads.cpp
+    os_file_read_page.cpp
+    os_bytes_read_since_printout.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -94,6 +103,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     allocator
+    monitor
     page
     PRIVATE
 )

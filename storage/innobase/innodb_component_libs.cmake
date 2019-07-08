@@ -46,7 +46,7 @@ SET( INNODB_COMPONENT_LIBS
     #math
     #memory
     #memory_check
-    monitor
+    #monitor
 
     # P
     #page

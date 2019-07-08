@@ -46,6 +46,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/ioasync/Slot.h>
 #include <innodb/ioasync/AIO.h>
 #include <innodb/ioasync/os_aio_n_segments.h>
+#include <innodb/io/os_bytes_read_since_printout.h>
+#include <innodb/io/os_file_read_page.h>
 
 #include "os0file.h"
 #include "my_compiler.h"
@@ -235,17 +237,15 @@ static os_event_t *os_aio_segment_wait_events = NULL;
 wait until a batch of new read requests have been posted */
 static bool os_aio_recommend_sleep_for_read_threads = false;
 
-ulint os_n_file_reads = 0;
-static ulint os_bytes_read_since_printout = 0;
-ulint os_n_file_writes = 0;
+
+
+
 ulint os_n_fsyncs = 0;
 static ulint os_n_file_reads_old = 0;
 static ulint os_n_file_writes_old = 0;
 static ulint os_n_fsyncs_old = 0;
-/** Number of pending write operations */
-ulint os_n_pending_writes = 0;
-/** Number of pending read operations */
-ulint os_n_pending_reads = 0;
+
+
 
 static time_t os_last_printout;
 bool os_has_said_disk_full = false;
@@ -2465,201 +2465,9 @@ void Dir_Walker::walk_win32(const Path &basedir, bool recursive, Function &&f) {
 #endif /* !_WIN32*/
 
 
-/** Does a synchronous write operation in Posix.
-@param[in]	type		IO context
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer from which to write
-@param[in]	n		number of bytes to read, starting from offset
-@param[in]	offset		file offset from the start where to read
-@param[out]	err		DB_SUCCESS or error code
-@return number of bytes written, -1 if error */
-static MY_ATTRIBUTE((warn_unused_result)) ssize_t
-    os_file_pwrite(IORequest &type, os_file_t file, const byte *buf, ulint n,
-                   os_offset_t offset, dberr_t *err) {
-#ifdef UNIV_HOTBACKUP
-  static meb::Mutex meb_mutex;
-#endif /* UNIV_HOTBACKUP */
 
-  ut_ad(type.validate());
 
-#ifdef UNIV_HOTBACKUP
-  meb_mutex.lock();
-#endif /* UNIV_HOTBACKUP */
-  ++os_n_file_writes;
-#ifdef UNIV_HOTBACKUP
-  meb_mutex.unlock();
-#endif /* UNIV_HOTBACKUP */
 
-  (void)os_atomic_increment_ulint(&os_n_pending_writes, 1);
-  MONITOR_ATOMIC_INC(MONITOR_OS_PENDING_WRITES);
-
-  ssize_t n_bytes = os_file_io(type, file, (void *)buf, n, offset, err);
-
-  (void)os_atomic_decrement_ulint(&os_n_pending_writes, 1);
-  MONITOR_ATOMIC_DEC(MONITOR_OS_PENDING_WRITES);
-
-  return (n_bytes);
-}
-
-/** Requests a synchronous write operation.
-@param[in]	type		IO flags
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer from which to write
-@param[in]	offset		file offset from the start where to read
-@param[in]	n		number of bytes to read, starting from offset
-@return DB_SUCCESS if request was successful, false if fail */
-static MY_ATTRIBUTE((warn_unused_result)) dberr_t
-    os_file_write_page(IORequest &type, const char *name, os_file_t file,
-                       const byte *buf, os_offset_t offset, ulint n) {
-  dberr_t err;
-
-  ut_ad(type.validate());
-  ut_ad(n > 0);
-
-  ssize_t n_bytes = os_file_pwrite(type, file, buf, n, offset, &err);
-
-  if ((ulint)n_bytes != n && !os_has_said_disk_full) {
-    ib::error(ER_IB_MSG_814) << "Write to file " << name << " failed at offset "
-                             << offset << ", " << n
-                             << " bytes should have been written,"
-                                " only "
-                             << n_bytes
-                             << " were written."
-                                " Operating system error number "
-                             << errno
-                             << "."
-                                " Check that your OS and file system"
-                                " support files of this size."
-                                " Check also that the disk is not full"
-                                " or a disk quota exceeded.";
-
-    if (strerror(errno) != NULL) {
-      ib::error(ER_IB_MSG_815)
-          << "Error number " << errno << " means '" << strerror(errno) << "'";
-    }
-
-    ib::info(ER_IB_MSG_816) << OPERATING_SYSTEM_ERROR_MSG;
-
-    os_has_said_disk_full = true;
-  }
-
-  return (err);
-}
-
-/** Does a synchronous read operation in Posix.
-@param[in]	type		IO flags
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset from the start where to read
-@param[in]	n		number of bytes to read, starting from offset
-@param[out]	err		DB_SUCCESS or error code
-@return number of bytes read, -1 if error */
-static MY_ATTRIBUTE((warn_unused_result)) ssize_t
-    os_file_pread(IORequest &type, os_file_t file, void *buf, ulint n,
-                  os_offset_t offset, dberr_t *err) {
-#ifdef UNIV_HOTBACKUP
-  static meb::Mutex meb_mutex;
-
-  meb_mutex.lock();
-#endif /* UNIV_HOTBACKUP */
-  ++os_n_file_reads;
-#ifdef UNIV_HOTBACKUP
-  meb_mutex.unlock();
-#endif /* UNIV_HOTBACKUP */
-
-  (void)os_atomic_increment_ulint(&os_n_pending_reads, 1);
-  MONITOR_ATOMIC_INC(MONITOR_OS_PENDING_READS);
-
-  ssize_t n_bytes = os_file_io(type, file, buf, n, offset, err);
-
-  (void)os_atomic_decrement_ulint(&os_n_pending_reads, 1);
-  MONITOR_ATOMIC_DEC(MONITOR_OS_PENDING_READS);
-
-  return (n_bytes);
-}
-
-/** Requests a synchronous positioned read operation.
-@return DB_SUCCESS if request was successful, false if fail
-@param[in]	type		IO flags
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset from the start where to read
-@param[in]	n		number of bytes to read, starting from offset
-@param[out]	o		number of bytes actually read
-@param[in]	exit_on_err	if true then exit on error
-@return DB_SUCCESS or error code */
-static MY_ATTRIBUTE((warn_unused_result)) dberr_t
-    os_file_read_page(IORequest &type, os_file_t file, void *buf,
-                      os_offset_t offset, ulint n, ulint *o, bool exit_on_err) {
-  dberr_t err;
-
-#ifdef UNIV_HOTBACKUP
-  static meb::Mutex meb_mutex;
-
-  meb_mutex.lock();
-#endif /* UNIV_HOTBACKUP */
-  os_bytes_read_since_printout += n;
-#ifdef UNIV_HOTBACKUP
-  meb_mutex.unlock();
-#endif /* UNIV_HOTBACKUP */
-
-  ut_ad(type.validate());
-  ut_ad(n > 0);
-
-  for (;;) {
-    ssize_t n_bytes;
-
-    n_bytes = os_file_pread(type, file, buf, n, offset, &err);
-
-    if (o != NULL) {
-      *o = n_bytes;
-    }
-
-    if (err != DB_SUCCESS && !exit_on_err) {
-      return (err);
-
-    } else if ((ulint)n_bytes == n) {
-      /** The read will succeed but decompress can fail
-      for various reasons. */
-
-      if (type.is_compression_enabled() &&
-          !Compression::is_compressed_page(static_cast<byte *>(buf))) {
-        return (DB_SUCCESS);
-
-      } else {
-        return (err);
-      }
-    }
-
-    ib::error(ER_IB_MSG_817)
-        << "Tried to read " << n << " bytes at offset " << offset
-        << ", but was only able to read " << n_bytes;
-
-    if (exit_on_err) {
-      if (!os_file_handle_error(NULL, "read")) {
-        /* Hard error */
-        break;
-      }
-
-    } else if (!os_file_handle_error_no_exit(NULL, "read", false)) {
-      /* Hard error */
-      break;
-    }
-
-    if (n_bytes > 0 && (ulint)n_bytes < n) {
-      n -= (ulint)n_bytes;
-      offset += (ulint)n_bytes;
-      buf = reinterpret_cast<uchar *>(buf) + (ulint)n_bytes;
-    }
-  }
-
-  ib::fatal(ER_IB_MSG_818) << "Cannot read from file. OS error number " << errno
-                           << ".";
-
-  return (err);
-}
 
 
 

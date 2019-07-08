@@ -4,6 +4,9 @@
 
 #ifndef UNIV_HOTBACKUP
 
+#include <innodb/monitor/macros.h>
+#include <innodb/monitor/monitor_set_tbl.h>
+
 /** Macros to turn on/off the control bit in monitor_set_tbl for a monitor
 counter option. */
 

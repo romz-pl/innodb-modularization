@@ -85,10 +85,7 @@ std::string Compression::to_string(const Compression::meta_t &meta) {
   return (stream.str());
 }
 
-/** @return true if it is a compressed page */
-bool Compression::is_compressed_page(const byte *page) {
-  return (mach_read_from_2(page + FIL_PAGE_TYPE) == FIL_PAGE_COMPRESSED);
-}
+
 
 /** Deserizlise the page header compression meta-data
 @param[in]	page		Pointer to the page header

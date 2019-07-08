@@ -105,8 +105,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/io/os_file_truncate_posix.h>
 #include <innodb/io/os_file_set_eof.h>
 #include <innodb/io/os_file_truncate.h>
-
-
+#include <innodb/io/os_n_pending_writes.h>
+#include <innodb/io/os_file_pwrite.h>
+#include <innodb/io/os_n_file_writes.h>
+#include <innodb/io/os_file_write_page.h>
+#include <innodb/io/os_n_file_reads.h>
+#include <innodb/io/os_n_pending_reads.h>
+#include <innodb/io/os_file_pread.h>
 
 #include "my_dbug.h"
 #include "my_io.h"
@@ -131,10 +136,8 @@ struct fil_node_t;
 
 extern bool os_has_said_disk_full;
 
-/** Number of pending read operations */
-extern ulint os_n_pending_reads;
-/** Number of pending write operations */
-extern ulint os_n_pending_writes;
+
+
 
 /* Flush after each os_fsync_threshold bytes */
 extern unsigned long long os_fsync_threshold;
@@ -215,8 +218,8 @@ static const ulint OS_AIO_N_PENDING_IOS_PER_THREAD = 32;
 
 
 
-extern ulint os_n_file_reads;
-extern ulint os_n_file_writes;
+
+
 extern ulint os_n_fsyncs;
 
 
