@@ -259,81 +259,15 @@ extern mysql_pfs_key_t innodb_clone_file_key;
 extern mysql_pfs_key_t innodb_data_file_key;
 extern mysql_pfs_key_t innodb_tablespace_open_file_key;
 
-/* Following four macros are instumentations to register
-various file I/O operations with performance schema.
-1) register_pfs_file_open_begin() and register_pfs_file_open_end() are
-used to register file creation, opening and closing.
-2) register_pfs_file_rename_begin() and  register_pfs_file_rename_end()
-are used to register file renaming.
-3) register_pfs_file_io_begin() and register_pfs_file_io_end() are
-used to register actual file read, write and flush
-4) register_pfs_file_close_begin() and register_pfs_file_close_end()
-are used to register file deletion operations*/
-#define register_pfs_file_open_begin(state, locker, key, op, name, src_file, \
-                                     src_line)                               \
-  do {                                                                       \
-    locker = PSI_FILE_CALL(get_thread_file_name_locker)(state, key.m_value,  \
-                                                        op, name, &locker);  \
-    if (locker != NULL) {                                                    \
-      PSI_FILE_CALL(start_file_open_wait)                                    \
-      (locker, src_file, static_cast<uint>(src_line));                       \
-    }                                                                        \
-  } while (0)
+#include <innodb/io/register_pfs_file_open_begin.h>
+#include <innodb/io/register_pfs_file_open_end.h>
+#include <innodb/io/register_pfs_file_rename_begin.h>
+#include <innodb/io/register_pfs_file_rename_end.h>
+#include <innodb/io/register_pfs_file_close_begin.h>
+#include <innodb/io/register_pfs_file_close_end.h>
+#include <innodb/io/register_pfs_file_io_begin.h>
+#include <innodb/io/register_pfs_file_io_end.h>
 
-#define register_pfs_file_open_end(locker, file, result)              \
-  do {                                                                \
-    if (locker != NULL) {                                             \
-      file.m_psi = PSI_FILE_CALL(end_file_open_wait)(locker, result); \
-    }                                                                 \
-  } while (0)
-
-#define register_pfs_file_rename_begin(state, locker, key, op, name, src_file, \
-                                       src_line)                               \
-  register_pfs_file_open_begin(state, locker, key, op, name, src_file,         \
-                               static_cast<uint>(src_line))
-
-#define register_pfs_file_rename_end(locker, from, to, result)       \
-  do {                                                               \
-    if (locker != NULL) {                                            \
-      PSI_FILE_CALL(end_file_rename_wait)(locker, from, to, result); \
-    }                                                                \
-  } while (0)
-
-#define register_pfs_file_close_begin(state, locker, key, op, name, src_file, \
-                                      src_line)                               \
-  do {                                                                        \
-    locker = PSI_FILE_CALL(get_thread_file_name_locker)(state, key.m_value,   \
-                                                        op, name, &locker);   \
-    if (locker != NULL) {                                                     \
-      PSI_FILE_CALL(start_file_close_wait)                                    \
-      (locker, src_file, static_cast<uint>(src_line));                        \
-    }                                                                         \
-  } while (0)
-
-#define register_pfs_file_close_end(locker, result)       \
-  do {                                                    \
-    if (locker != NULL) {                                 \
-      PSI_FILE_CALL(end_file_close_wait)(locker, result); \
-    }                                                     \
-  } while (0)
-
-#define register_pfs_file_io_begin(state, locker, file, count, op, src_file, \
-                                   src_line)                                 \
-  do {                                                                       \
-    locker =                                                                 \
-        PSI_FILE_CALL(get_thread_file_stream_locker)(state, file.m_psi, op); \
-    if (locker != NULL) {                                                    \
-      PSI_FILE_CALL(start_file_wait)                                         \
-      (locker, count, src_file, static_cast<uint>(src_line));                \
-    }                                                                        \
-  } while (0)
-
-#define register_pfs_file_io_end(locker, count)    \
-  do {                                             \
-    if (locker != NULL) {                          \
-      PSI_FILE_CALL(end_file_wait)(locker, count); \
-    }                                              \
-  } while (0)
 
 /* Following macros/functions are file I/O APIs that would be performance
 schema instrumented if "UNIV_PFS_IO" is defined. They would point to

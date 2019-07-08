@@ -67,6 +67,14 @@ add_library( ${LIB_NAME} STATIC
     os_is_sparse_file_supported.cpp
     os_offset_t.cpp
     pfs_os_file_t.cpp
+    register_pfs_file_close_begin.cpp
+    register_pfs_file_close_end.cpp
+    register_pfs_file_io_begin.cpp
+    register_pfs_file_io_end.cpp
+    register_pfs_file_open_begin.cpp
+    register_pfs_file_open_end.cpp
+    register_pfs_file_rename_begin.cpp
+    register_pfs_file_rename_end.cpp
     srv_unix_flush_t.cpp
 )
 
