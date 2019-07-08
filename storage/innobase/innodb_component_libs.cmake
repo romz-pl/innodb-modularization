@@ -46,6 +46,7 @@ SET( INNODB_COMPONENT_LIBS
     #math
     #memory
     #memory_check
+    monitor
 
     # P
     #page
@@ -67,7 +68,7 @@ SET( INNODB_COMPONENT_LIBS
     #sync_rw
 
     # T
-    tablespace
+    #tablespace
     #thread
     #time
 

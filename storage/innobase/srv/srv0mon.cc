@@ -1378,12 +1378,7 @@ static monitor_info_t innodb_counter_info[] = {
      MONITOR_MODULE, MONITOR_DEFAULT_START, MONITOR_ALL_COUNTER},
 };
 
-/* The "innodb_counter_value" array stores actual counter values */
-monitor_value_t innodb_counter_value[NUM_MONITOR];
 
-/* monitor_set_tbl is used to record and determine whether a monitor
-has been turned on/off. */
-ulint monitor_set_tbl[(NUM_MONITOR + NUM_BITS_ULINT - 1) / NUM_BITS_ULINT];
 
 /** Get a monitor's "monitor_info" by its monitor id (index into the
  innodb_counter_info array.
