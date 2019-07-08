@@ -190,23 +190,10 @@ the OS actually supports it: Win 95 does not, NT does. */
 
 
 
-
-
-
-
-
-/** Options for os_file_create_func @{ */
-
-
-
-
-
-
-
-
-
-
-
+#include <innodb/io/pfs_os_file_create_simple_func.h>
+#include <innodb/io/pfs_os_file_create_simple_no_error_handling_func.h>
+#include <innodb/io/pfs_os_file_create_func.h>
+#include <innodb/io/pfs_os_file_close_func.h>
 
 
 /** Types for AIO operations @{ */
@@ -342,89 +329,7 @@ The wrapper functions have the prefix of "innodb_". */
 #define os_file_delete_if_exists(key, name, exist) \
   pfs_os_file_delete_if_exists_func(key, name, exist, __FILE__, __LINE__)
 
-/** NOTE! Please use the corresponding macro os_file_create_simple(),
-not directly this function!
-A performance schema instrumented wrapper function for
-os_file_create_simple() which opens or creates a file.
-@param[in]	key		Performance Schema Key
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	access_type	OS_FILE_READ_ONLY or OS_FILE_READ_WRITE
-@param[in]	read_only	if true read only mode checks are enforced
-@param[out]	success		true if succeeded
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return own: handle to the file, not defined if error, error number
-        can be retrieved with os_file_get_last_error */
-UNIV_INLINE
-pfs_os_file_t pfs_os_file_create_simple_func(
-    mysql_pfs_key_t key, const char *name, ulint create_mode, ulint access_type,
-    bool read_only, bool *success, const char *src_file, uint src_line)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** NOTE! Please use the corresponding macro
-os_file_create_simple_no_error_handling(), not directly this function!
-A performance schema instrumented wrapper function for
-os_file_create_simple_no_error_handling(). Add instrumentation to
-monitor file creation/open.
-@param[in]	key		Performance Schema Key
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	access_type	OS_FILE_READ_ONLY, OS_FILE_READ_WRITE, or
-                                OS_FILE_READ_ALLOW_DELETE; the last option is
-                                used by a backup program reading the file
-@param[in]	read_only	if true read only mode checks are enforced
-@param[out]	success		true if succeeded
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return own: handle to the file, not defined if error, error number
-        can be retrieved with os_file_get_last_error */
-UNIV_INLINE
-pfs_os_file_t pfs_os_file_create_simple_no_error_handling_func(
-    mysql_pfs_key_t key, const char *name, ulint create_mode, ulint access_type,
-    bool read_only, bool *success, const char *src_file, uint src_line)
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** NOTE! Please use the corresponding macro os_file_create(), not directly
-this function!
-A performance schema wrapper function for os_file_create().
-Add instrumentation to monitor file creation/open.
-@param[in]	key		Performance Schema Key
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	purpose		OS_FILE_AIO, if asynchronous, non-buffered I/O
-                                is desired, OS_FILE_NORMAL, if any normal file;
-                                NOTE that it also depends on type, os_aio_..
-                                and srv_.. variables whether we really use
-                                async I/O or unbuffered I/O: look in the
-                                function source code for the exact rules
-@param[in]	type		OS_DATA_FILE or OS_LOG_FILE
-@param[in]	read_only	if true read only mode checks are enforced
-@param[out]	success		true if succeeded
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return own: handle to the file, not defined if error, error number
-        can be retrieved with os_file_get_last_error */
-UNIV_INLINE
-pfs_os_file_t pfs_os_file_create_func(mysql_pfs_key_t key, const char *name,
-                                      ulint create_mode, ulint purpose,
-                                      ulint type, bool read_only, bool *success,
-                                      const char *src_file, uint src_line)
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** NOTE! Please use the corresponding macro os_file_close(), not directly
-this function!
-A performance schema instrumented wrapper function for os_file_close().
-@param[in]	file		handle to a file
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return true if success */
-UNIV_INLINE
-bool pfs_os_file_close_func(pfs_os_file_t file, const char *src_file,
-                            uint src_line);
 
 /** NOTE! Please use the corresponding macro os_file_read(), not directly
 this function!

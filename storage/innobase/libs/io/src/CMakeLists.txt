@@ -76,6 +76,10 @@ add_library( ${LIB_NAME} STATIC
     register_pfs_file_rename_begin.cpp
     register_pfs_file_rename_end.cpp
     srv_unix_flush_t.cpp
+    pfs_os_file_create_simple_func.cpp
+    pfs_os_file_create_simple_no_error_handling_func.cpp
+    pfs_os_file_create_func.cpp
+    pfs_os_file_close_func.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

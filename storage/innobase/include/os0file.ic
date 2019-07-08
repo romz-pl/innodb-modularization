@@ -33,154 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #ifdef UNIV_PFS_IO
-/** NOTE! Please use the corresponding macro os_file_create_simple(),
-not directly this function!
-A performance schema instrumented wrapper function for
-os_file_create_simple() which opens or creates a file.
-@param[in]	key		Performance Schema Key
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	access_type	OS_FILE_READ_ONLY or OS_FILE_READ_WRITE
-@param[in]	read_only	if true read only mode checks are enforced
-@param[out]	success		true if succeeded
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return own: handle to the file, not defined if error, error number
-can be retrieved with os_file_get_last_error */
-UNIV_INLINE
-pfs_os_file_t pfs_os_file_create_simple_func(
-    mysql_pfs_key_t key, const char *name, ulint create_mode, ulint access_type,
-    bool read_only, bool *success, const char *src_file, uint src_line) {
-  PSI_file_locker_state state;
-  struct PSI_file_locker *locker = NULL;
-  pfs_os_file_t file;
 
-  /* register a file open or creation depending on "create_mode" */
-  register_pfs_file_open_begin(
-      &state, locker, key,
-      (create_mode == OS_FILE_CREATE) ? PSI_FILE_CREATE : PSI_FILE_OPEN, name,
-      src_file, src_line);
-
-  file.m_file = os_file_create_simple_func(name, create_mode, access_type,
-                                           read_only, success);
-  file.m_psi = NULL;
-
-  /* Regsiter psi value for the file */
-  register_pfs_file_open_end(locker, file, (*success == TRUE ? success : 0));
-
-  return (file);
-}
-
-/** NOTE! Please use the corresponding macro
-os_file_create_simple_no_error_handling(), not directly this function!
-A performance schema instrumented wrapper function for
-os_file_create_simple_no_error_handling(). Add instrumentation to
-monitor file creation/open.
-@param[in]	key		Performance Schema Key
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	access_type	OS_FILE_READ_ONLY, OS_FILE_READ_WRITE, or
-                                OS_FILE_READ_ALLOW_DELETE; the last option is
-                                used by a backup program reading the file
-@param[in]	read_only	if true read only mode checks are enforced
-@param[out]	success		true if succeeded
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return own: handle to the file, not defined if error, error number
-can be retrieved with os_file_get_last_error */
-UNIV_INLINE
-pfs_os_file_t pfs_os_file_create_simple_no_error_handling_func(
-    mysql_pfs_key_t key, const char *name, ulint create_mode, ulint access_type,
-    bool read_only, bool *success, const char *src_file, uint src_line) {
-  PSI_file_locker_state state;
-  struct PSI_file_locker *locker = NULL;
-  pfs_os_file_t file;
-
-  /* register a file open or creation depending on "create_mode" */
-  register_pfs_file_open_begin(
-      &state, locker, key,
-      create_mode == OS_FILE_CREATE ? PSI_FILE_CREATE : PSI_FILE_OPEN, name,
-      src_file, src_line);
-
-  file = os_file_create_simple_no_error_handling_func(
-      name, create_mode, access_type, read_only, success);
-
-  file.m_psi = NULL;
-  register_pfs_file_open_end(locker, file, (*success == TRUE ? success : 0));
-
-  return (file);
-}
-
-/** NOTE! Please use the corresponding macro os_file_create(), not directly
-this function!
-A performance schema wrapper function for os_file_create().
-Add instrumentation to monitor file creation/open.
-@param[in]	key		Performance Schema Key
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	create_mode	create mode
-@param[in]	purpose		OS_FILE_AIO, if asynchronous, non-buffered I/O
-                                is desired, OS_FILE_NORMAL, if any normal file;
-                                NOTE that it also depends on type, os_aio_..
-                                and srv_.. variables whether we really us
-                                async I/O or unbuffered I/O: look in the
-                                function source code for the exact rules
-@param[in]	type		OS_DATA_FILE or OS_LOG_FILE
-@param[in]	read_only	if true read only mode checks are enforced
-@param[out]	success		true if succeeded
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return own: handle to the file, not defined if error, error number
-can be retrieved with os_file_get_last_error */
-UNIV_INLINE
-pfs_os_file_t pfs_os_file_create_func(mysql_pfs_key_t key, const char *name,
-                                      ulint create_mode, ulint purpose,
-                                      ulint type, bool read_only, bool *success,
-                                      const char *src_file, uint src_line) {
-  PSI_file_locker_state state;
-  struct PSI_file_locker *locker = NULL;
-  pfs_os_file_t file;
-
-  /* register a file open or creation depending on "create_mode" */
-  register_pfs_file_open_begin(
-      &state, locker, key,
-      create_mode == OS_FILE_CREATE ? PSI_FILE_CREATE : PSI_FILE_OPEN, name,
-      src_file, src_line);
-
-  file =
-      os_file_create_func(name, create_mode, purpose, type, read_only, success);
-
-  file.m_psi = NULL;
-  register_pfs_file_open_end(locker, file, (*success == TRUE ? success : 0));
-
-  return (file);
-}
-/**
-NOTE! Please use the corresponding macro os_file_close(), not directly
-this function!
-A performance schema instrumented wrapper function for os_file_close().
-@param[in]	file		handle to a file
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return true if success */
-UNIV_INLINE
-bool pfs_os_file_close_func(pfs_os_file_t file, const char *src_file,
-                            uint src_line) {
-  PSI_file_locker_state state;
-  struct PSI_file_locker *locker = NULL;
-
-  /* register the file close */
-  register_pfs_file_io_begin(&state, locker, file, 0, PSI_FILE_CLOSE, src_file,
-                             src_line);
-
-  bool result = os_file_close_func(file.m_file);
-
-  register_pfs_file_io_end(locker, 0);
-
-  return (result);
-}
 
 #ifndef UNIV_HOTBACKUP
 /** NOTE! Please use the corresponding macro os_aio(), not directly this
@@ -228,6 +81,11 @@ dberr_t pfs_os_aio_func(IORequest &type, AIO_mode aio_mode, const char *name,
   return (result);
 }
 #endif /* UNIV_HOTBACKUP */
+
+
+
+
+
 
 /** NOTE! Please use the corresponding macro os_file_read(), not directly
 this function!
