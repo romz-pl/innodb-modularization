@@ -19,5 +19,6 @@
 /** Number of bit in a ulint datatype */
 #define NUM_BITS_ULINT (sizeof(ulint) * CHAR_BIT)
 
+#define MONITOR_INIT_ZERO_VALUE 0
 
 #endif

@@ -53,6 +53,39 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/monitor/MONITOR_OFF.h>
 #include <innodb/monitor/MONITOR_IS_ON.h>
 #include <innodb/monitor/innodb_counter_value.h>
+#include <innodb/monitor/MONITOR_FIELD.h>
+#include <innodb/monitor/MONITOR_VALUE.h>
+#include <innodb/monitor/MONITOR_MAX_VALUE.h>
+#include <innodb/monitor/MONITOR_MIN_VALUE.h>
+#include <innodb/monitor/MONITOR_VALUE_RESET.h>
+#include <innodb/monitor/MONITOR_MAX_VALUE_START.h>
+#include <innodb/monitor/MONITOR_MIN_VALUE_START.h>
+#include <innodb/monitor/MONITOR_LAST_VALUE.h>
+#include <innodb/monitor/MONITOR_START_VALUE.h>
+#include <innodb/monitor/MONITOR_VALUE_SINCE_START.h>
+#include <innodb/monitor/MONITOR_STATUS.h>
+#include <innodb/monitor/MONITOR_SET_START.h>
+#include <innodb/monitor/MONITOR_SET_OFF.h>
+#include <innodb/monitor/MONITOR_MAX_MIN_NOT_INIT.h>
+#include <innodb/monitor/MONITOR_INIT.h>
+#include <innodb/monitor/MONITOR_INC.h>
+#include <innodb/monitor/MONITOR_ATOMIC_INC.h>
+#include <innodb/monitor/MONITOR_ATOMIC_DEC.h>
+#include <innodb/monitor/MONITOR_DEC.h>
+#include <innodb/monitor/MONITOR_CHECK_DEFINED.h>
+#include <innodb/monitor/MONITOR_INC_VALUE.h>
+#include <innodb/monitor/MONITOR_DEC_VALUE.h>
+#include <innodb/monitor/MONITOR_INC_NOCHECK.h>
+#include <innodb/monitor/MONITOR_DEC_NOCHECK.h>
+#include <innodb/monitor/MONITOR_SET.h>
+#include <innodb/monitor/MONITOR_INC_TIME_IN_MICRO_SECS.h>
+#include <innodb/monitor/MONITOR_INC_VALUE_CUMULATIVE.h>
+#include <innodb/monitor/MONITOR_SET_UPD_MAX_ONLY.h>
+#include <innodb/monitor/MONITOR_SET_SIMPLE.h>
+#include <innodb/monitor/MONITOR_RESET_ALL.h>
+#include <innodb/monitor/MONITOR_SAVE_START.h>
+#include <innodb/monitor/MONITOR_SAVE_LAST.h>
+#include <innodb/monitor/MONITOR_SET_DIFF.h>
 
 
 
@@ -60,276 +93,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef UNIV_HOTBACKUP
 
 
-/** Following are macro defines for basic montior counter manipulations.
-Please note we do not provide any synchronization for these monitor
-operations due to performance consideration. Most counters can
-be placed under existing mutex protections in respective code
-module. */
 
-/** Macros to access various fields of a monitor counters */
-#define MONITOR_FIELD(monitor, field) (innodb_counter_value[monitor].field)
-
-#define MONITOR_VALUE(monitor) MONITOR_FIELD(monitor, mon_value)
-
-#define MONITOR_MAX_VALUE(monitor) MONITOR_FIELD(monitor, mon_max_value)
-
-#define MONITOR_MIN_VALUE(monitor) MONITOR_FIELD(monitor, mon_min_value)
-
-#define MONITOR_VALUE_RESET(monitor) MONITOR_FIELD(monitor, mon_value_reset)
-
-#define MONITOR_MAX_VALUE_START(monitor) \
-  MONITOR_FIELD(monitor, mon_max_value_start)
-
-#define MONITOR_MIN_VALUE_START(monitor) \
-  MONITOR_FIELD(monitor, mon_min_value_start)
-
-#define MONITOR_LAST_VALUE(monitor) MONITOR_FIELD(monitor, mon_last_value)
-
-#define MONITOR_START_VALUE(monitor) MONITOR_FIELD(monitor, mon_start_value)
-
-#define MONITOR_VALUE_SINCE_START(monitor) \
-  (MONITOR_VALUE(monitor) + MONITOR_VALUE_RESET(monitor))
-
-#define MONITOR_STATUS(monitor) MONITOR_FIELD(monitor, mon_status)
-
-#define MONITOR_SET_START(monitor)                         \
-  do {                                                     \
-    MONITOR_STATUS(monitor) = MONITOR_STARTED;             \
-    MONITOR_FIELD((monitor), mon_start_time) = time(NULL); \
-  } while (0)
-
-#define MONITOR_SET_OFF(monitor)                          \
-  do {                                                    \
-    MONITOR_STATUS(monitor) = MONITOR_STOPPED;            \
-    MONITOR_FIELD((monitor), mon_stop_time) = time(NULL); \
-  } while (0)
-
-#define MONITOR_INIT_ZERO_VALUE 0
-
-/** Max and min values are initialized when we first turn on the monitor
-counter, and set the MONITOR_STATUS. */
-#define MONITOR_MAX_MIN_NOT_INIT(monitor)                   \
-  (MONITOR_STATUS(monitor) == MONITOR_INIT_ZERO_VALUE &&    \
-   MONITOR_MIN_VALUE(monitor) == MONITOR_INIT_ZERO_VALUE && \
-   MONITOR_MAX_VALUE(monitor) == MONITOR_INIT_ZERO_VALUE)
-
-#define MONITOR_INIT(monitor)                        \
-  if (MONITOR_MAX_MIN_NOT_INIT(monitor)) {           \
-    MONITOR_MIN_VALUE(monitor) = MIN_RESERVED;       \
-    MONITOR_MIN_VALUE_START(monitor) = MIN_RESERVED; \
-    MONITOR_MAX_VALUE(monitor) = MAX_RESERVED;       \
-    MONITOR_MAX_VALUE_START(monitor) = MAX_RESERVED; \
-  }
-
-/** Macros to increment/decrement the counters. The normal
-monitor counter operation expects appropriate synchronization
-already exists. No additional mutex is necessary when operating
-on the counters */
-#define MONITOR_INC(monitor)                                   \
-  if (MONITOR_IS_ON(monitor)) {                                \
-    MONITOR_VALUE(monitor)++;                                  \
-    if (MONITOR_VALUE(monitor) > MONITOR_MAX_VALUE(monitor)) { \
-      MONITOR_MAX_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-  }
-
-/** Atomically increment a monitor counter.
-Use MONITOR_INC if appropriate mutex protection exists.
-@param monitor monitor to be incremented by 1 */
-#define MONITOR_ATOMIC_INC(monitor)                                            \
-  if (MONITOR_IS_ON(monitor)) {                                                \
-    ib_uint64_t value;                                                         \
-    value =                                                                    \
-        os_atomic_increment_uint64((ib_uint64_t *)&MONITOR_VALUE(monitor), 1); \
-    /* Note: This is not 100% accurate because of the                          \
-    inherent race, we ignore it due to performance. */                         \
-    if (value > (ib_uint64_t)MONITOR_MAX_VALUE(monitor)) {                     \
-      MONITOR_MAX_VALUE(monitor) = value;                                      \
-    }                                                                          \
-  }
-
-/** Atomically decrement a monitor counter.
-Use MONITOR_DEC if appropriate mutex protection exists.
-@param monitor monitor to be decremented by 1 */
-#define MONITOR_ATOMIC_DEC(monitor)                                            \
-  if (MONITOR_IS_ON(monitor)) {                                                \
-    ib_uint64_t value;                                                         \
-    value =                                                                    \
-        os_atomic_decrement_uint64((ib_uint64_t *)&MONITOR_VALUE(monitor), 1); \
-    /* Note: This is not 100% accurate because of the                          \
-    inherent race, we ignore it due to performance. */                         \
-    if (value < (ib_uint64_t)MONITOR_MIN_VALUE(monitor)) {                     \
-      MONITOR_MIN_VALUE(monitor) = value;                                      \
-    }                                                                          \
-  }
-
-#define MONITOR_DEC(monitor)                                   \
-  if (MONITOR_IS_ON(monitor)) {                                \
-    MONITOR_VALUE(monitor)--;                                  \
-    if (MONITOR_VALUE(monitor) < MONITOR_MIN_VALUE(monitor)) { \
-      MONITOR_MIN_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-  }
-
-#ifdef UNIV_DEBUG_VALGRIND
-#define MONITOR_CHECK_DEFINED(value)  \
-  do {                                \
-    mon_type_t m = value;             \
-    UNIV_MEM_ASSERT_RW(&m, sizeof m); \
-  } while (0)
-#else /* UNIV_DEBUG_VALGRIND */
-#define MONITOR_CHECK_DEFINED(value) (void)0
-#endif /* UNIV_DEBUG_VALGRIND */
-
-#define MONITOR_INC_VALUE(monitor, value)                      \
-  MONITOR_CHECK_DEFINED(value);                                \
-  if (MONITOR_IS_ON(monitor)) {                                \
-    MONITOR_VALUE(monitor) += (mon_type_t)(value);             \
-    if (MONITOR_VALUE(monitor) > MONITOR_MAX_VALUE(monitor)) { \
-      MONITOR_MAX_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-  }
-
-#define MONITOR_DEC_VALUE(monitor, value)                                     \
-  MONITOR_CHECK_DEFINED(value);                                               \
-  if (MONITOR_IS_ON(monitor)) {                                               \
-                ut_ad(MONITOR_VALUE(monitor) >= (mon_type_t) (value);	\
-        MONITOR_VALUE(monitor) -= (mon_type_t) (value);		\
-        if (MONITOR_VALUE(monitor) < MONITOR_MIN_VALUE(monitor)) {  \
-            MONITOR_MIN_VALUE(monitor) = MONITOR_VALUE(monitor);\
-        }                                                             \
-  }
-
-/* Increment/decrement counter without check the monitor on/off bit, which
-could already be checked as a module group */
-#define MONITOR_INC_NOCHECK(monitor)                           \
-  do {                                                         \
-    MONITOR_VALUE(monitor)++;                                  \
-    if (MONITOR_VALUE(monitor) > MONITOR_MAX_VALUE(monitor)) { \
-      MONITOR_MAX_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-  } while (0)
-
-#define MONITOR_DEC_NOCHECK(monitor)                           \
-  do {                                                         \
-    MONITOR_VALUE(monitor)--;                                  \
-    if (MONITOR_VALUE(monitor) < MONITOR_MIN_VALUE(monitor)) { \
-      MONITOR_MIN_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-  } while (0)
-
-/** Directly set a monitor counter's value */
-#define MONITOR_SET(monitor, value)                            \
-  MONITOR_CHECK_DEFINED(value);                                \
-  if (MONITOR_IS_ON(monitor)) {                                \
-    MONITOR_VALUE(monitor) = (mon_type_t)(value);              \
-    if (MONITOR_VALUE(monitor) > MONITOR_MAX_VALUE(monitor)) { \
-      MONITOR_MAX_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-    if (MONITOR_VALUE(monitor) < MONITOR_MIN_VALUE(monitor)) { \
-      MONITOR_MIN_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-  }
-
-/** Add time difference between now and input "value" (in seconds) to the
-monitor counter
-@param monitor monitor to update for the time difference
-@param value the start time value */
-#define MONITOR_INC_TIME_IN_MICRO_SECS(monitor, value)        \
-  MONITOR_CHECK_DEFINED(value);                               \
-  if (MONITOR_IS_ON(monitor)) {                               \
-    uintmax_t old_time = (value);                             \
-    value = ut_time_us(NULL);                                 \
-    MONITOR_VALUE(monitor) += (mon_type_t)(value - old_time); \
-  }
-
-/** This macro updates 3 counters in one call. However, it only checks the
-main/first monitor counter 'monitor', to see it is on or off to decide
-whether to do the update.
-@param monitor the main monitor counter to update. It accounts for
-                        the accumulative value for the counter.
-@param monitor_n_calls counter that counts number of times this macro is
-                        called
-@param monitor_per_call counter that records the current and max value of
-                        each incremental value
-@param value incremental value to record this time */
-#define MONITOR_INC_VALUE_CUMULATIVE(monitor, monitor_n_calls,   \
-                                     monitor_per_call, value)    \
-  MONITOR_CHECK_DEFINED(value);                                  \
-  if (MONITOR_IS_ON(monitor)) {                                  \
-    MONITOR_VALUE(monitor_n_calls)++;                            \
-    MONITOR_VALUE(monitor_per_call) = (mon_type_t)(value);       \
-    if (MONITOR_VALUE(monitor_per_call) >                        \
-        MONITOR_MAX_VALUE(monitor_per_call)) {                   \
-      MONITOR_MAX_VALUE(monitor_per_call) = (mon_type_t)(value); \
-    }                                                            \
-    MONITOR_VALUE(monitor) += (mon_type_t)(value);               \
-    if (MONITOR_VALUE(monitor) > MONITOR_MAX_VALUE(monitor)) {   \
-      MONITOR_MAX_VALUE(monitor) = MONITOR_VALUE(monitor);       \
-    }                                                            \
-  }
-
-/** Directly set a monitor counter's value, and if the value
-is monotonically increasing, only max value needs to be updated */
-#define MONITOR_SET_UPD_MAX_ONLY(monitor, value)               \
-  MONITOR_CHECK_DEFINED(value);                                \
-  if (MONITOR_IS_ON(monitor)) {                                \
-    MONITOR_VALUE(monitor) = (mon_type_t)(value);              \
-    if (MONITOR_VALUE(monitor) > MONITOR_MAX_VALUE(monitor)) { \
-      MONITOR_MAX_VALUE(monitor) = MONITOR_VALUE(monitor);     \
-    }                                                          \
-  }
-
-/** Some values such as log sequence number are montomically increasing
-number, do not need to record max/min values */
-#define MONITOR_SET_SIMPLE(monitor, value)        \
-  MONITOR_CHECK_DEFINED(value);                   \
-  if (MONITOR_IS_ON(monitor)) {                   \
-    MONITOR_VALUE(monitor) = (mon_type_t)(value); \
-  }
-
-/** Reset the monitor value and max/min value to zero. The reset
-operation would only be conducted when the counter is turned off */
-#define MONITOR_RESET_ALL(monitor)                                    \
-  do {                                                                \
-    MONITOR_VALUE(monitor) = MONITOR_INIT_ZERO_VALUE;                 \
-    MONITOR_MAX_VALUE(monitor) = MAX_RESERVED;                        \
-    MONITOR_MIN_VALUE(monitor) = MIN_RESERVED;                        \
-    MONITOR_VALUE_RESET(monitor) = MONITOR_INIT_ZERO_VALUE;           \
-    MONITOR_MAX_VALUE_START(monitor) = MAX_RESERVED;                  \
-    MONITOR_MIN_VALUE_START(monitor) = MIN_RESERVED;                  \
-    MONITOR_LAST_VALUE(monitor) = MONITOR_INIT_ZERO_VALUE;            \
-    MONITOR_FIELD(monitor, mon_start_time) = MONITOR_INIT_ZERO_VALUE; \
-    MONITOR_FIELD(monitor, mon_stop_time) = MONITOR_INIT_ZERO_VALUE;  \
-    MONITOR_FIELD(monitor, mon_reset_time) = MONITOR_INIT_ZERO_VALUE; \
-  } while (0)
-
-/** Following four macros defines necessary operations to fetch and
-consolidate information from existing system status variables. */
-
-/** Save the passed-in value to mon_start_value field of monitor
-counters */
-#define MONITOR_SAVE_START(monitor, value)                  \
-  do {                                                      \
-    MONITOR_CHECK_DEFINED(value);                           \
-    (MONITOR_START_VALUE(monitor) =                         \
-         (mon_type_t)(value)-MONITOR_VALUE_RESET(monitor)); \
-  } while (0)
-
-/** Save the passed-in value to mon_last_value field of monitor
-counters */
-#define MONITOR_SAVE_LAST(monitor)                          \
-  do {                                                      \
-    MONITOR_LAST_VALUE(monitor) = MONITOR_VALUE(monitor);   \
-    MONITOR_START_VALUE(monitor) += MONITOR_VALUE(monitor); \
-  } while (0)
-
-/** Set monitor value to the difference of value and mon_start_value
-compensated by mon_last_value if accumulated value is required. */
-#define MONITOR_SET_DIFF(monitor, value)                                       \
-  MONITOR_SET_UPD_MAX_ONLY(monitor, ((value)-MONITOR_VALUE_RESET(monitor) -    \
-                                     MONITOR_FIELD(monitor, mon_start_value) + \
-                                     MONITOR_FIELD(monitor, mon_last_value)))
 
 /** Get monitor's monitor_info_t by its monitor id (index into the
  innodb_counter_info array
