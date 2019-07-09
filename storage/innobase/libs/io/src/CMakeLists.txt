@@ -8,6 +8,10 @@ add_library( ${LIB_NAME} STATIC
     Encryption.cpp
     Fil_path.cpp
     IORequest.cpp
+    IORequestLogRead.cpp
+    IORequestLogWrite.cpp
+    IORequestRead.cpp
+    IORequestWrite.cpp
     OS_FD_FROM_FILE.cpp
     OS_FILE_CLOSE_FD.cpp
     OS_FILE_FROM_FD.cpp
@@ -15,6 +19,12 @@ add_library( ${LIB_NAME} STATIC
     access_type.cpp
     block_cache.cpp
     ib_file_suffix.cpp
+    innodb_arch_file_key.cpp
+    innodb_clone_file_key.cpp
+    innodb_data_file_key.cpp
+    innodb_log_file_key.cpp
+    innodb_temp_file_key.cpp
+    macros.cpp
     meb_free_block_cache.cpp
     os_alloc_block.cpp
     os_bytes_read_since_printout.cpp
@@ -22,22 +32,32 @@ add_library( ${LIB_NAME} STATIC
     os_file_can_delete.cpp
     os_file_close.cpp
     os_file_close_func.cpp
+    os_file_close_no_error_handling.cpp
     os_file_close_pfs.cpp
     os_file_compress_page.cpp
     os_file_compressed_page_size.cpp
+    os_file_copy.cpp
     os_file_copy_func.cpp
+    os_file_copy_pfs.cpp
     os_file_copy_read_write.cpp
+    os_file_create.cpp
     os_file_create_directory.cpp
     os_file_create_func.cpp
+    os_file_create_simple.cpp
     os_file_create_simple_func.cpp
+    os_file_create_simple_no_error_handling.cpp
     os_file_create_simple_no_error_handling_func.cpp
     os_file_create_subdirs_if_needed.cpp
     os_file_create_t.cpp
+    os_file_delete.cpp
     os_file_delete_func.cpp
+    os_file_delete_if_exists.cpp
     os_file_delete_if_exists_func.cpp
     os_file_encrypt_log.cpp
     os_file_encrypt_page.cpp
+    os_file_flush.cpp
     os_file_flush_func.cpp
+    os_file_flush_pfs.cpp
     os_file_fsync_posix.cpp
     os_file_get_last_error.cpp
     os_file_get_last_error_low.cpp
@@ -57,9 +77,16 @@ add_library( ${LIB_NAME} STATIC
     os_file_punch_hole.cpp
     os_file_punch_hole_posix.cpp
     os_file_pwrite.cpp
+    os_file_read.cpp
     os_file_read_func.cpp
+    os_file_read_no_error_handling.cpp
     os_file_read_no_error_handling_func.cpp
+    os_file_read_no_error_handling_int_fd.cpp
+    os_file_read_no_error_handling_pfs.cpp
     os_file_read_page.cpp
+    os_file_read_pfs.cpp
+    os_file_read_string.cpp
+    os_file_rename.cpp
     os_file_rename_func.cpp
     os_file_scan_directory.cpp
     os_file_seek.cpp
@@ -74,22 +101,40 @@ add_library( ${LIB_NAME} STATIC
     os_file_truncate.cpp
     os_file_truncate_posix.cpp
     os_file_type_t.cpp
+    os_file_write.cpp
     os_file_write_func.cpp
+    os_file_write_int_fd.cpp
     os_file_write_page.cpp
+    os_file_write_pfs.cpp
     os_free_block.cpp
+    os_fsync_threshold.cpp
+    os_fusionio_get_sector_size.cpp
+    os_has_said_disk_full.cpp
     os_innodb_umask.cpp
+    os_io_ptr_align.cpp
     os_is_o_direct_supported.cpp
     os_is_sparse_file_supported.cpp
     os_n_file_reads.cpp
     os_n_file_writes.cpp
+    os_n_fsyncs.cpp
     os_n_pending_reads.cpp
     os_n_pending_writes.cpp
     os_offset_t.cpp
     pfs_os_file_close_func.cpp
+    pfs_os_file_copy_func.cpp
     pfs_os_file_create_func.cpp
     pfs_os_file_create_simple_func.cpp
     pfs_os_file_create_simple_no_error_handling_func.cpp
+    pfs_os_file_delete_func.cpp
+    pfs_os_file_delete_if_exists_func.cpp
+    pfs_os_file_flush_func.cpp
+    pfs_os_file_read_func.cpp
+    pfs_os_file_read_no_error_handling_func.cpp
+    pfs_os_file_read_no_error_handling_int_fd_func.cpp
+    pfs_os_file_rename_func.cpp
     pfs_os_file_t.cpp
+    pfs_os_file_write_func.cpp
+    pfs_os_file_write_int_fd_func.cpp
     register_pfs_file_close_begin.cpp
     register_pfs_file_close_end.cpp
     register_pfs_file_io_begin.cpp

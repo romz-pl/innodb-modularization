@@ -3,10 +3,11 @@
 #include <innodb/logger/error.h>
 #include <innodb/logger/info.h>
 #include <innodb/io/os_file_pwrite.h>
+#include <innodb/io/os_has_said_disk_full.h>
 
 #include <cstring>
 
-extern bool os_has_said_disk_full;
+
 extern const char *OPERATING_SYSTEM_ERROR_MSG;
 
 /** Requests a synchronous write operation.

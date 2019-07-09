@@ -54,6 +54,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/sync_mutex/MUTEX_TYPE.h>
 #include <innodb/buffer/buf_pool_get_curr_size.h>
+#include <innodb/io/os_has_said_disk_full.h>
+#include <innodb/io/innodb_log_file_key.h>
+#include <innodb/io/innodb_data_file_key.h>
 
 #include <zlib.h>
 #include "btr0btr.h"
@@ -121,6 +124,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "usr0sess.h"
 #include "ut0crc32.h"
 #include "sql/log.h"
+
 
 /** fil_space_t::flags for hard-coded tablespaces */
 extern uint32_t predefined_flags;

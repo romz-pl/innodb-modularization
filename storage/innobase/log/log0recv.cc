@@ -45,6 +45,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/buffer/buf_page_get_newest_modification.h>
 #include <innodb/buffer/buf_pool_get_n_pages.h>
+#include <innodb/io/IORequestRead.h>
+#include <innodb/io/IORequestWrite.h>
+#include <innodb/io/IORequestLogRead.h>
+#include <innodb/io/IORequestLogWrite.h>
+
+
 
 #include "ha_prototypes.h"
 

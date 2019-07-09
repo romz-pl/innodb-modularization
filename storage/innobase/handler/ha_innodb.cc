@@ -49,6 +49,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/string/ut_str_sql_format.h>
 #include <innodb/buffer/buf_pool_ptr.h>
 #include <innodb/buffer/buf_pool_size_align.h>
+#include <innodb/io/innodb_data_file_key.h>
+#include <innodb/io/innodb_log_file_key.h>
+#include <innodb/io/innodb_temp_file_key.h>
+#include <innodb/io/innodb_arch_file_key.h>
+#include <innodb/io/innodb_clone_file_key.h>
 
 #include <auto_thd.h>
 #include <errno.h>

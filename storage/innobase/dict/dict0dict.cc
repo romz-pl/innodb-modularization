@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/string/ut_strlen.h>
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/buffer/buf_pool_get_curr_size.h>
+#include <innodb/io/innodb_temp_file_key.h>
 
 #include "mysql/components/services/log_builtins.h"
 

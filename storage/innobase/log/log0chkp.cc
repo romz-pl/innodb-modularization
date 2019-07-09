@@ -50,6 +50,10 @@ the file COPYING.Google.
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_low.h>
 #include <innodb/sync_event/os_event_wait_time_low.h>
+#include <innodb/io/IORequestLogRead.h>
+#include <innodb/io/IORequestLogWrite.h>
+
+
 
 #include "ha_prototypes.h"
 

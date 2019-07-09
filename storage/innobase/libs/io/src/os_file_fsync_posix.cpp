@@ -5,10 +5,9 @@
 #include <innodb/logger/warn.h>
 #include <innodb/error/ut_error.h>
 #include <innodb/thread/os_thread_sleep.h>
+#include <innodb/io/os_n_fsyncs.h>
 
 #include <unistd.h>
-
-extern ulint os_n_fsyncs;
 
 /** Wrapper to fsync(2) that retries the call on some errors.
 Returns the value 0 if successful; otherwise the value -1 is returned and

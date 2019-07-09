@@ -33,6 +33,8 @@
 
 #include <gtest/gtest.h>
 
+#include <innodb/io/innodb_log_file_key.h>
+
 #include "clone0api.h" /* clone_init(), clone_free() */
 #include "dict0dict.h" /* dict_sys_t::s_log_space_first_id */
 #include "fil0fil.h"

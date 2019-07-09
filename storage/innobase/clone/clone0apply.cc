@@ -29,6 +29,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/io/innodb_clone_file_key.h>
+
 #include "clone0clone.h"
 #include "dict0dict.h"
 #include "handler.h"

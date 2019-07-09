@@ -4,10 +4,10 @@
 #include <innodb/logger/error.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/thread/os_thread_sleep.h>
+#include <innodb/io/os_has_said_disk_full.h>
 
 void srv_fatal_error();
 
-extern bool os_has_said_disk_full;
 
 
 /** Does error handling when a file operation fails.

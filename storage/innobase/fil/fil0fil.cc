@@ -52,6 +52,14 @@ The tablespace memory cache */
 #include <innodb/buffer/buf_block_set_file_page.h>
 #include <innodb/buffer/buf_block_set_state.h>
 #include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/io/os_has_said_disk_full.h>
+#include <innodb/io/IORequestRead.h>
+#include <innodb/io/IORequestWrite.h>
+#include <innodb/io/innodb_log_file_key.h>
+#include <innodb/io/innodb_data_file_key.h>
+#include <innodb/io/innodb_temp_file_key.h>
+
+
 
 #include "os0file.h"
 #include "btr0btr.h"
@@ -104,8 +112,6 @@ The tablespace memory cache */
 #include <thread>
 #include <tuple>
 #include <unordered_map>
-
-
 
 
 

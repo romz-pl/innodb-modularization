@@ -8,6 +8,7 @@
 #include <innodb/machine/data.h>
 #include <innodb/page/page_type_t.h>
 #include <innodb/page/type.h>
+#include <innodb/io/os_io_ptr_align.h>
 
 #include <string.h>
 #include <lz4.h>
@@ -16,8 +17,6 @@
 /* Compression level to be used by zlib. Settable by user. */
 extern uint page_zip_level;
 
-/** Disk sector size of aligning write buffer for DIRECT_IO */
-static const ulint os_io_ptr_align = UNIV_SECTOR_SIZE;
 
 /** Compress a data page
 @param[in]	compression	Compression algorithm

@@ -39,6 +39,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_in_file.h>
 #include <innodb/buffer/buf_page_get_state.h>
 #include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/io/IORequestWrite.h>
+
 
 #include "buf0buf.h"
 #include "buf/buf.h"

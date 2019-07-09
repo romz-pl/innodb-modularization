@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_destroy.h>
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
+#include <innodb/io/innodb_arch_file_key.h>
 
 #include "arch0arch.h"
 #include "os0thread-create.h"

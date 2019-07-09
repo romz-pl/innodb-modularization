@@ -4,9 +4,7 @@
 #include <innodb/align/ut_align.h>
 #include <innodb/io/block_cache.h>
 #include <innodb/io/os_alloc_block.h>
-
-/** Disk sector size of aligning write buffer for DIRECT_IO */
-static const ulint os_io_ptr_align = UNIV_SECTOR_SIZE;
+#include <innodb/io/os_io_ptr_align.h>
 
 
 /** Encrypt log blocks content when write it to disk.

@@ -48,6 +48,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/ioasync/os_aio_n_segments.h>
 #include <innodb/io/os_bytes_read_since_printout.h>
 #include <innodb/io/os_file_read_page.h>
+#include <innodb/io/os_n_fsyncs.h>
 
 #include "os0file.h"
 #include "my_compiler.h"
@@ -116,34 +117,17 @@ extern int meb_key_fetch(const char *key_id, char **key_type,
 #include <innodb/io/Block.h>
 #include <innodb/io/Blocks.h>
 #include <innodb/io/block_cache.h>
+#include <innodb/io/os_has_said_disk_full.h>
+#include <innodb/io/macros.h>
 
 
 #ifdef UNIV_HOTBACKUP
 #include <data0type.h>
 #endif /* UNIV_HOTBACKUP */
 
-/* Flush after each os_fsync_threshold bytes */
-unsigned long long os_fsync_threshold = 0;
 
 
 
-
-
-
-
-
-
-/** Disk sector size of aligning write buffer for DIRECT_IO */
-static ulint os_io_ptr_align = UNIV_SECTOR_SIZE;
-
-#ifdef _WIN32
-
-/* On Windows when using native AIO the number of AIO requests
-that a thread can handle at a given time is limited to 32
-i.e.: SRV_N_PENDING_IOS_PER_THREAD */
-#define SRV_N_PENDING_IOS_PER_THREAD OS_AIO_N_PENDING_IOS_PER_THREAD
-
-#endif /* _WIN32 */
 
 /** In simulated aio, merge at most this many consecutive i/os */
 static const ulint OS_AIO_MERGE_N_CONSECUTIVE = 64;
@@ -206,14 +190,6 @@ the completed IO request and calls completion routine on it.
 
 **********************************************************************/
 
-#ifdef UNIV_PFS_IO
-/* Keys to register InnoDB I/O with performance schema */
-mysql_pfs_key_t innodb_log_file_key;
-mysql_pfs_key_t innodb_data_file_key;
-mysql_pfs_key_t innodb_temp_file_key;
-mysql_pfs_key_t innodb_arch_file_key;
-mysql_pfs_key_t innodb_clone_file_key;
-#endif /* UNIV_PFS_IO */
 
 #endif /* !UNIV_HOTBACKUP */
 
@@ -240,7 +216,7 @@ static bool os_aio_recommend_sleep_for_read_threads = false;
 
 
 
-ulint os_n_fsyncs = 0;
+
 static ulint os_n_file_reads_old = 0;
 static ulint os_n_file_writes_old = 0;
 static ulint os_n_fsyncs_old = 0;
@@ -248,7 +224,7 @@ static ulint os_n_fsyncs_old = 0;
 
 
 static time_t os_last_printout;
-bool os_has_said_disk_full = false;
+
 
 /** Default Zip compression level */
 extern uint page_zip_level;
@@ -690,21 +666,7 @@ FILE *os_file_create_tmpfile(const char *path) {
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Rewind file to its start, read at most size - 1 bytes from it to str, and
-NUL-terminate str. All errors are silently ignored. This function is
-mostly meant to be used with temporary files.
-@param[in,out]	file		File to read from
-@param[in,out]	str		Buffer where to read
-@param[in]	size		Size of buffer */
-void os_file_read_string(FILE *file, char *str, ulint size) {
-  if (size != 0) {
-    rewind(file);
 
-    size_t flen = fread(str, 1, size - 1, file);
-
-    str[flen] = '\0';
-  }
-}
 
 
 
@@ -1233,14 +1195,7 @@ static dberr_t os_aio_linux_handler(ulint global_segment, fil_node_t **m1,
 
 
 
-#ifdef UNIV_HOTBACKUP
-/** Closes a file handle.
-@param[in]	file		Handle to a file
-@return true if success */
-bool os_file_close_no_error_handling(os_file_t file) {
-  return (close(file) != -1);
-}
-#endif /* UNIV_HOTBACKUP */
+
 
 /** This function can be called if one wants to post a batch of reads and
 prefers an i/o-handler thread to handle them all at once later. You must
@@ -2321,14 +2276,7 @@ bool os_file_set_eof(FILE *file) {
   return (SetEndOfFile(h));
 }
 
-#ifdef UNIV_HOTBACKUP
-/** Closes a file handle.
-@param[in]	file		Handle to close
-@return true if success */
-bool os_file_close_no_error_handling(os_file_t file) {
-  return (CloseHandle(file) ? true : false);
-}
-#endif /* UNIV_HOTBACKUP */
+
 
 /** This function can be called if one wants to post a batch of reads and
 prefers an i/o-handler thread to handle them all at once later. You must
@@ -2708,93 +2656,6 @@ dberr_t AIO::init() {
 }
 
 
-
-
-#if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
-
-/** Max disk sector size */
-static const ulint MAX_SECTOR_SIZE = 4096;
-
-/**
-Try and get the FusionIO sector size. */
-void os_fusionio_get_sector_size() {
-  if (srv_unix_file_flush_method == SRV_UNIX_O_DIRECT ||
-      srv_unix_file_flush_method == SRV_UNIX_O_DIRECT_NO_FSYNC) {
-    ulint sector_size = UNIV_SECTOR_SIZE;
-    char *path = srv_data_home;
-    os_file_t check_file;
-    byte *ptr;
-    byte *block_ptr;
-    char current_dir[3];
-    char *dir_end;
-    ulint dir_len;
-    ulint check_path_len;
-    char *check_file_name;
-    ssize_t ret;
-
-    /* If the srv_data_home is empty, set the path to
-    current dir. */
-    if (*path == 0) {
-      current_dir[0] = FN_CURLIB;
-      current_dir[1] = FN_LIBCHAR;
-      current_dir[2] = 0;
-      path = current_dir;
-    }
-
-    /* Get the path of data file */
-    dir_end = strrchr(path, OS_PATH_SEPARATOR);
-    dir_len = dir_end ? dir_end - path : strlen(path);
-
-    /* allocate a new path and move the directory path to it. */
-    check_path_len = dir_len + sizeof "/check_sector_size";
-    check_file_name = static_cast<char *>(ut_zalloc_nokey(check_path_len));
-    memcpy(check_file_name, path, dir_len);
-
-    /* Construct a check file name. */
-    strcat(check_file_name + dir_len, "/check_sector_size");
-
-    /* Create a tmp file for checking sector size. */
-    check_file = ::open(check_file_name,
-                        O_CREAT | O_TRUNC | O_WRONLY | O_DIRECT, S_IRWXU);
-
-    if (check_file == -1) {
-      ib::error(ER_IB_MSG_830)
-          << "Failed to create check sector file, errno:" << errno
-          << " Please confirm O_DIRECT is"
-          << " supported and remove the file " << check_file_name
-          << " if it exists.";
-      ut_free(check_file_name);
-      errno = 0;
-      return;
-    }
-
-    /* Try to write the file with different sector size
-    alignment. */
-    ptr = static_cast<byte *>(ut_zalloc_nokey(2 * MAX_SECTOR_SIZE));
-
-    while (sector_size <= MAX_SECTOR_SIZE) {
-      block_ptr = static_cast<byte *>(ut_align(ptr, sector_size));
-      ret = pwrite(check_file, block_ptr, sector_size, 0);
-      if (ret > 0 && (ulint)ret == sector_size) {
-        break;
-      }
-      sector_size *= 2;
-    }
-
-    /* The sector size should <= MAX_SECTOR_SIZE. */
-    ut_ad(sector_size <= MAX_SECTOR_SIZE);
-
-    close(check_file);
-    unlink(check_file_name);
-
-    ut_free(check_file_name);
-    ut_free(ptr);
-    errno = 0;
-
-    os_io_ptr_align = sector_size;
-  }
-}
-#endif /* !NO_FALLOCATE && UNIV_LINUX */
 
 
 

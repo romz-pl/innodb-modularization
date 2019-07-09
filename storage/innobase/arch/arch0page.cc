@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_from_array.h>
 #include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
 #include <innodb/buffer/buf_pool_t.h>
+#include <innodb/io/innodb_arch_file_key.h>
 
 #include "arch0page.h"
 #include "arch0recv.h"
