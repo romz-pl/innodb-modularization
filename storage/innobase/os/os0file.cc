@@ -2588,22 +2588,6 @@ bool os_file_set_size(const char *name, pfs_os_file_t file, os_offset_t offset,
 }
 
 
-/** NOTE! Use the corresponding macro os_file_read(), not directly this
-function!
-Requests a synchronous positioned read operation.
-@return DB_SUCCESS if request was successful, DB_IO_ERROR on failure
-@param[in]	type		IO flags
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset from the start where to read
-@param[in]	n		number of bytes to read, starting from offset
-@return DB_SUCCESS or error code */
-dberr_t os_file_read_func(IORequest &type, os_file_t file, void *buf,
-                          os_offset_t offset, ulint n) {
-  ut_ad(type.is_read());
-
-  return (os_file_read_page(type, file, buf, offset, n, NULL, true));
-}
 
 /** NOTE! Use the corresponding macro os_file_read_first_page(), not
 directly this function!
@@ -2631,176 +2615,13 @@ dberr_t os_file_read_first_page_func(IORequest &type, os_file_t file, void *buf,
   return (err);
 }
 
-/** copy data from one file to another file using read, write.
-@param[in]	src_file	file handle to copy from
-@param[in]	src_offset	offset to copy from
-@param[in]	dest_file	file handle to copy to
-@param[in]	dest_offset	offset to copy to
-@param[in]	size		number of bytes to copy
-@return DB_SUCCESS if successful */
-static dberr_t os_file_copy_read_write(os_file_t src_file,
-                                       os_offset_t src_offset,
-                                       os_file_t dest_file,
-                                       os_offset_t dest_offset, uint size) {
-  dberr_t err;
-  uint request_size;
-  const uint BUF_SIZE = 4 * UNIV_SECTOR_SIZE;
 
-  char buf[BUF_SIZE + UNIV_SECTOR_SIZE];
-  char *buf_ptr;
 
-  buf_ptr = static_cast<char *>(ut_align(buf, UNIV_SECTOR_SIZE));
 
-  IORequest read_request(IORequest::READ);
-  read_request.disable_compression();
-  read_request.clear_encrypted();
 
-  IORequest write_request(IORequest::WRITE);
-  write_request.disable_compression();
-  write_request.clear_encrypted();
 
-  while (size > 0) {
-    if (size > BUF_SIZE) {
-      request_size = BUF_SIZE;
-    } else {
-      request_size = size;
-    }
 
-    err = os_file_read_func(read_request, src_file, buf_ptr, src_offset,
-                            request_size);
 
-    if (err != DB_SUCCESS) {
-      return (err);
-    }
-    src_offset += request_size;
-
-    err = os_file_write_func(write_request, "file copy", dest_file, buf_ptr,
-                             dest_offset, request_size);
-
-    if (err != DB_SUCCESS) {
-      return (err);
-    }
-    dest_offset += request_size;
-    size -= request_size;
-  }
-
-  return (DB_SUCCESS);
-}
-
-/** copy data from one file to another file.
-@param[in]	src_file	file handle to copy from
-@param[in]	src_offset	offset to copy from
-@param[in]	dest_file	file handle to copy to
-@param[in]	dest_offset	offset to copy to
-@param[in]	size		number of bytes to copy
-@return DB_SUCCESS if successful */
-#ifdef __linux__
-dberr_t os_file_copy_func(os_file_t src_file, os_offset_t src_offset,
-                          os_file_t dest_file, os_offset_t dest_offset,
-                          uint size) {
-  dberr_t err;
-  static bool use_sendfile = true;
-
-  uint actual_size;
-  int ret_size;
-
-  int src_fd;
-  int dest_fd;
-
-  if (!os_file_seek(nullptr, src_file, src_offset)) {
-    return (DB_IO_ERROR);
-  }
-
-  if (!os_file_seek(nullptr, dest_file, dest_offset)) {
-    return (DB_IO_ERROR);
-  }
-
-  src_fd = OS_FD_FROM_FILE(src_file);
-  dest_fd = OS_FD_FROM_FILE(dest_file);
-
-  while (use_sendfile && size > 0) {
-    ret_size = sendfile(dest_fd, src_fd, nullptr, size);
-
-    if (ret_size == -1) {
-      /* Fall through read/write path. */
-      ib::info(ER_IB_MSG_827) << "sendfile failed to copy data"
-                                 " : trying read/write ";
-
-      use_sendfile = false;
-      break;
-    }
-
-    actual_size = static_cast<uint>(ret_size);
-
-    ut_ad(size >= actual_size);
-    size -= actual_size;
-  }
-
-  if (size == 0) {
-    return (DB_SUCCESS);
-  }
-
-  err = os_file_copy_read_write(src_file, src_offset, dest_file, dest_offset,
-                                size);
-
-  return (err);
-}
-#else
-dberr_t os_file_copy_func(os_file_t src_file, os_offset_t src_offset,
-                          os_file_t dest_file, os_offset_t dest_offset,
-                          uint size) {
-  dberr_t err;
-
-  err = os_file_copy_read_write(src_file, src_offset, dest_file, dest_offset,
-                                size);
-  return (err);
-}
-#endif
-
-/** NOTE! Use the corresponding macro os_file_read_no_error_handling(),
-not directly this function!
-Requests a synchronous positioned read operation.
-@return DB_SUCCESS if request was successful, DB_IO_ERROR on failure
-@param[in]	type		IO flags
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset from the start where to read
-@param[in]	n		number of bytes to read, starting from offset
-@param[out]	o		number of bytes actually read
-@return DB_SUCCESS or error code */
-dberr_t os_file_read_no_error_handling_func(IORequest &type, os_file_t file,
-                                            void *buf, os_offset_t offset,
-                                            ulint n, ulint *o) {
-  ut_ad(type.is_read());
-
-  return (os_file_read_page(type, file, buf, offset, n, o, false));
-}
-
-/** NOTE! Use the corresponding macro os_file_write(), not directly
-Requests a synchronous write operation.
-@param[in]	type		IO flags
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	file		handle to an open file
-@param[out]	buf		buffer from which to write
-@param[in]	offset		file offset from the start where to read
-@param[in]	n		number of bytes to read, starting from offset
-@return DB_SUCCESS if request was successful, false if fail */
-dberr_t os_file_write_func(IORequest &type, const char *name, os_file_t file,
-                           const void *buf, os_offset_t offset, ulint n) {
-  ut_ad(type.validate());
-  ut_ad(type.is_write());
-
-  /* We never compress the first page.
-  Note: This assumes we always do block IO. */
-  if (offset == 0) {
-    type.clear_compressed();
-  }
-
-  const byte *ptr = reinterpret_cast<const byte *>(buf);
-
-  return (os_file_write_page(type, name, file, ptr, offset, n));
-}
 
 
 
@@ -2885,6 +2706,10 @@ dberr_t AIO::init() {
 
   return (init_slots());
 }
+
+
+
+
 #if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
 
 /** Max disk sector size */

@@ -112,6 +112,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/io/os_n_file_reads.h>
 #include <innodb/io/os_n_pending_reads.h>
 #include <innodb/io/os_file_pread.h>
+#include <innodb/io/os_file_write_func.h>
+#include <innodb/io/os_file_read_no_error_handling_func.h>
+#include <innodb/io/OS_FILE_FROM_FD.h>
+#include <innodb/io/OS_FILE_CLOSE_FD.h>
+#include <innodb/io/OS_FD_FROM_FILE.h>
+#include <innodb/io/os_file_close_pfs.h>
+#include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_copy_read_write.h>
+#include <innodb/io/os_file_copy_func.h>
+#include <innodb/io/os_file_read_func.h>
+
 
 #include "my_dbug.h"
 #include "my_io.h"
@@ -153,40 +164,6 @@ the OS actually supports it: Win 95 does not, NT does. */
 
 /** Use unbuffered I/O */
 #define UNIV_NON_BUFFERED_IO
-
-
-/** Convert a C file descriptor to a native file handle
-@param fd file descriptor
-@return native file handle */
-#define OS_FILE_FROM_FD(fd) (HANDLE) _get_osfhandle(fd)
-
-/** Associates a C file descriptor with an existing native file handle
-@param[in]	file	native file handle
-@return C file descriptor */
-#define OS_FD_FROM_FILE(file) _open_osfhandle((intptr_t)file, _O_RDONLY)
-
-/** Closes the file associated with C file descriptor fd
-@param[in]	fd	C file descriptor
-@return 0 if success */
-#define OS_FILE_CLOSE_FD(fd) _close(fd)
-
-#else /* _WIN32 */
-
-
-/** Convert a C file descriptor to a native file handle
-@param fd file descriptor
-@return native file handle */
-#define OS_FILE_FROM_FD(fd) fd
-
-/** C file descriptor from an existing native file handle
-@param[in]	file	native file handle
-@return C file descriptor */
-#define OS_FD_FROM_FILE(file) file
-
-/** Closes the file associated with C file descriptor fd
-@param[in]	fd	C file descriptor
-@return 0 if success */
-#define OS_FILE_CLOSE_FD(fd) (os_file_close(fd) ? 0 : -1)
 
 #endif /* _WIN32 */
 
@@ -289,7 +266,7 @@ The wrapper functions have the prefix of "innodb_". */
   pfs_os_file_create_simple_no_error_handling_func(                         \
       key, name, create_mode, access, read_only, success, __FILE__, __LINE__)
 
-#define os_file_close_pfs(file) pfs_os_file_close_func(file, __FILE__, __LINE__)
+
 
 #define os_aio(type, mode, name, file, buf, offset, n, read_only, message1,    \
                message2)                                                       \
@@ -567,8 +544,6 @@ to original un-instrumented file I/O APIs */
   os_file_create_simple_no_error_handling_func(name, create_mode, access,   \
                                                read_only, success)
 
-#define os_file_close_pfs(file) os_file_close_func(file)
-
 #define os_aio(type, mode, name, file, buf, offset, n, read_only, message1, \
                message2)                                                    \
   os_aio_func(type, mode, name, file, buf, offset, n, read_only, message1,  \
@@ -607,11 +582,7 @@ to original un-instrumented file I/O APIs */
 
 #endif /* UNIV_PFS_IO */
 
-#ifdef UNIV_PFS_IO
-#define os_file_close(file) os_file_close_pfs(file)
-#else
-#define os_file_close(file) os_file_close_pfs((file).m_file)
-#endif
+
 
 #ifdef UNIV_PFS_IO
 #define os_file_read(type, file, buf, offset, n) \
@@ -683,25 +654,6 @@ bool os_file_set_size(const char *name, pfs_os_file_t file, os_offset_t offset,
 
 
 
-
-
-
-
-
-
-/** NOTE! Use the corresponding macro os_file_read(), not directly this
-function!
-Requests a synchronous read operation.
-@param[in]	type		IO request context
-@param[in]	file		Open file handle
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset where to read
-@param[in]	n		number of bytes to read
-@return DB_SUCCESS if request was successful */
-dberr_t os_file_read_func(IORequest &type, os_file_t file, void *buf,
-                          os_offset_t offset, ulint n)
-    MY_ATTRIBUTE((warn_unused_result));
-
 /** NOTE! Use the corresponding macro os_file_read_first_page(),
 not directly this function!
 Requests a synchronous read operation of page 0 of IBD file
@@ -714,17 +666,6 @@ dberr_t os_file_read_first_page_func(IORequest &type, os_file_t file, void *buf,
                                      ulint n)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** copy data from one file to another file. Data is read/written
-at current file offset.
-@param[in]	src_file	file handle to copy from
-@param[in]	src_offset	offset to copy from
-@param[in]	dest_file	file handle to copy to
-@param[in]	dest_offset	offset to copy to
-@param[in]	size		number of bytes to copy
-@return DB_SUCCESS if successful */
-dberr_t os_file_copy_func(os_file_t src_file, os_offset_t src_offset,
-                          os_file_t dest_file, os_offset_t dest_offset,
-                          uint size) MY_ATTRIBUTE((warn_unused_result));
 
 /** Rewind file to its start, read at most size - 1 bytes from it to str, and
 NUL-terminate str. All errors are silently ignored. This function is
@@ -734,36 +675,6 @@ mostly meant to be used with temporary files.
 @param[in]	size		size of buffer */
 void os_file_read_string(FILE *file, char *str, ulint size);
 
-/** NOTE! Use the corresponding macro os_file_read_no_error_handling(),
-not directly this function!
-Requests a synchronous positioned read operation. This function does not do
-any error handling. In case of error it returns FALSE.
-@param[in]	type		IO request context
-@param[in]	file		Open file handle
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset where to read
-@param[in]	n		number of bytes to read
-@param[out]	o		number of bytes actually read
-@return DB_SUCCESS or error code */
-dberr_t os_file_read_no_error_handling_func(IORequest &type, os_file_t file,
-                                            void *buf, os_offset_t offset,
-                                            ulint n, ulint *o)
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** NOTE! Use the corresponding macro os_file_write(), not directly this
-function!
-Requests a synchronous write operation.
-@param[in,out]	type		IO request context
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	file		Open file handle
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset where to read
-@param[in]	n		number of bytes to read
-@return DB_SUCCESS if request was successful */
-dberr_t os_file_write_func(IORequest &type, const char *name, os_file_t file,
-                           const void *buf, os_offset_t offset, ulint n)
-    MY_ATTRIBUTE((warn_unused_result));
 
 
 

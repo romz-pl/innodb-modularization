@@ -8,17 +8,25 @@ add_library( ${LIB_NAME} STATIC
     Encryption.cpp
     Fil_path.cpp
     IORequest.cpp
+    OS_FD_FROM_FILE.cpp
+    OS_FILE_CLOSE_FD.cpp
+    OS_FILE_FROM_FD.cpp
     SyncFileIO.cpp
     access_type.cpp
     block_cache.cpp
     ib_file_suffix.cpp
     meb_free_block_cache.cpp
     os_alloc_block.cpp
+    os_bytes_read_since_printout.cpp
     os_create_block_cache.cpp
     os_file_can_delete.cpp
+    os_file_close.cpp
     os_file_close_func.cpp
+    os_file_close_pfs.cpp
     os_file_compress_page.cpp
     os_file_compressed_page_size.cpp
+    os_file_copy_func.cpp
+    os_file_copy_read_write.cpp
     os_file_create_directory.cpp
     os_file_create_func.cpp
     os_file_create_simple_func.cpp
@@ -45,8 +53,13 @@ add_library( ${LIB_NAME} STATIC
     os_file_is_root.cpp
     os_file_lock.cpp
     os_file_original_page_size.cpp
+    os_file_pread.cpp
     os_file_punch_hole.cpp
     os_file_punch_hole_posix.cpp
+    os_file_pwrite.cpp
+    os_file_read_func.cpp
+    os_file_read_no_error_handling_func.cpp
+    os_file_read_page.cpp
     os_file_rename_func.cpp
     os_file_scan_directory.cpp
     os_file_seek.cpp
@@ -61,11 +74,21 @@ add_library( ${LIB_NAME} STATIC
     os_file_truncate.cpp
     os_file_truncate_posix.cpp
     os_file_type_t.cpp
+    os_file_write_func.cpp
+    os_file_write_page.cpp
     os_free_block.cpp
     os_innodb_umask.cpp
     os_is_o_direct_supported.cpp
     os_is_sparse_file_supported.cpp
+    os_n_file_reads.cpp
+    os_n_file_writes.cpp
+    os_n_pending_reads.cpp
+    os_n_pending_writes.cpp
     os_offset_t.cpp
+    pfs_os_file_close_func.cpp
+    pfs_os_file_create_func.cpp
+    pfs_os_file_create_simple_func.cpp
+    pfs_os_file_create_simple_no_error_handling_func.cpp
     pfs_os_file_t.cpp
     register_pfs_file_close_begin.cpp
     register_pfs_file_close_end.cpp
@@ -76,19 +99,6 @@ add_library( ${LIB_NAME} STATIC
     register_pfs_file_rename_begin.cpp
     register_pfs_file_rename_end.cpp
     srv_unix_flush_t.cpp
-    pfs_os_file_create_simple_func.cpp
-    pfs_os_file_create_simple_no_error_handling_func.cpp
-    pfs_os_file_create_func.cpp
-    pfs_os_file_close_func.cpp
-    os_file_pwrite.cpp
-    os_n_pending_writes.cpp
-    os_n_file_writes.cpp
-    os_file_write_page.cpp
-    os_file_pread.cpp
-    os_n_file_reads.cpp
-    os_n_pending_reads.cpp
-    os_file_read_page.cpp
-    os_bytes_read_since_printout.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
