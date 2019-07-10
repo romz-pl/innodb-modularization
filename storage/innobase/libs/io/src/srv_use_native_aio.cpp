@@ -1,4 +1,4 @@
-#include <innodb/ioasync/srv_use_native_aio.h>
+#include <innodb/io/srv_use_native_aio.h>
 
 /* If this flag is TRUE, then we will use the native aio of the
 OS (provided we compiled Innobase with it in), otherwise we will

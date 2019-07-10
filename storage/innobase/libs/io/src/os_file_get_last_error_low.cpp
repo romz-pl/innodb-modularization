@@ -2,19 +2,11 @@
 
 #include <innodb/logger/error.h>
 #include <innodb/logger/info.h>
+#include <innodb/io/srv_use_native_aio.h>
+#include <innodb/io/srv_is_being_started.h>
+#include <innodb/io/OPERATING_SYSTEM_ERROR_MSG.h>
 
 #include <string.h>
-
-/** true if the server is being started */
-extern bool srv_is_being_started;
-
-extern const char *OPERATING_SYSTEM_ERROR_MSG;
-
-/* If this flag is TRUE, then we will use the native aio of the
-OS (provided we compiled Innobase with it in), otherwise we will
-use simulated aio we build below with threads.
-Currently we support native aio on windows and linux */
-extern bool srv_use_native_aio;
 
 /** Retrieves the last error number if an error occurs in a file io function.
 The number should be retrieved before any other OS calls (because they may

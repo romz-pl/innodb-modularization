@@ -57,6 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_has_said_disk_full.h>
 #include <innodb/io/innodb_log_file_key.h>
 #include <innodb/io/innodb_data_file_key.h>
+#include <innodb/io/srv_is_being_started.h>
 
 #include <zlib.h>
 #include "btr0btr.h"
@@ -138,8 +139,7 @@ ibool srv_start_raw_disk_in_use = FALSE;
 /** Number of IO threads to use */
 ulint srv_n_file_io_threads = 0;
 
-/** true if the server is being started */
-bool srv_is_being_started = false;
+
 /** true if SYS_TABLESPACES is available for lookups */
 bool srv_sys_tablespaces_open = false;
 /** true if the server is being started, before rolling back any

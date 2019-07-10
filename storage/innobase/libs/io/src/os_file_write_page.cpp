@@ -4,11 +4,9 @@
 #include <innodb/logger/info.h>
 #include <innodb/io/os_file_pwrite.h>
 #include <innodb/io/os_has_said_disk_full.h>
+#include <innodb/io/OPERATING_SYSTEM_ERROR_MSG.h>
 
 #include <cstring>
-
-
-extern const char *OPERATING_SYSTEM_ERROR_MSG;
 
 /** Requests a synchronous write operation.
 @param[in]	type		IO flags

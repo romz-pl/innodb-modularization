@@ -54,7 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/innodb_temp_file_key.h>
 #include <innodb/io/innodb_arch_file_key.h>
 #include <innodb/io/innodb_clone_file_key.h>
-#include <innodb/ioasync/srv_use_native_aio.h>
+#include <innodb/io/srv_use_native_aio.h>
 
 #include <auto_thd.h>
 #include <errno.h>
@@ -22547,9 +22547,6 @@ const char *FORCE_RECOVERY_MSG = "Please refer to " REFMAN
 const char *ERROR_CREATING_MSG =
     "Please refer to " REFMAN "error-creating-innodb.html";
 
-const char *OPERATING_SYSTEM_ERROR_MSG =
-    "Some operating system error numbers are described at"
-    " " REFMAN "operating-system-error-codes.html";
 
 const char *FOREIGN_KEY_CONSTRAINTS_MSG =
     "Please refer to " REFMAN

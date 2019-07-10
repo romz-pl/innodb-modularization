@@ -52,8 +52,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/ioasync/os_last_printout.h>
 #include <innodb/ioasync/AIOHandler.h>
 #include <innodb/ioasync/LinuxAIOHandler.h>
-#include <innodb/ioasync/srv_use_native_aio.h>
-
+#include <innodb/io/srv_use_native_aio.h>
+#include <innodb/io/srv_is_being_started.h>
+#include <innodb/io/OPERATING_SYSTEM_ERROR_MSG.h>
 
 #include "os0file.h"
 #include "my_compiler.h"

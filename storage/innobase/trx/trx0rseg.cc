@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/logger/info.h>
+#include <innodb/io/srv_is_being_started.h>
 
 #include "trx0rseg.h"
 

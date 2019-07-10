@@ -1,7 +1,7 @@
 #include <innodb/ioasync/os_aio_func.h>
 
 #include <innodb/ioasync/AIO.h>
-#include <innodb/ioasync/srv_use_native_aio.h>
+#include <innodb/io/srv_use_native_aio.h>
 #include <innodb/io/os_file_read_func.h>
 #include <innodb/io/os_file_write_func.h>
 #include <innodb/io/os_n_file_reads.h>

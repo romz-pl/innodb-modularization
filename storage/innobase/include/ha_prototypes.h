@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define HA_INNODB_PROTOTYPES_H
 
 #include <innodb/univ/univ.h>
+#include <innodb/io/OPERATING_SYSTEM_ERROR_MSG.h>
 
 #include <stdio.h>
 #include <string>
@@ -316,7 +317,6 @@ extern const char *TROUBLESHOOT_DATADICT_MSG;
 extern const char *BUG_REPORT_MSG;
 extern const char *FORCE_RECOVERY_MSG;
 extern const char *ERROR_CREATING_MSG;
-extern const char *OPERATING_SYSTEM_ERROR_MSG;
 extern const char *FOREIGN_KEY_CONSTRAINTS_MSG;
 extern const char *INNODB_PARAMETERS_MSG;
 

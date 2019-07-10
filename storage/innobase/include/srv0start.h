@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define srv0start_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/io/srv_is_being_started.h>
 
 #include "log0types.h"
 #include "os0thread-create.h"
@@ -149,8 +150,7 @@ void srv_get_encryption_data_filename(dict_table_t *table, char *filename,
                                       ulint max_len);
 #endif /* !UNIV_HOTBACKUP */
 
-/** true if the server is being started */
-extern bool srv_is_being_started;
+
 /** true if SYS_TABLESPACES is available for lookups */
 extern bool srv_sys_tablespaces_open;
 /** true if the server is being started, before rolling back any

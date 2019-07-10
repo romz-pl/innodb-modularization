@@ -12,6 +12,7 @@ add_library( ${LIB_NAME} STATIC
     IORequestLogWrite.cpp
     IORequestRead.cpp
     IORequestWrite.cpp
+    OPERATING_SYSTEM_ERROR_MSG.cpp
     OS_FD_FROM_FILE.cpp
     OS_FILE_CLOSE_FD.cpp
     OS_FILE_FROM_FD.cpp
@@ -143,7 +144,10 @@ add_library( ${LIB_NAME} STATIC
     register_pfs_file_open_end.cpp
     register_pfs_file_rename_begin.cpp
     register_pfs_file_rename_end.cpp
+    srv_is_being_started.cpp
     srv_unix_flush_t.cpp
+    srv_use_native_aio.cpp
+
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

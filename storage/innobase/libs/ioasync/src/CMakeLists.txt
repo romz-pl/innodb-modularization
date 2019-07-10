@@ -19,7 +19,6 @@ add_library( ${LIB_NAME} STATIC
     srv_set_io_thread_op_info.cpp
     srv_reset_io_thread_op_info.cpp
     os_aio_func.cpp
-    srv_use_native_aio.cpp
 
 )
 

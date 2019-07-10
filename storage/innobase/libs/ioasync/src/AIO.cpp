@@ -20,7 +20,7 @@
 #include <innodb/time/ut_time.h>
 #include <innodb/formatting/formatting.h>
 #include <innodb/ioasync/srv_reset_io_thread_op_info.h>
-#include <innodb/ioasync/srv_use_native_aio.h>
+#include <innodb/io/srv_use_native_aio.h>
 
 /** time to sleep, in microseconds if io_setup() returns EAGAIN. */
 static const ulint OS_AIO_IO_SETUP_RETRY_SLEEP = 500000UL;
