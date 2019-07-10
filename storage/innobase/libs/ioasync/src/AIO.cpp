@@ -1,26 +1,33 @@
 #include <innodb/ioasync/AIO.h>
 
-#include <innodb/ioasync/os_aio_n_segments.h>
-#include <innodb/sync_event/os_event_set.h>
-#include <innodb/logger/warn.h>
-#include <innodb/logger/info.h>
-#include <innodb/allocator/ut_free.h>
-#include <innodb/allocator/ut_zalloc_nokey.h>
-#include <innodb/allocator/ut_malloc_nokey.h>
-#include <innodb/sync_mutex/mutex_create.h>
-#include <innodb/sync_event/os_event_create.h>
 #include <innodb/align/ut_align.h>
-#include <innodb/sync_mutex/mutex_destroy.h>
-#include <innodb/sync_event/os_event_destroy.h>
+#include <innodb/allocator/ut_free.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/allocator/ut_zalloc_nokey.h>
+#include <innodb/formatting/formatting.h>
+#include <innodb/io/os_file_compress_page.h>
+#include <innodb/io/os_file_encrypt_log.h>
+#include <innodb/io/os_file_encrypt_page.h>
+#include <innodb/io/os_free_block.h>
+#include <innodb/io/srv_use_native_aio.h>
 #include <innodb/ioasync/SRV_MAX_N_IO_THREADS.h>
-#include <innodb/ioasync/srv_io_thread_function.h>
+#include <innodb/ioasync/os_aio_n_segments.h>
 #include <innodb/ioasync/os_aio_segment_wait_events.h>
+#include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/ioasync/os_aio_validate.h>
 #include <innodb/ioasync/os_last_printout.h>
-#include <innodb/time/ut_time.h>
-#include <innodb/formatting/formatting.h>
+#include <innodb/ioasync/srv_io_thread_function.h>
 #include <innodb/ioasync/srv_reset_io_thread_op_info.h>
-#include <innodb/io/srv_use_native_aio.h>
+#include <innodb/logger/info.h>
+#include <innodb/logger/warn.h>
+#include <innodb/page/type.h>
+#include <innodb/sync_event/os_event_create.h>
+#include <innodb/sync_event/os_event_destroy.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/sync_event/os_event_set.h>
+#include <innodb/sync_mutex/mutex_create.h>
+#include <innodb/sync_mutex/mutex_destroy.h>
+#include <innodb/time/ut_time.h>
 
 /** time to sleep, in microseconds if io_setup() returns EAGAIN. */
 static const ulint OS_AIO_IO_SETUP_RETRY_SLEEP = 500000UL;
@@ -986,4 +993,233 @@ void AIO::print_to_file(FILE *file) {
 }
 
 #endif
+
+/** Requests for a slot in the aio array. If no slot is available, waits until
+not_full-event becomes signaled.
+
+@param[in,out]	type		IO context
+@param[in,out]	m1		message to be passed along with the AIO
+                                operation
+@param[in,out]	m2		message to be passed along with the AIO
+                                operation
+@param[in]	file		file handle
+@param[in]	name		name of the file or path as a NUL-terminated
+                                string
+@param[in,out]	buf		buffer where to read or from which to write
+@param[in]	offset		file offset, where to read from or start writing
+@param[in]	len		length of the block to read or write
+@return pointer to slot */
+Slot *AIO::reserve_slot(IORequest &type, fil_node_t *m1, void *m2,
+                        pfs_os_file_t file, const char *name, void *buf,
+                        os_offset_t offset, ulint len) {
+#ifdef WIN_ASYNC_IO
+  ut_a((len & 0xFFFFFFFFUL) == len);
+#endif /* WIN_ASYNC_IO */
+
+  /* No need of a mutex. Only reading constant fields */
+  ulint slots_per_seg;
+
+  ut_ad(type.validate());
+
+  slots_per_seg = slots_per_segment();
+
+  /* We attempt to keep adjacent blocks in the same local
+  segment. This can help in merging IO requests when we are
+  doing simulated AIO */
+  ulint local_seg;
+
+  local_seg = (offset >> (UNIV_PAGE_SIZE_SHIFT + 6)) % m_n_segments;
+
+  for (;;) {
+    acquire();
+
+    if (m_n_reserved != m_slots.size()) {
+      break;
+    }
+
+    release();
+
+    if (!srv_use_native_aio) {
+      /* If the handler threads are suspended,
+      wake them so that we get more slots */
+
+      os_aio_simulated_wake_handler_threads();
+    }
+
+    os_event_wait(m_not_full);
+  }
+
+  ulint counter = 0;
+  Slot *slot = NULL;
+
+  /* We start our search for an available slot from our preferred
+  local segment and do a full scan of the array. We are
+  guaranteed to find a slot in full scan. */
+  for (ulint i = local_seg * slots_per_seg; counter < m_slots.size();
+       ++i, ++counter) {
+    i %= m_slots.size();
+
+    slot = at(i);
+
+    if (slot->is_reserved == false) {
+      break;
+    }
+  }
+
+  /* We MUST always be able to get hold of a reserved slot. */
+  ut_a(counter < m_slots.size());
+
+  ut_a(slot->is_reserved == false);
+
+  ++m_n_reserved;
+
+  if (m_n_reserved == 1) {
+    os_event_reset(m_is_empty);
+  }
+
+  if (m_n_reserved == m_slots.size()) {
+    os_event_reset(m_not_full);
+  }
+
+  slot->is_reserved = true;
+  slot->reservation_time = ut_time();
+  slot->m1 = m1;
+  slot->m2 = m2;
+  slot->file = file;
+  slot->name = name;
+#ifdef _WIN32
+  slot->len = static_cast<DWORD>(len);
+#else
+  slot->len = static_cast<ulint>(len);
+#endif /* _WIN32 */
+  slot->type = type;
+  slot->buf = static_cast<byte *>(buf);
+  slot->ptr = slot->buf;
+  slot->offset = offset;
+  slot->err = DB_SUCCESS;
+  slot->original_len = static_cast<uint32>(len);
+  slot->io_already_done = false;
+  slot->buf_block = NULL;
+  slot->encrypt_log_buf = NULL;
+
+  if (srv_use_native_aio && offset > 0 && type.is_write() &&
+      type.is_compressed()) {
+    ulint compressed_len = len;
+
+    ut_ad(!type.is_log());
+
+    release();
+
+    void *src_buf = slot->buf;
+    slot->buf_block = os_file_compress_page(type, src_buf, &compressed_len);
+
+    slot->buf = static_cast<byte *>(src_buf);
+    slot->ptr = slot->buf;
+#ifdef _WIN32
+    slot->len = static_cast<DWORD>(compressed_len);
+#else
+    slot->len = static_cast<ulint>(compressed_len);
+#endif /* _WIN32 */
+    slot->skip_punch_hole = !type.punch_hole();
+
+    acquire();
+  }
+
+  /* We do encryption after compression, since if we do encryption
+  before compression, the encrypted data will cause compression fail
+  or low compression rate. */
+  if (srv_use_native_aio && offset > 0 && type.is_write() &&
+      type.is_encrypted()) {
+    ulint encrypted_len = slot->len;
+    Block *encrypted_block;
+    byte *encrypt_log_buf;
+
+    release();
+
+    void *src_buf = slot->buf;
+    if (!type.is_log()) {
+      encrypted_block = os_file_encrypt_page(type, src_buf, &encrypted_len);
+
+      if (slot->buf_block != NULL) {
+        os_free_block(slot->buf_block);
+      }
+
+      slot->buf_block = encrypted_block;
+    } else {
+      /* Skip encrypt log file header */
+      if (offset >= LOG_FILE_HDR_SIZE) {
+        encrypted_block =
+            os_file_encrypt_log(type, src_buf, encrypt_log_buf, &encrypted_len);
+
+        if (slot->buf_block != NULL) {
+          os_free_block(slot->buf_block);
+        }
+
+        slot->buf_block = encrypted_block;
+
+        if (slot->encrypt_log_buf != NULL) {
+          ut_free(slot->encrypt_log_buf);
+        }
+
+        slot->encrypt_log_buf = encrypt_log_buf;
+      }
+    }
+
+    slot->buf = static_cast<byte *>(src_buf);
+
+    slot->ptr = slot->buf;
+
+#ifdef _WIN32
+    slot->len = static_cast<DWORD>(encrypted_len);
+#else
+    slot->len = static_cast<ulint>(encrypted_len);
+#endif /* _WIN32 */
+
+    acquire();
+  }
+
+#ifdef WIN_ASYNC_IO
+  {
+    OVERLAPPED *control;
+
+    control = &slot->control;
+    control->Offset = (DWORD)offset & 0xFFFFFFFF;
+    control->OffsetHigh = (DWORD)(offset >> 32);
+
+    ResetEvent(slot->handle);
+  }
+#elif defined(LINUX_NATIVE_AIO)
+
+  /* If we are not using native AIO skip this part. */
+  if (srv_use_native_aio) {
+    off_t aio_offset;
+
+    /* Check if we are dealing with 64 bit arch.
+    If not then make sure that offset fits in 32 bits. */
+    aio_offset = (off_t)offset;
+
+    ut_a(sizeof(aio_offset) >= sizeof(offset) ||
+         ((os_offset_t)aio_offset) == offset);
+
+    struct iocb *iocb = &slot->control;
+
+    if (type.is_read()) {
+      io_prep_pread(iocb, file.m_file, slot->ptr, slot->len, aio_offset);
+    } else {
+      ut_ad(type.is_write());
+      io_prep_pwrite(iocb, file.m_file, slot->ptr, slot->len, aio_offset);
+    }
+
+    iocb->data = slot;
+
+    slot->n_bytes = 0;
+    slot->ret = 0;
+  }
+#endif /* LINUX_NATIVE_AIO */
+
+  release();
+
+  return (slot);
+}
+
 

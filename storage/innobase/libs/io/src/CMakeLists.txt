@@ -162,8 +162,10 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     allocator
+    formatting
     monitor
     page
+    sync_mutex
     PRIVATE
 )
 

@@ -34,5 +34,5 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 /** Returns true if recovery is currently running.
 @return recv_recovery_on */
-UNIV_INLINE
+inline
 bool recv_recovery_is_on() { return (recv_recovery_on); }

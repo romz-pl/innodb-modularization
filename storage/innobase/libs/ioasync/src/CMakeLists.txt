@@ -50,8 +50,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    formatting
-    sync_mutex
     tablespace
     PRIVATE
 )
