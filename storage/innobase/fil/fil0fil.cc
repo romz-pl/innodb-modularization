@@ -58,8 +58,11 @@ The tablespace memory cache */
 #include <innodb/io/innodb_log_file_key.h>
 #include <innodb/io/innodb_data_file_key.h>
 #include <innodb/io/innodb_temp_file_key.h>
-
-
+#include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
+#include <innodb/ioasync/os_file_set_size.h>
+#include <innodb/ioasync/os_aio_func.h>
+#include <innodb/ioasync/os_aio.h>
+#include <innodb/ioasync/os_aio_handler.h>
 
 #include "os0file.h"
 #include "btr0btr.h"

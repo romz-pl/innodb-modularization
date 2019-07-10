@@ -49,6 +49,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_stat_t.h>
 #include <innodb/buffer/buf_pool_get_n_pages.h>
 #include <innodb/io/os_n_fsyncs.h>
+#include <innodb/ioasync/os_aio_refresh_stats.h>
+#include <innodb/ioasync/os_aio_print.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <mysqld.h>

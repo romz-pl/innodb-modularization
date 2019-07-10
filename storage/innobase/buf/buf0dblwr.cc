@@ -40,6 +40,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_get_state.h>
 #include <innodb/buffer/buf_block_get_state.h>
 #include <innodb/io/IORequestWrite.h>
+#include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
+#include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
 
 
 #include "buf0buf.h"

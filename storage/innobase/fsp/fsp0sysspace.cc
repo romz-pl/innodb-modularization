@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Refactored 2013-7-26 by Kevin Lewis
  *******************************************************/
 
+#include <innodb/ioasync/os_file_set_size.h>
+
 #include <stdlib.h>
 #include <sys/types.h>
 

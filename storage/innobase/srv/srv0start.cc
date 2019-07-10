@@ -58,6 +58,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/innodb_log_file_key.h>
 #include <innodb/io/innodb_data_file_key.h>
 #include <innodb/io/srv_is_being_started.h>
+#include <innodb/ioasync/os_aio_all_slots_free.h>
+#include <innodb/ioasync/os_file_set_size.h>
+#include <innodb/ioasync/os_aio_wake_all_threads_at_shutdown.h>
+#include <innodb/ioasync/os_aio_init.h>
+#include <innodb/ioasync/os_aio_free.h>
 
 #include <zlib.h>
 #include "btr0btr.h"

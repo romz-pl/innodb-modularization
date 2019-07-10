@@ -64,6 +64,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_set_state.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/time/ut_time_ms.h>
+#include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
+#include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0buf.h"
