@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/io/os_file_flush.h>
+#include <innodb/io/os_file_flush_pfs.h>
 
 #ifdef UNIV_PFS_IO
 #define os_file_flush(file) os_file_flush_pfs(file)

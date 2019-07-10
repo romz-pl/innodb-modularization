@@ -166,6 +166,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/io/os_file_read_no_error_handling.h>
 #include <innodb/io/os_file_close_no_error_handling.h>
 #include <innodb/io/os_file_read_string.h>
+#include <innodb/ioasync/pfs_os_aio_func.h>
+#include <innodb/ioasync/os_aio_handler.h>
+#include <innodb/ioasync/os_aio_init.h>
+#include <innodb/ioasync/os_aio_free.h>
+#include <innodb/ioasync/os_aio_func.h>
+#include <innodb/ioasync/os_aio_wake_all_threads_at_shutdown.h>
+#include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
+#include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
+#include <innodb/ioasync/os_aio_simulated_put_read_threads_to_sleep.h>
+#include <innodb/ioasync/os_aio_refresh_stats.h>
+#include <innodb/ioasync/os_aio_print.h>
+#include <innodb/ioasync/os_aio_all_slots_free.h>
+#include <innodb/ioasync/os_aio.h>
+#include <innodb/ioasync/os_file_set_size.h>
+
 
 #include "my_dbug.h"
 #include "my_io.h"
@@ -222,71 +237,16 @@ FILE *os_file_create_tmpfile(const char *path);
 #ifdef UNIV_PFS_IO
 
 /* Keys to register InnoDB I/O with performance schema */
-
-
-
-
 extern mysql_pfs_key_t innodb_tablespace_open_file_key;
-
-
-
-#define os_aio(type, mode, name, file, buf, offset, n, read_only, message1,    \
-               message2)                                                       \
-  pfs_os_aio_func(type, mode, name, file, buf, offset, n, read_only, message1, \
-                  message2, __FILE__, __LINE__)
 
 #define os_file_read_first_page_pfs(type, file, buf, n) \
   pfs_os_file_read_first_page_func(type, file, buf, n, __FILE__, __LINE__)
 
 
-
-
-/** NOTE! Please use the corresponding macro os_aio(), not directly this
-function!
-Performance schema wrapper function of os_aio() which requests
-an asynchronous I/O operation.
-@param[in]	type		IO request context
-@param[in]	mode		IO mode
-@param[in]	name		Name of the file or path as NUL terminated
-                                string
-@param[in]	file		Open file handle
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset where to read
-@param[in]	n		number of bytes to read
-@param[in]	read_only	if true read only mode checks are enforced
-@param[in,out]	m1		Message for the AIO handler, (can be used to
-                                identify a completed AIO operation); ignored
-                                if mode is OS_AIO_SYNC
-@param[in,out]	m2		message for the AIO handler (can be used to
-                                identify a completed AIO operation); ignored
-                                if mode is OS_AIO_SYNC
-@param[in]	src_file	file name where func invoked
-@param[in]	src_line	line where the func invoked
-@return DB_SUCCESS if request was queued successfully, false if fail */
-UNIV_INLINE
-dberr_t pfs_os_aio_func(IORequest &type, AIO_mode mode, const char *name,
-                        pfs_os_file_t file, void *buf, os_offset_t offset,
-                        ulint n, bool read_only, fil_node_t *m1, void *m2,
-                        const char *src_file, uint src_line);
-
 #else /* UNIV_PFS_IO */
-
-
-
-
-#define os_aio(type, mode, name, file, buf, offset, n, read_only, message1, \
-               message2)                                                    \
-  os_aio_func(type, mode, name, file, buf, offset, n, read_only, message1,  \
-              message2)
-
-
 
 #define os_file_read_first_page_pfs(type, file, buf, n) \
   os_file_read_first_page_func(type, file, buf, n)
-
-
-
-
 
 #endif /* UNIV_PFS_IO */
 
@@ -314,18 +274,7 @@ dberr_t pfs_os_aio_func(IORequest &type, AIO_mode mode, const char *name,
 
 
 
-/** Write the specified number of zeros to a file from specific offset.
-@param[in]	name		name of the file or path as a null-terminated
-                                string
-@param[in]	file		handle to a file
-@param[in]	offset		file offset
-@param[in]	size		file size
-@param[in]	read_only	Enable read-only checks if true
-@param[in]	flush		Flush file content to disk
-@return true if success */
-bool os_file_set_size(const char *name, pfs_os_file_t file, os_offset_t offset,
-                      os_offset_t size, bool read_only, bool flush)
-    MY_ATTRIBUTE((warn_unused_result));
+
 
 
 
@@ -354,104 +303,17 @@ void unit_test_os_file_get_parent_dir();
 
 
 
-/** Initializes the asynchronous io system. Creates one array each for ibuf
-and log i/o. Also creates one array each for read and write where each
-array is divided logically into n_read_segs and n_write_segs
-respectively. The caller must create an i/o handler thread for each
-segment in these arrays. This function also creates the sync array.
-No i/o handler thread needs to be created for that
-@param[in]	n_readers	number of reader threads
-@param[in]	n_writers	number of writer threads
-@param[in]	n_slots_sync	number of slots in the sync aio array */
 
-bool os_aio_init(ulint n_readers, ulint n_writers, ulint n_slots_sync);
 
-/**
-Frees the asynchronous io system. */
-void os_aio_free();
 
-/**
-NOTE! Use the corresponding macro os_aio(), not directly this function!
-Requests an asynchronous i/o operation.
-@param[in]	type		IO request context
-@param[in]	aio_mode	IO mode
-@param[in]	name		Name of the file or path as NUL terminated
-                                string
-@param[in]	file		Open file handle
-@param[out]	buf		buffer where to read
-@param[in]	offset		file offset where to read
-@param[in]	n		number of bytes to read
-@param[in]	read_only	if true read only mode checks are enforced
-@param[in,out]	m1		Message for the AIO handler, (can be used to
-                                identify a completed AIO operation); ignored
-                                if mode is OS_AIO_SYNC
-@param[in,out]	m2		message for the AIO handler (can be used to
-                                identify a completed AIO operation); ignored
-                                if mode is OS_AIO_SYNC
-@return DB_SUCCESS or error code */
-dberr_t os_aio_func(IORequest &type, AIO_mode aio_mode, const char *name,
-                    pfs_os_file_t file, void *buf, os_offset_t offset, ulint n,
-                    bool read_only, fil_node_t *m1, void *m2);
 
-/** Wakes up all async i/o threads so that they know to exit themselves in
-shutdown. */
-void os_aio_wake_all_threads_at_shutdown();
 
-/** Waits until there are no pending writes in os_aio_write_array. There can
-be other, synchronous, pending writes. */
-void os_aio_wait_until_no_pending_writes();
 
-/** Wakes up simulated aio i/o-handler threads if they have something to do. */
-void os_aio_simulated_wake_handler_threads();
 
-/** This function can be called if one wants to post a batch of reads and
-prefers an i/o-handler thread to handle them all at once later. You must
-call os_aio_simulated_wake_handler_threads later to ensure the threads
-are not left sleeping! */
-void os_aio_simulated_put_read_threads_to_sleep();
 
-/** This is the generic AIO handler interface function.
-Waits for an aio operation to complete. This function is used to wait the
-for completed requests. The AIO array of pending requests is divided
-into segments. The thread specifies which segment or slot it wants to wait
-for. NOTE: this function will also take care of freeing the aio slot,
-therefore no other thread is allowed to do the freeing!
-@param[in]	segment		the number of the segment in the aio arrays to
-                                wait for; segment 0 is the ibuf I/O thread,
-                                segment 1 the log I/O thread, then follow the
-                                non-ibuf read threads, and as the last are the
-                                non-ibuf write threads; if this is
-                                ULINT_UNDEFINED, then it means that sync AIO
-                                is used, and this parameter is ignored
-@param[out]	m1		the messages passed with the AIO request;
-                                note that also in the case where the AIO
-                                operation failed, these output parameters
-                                are valid and can be used to restart the
-                                operation, for example
-@param[out]	m2		callback message
-@param[out]	request		OS_FILE_WRITE or ..._READ
-@return DB_SUCCESS or error code */
-dberr_t os_aio_handler(ulint segment, fil_node_t **m1, void **m2,
-                       IORequest *request);
 
-/** Prints info of the aio arrays.
-@param[in,out]	file		file where to print */
-void os_aio_print(FILE *file);
 
-/** Refreshes the statistics used to print per-second averages. */
-void os_aio_refresh_stats();
 
-/** Checks that all slots in the system have been freed, that is, there are
-no pending io operations. */
-bool os_aio_all_slots_free();
-
-#ifdef UNIV_DEBUG
-
-/** Prints all pending IO
-@param[in]	file	file where to print */
-void os_aio_print_pending_io(FILE *file);
-
-#endif /* UNIV_DEBUG */
 
 
 

@@ -19,7 +19,24 @@ add_library( ${LIB_NAME} STATIC
     srv_set_io_thread_op_info.cpp
     srv_reset_io_thread_op_info.cpp
     os_aio_func.cpp
-
+    os_aio_simulated_handler.cpp
+    SimulatedAIOHandler.cpp
+    os_aio_linux_handler.cpp
+    pfs_os_aio_func.cpp
+    os_aio_handler.cpp
+    os_aio_init.cpp
+    os_aio_free.cpp
+    os_aio_wake_all_threads_at_shutdown.cpp
+    os_aio_wait_until_no_pending_writes.cpp
+    os_aio_simulated_wake_handler_threads.cpp
+    os_aio_recommend_sleep_for_read_threads.cpp
+    os_aio_simulated_put_read_threads_to_sleep.cpp
+    os_aio_print.cpp
+    os_aio_refresh_stats.cpp
+    os_aio_all_slots_free.cpp
+    os_aio_print_pending_io.cpp
+    os_aio.cpp
+    os_file_set_size.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -34,8 +51,8 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     formatting
-    io
     sync_mutex
+    tablespace
     PRIVATE
 )
 

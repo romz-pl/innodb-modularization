@@ -7955,10 +7955,7 @@ dberr_t fil_rename_precheck(const dict_table_t *old_table,
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Note that the file system where the file resides doesn't support PUNCH HOLE.
-Called from AIO handlers when IO returns DB_IO_NO_PUNCH_HOLE
-@param[in,out]	file		file to set */
-void fil_no_punch_hole(fil_node_t *file) { file->punch_hole = false; }
+
 
 /** Set the compression type for the tablespace of a table
 @param[in]	table		The table that should be compressed

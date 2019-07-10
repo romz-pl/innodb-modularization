@@ -51,6 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fil_addr_t.h>
 #include <innodb/buffer/buf_frame_t.h>
 #include <innodb/tablespace/buf_remove_t.h>
+#include <innodb/tablespace/fil_no_punch_hole.h>
 
 #include "dict0types.h"
 #include <innodb/page/type.h>
@@ -850,9 +851,6 @@ bool fil_fusionio_enable_atomic_write(pfs_os_file_t file)
     MY_ATTRIBUTE((warn_unused_result));
 #endif /* !NO_FALLOCATE && UNIV_LINUX */
 
-/** Note that the file system where the file resides doesn't support PUNCH HOLE
-@param[in,out]	file		File node to set */
-void fil_no_punch_hole(fil_node_t *file);
 
 #ifdef UNIV_ENABLE_UNIT_TEST_MAKE_FILEPATH
 void test_make_filepath();
