@@ -54,6 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/innodb_temp_file_key.h>
 #include <innodb/io/innodb_arch_file_key.h>
 #include <innodb/io/innodb_clone_file_key.h>
+#include <innodb/ioasync/srv_use_native_aio.h>
 
 #include <auto_thd.h>
 #include <errno.h>

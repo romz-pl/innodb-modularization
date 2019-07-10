@@ -42,9 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 class FlushObserver;
 
 #ifndef UNIV_HOTBACKUP
-/** Flag indicating if the page_cleaner is in active state. */
-extern bool buf_page_cleaner_is_active;
-
+#include <innodb/ioasync/buf_page_cleaner_is_active.h>
 #ifdef UNIV_DEBUG
 
 /** Value of MySQL global variable used to disable page cleaner. */

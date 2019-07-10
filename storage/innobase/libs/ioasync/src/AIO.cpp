@@ -14,6 +14,13 @@
 #include <innodb/sync_event/os_event_destroy.h>
 #include <innodb/ioasync/SRV_MAX_N_IO_THREADS.h>
 #include <innodb/ioasync/srv_io_thread_function.h>
+#include <innodb/ioasync/os_aio_segment_wait_events.h>
+#include <innodb/ioasync/os_aio_validate.h>
+#include <innodb/ioasync/os_last_printout.h>
+#include <innodb/time/ut_time.h>
+#include <innodb/formatting/formatting.h>
+#include <innodb/ioasync/srv_reset_io_thread_op_info.h>
+#include <innodb/ioasync/srv_use_native_aio.h>
 
 /** time to sleep, in microseconds if io_setup() returns EAGAIN. */
 static const ulint OS_AIO_IO_SETUP_RETRY_SLEEP = 500000UL;
@@ -32,16 +39,11 @@ recovery and open all tables in RO mode instead of RW mode. We don't
 sync the max trx id to disk either. */
 extern bool srv_read_only_mode;
 
-/* If this flag is TRUE, then we will use the native aio of the
-OS (provided we compiled Innobase with it in), otherwise we will
-use simulated aio we build below with threads.
-Currently we support native aio on windows and linux */
-extern bool srv_use_native_aio;
 
 extern char *srv_log_group_home_dir;
 
 int innobase_mysql_tmpfile(const char *path);
-void srv_reset_io_thread_op_info();
+
 
 /** Static declarations */
 AIO *AIO::s_reads;
@@ -586,4 +588,402 @@ void AIO::shutdown() {
   UT_DELETE(s_reads);
   s_reads = NULL;
 }
+
+/** Initializes the asynchronous io system. Creates one array each for ibuf
+and log i/o. Also creates one array each for read and write where each
+array is divided logically into n_readers and n_writers
+respectively. The caller must create an i/o handler thread for each
+segment in these arrays. This function also creates the sync array.
+No i/o handler thread needs to be created for that
+@param[in]	n_per_seg	maximum number of pending aio
+                                operations allowed per segment
+@param[in]	n_readers	number of reader threads
+@param[in]	n_writers	number of writer threads
+@param[in]	n_slots_sync	number of slots in the sync aio array
+@return true if the AIO sub-system was started successfully */
+bool AIO::start(ulint n_per_seg, ulint n_readers, ulint n_writers,
+                ulint n_slots_sync) {
+#if defined(LINUX_NATIVE_AIO)
+  /* Check if native aio is supported on this system and tmpfs */
+  if (srv_use_native_aio && !is_linux_native_aio_supported()) {
+    ib::warn(ER_IB_MSG_829) << "Linux Native AIO disabled.";
+
+    srv_use_native_aio = FALSE;
+  }
+#endif /* LINUX_NATIVE_AIO */
+
+  srv_reset_io_thread_op_info();
+
+  s_reads =
+      create(LATCH_ID_OS_AIO_READ_MUTEX, n_readers * n_per_seg, n_readers);
+
+  if (s_reads == NULL) {
+    return (false);
+  }
+
+  ulint start = srv_read_only_mode ? 0 : 2;
+  ulint n_segs = n_readers + start;
+
+#ifndef UNIV_HOTBACKUP
+  /* 0 is the ibuf segment and 1 is the redo log segment. */
+  for (ulint i = start; i < n_segs; ++i) {
+    ut_a(i < SRV_MAX_N_IO_THREADS);
+    srv_io_thread_function[i] = "read thread";
+  }
+#endif /* !UNIV_HOTBACKUP */
+
+  ulint n_segments = n_readers;
+
+  if (!srv_read_only_mode) {
+    s_ibuf = create(LATCH_ID_OS_AIO_IBUF_MUTEX, n_per_seg, 1);
+
+    if (s_ibuf == NULL) {
+      return (false);
+    }
+
+    ++n_segments;
+
+#ifndef UNIV_HOTBACKUP
+    srv_io_thread_function[0] = "insert buffer thread";
+#endif /* !UNIV_HOTBACKUP */
+
+    s_log = create(LATCH_ID_OS_AIO_LOG_MUTEX, n_per_seg, 1);
+
+    if (s_log == NULL) {
+      return (false);
+    }
+
+    ++n_segments;
+
+#ifndef UNIV_HOTBACKUP
+    srv_io_thread_function[1] = "log thread";
+#endif /* !UNIV_HOTBAKUP */
+
+  } else {
+    s_ibuf = s_log = NULL;
+  }
+
+  s_writes =
+      create(LATCH_ID_OS_AIO_WRITE_MUTEX, n_writers * n_per_seg, n_writers);
+
+  if (s_writes == NULL) {
+    return (false);
+  }
+
+  n_segments += n_writers;
+
+#ifndef UNIV_HOTBACKUP
+  for (ulint i = start + n_readers; i < n_segments; ++i) {
+    ut_a(i < SRV_MAX_N_IO_THREADS);
+    srv_io_thread_function[i] = "write thread";
+  }
+#endif /* !UNIV_HOTBACKUP */
+
+  ut_ad(n_segments >= static_cast<ulint>(srv_read_only_mode ? 2 : 4));
+
+  s_sync = create(LATCH_ID_OS_AIO_SYNC_MUTEX, n_slots_sync, 1);
+
+  if (s_sync == NULL) {
+    return (false);
+  }
+
+  os_aio_n_segments = n_segments;
+
+  os_aio_validate();
+
+  os_aio_segment_wait_events = static_cast<os_event_t *>(
+      ut_zalloc_nokey(n_segments * sizeof *os_aio_segment_wait_events));
+
+  if (os_aio_segment_wait_events == NULL) {
+    return (false);
+  }
+
+  for (ulint i = 0; i < n_segments; ++i) {
+    os_aio_segment_wait_events[i] = os_event_create(0);
+  }
+
+  os_last_printout = ut_time();
+
+  return (true);
+}
+
+
+/** Initialise the array */
+dberr_t AIO::init() {
+  ut_a(!m_slots.empty());
+
+#ifdef _WIN32
+  ut_a(m_handles == NULL);
+
+  m_handles = UT_NEW_NOKEY(Handles(m_slots.size()));
+#endif /* _WIN32 */
+
+  if (srv_use_native_aio) {
+#ifdef LINUX_NATIVE_AIO
+    dberr_t err = init_linux_native_aio();
+
+    if (err != DB_SUCCESS) {
+      return (err);
+    }
+
+#endif /* LINUX_NATIVE_AIO */
+  }
+
+  return (init_slots());
+}
+
+/** Wakes up a simulated aio i/o-handler thread if it has something to do.
+@param[in]	global_segment	The number of the segment in the AIO arrays */
+void AIO::wake_simulated_handler_thread(ulint global_segment) {
+  ut_ad(!srv_use_native_aio);
+
+  AIO *array;
+  ulint segment = get_array_and_local_segment(&array, global_segment);
+
+  array->wake_simulated_handler_thread(global_segment, segment);
+}
+
+/** Wakes up a simulated AIO I/O-handler thread if it has something to do
+for a local segment in the AIO array.
+@param[in]	global_segment	The number of the segment in the AIO arrays
+@param[in]	segment		The local segment in the AIO array */
+void AIO::wake_simulated_handler_thread(ulint global_segment, ulint segment) {
+  ut_ad(!srv_use_native_aio);
+
+  ulint n = slots_per_segment();
+  ulint offset = segment * n;
+
+  /* Look through n slots after the segment * n'th slot */
+
+  acquire();
+
+  const Slot *slot = at(offset);
+
+  for (ulint i = 0; i < n; ++i, ++slot) {
+    if (slot->is_reserved) {
+      /* Found an i/o request */
+
+      release();
+
+      os_event_t event;
+
+      event = os_aio_segment_wait_events[global_segment];
+
+      os_event_set(event);
+
+      return;
+    }
+  }
+
+  release();
+}
+
+/** Select the IO slot array
+@param[in,out]	type		Type of IO, READ or WRITE
+@param[in]	read_only	true if running in read-only mode
+@param[in]	aio_mode	IO mode
+@return slot array or NULL if invalid mode specified */
+AIO *AIO::select_slot_array(IORequest &type, bool read_only,
+                            AIO_mode aio_mode) {
+  AIO *array;
+
+  ut_ad(type.validate());
+
+  switch (aio_mode) {
+    case AIO_mode::NORMAL:
+
+      array = type.is_read() ? AIO::s_reads : AIO::s_writes;
+      break;
+
+    case AIO_mode::IBUF:
+      ut_ad(type.is_read());
+
+      /* Reduce probability of deadlock bugs in connection with ibuf:
+      do not let the ibuf i/o handler sleep */
+
+      type.clear_do_not_wake();
+
+      array = read_only ? AIO::s_reads : AIO::s_ibuf;
+      break;
+
+    case AIO_mode::LOG:
+
+      array = read_only ? AIO::s_reads : AIO::s_log;
+      break;
+
+    case AIO_mode::SYNC:
+
+      array = AIO::s_sync;
+#if defined(LINUX_NATIVE_AIO)
+      /* In Linux native AIO we don't use sync IO array. */
+      ut_a(!srv_use_native_aio);
+#endif /* LINUX_NATIVE_AIO */
+      break;
+
+    default:
+      ut_error;
+  }
+
+  return (array);
+}
+
+
+/** Get the total number of pending IOs
+@return the total number of pending IOs */
+ulint AIO::total_pending_io_count() {
+  ulint count = s_reads->pending_io_count();
+
+  if (s_writes != NULL) {
+    count += s_writes->pending_io_count();
+  }
+
+  if (s_ibuf != NULL) {
+    count += s_ibuf->pending_io_count();
+  }
+
+  if (s_log != NULL) {
+    count += s_log->pending_io_count();
+  }
+
+  if (s_sync != NULL) {
+    count += s_sync->pending_io_count();
+  }
+
+  return (count);
+}
+
+/** Prints pending IO requests per segment of an aio array.
+We probably don't need per segment statistics but they can help us
+during development phase to see if the IO requests are being
+distributed as expected.
+@param[in,out]	file		File where to print
+@param[in]	segments	Pending IO array */
+void AIO::print_segment_info(FILE *file, const ulint *segments) {
+  ut_ad(m_n_segments > 0);
+
+  if (m_n_segments > 1) {
+    fprintf(file, " [");
+
+    for (ulint i = 0; i < m_n_segments; ++i, ++segments) {
+      if (i != 0) {
+        fprintf(file, ", ");
+      }
+
+      fprintf(file, ULINTPF, *segments);
+    }
+
+    fprintf(file, "] ");
+  }
+}
+
+/** Prints info about the aio array.
+@param[in,out]	file		Where to print */
+void AIO::print(FILE *file) {
+  ulint count = 0;
+  ulint n_res_seg[SRV_MAX_N_IO_THREADS];
+
+  mutex_enter(&m_mutex);
+
+  ut_a(!m_slots.empty());
+  ut_a(m_n_segments > 0);
+
+  memset(n_res_seg, 0x0, sizeof(n_res_seg));
+
+  for (ulint i = 0; i < m_slots.size(); ++i) {
+    Slot &slot = m_slots[i];
+    ulint segment = (i * m_n_segments) / m_slots.size();
+
+    if (slot.is_reserved) {
+      ++count;
+
+      ++n_res_seg[segment];
+
+      ut_a(slot.len > 0);
+    }
+  }
+
+  ut_a(m_n_reserved == count);
+
+  print_segment_info(file, n_res_seg);
+
+  mutex_exit(&m_mutex);
+}
+
+/** Print all the AIO segments
+@param[in,out]	file		Where to print */
+void AIO::print_all(FILE *file) {
+  s_reads->print(file);
+
+  if (s_writes != NULL) {
+    fputs(", aio writes:", file);
+    s_writes->print(file);
+  }
+
+  if (s_ibuf != NULL) {
+    fputs(",\n ibuf aio reads:", file);
+    s_ibuf->print(file);
+  }
+
+  if (s_log != NULL) {
+    fputs(", log i/o's:", file);
+    s_log->print(file);
+  }
+
+  if (s_sync != NULL) {
+    fputs(", sync i/o's:", file);
+    s_sync->print(file);
+  }
+}
+
+
+#ifdef UNIV_DEBUG
+
+/** Prints all pending IO for the array
+@param[in]	file	file where to print */
+void AIO::to_file(FILE *file) const {
+  acquire();
+
+  fprintf(file, " %lu\n", static_cast<ulong>(m_n_reserved));
+
+  for (ulint i = 0; i < m_slots.size(); ++i) {
+    const Slot &slot = m_slots[i];
+
+    if (slot.is_reserved) {
+      fprintf(file, "%s IO for %s (offset=" UINT64PF ", size=%lu)\n",
+              slot.type.is_read() ? "read" : "write", slot.name, slot.offset,
+              slot.len);
+    }
+  }
+
+  release();
+}
+
+/** Print pending IOs for all arrays */
+void AIO::print_to_file(FILE *file) {
+  fprintf(file, "Pending normal aio reads:");
+
+  s_reads->to_file(file);
+
+  if (s_writes != NULL) {
+    fprintf(file, "Pending normal aio writes:");
+    s_writes->to_file(file);
+  }
+
+  if (s_ibuf != NULL) {
+    fprintf(file, "Pending ibuf aio reads:");
+    s_ibuf->to_file(file);
+  }
+
+  if (s_log != NULL) {
+    fprintf(file, "Pending log i/o's:");
+    s_log->to_file(file);
+  }
+
+  if (s_sync != NULL) {
+    fprintf(file, "Pending sync i/o's:");
+    s_sync->to_file(file);
+  }
+}
+
+#endif
 

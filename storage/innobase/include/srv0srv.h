@@ -51,6 +51,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/time/ib_time_t.h>
 #include <innodb/io/os_file_stat_t.h>
+#include <innodb/ioasync/srv_reset_io_thread_op_info.h>
+#include <innodb/ioasync/srv_set_io_thread_op_info.h>
 
 #include "buf0checksum.h"
 #include "fil0fil.h"
@@ -268,11 +270,7 @@ extern unsigned long long srv_online_max_size;
 /** Number of threads to use for parallel reads. */
 extern ulong srv_parallel_read_threads;
 
-/* If this flag is TRUE, then we will use the native aio of the
-OS (provided we compiled Innobase with it in), otherwise we will
-use simulated aio we build below with threads.
-Currently we support native aio on windows and linux */
-extern bool srv_use_native_aio;
+
 extern bool srv_numa_interleave;
 
 /** Server undo tablespaces directory, can be absolute path. */
@@ -580,10 +578,7 @@ extern ulint srv_fatal_semaphore_wait_threshold;
 extern ulint srv_dml_needed_delay;
 
 #include <innodb/ioasync/SRV_MAX_N_IO_THREADS.h>
-
-/* Array of English strings describing the current state of an
-i/o handler thread */
-extern const char *srv_io_thread_op_info[];
+#include <innodb/ioasync/srv_io_thread_op_info.h>
 #include <innodb/ioasync/srv_io_thread_function.h>
 
 /* the number of purge threads to use from the worker pool (currently 0 or 1) */
@@ -776,13 +771,7 @@ enum srv_thread_type {
 void srv_boot(void);
 /** Frees the data structures created in srv_init(). */
 void srv_free(void);
-/** Sets the info describing an i/o thread current state. */
-void srv_set_io_thread_op_info(
-    ulint i,          /*!< in: the 'segment' of the i/o thread */
-    const char *str); /*!< in: constant char string describing the
-                      state */
-/** Resets the info describing an i/o thread current state. */
-void srv_reset_io_thread_op_info();
+
 /** Tells the purge thread that there has been activity in the database
  and wakes up the purge thread if it is suspended (not sleeping).  Note
  that there is a small chance that the purge thread stays suspended

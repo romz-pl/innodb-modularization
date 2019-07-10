@@ -7,6 +7,20 @@ add_library( ${LIB_NAME} STATIC
     os_aio_n_segments.cpp
     SRV_MAX_N_IO_THREADS.cpp
     srv_io_thread_function.cpp
+    os_aio_segment_wait_events.cpp
+    os_aio_validate.cpp
+    os_last_printout.cpp
+    AIOHandler.cpp
+    LinuxAIOHandler.cpp
+    srv_shutdown_t.cpp
+    srv_shutdown_state.cpp
+    buf_page_cleaner_is_active.cpp
+    srv_io_thread_op_info.cpp
+    srv_set_io_thread_op_info.cpp
+    srv_reset_io_thread_op_info.cpp
+    os_aio_func.cpp
+    srv_use_native_aio.cpp
+
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -20,6 +34,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    formatting
     io
     sync_mutex
     PRIVATE

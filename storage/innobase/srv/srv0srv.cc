@@ -209,15 +209,7 @@ bool high_level_read_only;
 /** Number of threads to use for parallel reads. */
 ulong srv_parallel_read_threads;
 
-/* If this flag is TRUE, then we will use the native aio of the
-OS (provided we compiled Innobase with it in), otherwise we will
-use simulated aio we build below with threads.
-Currently we support native aio on windows and linux */
-#ifdef _WIN32
-bool srv_use_native_aio = TRUE; /* enabled by default on Windows */
-#else
-bool srv_use_native_aio;
-#endif
+
 bool srv_numa_interleave = FALSE;
 
 #ifdef UNIV_DEBUG
@@ -567,10 +559,7 @@ ulint srv_truncated_status_writes = 0;
 bool srv_print_innodb_monitor = FALSE;
 bool srv_print_innodb_lock_monitor = FALSE;
 
-/* Array of English strings describing the current state of an
-i/o handler thread */
 
-const char *srv_io_thread_op_info[SRV_MAX_N_IO_THREADS];
 
 
 #ifndef UNIV_HOTBACKUP
@@ -839,23 +828,8 @@ static void srv_print_master_thread_info(FILE *file) /* in: output stream */
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Sets the info describing an i/o thread current state. */
-void srv_set_io_thread_op_info(
-    ulint i,         /*!< in: the 'segment' of the i/o thread */
-    const char *str) /*!< in: constant char string describing the
-                     state */
-{
-  ut_a(i < SRV_MAX_N_IO_THREADS);
 
-  srv_io_thread_op_info[i] = str;
-}
 
-/** Resets the info describing an i/o thread current state. */
-void srv_reset_io_thread_op_info() {
-  for (ulint i = 0; i < UT_ARR_SIZE(srv_io_thread_op_info); ++i) {
-    srv_io_thread_op_info[i] = "not started yet";
-  }
-}
 
 #ifndef UNIV_HOTBACKUP
 #ifdef UNIV_DEBUG
