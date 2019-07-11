@@ -10,6 +10,10 @@ wrapper functions with performance schema instrumentation in such case.
 If UNIV_PFS_IO is not defined, these I/O APIs point
 to original un-instrumented file I/O APIs */
 
+
+#include <innodb/io/create_type.h>
+#include <innodb/io/create_purpose.h>
+
 #ifdef UNIV_PFS_IO
 
 #include <innodb/io/pfs_os_file_create_func.h>

@@ -1,5 +1,7 @@
 #include <innodb/io/os_file_create_func.h>
 
+#include <innodb/io/create_type.h>
+#include <innodb/io/create_purpose.h>
 #include <innodb/io/os_file_create_subdirs_if_needed.h>
 #include <innodb/io/os_file_create_t.h>
 #include <innodb/io/os_file_handle_error_no_exit.h>
@@ -8,12 +10,11 @@
 #include <innodb/io/os_innodb_umask.h>
 #include <innodb/io/srv_unix_flush_t.h>
 #include <innodb/logger/error.h>
+#include <innodb/io/srv_unix_file_flush_method.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
-extern enum srv_unix_flush_t srv_unix_file_flush_method;
 
 /** NOTE! Use the corresponding macro os_file_create(), not directly
 this function!

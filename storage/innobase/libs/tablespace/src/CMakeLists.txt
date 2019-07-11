@@ -42,6 +42,10 @@ add_library( ${LIB_NAME} STATIC
     pfs_os_file_read_first_page_func.cpp
     space_id_t.cpp
     srv_start_raw_disk_in_use.cpp
+    fil_buffering_disabled.cpp
+    FLST_LEN.cpp
+    flst_get_len.cpp
+    recv_recovery_on.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

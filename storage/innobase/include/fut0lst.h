@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/tablespace/header.h>
-
+#include <innodb/tablespace/flst_get_len.h>
 
 
 #include "fil0fil.h"
@@ -71,11 +71,7 @@ void flst_remove(
     flst_base_node_t *base, /*!< in: pointer to base node of list */
     flst_node_t *node2,     /*!< in: node to remove */
     mtr_t *mtr);            /*!< in: mini-transaction handle */
-/** Get the length of a list.
-@param[in]	base	base node
-@return length */
-UNIV_INLINE
-ulint flst_get_len(const flst_base_node_t *base);
+
 
 /** Gets list first node address.
 @param[in]	base	pointer to base node

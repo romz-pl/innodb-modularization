@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  ***********************************************************************/
 
 #include <innodb/align/ut_align_offset.h>
+#include <innodb/tablespace/FLST_LEN.h>
+
 
 #include "buf0buf.h"
 #include "fut0fut.h"
@@ -46,8 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
         list element; the page part of address \
         is FIL_NULL, if no next element */
 
-/* We define the field offsets of a base node for the list */
-#define FLST_LEN 0 /* 32-bit list length field */
+
 #define FLST_FIRST                         \
   4 /* 6-byte address of the first element \
     of the list; undefined if empty list */
@@ -103,13 +104,7 @@ void flst_init(flst_base_node_t *base, /*!< in: pointer to base node */
   flst_write_addr(base + FLST_LAST, fil_addr_null, mtr);
 }
 
-/** Get the length of a list.
-@param[in]	base	base node
-@return length */
-UNIV_INLINE
-ulint flst_get_len(const flst_base_node_t *base) {
-  return (mach_read_from_4(base + FLST_LEN));
-}
+
 
 /** Gets list first node address.
  @return file address */

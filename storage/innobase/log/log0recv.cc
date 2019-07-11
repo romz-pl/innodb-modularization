@@ -116,11 +116,6 @@ static const size_t RECV_READ_AHEAD_AREA = 32;
 /** The recovery system */
 recv_sys_t *recv_sys = nullptr;
 
-/** true when applying redo log records during crash recovery; false
-otherwise.  Note that this is false while a background thread is
-rolling back incomplete transactions. */
-volatile bool recv_recovery_on;
-
 #ifdef UNIV_HOTBACKUP
 volatile bool is_online_redo_copy = true;
 volatile lsn_t backup_redo_log_flushed_lsn;

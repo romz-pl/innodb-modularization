@@ -687,8 +687,9 @@ extern PSI_stage_info srv_stage_clone_page_copy;
 #ifndef _WIN32
 
 #include <innodb/io/srv_unix_flush_t.h>
+#include <innodb/io/srv_unix_file_flush_method.h>
 
-extern enum srv_unix_flush_t srv_unix_file_flush_method;
+
 
 inline bool srv_is_direct_io() {
   return (srv_unix_file_flush_method == SRV_UNIX_O_DIRECT ||

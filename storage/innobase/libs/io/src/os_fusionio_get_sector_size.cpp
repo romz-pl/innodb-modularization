@@ -9,6 +9,7 @@
 #include <innodb/io/os_io_ptr_align.h>
 #include <innodb/io/srv_unix_flush_t.h>
 #include <innodb/logger/error.h>
+#include <innodb/io/srv_unix_file_flush_method.h>
 
 #include "my_io.h"
 
@@ -18,7 +19,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-extern enum srv_unix_flush_t srv_unix_file_flush_method;
 extern char *srv_data_home;
 
 /** Max disk sector size */

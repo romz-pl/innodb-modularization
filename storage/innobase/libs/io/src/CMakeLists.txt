@@ -19,6 +19,8 @@ add_library( ${LIB_NAME} STATIC
     SyncFileIO.cpp
     access_type.cpp
     block_cache.cpp
+    create_purpose.cpp
+    create_type.cpp
     ib_file_suffix.cpp
     innodb_arch_file_key.cpp
     innodb_clone_file_key.cpp
@@ -146,6 +148,7 @@ add_library( ${LIB_NAME} STATIC
     register_pfs_file_rename_end.cpp
     srv_is_being_started.cpp
     srv_read_only_mode.cpp
+    srv_unix_file_flush_method.cpp
     srv_unix_flush_t.cpp
     srv_use_native_aio.cpp
 

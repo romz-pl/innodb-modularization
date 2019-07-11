@@ -559,10 +559,7 @@ struct recv_sys_t {
 /** The recovery system */
 extern recv_sys_t *recv_sys;
 
-/** TRUE when applying redo log records during crash recovery; FALSE
-otherwise.  Note that this is FALSE while a background thread is
-rolling back incomplete transactions. */
-extern volatile bool recv_recovery_on;
+#include <innodb/tablespace/recv_recovery_on.h>
 
 /** If the following is TRUE, the buffer pool file pages must be invalidated
 after recovery and no ibuf operations are allowed; this becomes TRUE if

@@ -436,7 +436,7 @@ of the buffer pool. */
 uint srv_change_buffer_max_size = CHANGE_BUFFER_DEFAULT_SIZE;
 
 #ifndef _WIN32
-enum srv_unix_flush_t srv_unix_file_flush_method = SRV_UNIX_FSYNC;
+//
 #else
 enum srv_win_flush_t srv_win_file_flush_method = SRV_WIN_IO_UNBUFFERED;
 #endif /* _WIN32 */

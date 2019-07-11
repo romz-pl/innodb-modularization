@@ -6,9 +6,12 @@
 #include <innodb/error/ut_error.h>
 #include <innodb/formatting/hex.h>
 #include <innodb/io/IORequest.h>
+#include <innodb/io/IORequestRead.h>
 #include <innodb/io/access_type.h>
 #include <innodb/io/innodb_data_file_key.h>
+#include <innodb/io/innodb_log_file_key.h>
 #include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_create.h>
 #include <innodb/io/os_file_create_simple_no_error_handling.h>
 #include <innodb/io/os_file_create_t.h>
 #include <innodb/io/os_file_get_last_error.h>
@@ -17,23 +20,44 @@
 #include <innodb/io/os_file_stat_t.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/logger/fatal.h>
+#include <innodb/logger/info.h>
 #include <innodb/math/ut_2pow_round.h>
 #include <innodb/string/mem_strdup.h>
 #include <innodb/sync_mutex/mutex_create.h>
+#include <innodb/sync_rw/rw_lock_create.h>
+#include <innodb/sync_rw/rw_lock_free.h>
 #include <innodb/tablespace/Fil_system.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/extent.h>
+#include <innodb/tablespace/fil_buffering_disabled.h>
 #include <innodb/tablespace/fil_n_file_opened.h>
 #include <innodb/tablespace/fil_no_punch_hole.h>
+#include <innodb/tablespace/flst_get_len.h>
+#include <innodb/tablespace/fsp_header_get_field.h>
+#include <innodb/tablespace/fsp_header_get_flags.h>
+#include <innodb/tablespace/fsp_header_get_space_id.h>
 #include <innodb/tablespace/header.h>
+#include <innodb/tablespace/os_file_read_first_page.h>
 #include <innodb/tablespace/srv_start_raw_disk_in_use.h>
-
-
+#include <innodb/time/ib_time_t.h>
+#include <innodb/time/ut_time.h>
+#include <innodb/tablespace/recv_recovery_on.h>
 
 #include <atomic>
 
+
+namespace undo {
+bool is_active(space_id_t space_id, bool get_latch);
+}
+
+
 bool fsp_is_system_temporary(space_id_t space_id);
 bool recv_recovery_is_on();
+
+
+
+extern bool srv_startup_is_before_trx_rollback_phase;
+extern ulong srv_fast_shutdown;
 
 /** Total number of open files. */
 std::atomic_size_t Fil_shard::s_n_open;
@@ -283,3 +307,916 @@ fil_node_t *Fil_shard::create_node(const char *name, page_no_t size,
 
 
 
+/** First we open the file in the normal mode, no async I/O here, for
+simplicity. Then do some checks, and close the file again.  NOTE that we
+could not use the simple file read function os_file_read() in Windows
+to read from a file opened for async I/O!
+@param[in,out]	file		Get the size of this file
+@param[in]	read_only_mode	true if read only mode set
+@return DB_SUCCESS or error */
+dberr_t Fil_shard::get_file_size(fil_node_t *file, bool read_only_mode) {
+  bool success;
+  fil_space_t *space = file->space;
+
+  do {
+    ut_a(!file->is_open);
+
+    file->handle = os_file_create_simple_no_error_handling(
+        innodb_data_file_key, file->name, OS_FILE_OPEN, OS_FILE_READ_ONLY,
+        read_only_mode, &success);
+
+    if (!success) {
+      /* The following call prints an error message */
+      ulint err = os_file_get_last_error(true);
+
+      if (err == EMFILE + 100) {
+        if (close_files_in_LRU(true)) {
+          continue;
+        }
+      }
+
+      ib::warn(ER_IB_MSG_268) << "Cannot open '" << file->name
+                              << "'."
+                                 " Have you deleted .ibd files under a"
+                                 " running mysqld server?";
+
+      return (DB_ERROR);
+    }
+
+  } while (!success);
+
+  os_offset_t size_bytes = os_file_get_size(file->handle);
+
+  ut_a(size_bytes != (os_offset_t)-1);
+
+#ifdef UNIV_HOTBACKUP
+  if (space->id == TRX_SYS_SPACE) {
+    file->size = (ulint)(size_bytes / UNIV_PAGE_SIZE);
+    space->size += file->size;
+    os_file_close(file->handle);
+    return (DB_SUCCESS);
+  }
+#endif /* UNIV_HOTBACKUP */
+
+  ut_a(space->purpose != FIL_TYPE_LOG);
+
+  /* Read the first page of the tablespace */
+
+  byte *buf2 = static_cast<byte *>(ut_malloc_nokey(2 * UNIV_PAGE_SIZE));
+
+  /* Align memory for file I/O if we might have O_DIRECT set */
+
+  byte *page = static_cast<byte *>(ut_align(buf2, UNIV_PAGE_SIZE));
+
+  ut_ad(page == page_align(page));
+
+  IORequest request(IORequest::READ);
+
+  dberr_t err =
+      os_file_read_first_page(request, file->handle, page, UNIV_PAGE_SIZE);
+
+  ut_a(err == DB_SUCCESS);
+
+  os_file_close(file->handle);
+
+  uint32_t flags = fsp_header_get_flags(page);
+  space_id_t space_id = fsp_header_get_space_id(page);
+
+  /* To determine if tablespace is from 5.7 or not, we
+  rely on SDI flag. For IBDs from 5.7, which are opened
+  during import or during upgrade, their initial size
+  is lesser than the initial size in 8.0 */
+  bool has_sdi = FSP_FLAGS_HAS_SDI(flags);
+
+  uint8_t expected_size =
+      has_sdi ? FIL_IBD_FILE_INITIAL_SIZE : FIL_IBD_FILE_INITIAL_SIZE_5_7;
+
+  const page_size_t page_size(flags);
+
+  ulint min_size = expected_size * page_size.physical();
+
+  if (size_bytes < min_size) {
+    if (has_sdi) {
+      /** Add some tolerance when the tablespace is upgraded. If an empty
+      general tablespace is created in 5.7, and then upgraded to 8.0, then
+      its size changes from FIL_IBD_FILE_INITIAL_SIZE_5_7 pages to
+      FIL_IBD_FILE_INITIAL_SIZE-1. */
+
+      ut_ad(expected_size == FIL_IBD_FILE_INITIAL_SIZE);
+      ulint upgrade_size = (expected_size - 1) * page_size.physical();
+
+      if (size_bytes < upgrade_size) {
+        ib::error(ER_IB_MSG_269)
+            << "The size of tablespace file " << file->name << " is only "
+            << size_bytes << ", should be at least " << upgrade_size << "!";
+
+        ut_error;
+      }
+
+    } else {
+      ib::error(ER_IB_MSG_269)
+          << "The size of tablespace file " << file->name << " is only "
+          << size_bytes << ", should be at least " << min_size << "!";
+
+      ut_error;
+    }
+  }
+
+  if (space_id != space->id) {
+    ib::fatal(ER_IB_MSG_270) << "Tablespace id is " << space->id
+                             << " in the data dictionary but in file "
+                             << file->name << " it is " << space_id << "!";
+  }
+
+  /* We need to adjust for compressed pages. */
+  const page_size_t space_page_size(space->flags);
+
+  if (!page_size.equals_to(space_page_size)) {
+    ib::fatal(ER_IB_MSG_271)
+        << "Tablespace file " << file->name << " has page size " << page_size
+        << " (flags=" << ib::hex(flags) << ") but the data dictionary expects"
+        << " page size " << space_page_size
+        << " (flags=" << ib::hex(space->flags) << ")!";
+  }
+
+  /* If the SDI flag is set in the file header page, set it in space->flags. */
+  space->flags |= flags & FSP_FLAGS_MASK_SDI;
+
+#ifndef UNIV_HOTBACKUP
+  /* It is possible that
+  - For general tablespace, encryption flag is updated on disk but server
+  crashed before DD could be updated OR
+  - For DD tablespace, encryption flag is updated on disk.
+  */
+  if (FSP_FLAGS_GET_ENCRYPTION(flags)) {
+    space->flags |= flags & FSP_FLAGS_MASK_ENCRYPTION;
+  }
+#endif /* UNIV_HOTBACKUP */
+
+  /* Make a copy of space->flags and flags from the page header
+  so that they can be compared. */
+  uint32_t fil_space_flags = space->flags;
+  uint32_t header_fsp_flags = flags;
+
+  /* If a crash occurs while an UNDO space is being truncated,
+  it will be created new at startup. In that case, the fil_space_t
+  object will have the ENCRYPTION flag set, but the header page will
+  not be marked until the srv_master_thread gets around to it.
+  The opposite can occur where the header page contains the encryption
+  flag but the fil_space_t does not.  It could happen that undo
+  encryption was turned off just before the crash or shutdown so that
+  the srv_master_thread did not yet have time to apply it.
+  So don't compare the encryption flag for undo tablespaces. */
+  if (fsp_is_undo_tablespace(space->id)) {
+    fsp_flags_unset_encryption(fil_space_flags);
+    fsp_flags_unset_encryption(header_fsp_flags);
+  }
+
+  /* Make sure the space_flags are the same as the header page flags. */
+  if (fil_space_flags != header_fsp_flags) {
+    ib::error(ER_IB_MSG_272, ulong{space->flags}, file->name, ulonglong{flags});
+    ut_error;
+  }
+
+  {
+    page_no_t size = fsp_header_get_field(page, FSP_SIZE);
+
+    page_no_t free_limit;
+
+    free_limit = fsp_header_get_field(page, FSP_FREE_LIMIT);
+
+    ulint free_len;
+
+    free_len = flst_get_len(FSP_HEADER_OFFSET + FSP_FREE + page);
+
+    ut_ad(space->free_limit == 0 || space->free_limit == free_limit);
+
+    ut_ad(space->free_len == 0 || space->free_len == free_len);
+
+    space->size_in_header = size;
+    space->free_limit = free_limit;
+
+    ut_a(free_len < std::numeric_limits<uint32_t>::max());
+
+    space->free_len = (uint32_t)free_len;
+  }
+
+  ut_free(buf2);
+
+  /* For encrypted tablespace, we need to check the
+  encryption key and iv(initial vector) is read. */
+  if (FSP_FLAGS_GET_ENCRYPTION(space->flags) && !recv_recovery_is_on() &&
+      space->encryption_type != Encryption::AES) {
+    ib::error(ER_IB_MSG_273, file->name);
+
+    return (DB_ERROR);
+  }
+
+  if (file->size == 0) {
+    ulint extent_size;
+
+    extent_size = page_size.physical() * FSP_EXTENT_SIZE;
+
+#ifndef UNIV_HOTBACKUP
+    /* Truncate the size to a multiple of extent size. */
+    if (size_bytes >= extent_size) {
+      size_bytes = ut_2pow_round(size_bytes, extent_size);
+    }
+#else /* !UNIV_HOTBACKUP */
+
+    /* After apply-incremental, tablespaces are not
+    extended to a whole megabyte. Do not cut off
+    valid data. */
+
+#endif /* !UNIV_HOTBACKUP */
+
+    file->size = static_cast<page_no_t>(size_bytes / page_size.physical());
+
+    space->size += file->size;
+  }
+
+  return (DB_SUCCESS);
+}
+
+/** Open a file of a tablespace.
+The caller must own the shard mutex.
+@param[in,out]	file		Tablespace file
+@param[in]	extend		true if the file is being extended
+@return false if the file can't be opened, otherwise true */
+bool Fil_shard::open_file(fil_node_t *file, bool extend) {
+  bool success;
+  fil_space_t *space = file->space;
+
+  ut_ad(m_id == REDO_SHARD || mutex_owned());
+
+  ut_a(!file->is_open);
+  ut_a(file->n_pending == 0);
+
+  while (file->in_use > 0) {
+    /* We increment the reference count when extending
+    the file. */
+    if (file->in_use == 1 && extend) {
+      break;
+    }
+
+    mutex_release();
+
+    os_thread_sleep(100000);
+
+    mutex_acquire();
+  }
+
+  if (file->is_open) {
+    return (true);
+  }
+
+  bool read_only_mode;
+
+  read_only_mode = !fsp_is_system_temporary(space->id) && srv_read_only_mode;
+
+  if (file->size == 0 ||
+      (space->size_in_header == 0 && space->purpose == FIL_TYPE_TABLESPACE &&
+       file == &space->files.front()
+#ifndef UNIV_HOTBACKUP
+       && undo::is_active(space->id, false) &&
+       srv_startup_is_before_trx_rollback_phase
+#endif /* !UNIV_HOTBACKUP */
+       )) {
+
+    /* We don't know the file size yet. */
+    dberr_t err = get_file_size(file, read_only_mode);
+
+    if (err != DB_SUCCESS) {
+      return (false);
+    }
+  }
+
+  /* Open the file for reading and writing, in Windows normally in the
+  unbuffered async I/O mode, though global variables may make
+  os_file_create() to fall back to the normal file I/O mode. */
+
+  if (space->purpose == FIL_TYPE_LOG) {
+    file->handle =
+        os_file_create(innodb_log_file_key, file->name, OS_FILE_OPEN,
+                       OS_FILE_AIO, OS_LOG_FILE, read_only_mode, &success);
+  } else if (file->is_raw_disk) {
+    file->handle =
+        os_file_create(innodb_data_file_key, file->name, OS_FILE_OPEN_RAW,
+                       OS_FILE_AIO, OS_DATA_FILE, read_only_mode, &success);
+  } else {
+    file->handle =
+        os_file_create(innodb_data_file_key, file->name, OS_FILE_OPEN,
+                       OS_FILE_AIO, OS_DATA_FILE, read_only_mode, &success);
+  }
+
+  ut_a(success);
+
+  /* The file is ready for IO. */
+
+  file_opened(file);
+
+  return (true);
+}
+
+
+/** Close a tablespace file.
+@param[in]	LRU_close	true if called from LRU close
+@param[in,out]	file		Tablespace file to close */
+void Fil_shard::close_file(fil_node_t *file, bool LRU_close) {
+  ut_ad(mutex_owned());
+
+  ut_a(file->is_open);
+  ut_a(file->in_use == 0);
+  ut_a(file->n_pending == 0);
+  ut_a(file->n_pending_flushes == 0);
+
+#ifndef UNIV_HOTBACKUP
+  ut_a(file->modification_counter == file->flush_counter ||
+       file->space->purpose == FIL_TYPE_TEMPORARY || srv_fast_shutdown == 2);
+#endif /* !UNIV_HOTBACKUP */
+
+  bool ret = os_file_close(file->handle);
+
+  ut_a(ret);
+
+  file->handle.m_file = (os_file_t)-1;
+
+  file->is_open = false;
+
+  ut_a(s_n_open > 0);
+
+  --s_n_open;
+
+  fil_n_file_opened = s_n_open;
+
+  remove_from_LRU(file);
+}
+
+/** Tries to close a file in the LRU list.
+@param[in]	print_info	if true, prints information why it cannot close
+                                a file
+@return true if success, false if should retry later */
+bool Fil_shard::close_files_in_LRU(bool print_info) {
+  ut_ad(mutex_owned());
+
+  for (auto file = UT_LIST_GET_LAST(m_LRU); file != nullptr;
+       file = UT_LIST_GET_PREV(LRU, file)) {
+    if (file->modification_counter == file->flush_counter &&
+        file->n_pending_flushes == 0 && file->in_use == 0) {
+      close_file(file, true);
+
+      return (true);
+    }
+
+    if (!print_info) {
+      continue;
+    }
+
+    if (file->n_pending_flushes > 0) {
+      ib::info(ER_IB_MSG_274, file->name, file->n_pending_flushes);
+    }
+
+    /* Prior to sharding the counters were under a global
+    mutex. Now they are spread across the shards. Therefore
+    it is normal for the modification counter to be out of
+    sync with the flush counter for files that are in differnet
+    shards. */
+
+    if (file->modification_counter != file->flush_counter) {
+      ib::info(ER_IB_MSG_275, file->name, longlong{file->modification_counter},
+               longlong{file->flush_counter});
+    }
+
+    if (file->in_use > 0) {
+      ib::info(ER_IB_MSG_276, file->name);
+    }
+  }
+
+  return (false);
+}
+
+/** Tries to close a file in the LRU list.
+@param[in] print_info   if true, prints information why it cannot close a file
+@return true if success, false if should retry later */
+bool Fil_system::close_file_in_all_LRU(bool print_info) {
+  for (auto shard : m_shards) {
+    shard->mutex_acquire();
+
+    if (print_info) {
+      ib::info(ER_IB_MSG_277, shard->id(),
+               ulonglong{UT_LIST_GET_LEN(shard->m_LRU)});
+    }
+
+    bool success = shard->close_files_in_LRU(print_info);
+
+    shard->mutex_release();
+
+    if (success) {
+      return (true);
+    }
+  }
+
+  return (false);
+}
+
+/** We keep log files and system tablespace files always open; this is
+important in preventing deadlocks in this module, as a page read
+completion often performs another read from the insert buffer. The
+insert buffer is in tablespace TRX_SYS_SPACE, and we cannot end up
+waiting in this function.
+@param[in]	space_id	Tablespace ID to look up
+@return tablespace instance */
+fil_space_t *Fil_shard::get_reserved_space(space_id_t space_id) {
+  if (space_id == TRX_SYS_SPACE) {
+    return (fil_space_t::s_sys_space);
+
+  } else if (space_id == dict_sys_t_s_log_space_first_id &&
+             fil_space_t::s_redo_space != nullptr) {
+    return (fil_space_t::s_redo_space);
+  }
+
+  return (get_space_by_id(space_id));
+}
+
+/** Prepare to free a file. Remove from the unflushed list if there
+are no pending flushes.
+@param[in,out]	file		File instance to free */
+void Fil_shard::prepare_to_free_file(fil_node_t *file) {
+  ut_ad(mutex_owned());
+
+  fil_space_t *space = file->space;
+
+  if (space->is_in_unflushed_spaces && space_is_flushed(space)) {
+    space->is_in_unflushed_spaces = false;
+
+    UT_LIST_REMOVE(m_unflushed_spaces, space);
+  }
+}
+
+/** Prepare to free a file object from a tablespace memory cache.
+@param[in,out]	file	Tablespace file
+@param[in]	space	tablespace */
+void Fil_shard::file_close_to_free(fil_node_t *file, fil_space_t *space) {
+  ut_ad(mutex_owned());
+  ut_a(file->magic_n == FIL_NODE_MAGIC_N);
+  ut_a(file->n_pending == 0);
+  ut_a(file->in_use == 0);
+  ut_a(file->space == space);
+
+  if (file->is_open) {
+    /* We fool the assertion in Fil_system::close_file() to think
+    there are no unflushed modifications in the file */
+
+    file->modification_counter = file->flush_counter;
+
+    os_event_set(file->sync_event);
+
+    if (fil_buffering_disabled(space)) {
+      ut_ad(!space->is_in_unflushed_spaces);
+      ut_ad(space_is_flushed(space));
+
+    } else {
+      prepare_to_free_file(file);
+    }
+
+    /* TODO: set second parameter to true, so to release
+    fil_system mutex before logging tablespace name and id.
+    To go around Bug#26271853 - POTENTIAL DEADLOCK BETWEEN
+    FIL_SYSTEM MUTEX AND LOG MUTEX */
+    close_file(file, true);
+  }
+}
+
+/** Detach a space object from the tablespace memory cache.
+Closes the tablespace files but does not delete them.
+There must not be any pending I/O's or flushes on the files.
+@param[in,out]	space		tablespace */
+void Fil_shard::space_detach(fil_space_t *space) {
+  ut_ad(mutex_owned());
+
+  m_names.erase(space->name);
+
+  if (space->is_in_unflushed_spaces) {
+    ut_ad(!fil_buffering_disabled(space));
+
+    space->is_in_unflushed_spaces = false;
+
+    UT_LIST_REMOVE(m_unflushed_spaces, space);
+  }
+
+  ut_a(space->magic_n == FIL_SPACE_MAGIC_N);
+  ut_a(space->n_pending_flushes == 0);
+
+  for (auto &file : space->files) {
+    file_close_to_free(&file, space);
+  }
+}
+
+/** Explicitly call the destructor, this is to get around Clang bug#12350.
+@param[in,out]	p		Instance on which to call the destructor */
+template <typename T>
+void call_destructor(T *p) {
+  p->~T();
+}
+
+
+/** Free a tablespace object on which fil_space_detach() was invoked.
+There must not be any pending I/O's or flushes on the files.
+@param[in,out]	space		tablespace */
+void Fil_shard::space_free_low(fil_space_t *&space) {
+  // FIXME
+  // ut_ad(srv_fast_shutdown == 2);
+
+  for (auto &file : space->files) {
+    ut_d(space->size -= file.size);
+
+    os_event_destroy(file.sync_event);
+
+    ut_free(file.name);
+  }
+
+  call_destructor(&space->files);
+
+  ut_ad(space->size == 0);
+
+  rw_lock_free(&space->latch);
+
+  ut_free(space->name);
+  ut_free(space);
+
+  space = nullptr;
+}
+
+/** Frees a space object from the tablespace memory cache.
+Closes a tablespaces' files but does not delete them.
+There must not be any pending I/O's or flushes on the files.
+@param[in]	space_id	Tablespace ID
+@return fil_space_t instance on success or nullptr */
+fil_space_t *Fil_shard::space_free(space_id_t space_id) {
+  mutex_acquire();
+
+  fil_space_t *space = get_space_by_id(space_id);
+
+  if (space != nullptr) {
+    space_detach(space);
+
+    space_delete(space_id);
+  }
+
+  mutex_release();
+
+  return (space);
+}
+
+
+/** Opens the files associated with a tablespace and returns a pointer to
+the fil_space_t that is in the memory cache associated with a space id.
+@param[in]	space_id	Get the tablespace instance or this ID
+@return file_space_t pointer, nullptr if space not found */
+fil_space_t *Fil_shard::space_load(space_id_t space_id) {
+  ut_ad(mutex_owned());
+
+  fil_space_t *space = get_space_by_id(space_id);
+
+  if (space == nullptr || space->size != 0) {
+    return (space);
+  }
+
+  switch (space->purpose) {
+    case FIL_TYPE_LOG:
+      break;
+
+    case FIL_TYPE_IMPORT:
+    case FIL_TYPE_TEMPORARY:
+    case FIL_TYPE_TABLESPACE:
+
+      ut_a(space_id != TRX_SYS_SPACE);
+
+      mutex_release();
+
+      auto slot = mutex_acquire_and_get_space(space_id, space);
+
+      if (space == nullptr) {
+        if (slot) {
+          release_open_slot(m_id);
+        }
+
+        return (nullptr);
+      }
+
+      ut_a(1 == space->files.size());
+
+      {
+        fil_node_t *file;
+
+        file = &space->files.front();
+
+        /* It must be a single-table tablespace and
+        we have not opened the file yet; the following
+        calls will open it and update the size fields */
+
+        bool success = prepare_file_for_io(file, false);
+
+        if (slot) {
+          release_open_slot(m_id);
+        }
+
+        if (!success) {
+          /* The single-table tablespace can't be opened,
+          because the ibd file is missing. */
+
+          return (nullptr);
+        }
+
+        complete_io(file, IORequestRead);
+      }
+  }
+
+  return (space);
+}
+
+/** Open each file of a tablespace if not already open.
+@param[in]	space_id	tablespace identifier
+@retval	true	if all file nodes were opened
+@retval	false	on failure */
+bool Fil_shard::space_open(space_id_t space_id) {
+  ut_ad(mutex_owned());
+
+  fil_space_t *space = get_space_by_id(space_id);
+
+  for (auto &file : space->files) {
+    if (!file.is_open && !open_file(&file, false)) {
+      return (false);
+    }
+  }
+
+  return (true);
+}
+
+/** Close all open files. */
+void Fil_shard::close_all_files() {
+  ut_ad(mutex_owned());
+
+  auto end = m_spaces.end();
+
+  for (auto it = m_spaces.begin(); it != end; it = m_spaces.erase(it)) {
+    auto space = it->second;
+
+    ut_a(space->id == TRX_SYS_SPACE || space->purpose == FIL_TYPE_TEMPORARY ||
+         space->id == dict_sys_t_s_log_space_first_id ||
+         space->files.size() == 1);
+
+    if (space->id == dict_sys_t_s_log_space_first_id) {
+      fil_space_t::s_redo_space = nullptr;
+    }
+
+    for (auto &file : space->files) {
+      if (file.is_open) {
+        close_file(&file, false);
+      }
+    }
+
+    space_detach(space);
+
+    space_free_low(space);
+
+    ut_a(space == nullptr);
+  }
+}
+
+/** Close all open files. */
+void Fil_system::close_all_files() {
+  for (auto shard : m_shards) {
+    shard->mutex_acquire();
+
+    shard->close_all_files();
+
+    shard->mutex_release();
+  }
+}
+
+/** Close log files.
+@param[in]	free_all	If set then free all instances */
+void Fil_shard::close_log_files(bool free_all) {
+  mutex_acquire();
+
+  auto end = m_spaces.end();
+
+  for (auto it = m_spaces.begin(); it != end; /* No op */) {
+    auto space = it->second;
+
+    if (space->purpose != FIL_TYPE_LOG) {
+      ++it;
+      continue;
+    }
+
+    if (space->id == dict_sys_t_s_log_space_first_id) {
+      ut_a(fil_space_t::s_redo_space == space);
+
+      fil_space_t::s_redo_space = nullptr;
+    }
+
+    for (auto &file : space->files) {
+      if (file.is_open) {
+        close_file(&file, false);
+      }
+    }
+
+    if (free_all) {
+      space_detach(space);
+      space_free_low(space);
+      ut_a(space == nullptr);
+
+      it = m_spaces.erase(it);
+
+    } else {
+      ++it;
+    }
+  }
+
+  mutex_release();
+}
+
+/** Close all log files in all shards.
+@param[in]	free_all	If set then free all instances */
+void Fil_system::close_all_log_files(bool free_all) {
+  for (auto shard : m_shards) {
+    shard->close_log_files(free_all);
+  }
+}
+
+/** Iterate through all persistent tablespace files (FIL_TYPE_TABLESPACE)
+returning the nodes via callback function cbk.
+@param[in]	include_log	Include log files, if true
+@param[in]	f		Callback
+@return any error returned by the callback function. */
+dberr_t Fil_shard::iterate(bool include_log, Fil_iterator::Function &f) {
+  mutex_acquire();
+
+  for (auto &elem : m_spaces) {
+    auto space = elem.second;
+
+    if (space->purpose != FIL_TYPE_TABLESPACE &&
+        (!include_log || space->purpose != FIL_TYPE_LOG)) {
+      continue;
+    }
+
+    for (auto &file : space->files) {
+      /* Note: The callback can release the mutex. */
+
+      dberr_t err = f(&file);
+
+      if (err != DB_SUCCESS) {
+        mutex_release();
+
+        return (err);
+      }
+    }
+  }
+
+  mutex_release();
+
+  return (DB_SUCCESS);
+}
+
+/** Iterate through all persistent tablespace files (FIL_TYPE_TABLESPACE)
+returning the nodes via callback function cbk.
+@param[in]	include_log	include log files, if true
+@param[in]	f		callback function
+@return any error returned by the callback function. */
+dberr_t Fil_system::iterate(bool include_log, Fil_iterator::Function &f) {
+  for (auto shard : m_shards) {
+    dberr_t err = shard->iterate(include_log, f);
+
+    if (err != DB_SUCCESS) {
+      return (err);
+    }
+  }
+
+  return (DB_SUCCESS);
+}
+
+/** Check for pending operations.
+@param[in]	space	tablespace
+@param[in]	count	number of attempts so far
+@return 0 if no pending operations else count + 1. */
+ulint Fil_shard::space_check_pending_operations(fil_space_t *space,
+                                                ulint count) const {
+  ut_ad(mutex_owned());
+
+  if (space != nullptr && space->n_pending_ops > 0) {
+    if (count > 5000) {
+      ib::warn(ER_IB_MSG_287, space->name, ulong{space->n_pending_ops});
+    }
+
+    return (count + 1);
+  }
+
+  return (0);
+}
+
+/** Check for pending IO.
+@param[in]	space		Tablespace to check
+@param[in]	file		File in space list
+@param[in]	count		number of attempts so far
+@return 0 if no pending else count + 1. */
+ulint Fil_shard::check_pending_io(const fil_space_t *space,
+                                  const fil_node_t &file, ulint count) const {
+  ut_ad(mutex_owned());
+  ut_a(space->n_pending_ops == 0);
+
+  ut_a(space->id == TRX_SYS_SPACE || space->purpose == FIL_TYPE_TEMPORARY ||
+       space->id == dict_sys_t_s_log_space_first_id ||
+       space->files.size() == 1);
+
+  if (space->n_pending_flushes > 0 || file.n_pending > 0) {
+    if (count > 1000) {
+      ib::warn(ER_IB_MSG_288, space->name, ulong{space->n_pending_flushes},
+               size_t{file.n_pending});
+    }
+
+    return (count + 1);
+  }
+
+  return (0);
+}
+
+/** Check pending operations on a tablespace.
+@param[in]	space_id	Tablespace ID
+@param[out]	space		tablespace instance in memory
+@param[out]	path		tablespace path
+@return DB_SUCCESS or DB_TABLESPACE_NOT_FOUND. */
+dberr_t Fil_shard::space_check_pending_operations(space_id_t space_id,
+                                                  fil_space_t *&space,
+                                                  char **path) const {
+  ut_ad(!fsp_is_system_tablespace(space_id));
+  ut_ad(!fsp_is_global_temporary(space_id));
+
+  space = nullptr;
+
+  mutex_acquire();
+
+  fil_space_t *sp = get_space_by_id(space_id);
+
+  if (sp != nullptr) {
+    sp->stop_new_ops = true;
+  }
+
+  mutex_release();
+
+  /* Check for pending operations. */
+
+  ulint count = 0;
+
+  do {
+    mutex_acquire();
+
+    sp = get_space_by_id(space_id);
+
+    count = space_check_pending_operations(sp, count);
+
+    mutex_release();
+
+    if (count > 0) {
+      os_thread_sleep(20000);
+    }
+
+  } while (count > 0);
+
+  /* Check for pending IO. */
+
+  *path = 0;
+
+  do {
+    mutex_acquire();
+
+    sp = get_space_by_id(space_id);
+
+    if (sp == nullptr) {
+      mutex_release();
+
+      return (DB_TABLESPACE_NOT_FOUND);
+    }
+
+    const fil_node_t &file = sp->files.front();
+
+    count = check_pending_io(sp, file, count);
+
+    if (count == 0) {
+      *path = mem_strdup(file.name);
+    }
+
+    mutex_release();
+
+    if (count > 0) {
+      os_thread_sleep(20000);
+    }
+
+  } while (count > 0);
+
+  ut_ad(sp != nullptr);
+
+  space = sp;
+
+  return (DB_SUCCESS);
+}
