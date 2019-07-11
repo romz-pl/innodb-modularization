@@ -63,8 +63,7 @@ struct dict_add_v_col_t;
 DICT_IBUF_ID_MIN plus the space id */
 #define DICT_IBUF_ID_MIN 0xFFFFFFFF00000000ULL
 
-/** Table or partition identifier (unique within an InnoDB instance). */
-typedef ib_id_t table_id_t;
+
 /** Index identifier (unique within a tablespace). */
 typedef ib_id_t space_index_t;
 

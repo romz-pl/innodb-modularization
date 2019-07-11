@@ -24,6 +24,10 @@ add_library( ${LIB_NAME} STATIC
     fil_type_t.cpp
     lsn_t.cpp
     space_id_t.cpp
+    Fil_shard.cpp
+    Fil_iterator.cpp
+    page_id_t.cpp
+    AIO_mode.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -38,6 +42,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     io
+    memory
     string
     sync_rw
     PRIVATE

@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/ioasync/AIO_mode.h>
+#include <innodb/tablespace/AIO_mode.h>
 #include <innodb/ioasync/Slot.h>
 #include <innodb/sync_event/os_event_t.h>
 #include <innodb/sync_event/os_event_wait.h>

@@ -460,6 +460,9 @@ typedef ib_uint64_t ib_id_t;
 #define IB_ID_MAX IB_UINT64_MAX
 
 
+/** Table or partition identifier (unique within an InnoDB instance). */
+typedef ib_id_t table_id_t;
+
 
 
 #define SPACE_ID_PF UINT32PF

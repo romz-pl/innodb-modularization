@@ -51,7 +51,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/io/os_file_create_t.h>
 #include <innodb/io/IORequest.h>
 #include <innodb/io/os_file_size_t.h>
-#include <innodb/ioasync/AIO_mode.h>
+#include <innodb/tablespace/AIO_mode.h>
 #include <innodb/io/os_file_type_t.h>
 #include <innodb/io/os_file_stat_t.h>
 #include <innodb/io/os_file_get_last_error_low.h>

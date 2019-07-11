@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/error/dberr_t.h>
-#include <innodb/ioasync/AIO_mode.h>
+#include <innodb/tablespace/AIO_mode.h>
 #include <innodb/io/pfs_os_file_t.h>
 #include <innodb/io/os_offset_t.h>
 

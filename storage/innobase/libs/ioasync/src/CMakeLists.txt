@@ -2,7 +2,6 @@ set( LIB_NAME ioasync )
 
 add_library( ${LIB_NAME} STATIC
     AIO.cpp
-    AIO_mode.cpp
     Slot.cpp
     os_aio_n_segments.cpp
     SRV_MAX_N_IO_THREADS.cpp

@@ -97,7 +97,6 @@ add_library( ${LIB_NAME} STATIC
     buf_ptr_get_fsp_addr.cpp
     buf_withdraw_clock.cpp
     macros.cpp
-    page_id_t.cpp
     srv_checksum_algorithm_t.cpp
 )
 
@@ -112,7 +111,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    memory_check
     tablespace
     PRIVATE
 )
