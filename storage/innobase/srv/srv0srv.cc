@@ -51,6 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_n_fsyncs.h>
 #include <innodb/ioasync/os_aio_refresh_stats.h>
 #include <innodb/ioasync/os_aio_print.h>
+#include <innodb/tablespace/fil_n_file_opened.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <mysqld.h>
@@ -190,11 +191,6 @@ unsigned long long srv_max_undo_tablespace_size;
 /** Default undo tablespace size in UNIV_PAGEs count (10MB). */
 const page_no_t SRV_UNDO_TABLESPACE_SIZE_IN_PAGES =
     ((1024 * 1024) * 10) / UNIV_PAGE_SIZE_DEF;
-
-/** Set if InnoDB must operate in read-only mode. We don't do any
-recovery and open all tables in RO mode instead of RW mode. We don't
-sync the max trx id to disk either. */
-bool srv_read_only_mode;
 
 /** store to its own file each table created by an user; data
 dictionary tables are in the system tablespace 0 */
@@ -2412,7 +2408,7 @@ void undo_rotate_default_master_key() {
 /* Enable REDO tablespace encryption */
 bool srv_enable_redo_encryption(bool is_boot) {
   /* Start to encrypt the redo log block from now on. */
-  fil_space_t *space = fil_space_get(dict_sys_t::s_log_space_first_id);
+  fil_space_t *space = fil_space_get(dict_sys_t_s_log_space_first_id);
 
   /* While enabling encryption, make sure not to overwrite the tablespace
   key. */
@@ -2587,7 +2583,7 @@ loop:
     if (is_early_redo_undo_encryption_done()) {
       /* Rotate default master key for redo log encryption if it is set */
       if (srv_redo_log_encrypt) {
-        fil_space_t *space = fil_space_get(dict_sys_t::s_log_space_first_id);
+        fil_space_t *space = fil_space_get(dict_sys_t_s_log_space_first_id);
         ut_a(space);
         ut_ad(FSP_FLAGS_GET_ENCRYPTION(space->flags));
 

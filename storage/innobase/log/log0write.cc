@@ -2595,7 +2595,7 @@ void log_closer(log_t *log_ptr) {
 /* @{ */
 
 bool log_read_encryption() {
-  space_id_t log_space_id = dict_sys_t::s_log_space_first_id;
+  space_id_t log_space_id = dict_sys_t_s_log_space_first_id;
   const page_id_t page_id(log_space_id, 0);
   byte *log_block_buf_ptr;
   byte *log_block_buf;
@@ -2676,7 +2676,7 @@ static bool log_file_header_fill_encryption(byte *buf, byte *key, byte *iv,
 }
 
 bool log_write_encryption(byte *key, byte *iv, bool is_boot) {
-  const page_id_t page_id{dict_sys_t::s_log_space_first_id, 0};
+  const page_id_t page_id{dict_sys_t_s_log_space_first_id, 0};
   byte *log_block_buf_ptr;
   byte *log_block_buf;
 
@@ -2687,7 +2687,7 @@ bool log_write_encryption(byte *key, byte *iv, bool is_boot) {
       static_cast<byte *>(ut_align(log_block_buf_ptr, OS_FILE_LOG_BLOCK_SIZE));
 
   if (key == NULL && iv == NULL) {
-    fil_space_t *space = fil_space_get(dict_sys_t::s_log_space_first_id);
+    fil_space_t *space = fil_space_get(dict_sys_t_s_log_space_first_id);
 
     key = space->encryption_key;
     iv = space->encryption_iv;
@@ -2709,7 +2709,7 @@ bool log_write_encryption(byte *key, byte *iv, bool is_boot) {
 }
 
 bool log_rotate_encryption() {
-  fil_space_t *space = fil_space_get(dict_sys_t::s_log_space_first_id);
+  fil_space_t *space = fil_space_get(dict_sys_t_s_log_space_first_id);
 
   if (!FSP_FLAGS_GET_ENCRYPTION(space->flags)) {
     return (true);
@@ -2720,7 +2720,7 @@ bool log_rotate_encryption() {
 }
 
 void redo_rotate_default_master_key() {
-  fil_space_t *space = fil_space_get(dict_sys_t::s_log_space_first_id);
+  fil_space_t *space = fil_space_get(dict_sys_t_s_log_space_first_id);
 
   if (srv_shutdown_state != SRV_SHUTDOWN_NONE) {
     return;

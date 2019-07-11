@@ -28,6 +28,12 @@ add_library( ${LIB_NAME} STATIC
     Fil_iterator.cpp
     page_id_t.cpp
     AIO_mode.cpp
+    Fil_system.cpp
+    consts.cpp
+    fil_n_file_opened.cpp
+    srv_start_raw_disk_in_use.cpp
+    header.cpp
+    extent.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

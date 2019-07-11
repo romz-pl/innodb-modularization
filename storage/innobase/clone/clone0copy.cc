@@ -511,7 +511,7 @@ int Clone_Snapshot::add_redo_file(char *file_name, uint64_t file_size,
     ut_ad(file_offset == 0);
   }
 
-  file_meta->m_space_id = dict_sys_t::s_log_space_first_id;
+  file_meta->m_space_id = dict_sys_t_s_log_space_first_id;
 
   file_meta->m_file_index = m_num_redo_files;
 

@@ -116,7 +116,9 @@ The tablespace memory cache */
 #include <tuple>
 #include <unordered_map>
 #include <innodb/tablespace/Fil_shard.h>
-
+#include <innodb/tablespace/Fil_system.h>
+#include <innodb/tablespace/consts.h>
+#include <innodb/tablespace/fil_n_file_opened.h>
 
 
 
@@ -192,8 +194,7 @@ ulint fil_n_pending_log_flushes = 0;
 /** Number of pending tablespace flushes */
 ulint fil_n_pending_tablespace_flushes = 0;
 
-/** Number of files currently open */
-ulint fil_n_file_opened = 0;
+
 
 
 
@@ -202,41 +203,9 @@ ulint fil_n_file_opened = 0;
 /** The null file address */
 fil_addr_t fil_addr_null = {FIL_NULL, 0};
 
-/** Maximum number of threads to use for scanning data files. */
-static const size_t MAX_SCAN_THREADS = 8;
 
-#ifndef UNIV_HOTBACKUP
-/** Maximum number of shards supported. */
-static const size_t MAX_SHARDS = 64;
 
-/** The redo log is in its own shard. */
-static const size_t REDO_SHARD = MAX_SHARDS - 1;
 
-/** Number of undo shards to reserve. */
-static const size_t UNDO_SHARDS = 4;
-
-/** The UNDO logs have their own shards (4). */
-static const size_t UNDO_SHARDS_START = REDO_SHARD - (UNDO_SHARDS + 1);
-#else  /* !UNIV_HOTBACKUP */
-
-/** Maximum number of shards supported. */
-static const size_t MAX_SHARDS = 1;
-
-/** The redo log is in its own shard. */
-static const size_t REDO_SHARD = 0;
-
-/** The UNDO logs have their own shards (4). */
-static const size_t UNDO_SHARDS_START = 0;
-#endif /* !UNIV_HOTBACKUP */
-
-/** Maximum pages to check for valid space ID during start up. */
-static const size_t MAX_PAGES_TO_CHECK = 3;
-
-/** Sentinel for empty open slot. */
-static const size_t EMPTY_OPEN_SLOT = std::numeric_limits<size_t>::max();
-
-/** We want to store the line number from where it was called. */
-#define mutex_acquire() acquire(__LINE__)
 
 
 
@@ -252,428 +221,12 @@ static const size_t EMPTY_OPEN_SLOT = std::numeric_limits<size_t>::max();
 #endif /* _WIN32 */
 
 
-/** The tablespace memory cache; also the totality of logs (the log
-data space) is stored here; below we talk about tablespaces, but also
-the ib_logfiles form a 'space' and it is handled here */
-class Fil_system {
- public:
-  using Fil_shards = std::vector<Fil_shard *>;
-
-  /** Constructor.
-  @param[in]	n_shards	Number of shards to create
-  @param[in]	max_open	Maximum number of open files */
-  Fil_system(size_t n_shards, size_t max_open);
-
-  /** Destructor */
-  ~Fil_system();
-
-  /** Fetch the file names opened for a space_id during recovery.
-  @param[in]	space_id	Tablespace ID to lookup
-  @return pair of top level directory scanned and names that map
-          to space_id or nullptr if not found for names */
-  Tablespace_dirs::Result get_scanned_files(space_id_t space_id)
-      MY_ATTRIBUTE((warn_unused_result)) {
-    return (m_dirs.find(space_id));
-  }
-
-  /** Fetch the file name opened for a space_id during recovery
-  from the file map.
-  @param[in]	space_id	Undo tablespace ID
-  @return Full path to the file name that was opened, empty string
-          if space ID not found. */
-  std::string find(space_id_t space_id) MY_ATTRIBUTE((warn_unused_result)) {
-    auto result = get_scanned_files(space_id);
-
-    if (result.second != nullptr) {
-      return (result.first + result.second->front());
-    }
-
-    return ("");
-  }
-
-  /** Erase a tablespace ID and its mapping from the scanned files.
-  @param[in]	space_id	Tablespace ID to erase
-  @return true if successful */
-  bool erase(space_id_t space_id) MY_ATTRIBUTE((warn_unused_result)) {
-    return (m_dirs.erase(space_id));
-  }
-
-  /** Get the top level directory where this filename was found.
-  @param[in]	path		Path to look for.
-  @return the top level directory under which this file was found. */
-  const std::string &get_root(const std::string &path) const
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Update the DD if any files were moved to a new location.
-  Free the Tablespace_files instance.
-  @param[in]	read_only_mode	true if InnoDB is started in
-                                  read only mode.
-  @return DB_SUCCESS if all OK */
-  dberr_t prepare_open_for_business(bool read_only_mode)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Flush the redo log writes to disk, possibly cached by the OS. */
-  void flush_file_redo();
-
-  /** Flush to disk the writes in file spaces of the given type
-  possibly cached by the OS.
-  @param[in]	purpose		FIL_TYPE_TABLESPACE or FIL_TYPE_LOG,
-                                  can be ORred */
-  void flush_file_spaces(uint8_t purpose);
-
-  /** Fetch the fil_space_t instance that maps to the name.
-  @param[in]	name		Tablespace name to lookup
-  @return tablespace instance or nullptr if not found. */
-  fil_space_t *get_space_by_name(const char *name)
-      MY_ATTRIBUTE((warn_unused_result)) {
-    for (auto shard : m_shards) {
-      shard->mutex_acquire();
-
-      auto space = shard->get_space_by_name(name);
-
-      shard->mutex_release();
-
-      if (space != nullptr) {
-        return (space);
-      }
-    }
-
-    return (nullptr);
-  }
-
-  /** Check a space ID against the maximum known tablespace ID.
-  @param[in]	space_id	Tablespace ID to check
-  @return true if it is > than maximum known tablespace ID. */
-  bool is_greater_than_max_id(space_id_t space_id) const
-      MY_ATTRIBUTE((warn_unused_result)) {
-    ut_ad(mutex_owned_all());
-
-    return (space_id > m_max_assigned_id);
-  }
-
-  /** Update the maximum known tablespace ID.
-  @param[in]	space		Tablespace instance */
-  void set_maximum_space_id(const fil_space_t *space) {
-    ut_ad(mutex_owned_all());
-
-    if (!m_space_id_reuse_warned) {
-      m_space_id_reuse_warned = true;
-
-      ib::warn(ER_IB_MSG_266) << "Allocated tablespace ID " << space->id
-                              << " for " << space->name << ", old maximum"
-                              << " was " << m_max_assigned_id;
-    }
-
-    m_max_assigned_id = space->id;
-  }
-
-  /** Update the maximim known space ID if it's smaller than max_id.
-  @param[in]	space_id		Value to set if it's greater */
-  void update_maximum_space_id(space_id_t space_id) {
-    mutex_acquire_all();
-
-    if (is_greater_than_max_id(space_id)) {
-      m_max_assigned_id = space_id;
-    }
-
-    mutex_release_all();
-  }
-
-  /** Assigns a new space id for a new single-table tablespace. This
-  works simply by incrementing the global counter. If 4 billion ids
-  is not enough, we may need to recycle ids.
-  @param[out]	space_id	Set this to the new tablespace ID
-  @return true if assigned, false if not */
-  bool assign_new_space_id(space_id_t *space_id)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Tries to close a file in all the LRU lists.
-  The caller must hold the mutex.
-  @param[in] print_info		if true, prints information why it
-                                  cannot close a file
-  @return true if success, false if should retry later */
-  bool close_file_in_all_LRU(bool print_info)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Opens all log files and system tablespace data files in
-  all shards. */
-  void open_all_system_tablespaces();
-
-  /** Close all open files in a shard
-  @param[in,out]	shard		Close files of this shard */
-  void close_files_in_a_shard(Fil_shard *shard);
-
-  /** Close all open files. */
-  void close_all_files();
-
-  /** Close all the log files in all shards.
-  @param[in]	free_all	If set then free all instances */
-  void close_all_log_files(bool free_all);
-
-  /** Iterate through all persistent tablespace files
-  (FIL_TYPE_TABLESPACE) returning the nodes via callback function cbk.
-  @param[in]	include_log	Include log files, if true
-  @param[in]	f		Callback
-  @return any error returned by the callback function. */
-  dberr_t iterate(bool include_log, Fil_iterator::Function &f)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Rotate the tablespace keys by new master key.
-  @param[in,out]	shard		Rotate the keys in this shard
-  @return true if the re-encrypt succeeds */
-  bool encryption_rotate_in_a_shard(Fil_shard *shard);
-
-  /** Rotate the tablespace keys by new master key.
-  @return true if the re-encrypt succeeds */
-  bool encryption_rotate_all() MY_ATTRIBUTE((warn_unused_result));
-
-  /** Detach a space object from the tablespace memory cache.
-  Closes the tablespace files but does not delete them.
-  There must not be any pending I/O's or flushes on the files.
-  @param[in,out]	space		tablespace */
-  void space_detach(fil_space_t *space);
-
-  /** @return the maximum assigned ID so far */
-  space_id_t get_max_space_id() const { return (m_max_assigned_id); }
-
-  /** Lookup the tablespace ID.
-  @param[in]	space_id	Tablespace ID to lookup
-  @return true if the space ID is known. */
-  bool lookup_for_recovery(space_id_t space_id)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Open a tablespace that has a redo log record to apply.
-  @param[in]	space_id		Tablespace ID
-  @return true if the open was successful */
-  bool open_for_recovery(space_id_t space_id)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** This function should be called after recovery has completed.
-  Check for tablespace files for which we did not see any
-  MLOG_FILE_DELETE or MLOG_FILE_RENAME record. These could not
-  be recovered.
-  @return true if there were some filenames missing for which we had to
-          ignore redo log records during the apply phase */
-  bool check_missing_tablespaces() MY_ATTRIBUTE((warn_unused_result));
-
-  /** Note that a file has been relocated.
-  @param[in]	object_id	Server DD tablespace ID
-  @param[in]	space_id	InnoDB tablespace ID
-  @param[in]	space_name	Tablespace name
-  @param[in]	old_path	Path to the old location
-  @param[in]	new_path	Path scanned from disk */
-  void moved(dd::Object_id object_id, space_id_t space_id,
-             const char *space_name, const std::string &old_path,
-             const std::string &new_path) {
-    auto tuple =
-        std::make_tuple(object_id, space_id, space_name, old_path, new_path);
-
-    m_moved.push_back(tuple);
-  }
-
-  /** Check if a path is known to InnoDB.
-  @param[in]	path		Path to check
-  @return true if path is known to InnoDB */
-  bool check_path(const std::string &path) const {
-    const auto &dir = m_dirs.contains(path);
-
-    return (dir != Fil_path::null());
-  }
-
-  /** Get the list of directories that InnoDB knows about.
-  @return the list of directories 'dir1;dir2;....;dirN' */
-  std::string get_dirs() const { return (m_dirs.get_dirs()); }
-
-  /** Determines if a file belongs to the least-recently-used list.
-  @param[in]	space		Tablespace to check
-  @return true if the file belongs to fil_system->m_LRU mutex. */
-  static bool space_belongs_in_LRU(const fil_space_t *space)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Scan the directories to build the tablespace ID to file name
-  mapping table. */
-  dberr_t scan(const std::string &directories) {
-    return (m_dirs.scan(directories));
-  }
-
-  /** Get the tablespace ID from an .ibd and/or an undo tablespace.
-  If the ID is == 0 on the first page then check for at least
-  MAX_PAGES_TO_CHECK  pages with the same tablespace ID. Do a Light
-  weight check before trying with DataFile::find_space_id().
-  @param[in]	filename	File name to check
-  @return s_invalid_space_id if not found, otherwise the space ID */
-  static space_id_t get_tablespace_id(const std::string &filename)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Fil_shard by space ID.
-  @param[in]	space_id	Tablespace ID
-  @return reference to the shard */
-  Fil_shard *shard_by_id(space_id_t space_id) const
-      MY_ATTRIBUTE((warn_unused_result)) {
-#ifndef UNIV_HOTBACKUP
-    if (space_id == dict_sys_t::s_log_space_first_id) {
-      return (m_shards[REDO_SHARD]);
-
-    } else if (fsp_is_undo_tablespace(space_id)) {
-      const size_t limit = space_id % UNDO_SHARDS;
-
-      return (m_shards[UNDO_SHARDS_START + limit]);
-    }
-
-    ut_ad(m_shards.size() == MAX_SHARDS);
-
-    return (m_shards[space_id % UNDO_SHARDS_START]);
-#else  /* !UNIV_HOTBACKUP */
-    ut_ad(m_shards.size() == 1);
-
-    return (m_shards[0]);
-#endif /* !UNIV_HOTBACKUP */
-  }
-
-  /** Acquire all the mutexes. */
-  void mutex_acquire_all() const {
-#ifdef UNIV_HOTBACKUP
-    ut_ad(m_shards.size() == 1);
-#endif /* UNIV_HOTBACKUP */
-
-    for (auto shard : m_shards) {
-      shard->mutex_acquire();
-    }
-  }
-
-  /** Release all the mutexes. */
-  void mutex_release_all() const {
-#ifdef UNIV_HOTBACKUP
-    ut_ad(m_shards.size() == 1);
-#endif /* UNIV_HOTBACKUP */
-
-    for (auto shard : m_shards) {
-      shard->mutex_release();
-    }
-  }
-
-#ifdef UNIV_DEBUG
-
-  /** Checks the consistency of the tablespace cache.
-  @return true if ok */
-  bool validate() const MY_ATTRIBUTE((warn_unused_result));
-
-  /** Check if all mutexes are owned
-  @return true if all owned. */
-  bool mutex_owned_all() const MY_ATTRIBUTE((warn_unused_result)) {
-#ifdef UNIV_HOTBACKUP
-    ut_ad(m_shards.size() == 1);
-#endif /* UNIV_HOTBACKUP */
-
-    for (const auto shard : m_shards) {
-      ut_ad(shard->mutex_owned());
-    }
-
-    return (true);
-  }
-
-#endif /* UNIV_DEBUG */
-
-  /** Rename a tablespace.  Use the space_id to find the shard.
-  @param[in]	space_id	tablespace ID
-  @param[in]	old_name	old tablespace name
-  @param[in]	new_name	new tablespace name
-  @return DB_SUCCESS on success */
-  dberr_t rename_tablespace_name(space_id_t space_id, const char *old_name,
-                                 const char *new_name)
-      MY_ATTRIBUTE((warn_unused_result));
-
-  /** Free the data structures required for recovery. */
-  void free_scanned_files() { m_dirs.clear(); }
-
-#ifdef UNIV_HOTBACKUP
-  /** Extends all tablespaces to the size stored in the space header.
-  During the mysqlbackup --apply-log phase we extended the spaces
-  on-demand so that log records could be applied, but that may have
-  left spaces still too small compared to the size stored in the space
-  header. */
-  void meb_extend_tablespaces_to_stored_len() {
-    ut_ad(m_shards.size() == 1);
-
-    /* We use a single shard for MEB. */
-    auto shard = shard_by_id(SPACE_UNKNOWN);
-
-    shard->mutex_acquire();
-
-    shard->meb_extend_tablespaces_to_stored_len();
-
-    shard->mutex_release();
-  }
-
-  /** Process a file name passed as an input
-  Wrapper around meb_name_process()
-  @param[in,out]	name		absolute path of tablespace file
-  @param[in]	space_id	The tablespace ID
-  @param[in]	deleted		true if MLOG_FILE_DELETE */
-  void meb_name_process(char *name, space_id_t space_id, bool deleted);
-
-#endif /* UNIV_HOTBACKUP */
-
- private:
-  /** Open an ibd tablespace and add it to the InnoDB data structures.
-  This is similar to fil_ibd_open() except that it is used while
-  processing the redo log, so the data dictionary is not available
-  and very little validation is done. The tablespace name is extracted
-  from the dbname/tablename.ibd portion of the filename, which assumes
-  that the file is a file-per-table tablespace.  Any name will do for
-  now.  General tablespace names will be read from the dictionary after
-  it has been recovered.  The tablespace flags are read at this time
-  from the first page of the file in validate_for_recovery().
-  @param[in]	space_id	tablespace ID
-  @param[in]	path		path/to/databasename/tablename.ibd
-  @param[out]	space		the tablespace, or nullptr on error
-  @return status of the operation */
-  fil_load_status ibd_open_for_recovery(space_id_t space_id,
-                                        const std::string &path,
-                                        fil_space_t *&space)
-      MY_ATTRIBUTE((warn_unused_result));
-
- private:
-  /** Fil_shards managed */
-  Fil_shards m_shards;
-
-  /** n_open is not allowed to exceed this */
-  const size_t m_max_n_open;
-
-  /** Maximum space id in the existing tables, or assigned during
-  the time mysqld has been up; at an InnoDB startup we scan the
-  data dictionary and set here the maximum of the space id's of
-  the tables there */
-  space_id_t m_max_assigned_id;
-
-  /** true if fil_space_create() has issued a warning about
-  potential space_id reuse */
-  bool m_space_id_reuse_warned;
-
-  /** List of tablespaces that have been relocated. We need to
-  update the DD when it is safe to do so. */
-  dd_fil::Tablespaces m_moved;
-
-  /** Tablespace directories scanned at startup */
-  Tablespace_dirs m_dirs;
-
-  // Disable copying
-  Fil_system(Fil_system &&) = delete;
-  Fil_system(const Fil_system &) = delete;
-  Fil_system &operator=(const Fil_system &) = delete;
-
-  friend class Fil_shard;
-};
 
 /** The tablespace memory cache. This variable is nullptr before the module is
 initialized. */
 static Fil_system *fil_system = nullptr;
 
-/** Total number of open files. */
-std::atomic_size_t Fil_shard::s_n_open;
 
-/** Slot reserved for opening a file. */
-std::atomic_size_t Fil_shard::s_open_slot;
 
 #ifdef UNIV_HOTBACKUP
 static ulint srv_data_read;
@@ -827,134 +380,9 @@ bool Fil_system::space_belongs_in_LRU(const fil_space_t *space) {
   return (false);
 }
 
-/** Constructor
-@param[in]	shard_id	Shard ID  */
-Fil_shard::Fil_shard(size_t shard_id)
-    : m_id(shard_id), m_spaces(), m_names(), m_modification_counter() {
-  mutex_create(LATCH_ID_FIL_SHARD, &m_mutex);
 
-  UT_LIST_INIT(m_LRU, &fil_node_t::LRU);
 
-  UT_LIST_INIT(m_unflushed_spaces, &fil_space_t::unflushed_spaces);
-}
 
-/** Wait for an empty slot to reserve for opening a file.
-@return true on success. */
-bool Fil_shard::reserve_open_slot(size_t shard_id) {
-  size_t expected = EMPTY_OPEN_SLOT;
-
-  return (s_open_slot.compare_exchange_weak(expected, shard_id));
-}
-
-/** Release the slot reserved for opening a file.
-@param[in]	shard_id	ID of shard relasing the slot */
-void Fil_shard::release_open_slot(size_t shard_id) {
-  size_t expected = shard_id;
-
-  while (!s_open_slot.compare_exchange_weak(expected, EMPTY_OPEN_SLOT)) {
-  };
-}
-
-/** Map the space ID and name to the tablespace instance.
-@param[in]	space		Tablespace instance */
-void Fil_shard::space_add(fil_space_t *space) {
-  ut_ad(mutex_owned());
-
-  {
-    auto it = m_spaces.insert(Spaces::value_type(space->id, space));
-
-    ut_a(it.second);
-  }
-
-  {
-    auto name = space->name;
-
-    auto it = m_names.insert(Names::value_type(name, space));
-
-    ut_a(it.second);
-  }
-}
-
-/** Add the file node to the LRU list if required.
-@param[in,out]	file		File for the tablespace */
-void Fil_shard::file_opened(fil_node_t *file) {
-  ut_ad(m_id == REDO_SHARD || mutex_owned());
-
-  if (Fil_system::space_belongs_in_LRU(file->space)) {
-    /* Put the file to the LRU list */
-    UT_LIST_ADD_FIRST(m_LRU, file);
-  }
-
-  ++s_n_open;
-
-  file->is_open = true;
-
-  fil_n_file_opened = s_n_open;
-}
-
-/** Remove the file node from the LRU list.
-@param[in,out]	file		File for the tablespace */
-void Fil_shard::remove_from_LRU(fil_node_t *file) {
-  ut_ad(mutex_owned());
-
-  if (Fil_system::space_belongs_in_LRU(file->space)) {
-    ut_ad(mutex_owned());
-
-    ut_a(UT_LIST_GET_LEN(m_LRU) > 0);
-
-    /* The file is in the LRU list, remove it */
-    UT_LIST_REMOVE(m_LRU, file);
-  }
-}
-
-/** Close a tablespace file based on tablespace ID.
-@param[in]	space_id	Tablespace ID
-@return false if space_id was not found. */
-bool Fil_shard::close_file(space_id_t space_id) {
-  mutex_acquire();
-
-  auto space = get_space_by_id(space_id);
-
-  if (space == nullptr) {
-    mutex_release();
-
-    return (false);
-  }
-
-  for (auto &file : space->files) {
-    while (file.in_use > 0) {
-      mutex_release();
-
-      os_thread_sleep(10000);
-
-      mutex_acquire();
-    }
-
-    if (file.is_open) {
-      close_file(&file, false);
-    }
-  }
-
-  mutex_release();
-
-  return (true);
-}
-
-/** Remap the tablespace to the new name.
-@param[in]	space		Tablespace instance, with old name.
-@param[in]	new_name	New tablespace name */
-void Fil_shard::update_space_name_map(fil_space_t *space,
-                                      const char *new_name) {
-  ut_ad(mutex_owned());
-
-  ut_ad(m_spaces.find(space->id) != m_spaces.end());
-
-  m_names.erase(space->name);
-
-  auto it = m_names.insert(Names::value_type(new_name, space));
-
-  ut_a(it.second);
-}
 
 
 /** Add a space ID to filename mapping.
@@ -1103,22 +531,7 @@ void fil_space_set_imported(space_id_t space_id) {
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Checks if all the file nodes in a space are flushed. The caller must hold
-the fil_system mutex.
-@param[in]	space		Tablespace to check
-@return true if all are flushed */
-bool Fil_shard::space_is_flushed(const fil_space_t *space) {
-  ut_ad(mutex_owned());
 
-  for (const auto &file : space->files) {
-    if (file.modification_counter > file.flush_counter) {
-      ut_ad(!fil_buffering_disabled(space));
-      return (false);
-    }
-  }
-
-  return (true);
-}
 
 #if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
 
@@ -1145,99 +558,6 @@ bool fil_fusionio_enable_atomic_write(pfs_os_file_t file) {
 }
 #endif /* !NO_FALLOCATE && UNIV_LINUX */
 
-/** Attach a file to a tablespace
-@param[in]	name		file name of a file that is not open
-@param[in]	size		file size in entire database blocks
-@param[in,out]	space		tablespace from fil_space_create()
-@param[in]	is_raw		whether this is a raw device or partition
-@param[in]	punch_hole	true if supported for this file
-@param[in]	atomic_write	true if the file has atomic write enabled
-@param[in]	max_pages	maximum number of pages in file
-@return pointer to the file name
-@retval nullptr if error */
-fil_node_t *Fil_shard::create_node(const char *name, page_no_t size,
-                                   fil_space_t *space, bool is_raw,
-                                   bool punch_hole, bool atomic_write,
-                                   page_no_t max_pages) {
-  ut_ad(name != nullptr);
-  ut_ad(fil_system != nullptr);
-
-  if (space == nullptr) {
-    return (nullptr);
-  }
-
-  fil_node_t file;
-
-  memset(&file, 0x0, sizeof(file));
-
-  file.name = mem_strdup(name);
-
-  ut_a(!is_raw || srv_start_raw_disk_in_use);
-
-  file.sync_event = os_event_create("fsync_event");
-
-  file.is_raw_disk = is_raw;
-
-  file.size = size;
-
-  file.flush_size = size;
-
-  file.magic_n = FIL_NODE_MAGIC_N;
-
-  file.init_size = size;
-
-  file.max_size = max_pages;
-
-  file.space = space;
-
-  os_file_stat_t stat_info;
-
-#ifdef UNIV_DEBUG
-  dberr_t err =
-#endif /* UNIV_DEBUG */
-
-      os_file_get_status(
-          file.name, &stat_info, false,
-          fsp_is_system_temporary(space->id) ? true : srv_read_only_mode);
-
-  ut_ad(err == DB_SUCCESS);
-
-  file.block_size = stat_info.block_size;
-
-  /* In this debugging mode, we can overcome the limitation of some
-  OSes like Windows that support Punch Hole but have a hole size
-  effectively too large.  By setting the block size to be half the
-  page size, we can bypass one of the checks that would normally
-  turn Page Compression off.  This execution mode allows compression
-  to be tested even when full punch hole support is not available. */
-  DBUG_EXECUTE_IF(
-      "ignore_punch_hole",
-      file.block_size = std::min(static_cast<ulint>(stat_info.block_size),
-                               UNIV_PAGE_SIZE / 2););
-
-  if (!IORequest::is_punch_hole_supported() || !punch_hole ||
-      file.block_size >= srv_page_size) {
-    fil_no_punch_hole(&file);
-  } else {
-    file.punch_hole = punch_hole;
-  }
-
-  file.atomic_write = atomic_write;
-
-  mutex_acquire();
-
-  space->size += size;
-
-  space->files.push_back(file);
-
-  mutex_release();
-
-  ut_a(space->id == TRX_SYS_SPACE ||
-       space->id == dict_sys_t::s_log_space_first_id ||
-       space->purpose == FIL_TYPE_TEMPORARY || space->files.size() == 1);
-
-  return (&space->files.front());
-}
 
 /** Attach a file to a tablespace. File must be closed.
 @param[in]	name		file name (file must be closed)
@@ -1261,6 +581,7 @@ char *fil_node_create(const char *name, page_no_t size, fil_space_t *space,
 
   return (file == nullptr ? nullptr : file->name);
 }
+
 
 /** First we open the file in the normal mode, no async I/O here, for
 simplicity. Then do some checks, and close the file again.  NOTE that we
@@ -1493,6 +814,8 @@ dberr_t Fil_shard::get_file_size(fil_node_t *file, bool read_only_mode) {
   return (DB_SUCCESS);
 }
 
+
+
 /** Open a file of a tablespace.
 The caller must own the shard mutex.
 @param[in,out]	file		Tablespace file
@@ -1717,7 +1040,7 @@ fil_space_t *Fil_shard::get_reserved_space(space_id_t space_id) {
   if (space_id == TRX_SYS_SPACE) {
     return (fil_space_t::s_sys_space);
 
-  } else if (space_id == dict_sys_t::s_log_space_first_id &&
+  } else if (space_id == dict_sys_t_s_log_space_first_id &&
              fil_space_t::s_redo_space != nullptr) {
     return (fil_space_t::s_redo_space);
   }
@@ -2117,7 +1440,7 @@ fil_space_t *fil_space_create(const char *name, space_id_t space_id,
 
     fil_space_t::s_sys_space = space;
 
-  } else if (space->id == dict_sys_t::s_log_space_first_id) {
+  } else if (space->id == dict_sys_t_s_log_space_first_id) {
     ut_a(fil_space_t::s_redo_space == nullptr ||
          fil_space_t::s_redo_space == space);
 
@@ -2468,10 +1791,10 @@ void Fil_shard::close_all_files() {
     auto space = it->second;
 
     ut_a(space->id == TRX_SYS_SPACE || space->purpose == FIL_TYPE_TEMPORARY ||
-         space->id == dict_sys_t::s_log_space_first_id ||
+         space->id == dict_sys_t_s_log_space_first_id ||
          space->files.size() == 1);
 
-    if (space->id == dict_sys_t::s_log_space_first_id) {
+    if (space->id == dict_sys_t_s_log_space_first_id) {
       fil_space_t::s_redo_space = nullptr;
     }
 
@@ -2519,7 +1842,7 @@ void Fil_shard::close_log_files(bool free_all) {
       continue;
     }
 
-    if (space->id == dict_sys_t::s_log_space_first_id) {
+    if (space->id == dict_sys_t_s_log_space_first_id) {
       ut_a(fil_space_t::s_redo_space == space);
 
       fil_space_t::s_redo_space = nullptr;
@@ -2752,7 +2075,7 @@ ulint Fil_shard::check_pending_io(const fil_space_t *space,
   ut_a(space->n_pending_ops == 0);
 
   ut_a(space->id == TRX_SYS_SPACE || space->purpose == FIL_TYPE_TEMPORARY ||
-       space->id == dict_sys_t::s_log_space_first_id ||
+       space->id == dict_sys_t_s_log_space_first_id ||
        space->files.size() == 1);
 
   if (space->n_pending_flushes > 0 || file.n_pending > 0) {
@@ -5981,7 +5304,7 @@ dberr_t Fil_shard::get_file_for_io(const IORequest &req_type,
                                    fil_node_t *&file) {
   if (space->files.size() > 1) {
     ut_a(space->id == TRX_SYS_SPACE || space->purpose == FIL_TYPE_TEMPORARY ||
-         space->id == dict_sys_t::s_log_space_first_id);
+         space->id == dict_sys_t_s_log_space_first_id);
 
     for (auto &f : space->files) {
       if (f.size > *page_no) {
@@ -6519,9 +5842,9 @@ void Fil_shard::redo_space_flush() {
   fil_space_t *space = fil_space_t::s_redo_space;
 
   if (space == nullptr) {
-    space = get_space_by_id(dict_sys_t::s_log_space_first_id);
+    space = get_space_by_id(dict_sys_t_s_log_space_first_id);
   } else {
-    ut_ad(space == get_space_by_id(dict_sys_t::s_log_space_first_id));
+    ut_ad(space == get_space_by_id(dict_sys_t_s_log_space_first_id));
   }
 
   ut_a(!space->stop_new_ops);
@@ -6600,7 +5923,7 @@ not exist or is being dropped, does not do anything.
 void Fil_shard::space_flush(space_id_t space_id) {
   ut_ad(mutex_owned());
 
-  if (space_id == dict_sys_t::s_log_space_first_id) {
+  if (space_id == dict_sys_t_s_log_space_first_id) {
     redo_space_flush();
     return;
   }

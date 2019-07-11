@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/record/rec_format_t.h>
+#include <innodb/tablespace/consts.h>
+
 
 #include "buf0flu.h"
 
@@ -1180,8 +1182,7 @@ struct dict_sys_t {
     return (s_dd_table_ids.find(id) != s_dd_table_ids.end());
   }
 
-  /** The first ID of the redo log pseudo-tablespace */
-  static constexpr space_id_t s_log_space_first_id = 0xFFFFFFF0UL;
+
 
   /** Use maximum UINT value to indicate invalid space ID. */
   static constexpr space_id_t s_invalid_space_id = 0xFFFFFFFF;
@@ -1197,10 +1198,10 @@ struct dict_sys_t {
 
   /** The lowest undo tablespace ID. */
   static constexpr space_id_t s_min_undo_space_id =
-      s_log_space_first_id - (FSP_MAX_UNDO_TABLESPACES * undo_space_id_range);
+      dict_sys_t_s_log_space_first_id - (FSP_MAX_UNDO_TABLESPACES * undo_space_id_range);
 
   /** The highest undo  tablespace ID. */
-  static constexpr space_id_t s_max_undo_space_id = s_log_space_first_id - 1;
+  static constexpr space_id_t s_max_undo_space_id = dict_sys_t_s_log_space_first_id - 1;
 
   /** The first reserved tablespace ID */
   static constexpr space_id_t s_reserved_space_id = s_min_undo_space_id;

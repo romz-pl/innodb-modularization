@@ -37,7 +37,7 @@
 #include <innodb/io/srv_is_being_started.h>
 
 #include "clone0api.h" /* clone_init(), clone_free() */
-#include "dict0dict.h" /* dict_sys_t::s_log_space_first_id */
+#include "dict0dict.h" /* dict_sys_t_s_log_space_first_id */
 #include "fil0fil.h"
 #include "log0log.h"
 #include "log0recv.h"
@@ -169,7 +169,7 @@ static bool log_test_general_init() {
   fil_init(max_n_open_files);
 
   log_space = fil_space_create(
-      "innodb_redo_log", dict_sys_t::s_log_space_first_id,
+      "innodb_redo_log", dict_sys_t_s_log_space_first_id,
       fsp_flags_set_page_size(0, univ_page_size), FIL_TYPE_LOG);
 
   if (log_space == nullptr) {
@@ -235,7 +235,7 @@ static bool log_test_init() {
   }
 
   if (!log_sys_init(srv_n_log_files, srv_log_file_size,
-                    dict_sys_t::s_log_space_first_id)) {
+                    dict_sys_t_s_log_space_first_id)) {
     std::cerr << "Cannot initialize redo log" << std::endl;
     return (false);
   }
@@ -252,7 +252,7 @@ static bool log_test_init() {
   const lsn_t lsn = LOG_START_LSN + LOG_BLOCK_HDR_SIZE;
   log_create_first_checkpoint(log, lsn);
 
-  fil_flush(dict_sys_t::s_log_space_first_id);
+  fil_flush(dict_sys_t_s_log_space_first_id);
 
   log_start(log, 1, lsn, lsn);
 
@@ -269,7 +269,7 @@ static bool log_test_recovery() {
   recv_sys_init(4 * 1024 * 1024);
 
   const bool result = log_sys_init(srv_n_log_files, srv_log_file_size,
-                                   dict_sys_t::s_log_space_first_id);
+                                   dict_sys_t_s_log_space_first_id);
   EXPECT_TRUE(result);
 
   ut_a(log_sys != nullptr);

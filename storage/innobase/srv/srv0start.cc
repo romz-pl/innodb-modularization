@@ -138,8 +138,7 @@ extern uint32_t predefined_flags;
 /** Recovered persistent metadata */
 static MetadataRecover *srv_dict_metadata;
 
-/** TRUE if a raw partition is in use */
-ibool srv_start_raw_disk_in_use = FALSE;
+
 
 /** Number of IO threads to use */
 ulint srv_n_file_io_threads = 0;
@@ -393,7 +392,7 @@ static dberr_t create_log_files(char *logfilename, size_t dirnamelen, lsn_t lsn,
   /* Disable the doublewrite buffer for log files, not required */
 
   fil_space_t *log_space = fil_space_create(
-      "innodb_redo_log", dict_sys_t::s_log_space_first_id,
+      "innodb_redo_log", dict_sys_t_s_log_space_first_id,
       fsp_flags_set_page_size(0, univ_page_size), FIL_TYPE_LOG);
 
   ut_ad(fil_validate());
@@ -432,7 +431,7 @@ static dberr_t create_log_files(char *logfilename, size_t dirnamelen, lsn_t lsn,
   }
 
   if (!log_sys_init(srv_n_log_files, srv_log_file_size,
-                    dict_sys_t::s_log_space_first_id)) {
+                    dict_sys_t_s_log_space_first_id)) {
     return (DB_ERROR);
   }
 
@@ -2280,7 +2279,7 @@ dberr_t srv_start(bool create_new_db, const std::string &scan_directories) {
 
     /* Disable the doublewrite buffer for log files. */
     fil_space_t *log_space = fil_space_create(
-        "innodb_redo_log", dict_sys_t::s_log_space_first_id,
+        "innodb_redo_log", dict_sys_t_s_log_space_first_id,
         fsp_flags_set_page_size(0, univ_page_size), FIL_TYPE_LOG);
 
     ut_ad(fil_validate());
@@ -2300,7 +2299,7 @@ dberr_t srv_start(bool create_new_db, const std::string &scan_directories) {
       }
     }
 
-    if (!log_sys_init(i, srv_log_file_size, dict_sys_t::s_log_space_first_id)) {
+    if (!log_sys_init(i, srv_log_file_size, dict_sys_t_s_log_space_first_id)) {
       return (srv_init_abort(DB_ERROR));
     }
 

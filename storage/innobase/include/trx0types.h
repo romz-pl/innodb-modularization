@@ -43,6 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/space_id_t.h>
 #include <innodb/page/page_size_t.h>
 #include <innodb/formatting/formatting.h>
+#include <innodb/tablespace/consts.h>
+
 
 #include <algorithm>
 #include <atomic>
@@ -58,9 +60,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** maximum length that a formatted trx_t::id could take, not including
 the terminating NUL character. */
 static const ulint TRX_ID_MAX_LEN = 17;
-
-/** Space id of the transaction system page (the system tablespace) */
-static const space_id_t TRX_SYS_SPACE = 0;
 
 /** Page number of the transaction system page */
 #define TRX_SYS_PAGE_NO FSP_TRX_SYS_PAGE_NO

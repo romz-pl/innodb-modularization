@@ -34,6 +34,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define fut0lst_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/tablespace/header.h>
+
+
 
 #include "fil0fil.h"
 #include "mtr0mtr.h"
@@ -45,11 +48,7 @@ applied to these types! */
 typedef byte flst_base_node_t;
 typedef byte flst_node_t;
 
-/* The physical size of a list base node in bytes */
-constexpr ulint FLST_BASE_NODE_SIZE = 4 + 2 * FIL_ADDR_SIZE;
 
-/* The physical size of a list node in bytes */
-constexpr ulint FLST_NODE_SIZE = 2 * FIL_ADDR_SIZE;
 
 /** Initializes a list base node.
 @param[in]	base	pointer to base node

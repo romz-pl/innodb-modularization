@@ -161,9 +161,8 @@ extern bool srv_startup_is_before_trx_rollback_phase;
 extern bool srv_is_being_shutdown;
 #endif /* UNIV_DEBUG */
 
-/** TRUE if a raw partition is in use */
-extern ibool srv_start_raw_disk_in_use;
 
+#include <innodb/tablespace/srv_start_raw_disk_in_use.h>
 #include <innodb/ioasync/srv_shutdown_t.h>
 #include <innodb/ioasync/srv_shutdown_state.h>
 

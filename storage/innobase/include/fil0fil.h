@@ -52,6 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_frame_t.h>
 #include <innodb/tablespace/buf_remove_t.h>
 #include <innodb/tablespace/fil_no_punch_hole.h>
+#include <innodb/tablespace/consts.h>
 
 #include "dict0types.h"
 #include <innodb/page/type.h>
@@ -100,11 +101,7 @@ using Space_ids = std::vector<space_id_t, ut_allocator<space_id_t>>;
 
 
 
-/** Value of fil_space_t::magic_n */
-constexpr size_t FIL_SPACE_MAGIC_N = 89472;
 
-/** Value of fil_node_t::magic_n */
-constexpr size_t FIL_NODE_MAGIC_N = 89389;
 
 
 
@@ -121,14 +118,7 @@ See https://msdn.microsoft.com/en-us/library/1ywe7hcy.aspx */
 /** The MySQL server --datadir value */
 extern Fil_path MySQL_datadir_path;
 
-/** Initial size of a single-table tablespace in pages */
-constexpr size_t FIL_IBD_FILE_INITIAL_SIZE = 7;
-constexpr size_t FIL_IBT_FILE_INITIAL_SIZE = 5;
 
-/** An empty tablespace (CREATE TABLESPACE) has minimum
-of 4 pages and an empty CREATE TABLE (file_per_table) has 6 pages.
-Minimum of these two is 4 */
-constexpr size_t FIL_IBD_FILE_INITIAL_SIZE_5_7 = 4;
 
 
 
@@ -144,8 +134,7 @@ extern ulint fil_n_pending_log_flushes;
 /** Number of pending tablespace flushes */
 extern ulint fil_n_pending_tablespace_flushes;
 
-/** Number of files currently open */
-extern ulint fil_n_file_opened;
+
 
 /** Look up a tablespace.
 The caller should hold an InnoDB table lock or a MDL that prevents

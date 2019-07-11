@@ -246,10 +246,7 @@ extern FILE *srv_misc_tmpfile;
 
 extern char *srv_data_home;
 
-/** Set if InnoDB must operate in read-only mode. We don't do any
-recovery and open all tables in RO mode instead of RW mode. We don't
-sync the max trx id to disk either. */
-extern bool srv_read_only_mode;
+
 /** Set if InnoDB operates in read-only mode or innodb-force-recovery
 is greater than SRV_FORCE_NO_TRX_UNDO. */
 extern bool high_level_read_only;

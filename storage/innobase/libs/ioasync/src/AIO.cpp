@@ -28,6 +28,7 @@
 #include <innodb/sync_mutex/mutex_create.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/time/ut_time.h>
+#include <innodb/io/srv_read_only_mode.h>
 
 /** time to sleep, in microseconds if io_setup() returns EAGAIN. */
 static const ulint OS_AIO_IO_SETUP_RETRY_SLEEP = 500000UL;
@@ -40,12 +41,6 @@ static const ulint IO_IBUF_SEGMENT = 0;
 
 /** Log segment id */
 static const ulint IO_LOG_SEGMENT = 1;
-
-/** Set if InnoDB must operate in read-only mode. We don't do any
-recovery and open all tables in RO mode instead of RW mode. We don't
-sync the max trx id to disk either. */
-extern bool srv_read_only_mode;
-
 
 extern char *srv_log_group_home_dir;
 

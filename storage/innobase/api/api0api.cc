@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/string/ut_strlen.h>
 #include <innodb/string/ut_strcpy.h>
+#include <innodb/io/srv_read_only_mode.h>
 
 #include "api0api.h"
 #include "api0misc.h"

@@ -5,8 +5,7 @@
 #include <innodb/io/os_file_create_directory.h>
 #include <innodb/io/os_file_status.h>
 #include <innodb/io/os_file_get_parent_dir.h>
-
-extern bool srv_read_only_mode;
+#include <innodb/io/srv_read_only_mode.h>
 
 
 /** Creates all missing subdirectories along the given path.

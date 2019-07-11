@@ -145,6 +145,7 @@ add_library( ${LIB_NAME} STATIC
     register_pfs_file_rename_begin.cpp
     register_pfs_file_rename_end.cpp
     srv_is_being_started.cpp
+    srv_read_only_mode.cpp
     srv_unix_flush_t.cpp
     srv_use_native_aio.cpp
 

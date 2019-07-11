@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
+#include <innodb/io/srv_read_only_mode.h>
 
 #include <list>
 #include <set>
