@@ -38,7 +38,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_t.h>
 #include <innodb/page/FSEG_PAGE_DATA.h>
 #include <innodb/tablespace/header.h>
-
+#include <innodb/tablespace/fsp_header_get_field.h>
+#include <innodb/tablespace/fsp_header_get_flags.h>
+#include <innodb/tablespace/fsp_header_get_space_id.h>
+#include <innodb/tablespace/fsp_header_get_page_size.h>
 
 #include "fsp0space.h"
 #include "fut0lst.h"
@@ -312,35 +315,16 @@ page_no_t fsp_get_extent_size_in_pages(const page_size_t &page_size) {
                                  page_size.physical()));
 }
 
-/** Reads the space id from the first page of a tablespace.
- @return space id, ULINT UNDEFINED if error */
-space_id_t fsp_header_get_space_id(
-    const page_t *page); /*!< in: first page of a tablespace */
 
 /** Read the server version number from the DD tablespace header.
 @param[out]	version	server version from tablespace header
 @return false if success. */
 bool fsp_header_dict_get_server_version(uint *version);
 
-/** Read a tablespace header field.
-@param[in]	page	first page of a tablespace
-@param[in]	field	the header field
-@return the contents of the header field */
-inline uint32_t fsp_header_get_field(const page_t *page, ulint field) {
-  return (mach_read_from_4(FSP_HEADER_OFFSET + field + page));
-}
 
-/** Read the flags from the tablespace header page.
-@param[in]	page	first page of a tablespace
-@return the contents of FSP_SPACE_FLAGS */
-inline ulint fsp_header_get_flags(const page_t *page) {
-  return (fsp_header_get_field(page, FSP_SPACE_FLAGS));
-}
 
-/** Reads the page size from the first page of a tablespace.
-@param[in]	page	first page of a tablespace
-@return page size */
-page_size_t fsp_header_get_page_size(const page_t *page);
+
+
 
 /** Reads the encryption key from the first page of a tablespace.
 @param[in]	fsp_flags	tablespace flags

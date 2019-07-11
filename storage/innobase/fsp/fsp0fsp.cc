@@ -1092,35 +1092,8 @@ bool fsp_header_init(space_id_t space_id, page_no_t size, mtr_t *mtr,
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Reads the space id from the first page of a tablespace.
- @return space id, ULINT UNDEFINED if error */
-space_id_t fsp_header_get_space_id(
-    const page_t *page) /*!< in: first page of a tablespace */
-{
-  space_id_t fsp_id;
-  space_id_t id;
 
-  fsp_id = mach_read_from_4(FSP_HEADER_OFFSET + page + FSP_SPACE_ID);
 
-  id = mach_read_from_4(page + FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID);
-
-  DBUG_EXECUTE_IF("fsp_header_get_space_id_failure", id = SPACE_UNKNOWN;);
-
-  if (id != fsp_id) {
-    ib::error(ER_IB_MSG_414) << "Space ID in fsp header is " << fsp_id
-                             << ", but in the page header it is " << id << ".";
-    return (SPACE_UNKNOWN);
-  }
-
-  return (id);
-}
-
-/** Reads the page size from the first page of a tablespace.
-@param[in]	page	first page of a tablespace
-@return page size */
-page_size_t fsp_header_get_page_size(const page_t *page) {
-  return (page_size_t(fsp_header_get_flags(page)));
-}
 
 /** Reads the encryption key from the first page of a tablespace.
 @param[in]	fsp_flags	tablespace flags

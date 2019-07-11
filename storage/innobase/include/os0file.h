@@ -226,57 +226,11 @@ FILE *os_file_create_tmpfile(const char *path);
 /* Keys to register InnoDB I/O with performance schema */
 extern mysql_pfs_key_t innodb_tablespace_open_file_key;
 
-#define os_file_read_first_page_pfs(type, file, buf, n) \
-  pfs_os_file_read_first_page_func(type, file, buf, n, __FILE__, __LINE__)
-
-
-#else /* UNIV_PFS_IO */
-
-#define os_file_read_first_page_pfs(type, file, buf, n) \
-  os_file_read_first_page_func(type, file, buf, n)
-
 #endif /* UNIV_PFS_IO */
 
 
 
 
-
-
-#ifdef UNIV_PFS_IO
-#define os_file_read_first_page(type, file, buf, n) \
-  os_file_read_first_page_pfs(type, file, buf, n)
-#else
-#define os_file_read_first_page(type, file, buf, n) \
-  os_file_read_first_page_pfs(type, file.m_file, buf, n)
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/** NOTE! Use the corresponding macro os_file_read_first_page(),
-not directly this function!
-Requests a synchronous read operation of page 0 of IBD file
-@param[in]	type		IO request context
-@param[in]	file		Open file handle
-@param[out]	buf		buffer where to read
-@param[in]	n		number of bytes to read
-@return DB_SUCCESS if request was successful */
-dberr_t os_file_read_first_page_func(IORequest &type, os_file_t file, void *buf,
-                                     ulint n)
-    MY_ATTRIBUTE((warn_unused_result));
 
 
 
@@ -294,16 +248,6 @@ void unit_test_os_file_get_parent_dir();
 
 
 
-
-
-
-
-
-
-
-
-
-
 #ifndef UNIV_HOTBACKUP
 
 /** return any of the tmpdir path */
@@ -314,17 +258,8 @@ This function is defined in ha_innodb.cc.
 @param[in]	path	location for creating temporary file
 @return temporary file descriptor, or < 0 on error */
 int innobase_mysql_tmpfile(const char *path);
+
 #endif /* !UNIV_HOTBACKUP */
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -342,6 +277,5 @@ dberr_t os_file_decompress_page(bool dblwr_recover, byte *src, byte *dst,
 
 
 
-#include "os0file.ic"
 
 #endif /* os0file_h */

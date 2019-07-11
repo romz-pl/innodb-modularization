@@ -63,6 +63,7 @@ The tablespace memory cache */
 #include <innodb/ioasync/os_aio_func.h>
 #include <innodb/ioasync/os_aio.h>
 #include <innodb/ioasync/os_aio_handler.h>
+#include <innodb/tablespace/os_file_read_first_page.h>
 
 #include "os0file.h"
 #include "btr0btr.h"
