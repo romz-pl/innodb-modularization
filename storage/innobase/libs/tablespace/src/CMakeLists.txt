@@ -46,6 +46,8 @@ add_library( ${LIB_NAME} STATIC
     FLST_LEN.cpp
     flst_get_len.cpp
     recv_recovery_on.cpp
+    Tablespace.cpp
+    fil_fusionio_enable_atomic_write.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

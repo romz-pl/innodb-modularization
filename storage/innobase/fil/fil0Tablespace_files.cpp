@@ -1,5 +1,7 @@
 #include <innodb/tablespace/Tablespace_files.h>
 
+#include <innodb/logger/warn.h>
+
 #include "dict0dict.h"
 
 /** Get the file names that map to a space ID
@@ -43,4 +45,35 @@ bool Tablespace_files::erase(space_id_t space_id) {
   }
 
   return (false);
+}
+
+/** Add a space ID to filename mapping.
+@param[in]	space_id	Tablespace ID
+@param[in]	name		File name.
+@return number of files that map to the space ID */
+size_t Tablespace_files::add(space_id_t space_id, const std::string &name) {
+  ut_a(space_id != TRX_SYS_SPACE);
+
+  Names *names;
+
+  if (Fil_path::is_undo_tablespace_name(name)) {
+    if (!dict_sys_t::is_reserved(space_id) &&
+        0 == strncmp(name.c_str(), "undo_", 5)) {
+      ib::warn(ER_IB_MSG_267) << "Tablespace '" << name << "' naming"
+                              << " format is like an undo tablespace"
+                              << " but its ID " << space_id << " is not"
+                              << " in the undo tablespace range";
+    }
+
+    names = &m_undo_paths[space_id];
+
+  } else {
+    ut_ad(Fil_path::has_suffix(IBD, name.c_str()));
+
+    names = &m_ibd_paths[space_id];
+  }
+
+  names->push_back(name);
+
+  return (names->size());
 }

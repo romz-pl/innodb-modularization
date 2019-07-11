@@ -322,36 +322,7 @@ bool Fil_system::validate() const {
 bool fil_validate() { return (fil_system->validate()); }
 #endif /* UNIV_DEBUG */
 
-/** Constructor.
-@param[in]	n_shards	Number of shards to create
-@param[in]	max_open	Maximum number of open files */
-Fil_system::Fil_system(size_t n_shards, size_t max_open)
-    : m_shards(),
-      m_max_n_open(max_open),
-      m_max_assigned_id(),
-      m_space_id_reuse_warned() {
-  ut_ad(Fil_shard::s_open_slot == 0);
-  Fil_shard::s_open_slot = EMPTY_OPEN_SLOT;
 
-  for (size_t i = 0; i < n_shards; ++i) {
-    auto shard = UT_NEW_NOKEY(Fil_shard(i));
-
-    m_shards.push_back(shard);
-  }
-}
-
-/** Destructor */
-Fil_system::~Fil_system() {
-  ut_ad(Fil_shard::s_open_slot == EMPTY_OPEN_SLOT);
-
-  Fil_shard::s_open_slot = 0;
-
-  for (auto shard : m_shards) {
-    UT_DELETE(shard);
-  }
-
-  m_shards.clear();
-}
 
 /** Determines if a file belongs to the least-recently-used list.
 @param[in]	space		Tablespace to check
@@ -378,36 +349,6 @@ bool Fil_system::space_belongs_in_LRU(const fil_space_t *space) {
 
 
 
-/** Add a space ID to filename mapping.
-@param[in]	space_id	Tablespace ID
-@param[in]	name		File name.
-@return number of files that map to the space ID */
-size_t Tablespace_files::add(space_id_t space_id, const std::string &name) {
-  ut_a(space_id != TRX_SYS_SPACE);
-
-  Names *names;
-
-  if (Fil_path::is_undo_tablespace_name(name)) {
-    if (!dict_sys_t::is_reserved(space_id) &&
-        0 == strncmp(name.c_str(), "undo_", 5)) {
-      ib::warn(ER_IB_MSG_267) << "Tablespace '" << name << "' naming"
-                              << " format is like an undo tablespace"
-                              << " but its ID " << space_id << " is not"
-                              << " in the undo tablespace range";
-    }
-
-    names = &m_undo_paths[space_id];
-
-  } else {
-    ut_ad(Fil_path::has_suffix(IBD, name.c_str()));
-
-    names = &m_ibd_paths[space_id];
-  }
-
-  names->push_back(name);
-
-  return (names->size());
-}
 
 /** Reads data from a space to a buffer. Remember that the possible incomplete
 blocks at the end of file are ignored: they are not taken into account when
@@ -526,30 +467,6 @@ void fil_space_set_imported(space_id_t space_id) {
 
 
 
-#if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
-
-#include <sys/ioctl.h>
-
-/** FusionIO atomic write control info */
-#define DFS_IOCTL_ATOMIC_WRITE_SET _IOW(0x95, 2, uint)
-
-/** Try and enable FusionIO atomic writes.
-@param[in] file		OS file handle
-@return true if successful */
-bool fil_fusionio_enable_atomic_write(pfs_os_file_t file) {
-  if (srv_unix_file_flush_method == SRV_UNIX_O_DIRECT) {
-    uint atomic = 1;
-
-    ut_a(file.m_file != -1);
-
-    if (ioctl(file.m_file, DFS_IOCTL_ATOMIC_WRITE_SET, &atomic) != -1) {
-      return (true);
-    }
-  }
-
-  return (false);
-}
-#endif /* !NO_FALLOCATE && UNIV_LINUX */
 
 
 /** Attach a file to a tablespace. File must be closed.
@@ -1143,14 +1060,7 @@ void Fil_shard::open_system_tablespaces(size_t max_n_open, size_t *n_open) {
   mutex_release();
 }
 
-/** Opens all log files and system tablespace data files in all shards. */
-void Fil_system::open_all_system_tablespaces() {
-  size_t n_open = 0;
 
-  for (auto shard : m_shards) {
-    shard->open_system_tablespaces(m_max_n_open, &n_open);
-  }
-}
 
 /** Opens all log files and system tablespace data files. They stay open
 until the database server shutdown. This should be called at a server
@@ -5250,18 +5160,7 @@ void Fil_shard::flush_file_spaces(uint8_t purpose) {
   }
 }
 
-/** Flush the redo log writes to disk, possibly cached by the OS. */
-void Fil_system::flush_file_redo() { m_shards[REDO_SHARD]->flush_file_redo(); }
 
-/** Flush to disk the writes in file spaces of the given type
-possibly cached by the OS.
-@param[in]	purpose		FIL_TYPE_TABLESPACE or FIL_TYPE_LOG,
-                                can be ORred */
-void Fil_system::flush_file_spaces(uint8_t purpose) {
-  for (auto shard : m_shards) {
-    shard->flush_file_spaces(purpose);
-  }
-}
 
 /** Flush to disk the writes in file spaces of the given type
 possibly cached by the OS.
@@ -6004,21 +5903,7 @@ bool Fil_system::encryption_rotate_in_a_shard(Fil_shard *shard) {
   return (true);
 }
 
-/** Rotate the tablespace keys by new master key.
-@return true if the re-encrypt succeeds */
-bool Fil_system::encryption_rotate_all() {
-  for (auto shard : m_shards) {
-    // FIXME: We don't acquire the fil_sys::mutex here. Why?
 
-    bool success = encryption_rotate_in_a_shard(shard);
-
-    if (!success) {
-      return (false);
-    }
-  }
-
-  return (true);
-}
 
 /** Rotate the tablespace keys by new master key.
 @return true if the re-encrypt succeeds */

@@ -11,6 +11,7 @@ add_library( ${LIB_NAME} STATIC
     ut_strcpy.cpp
     ut_strlcpy.cpp
     ut_strlen.cpp
+    innobase_strcasecmp.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
