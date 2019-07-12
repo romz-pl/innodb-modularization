@@ -1,7 +1,7 @@
 #include <innodb/tablespace/fsp_header_get_field.h>
 
 #include <innodb/machine/data.h>
-#include <innodb/tablespace/header.h>
+#include <innodb/tablespace/consts.h>
 
 /** Read a tablespace header field.
 @param[in]	page	first page of a tablespace

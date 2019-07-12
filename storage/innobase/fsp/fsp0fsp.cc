@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_get_x_lock_count.h>
 #include <innodb/sync_rw/rw_lock_get_sx_lock_count.h>
 #include <innodb/print/ut_print_buf.h>
+#include <innodb/tablespace/xdes_calc_descriptor_index.h>
 
 #include "fsp0fsp.h"
 #include "buf0buf.h"

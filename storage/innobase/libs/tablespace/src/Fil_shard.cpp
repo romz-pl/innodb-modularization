@@ -28,7 +28,7 @@
 #include <innodb/sync_rw/rw_lock_free.h>
 #include <innodb/tablespace/Fil_system.h>
 #include <innodb/tablespace/consts.h>
-#include <innodb/tablespace/extent.h>
+#include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fil_buffering_disabled.h>
 #include <innodb/tablespace/fil_n_file_opened.h>
 #include <innodb/tablespace/fil_no_punch_hole.h>
@@ -36,7 +36,7 @@
 #include <innodb/tablespace/fsp_header_get_field.h>
 #include <innodb/tablespace/fsp_header_get_flags.h>
 #include <innodb/tablespace/fsp_header_get_space_id.h>
-#include <innodb/tablespace/header.h>
+#include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/os_file_read_first_page.h>
 #include <innodb/tablespace/srv_start_raw_disk_in_use.h>
 #include <innodb/time/ib_time_t.h>

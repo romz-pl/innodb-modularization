@@ -35,7 +35,9 @@ Created May 26, 2009 Vasil Dimov
 #define fsp0types_h
 
 #include <innodb/univ/univ.h>
-#include <innodb/tablespace/extent.h>
+#include <innodb/tablespace/consts.h>
+#include <innodb/tablespace/consts.h>
+
 
 
 /** @name Flags for inserting records in order
@@ -114,58 +116,7 @@ enum fsp_reserve_t {
   FSP_BLOB      /* reservation being done for BLOB insertion */
 };
 
-/* Number of pages described in a single descriptor page: currently each page
-description takes less than 1 byte; a descriptor page is repeated every
-this many file pages */
-/* #define XDES_DESCRIBED_PER_PAGE		UNIV_PAGE_SIZE */
-/* This has been replaced with either UNIV_PAGE_SIZE or page_zip->size. */
 
-/** @name The space low address page map
-The pages at FSP_XDES_OFFSET and FSP_IBUF_BITMAP_OFFSET are repeated
-every XDES_DESCRIBED_PER_PAGE pages in every tablespace. */
-/* @{ */
-/*--------------------------------------*/
-#define FSP_XDES_OFFSET 0        /* !< extent descriptor */
-#define FSP_IBUF_BITMAP_OFFSET 1 /* !< insert buffer bitmap */
-                                 /* The ibuf bitmap pages are the ones whose
-                                 page number is the number above plus a
-                                 multiple of XDES_DESCRIBED_PER_PAGE */
-
-#define FSP_FIRST_INODE_PAGE_NO 2 /*!< in every tablespace */
-
-/* The following pages exist in the system tablespace (space 0). */
-
-#define FSP_IBUF_HEADER_PAGE_NO \
-  3 /*!< insert buffer          \
-    header page, in             \
-    tablespace 0 */
-#define FSP_IBUF_TREE_ROOT_PAGE_NO \
-  4 /*!< insert buffer             \
-    B-tree root page in            \
-    tablespace 0 */
-    /* The ibuf tree root page number in
-    tablespace 0; its fseg inode is on the page
-    number FSP_FIRST_INODE_PAGE_NO */
-#define FSP_TRX_SYS_PAGE_NO \
-  5 /*!< transaction        \
-    system header, in       \
-    tablespace 0 */
-#define FSP_FIRST_RSEG_PAGE_NO  \
-  6 /*!< first rollback segment \
-    page, in tablespace 0 */
-#define FSP_DICT_HDR_PAGE_NO    \
-  7 /*!< data dictionary header \
-    page, in tablespace 0 */
-
-/* The following page exists in each v8 Undo Tablespace.
-(space_id = SRV_LOG_SPACE_FIRST_ID - undo_space_num)
-(undo_space_num = rseg_array_slot_num + 1) */
-
-#define FSP_RSEG_ARRAY_PAGE_NO      \
-  3 /*!< rollback segment directory \
-    page number in each undo tablespace */
-/*--------------------------------------*/
-/* @} */
 
 /** Validate the tablespace flags.
 These flags are stored in the tablespace header at offset FSP_SPACE_FLAGS.

@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define fut0lst_h
 
 #include <innodb/univ/univ.h>
-#include <innodb/tablespace/header.h>
+#include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/flst_get_len.h>
 
 

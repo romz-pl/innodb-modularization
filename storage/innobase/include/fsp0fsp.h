@@ -37,11 +37,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/page/page_t.h>
 #include <innodb/page/FSEG_PAGE_DATA.h>
-#include <innodb/tablespace/header.h>
+#include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fsp_header_get_field.h>
 #include <innodb/tablespace/fsp_header_get_flags.h>
 #include <innodb/tablespace/fsp_header_get_space_id.h>
 #include <innodb/tablespace/fsp_header_get_page_size.h>
+#include <innodb/tablespace/xdes_t.h>
+
 
 #include "fut0lst.h"
 #include "mtr0mtr.h"
@@ -65,13 +67,11 @@ extern mysql_mutex_t resume_encryption_cond_m;
 
 
 
-/** The number of bytes required to store SDI root page number(4)
-and SDI version(4) at Page 0 */
-#define FSP_SDI_HEADER_LEN 8
+
 
 /* The data structures in files are defined just as byte strings in C */
 typedef byte fsp_header_t;
-typedef byte xdes_t;
+
 
 #ifdef UNIV_DEBUG
 /** Check if the state of extent descriptor is valid.
@@ -126,118 +126,16 @@ inline std::ostream &operator<<(std::ostream &out,
 
 /* @defgroup File Segment Inode Constants (moved from fsp0fsp.c) @{ */
 
-/*			FILE SEGMENT INODE
-                        ==================
 
-Segment inode which is created for each segment in a tablespace. NOTE: in
-purge we assume that a segment having only one currently used page can be
-freed in a few steps, so that the freeing cannot fill the file buffer with
-bufferfixed file pages. */
 
 typedef byte fseg_inode_t;
 
-#define FSEG_INODE_PAGE_NODE FSEG_PAGE_DATA
-/* the list node for linking
-segment inode pages */
 
-#define FSEG_ARR_OFFSET (FSEG_PAGE_DATA + FLST_NODE_SIZE)
-/*-------------------------------------*/
-#define FSEG_ID                             \
-  0 /* 8 bytes of segment id: if this is 0, \
-    it means that the header is unused */
-#define FSEG_NOT_FULL_N_USED 8
-/* number of used segment pages in
-the FSEG_NOT_FULL list */
-#define FSEG_FREE 12
-/* list of free extents of this
-segment */
-#define FSEG_NOT_FULL (12 + FLST_BASE_NODE_SIZE)
-/* list of partially free extents */
-#define FSEG_FULL (12 + 2 * FLST_BASE_NODE_SIZE)
-/* list of full extents */
-#define FSEG_MAGIC_N (12 + 3 * FLST_BASE_NODE_SIZE)
-/* magic number used in debugging */
-#define FSEG_FRAG_ARR (16 + 3 * FLST_BASE_NODE_SIZE)
-/* array of individual pages
-belonging to this segment in fsp
-fragment extent lists */
-#define FSEG_FRAG_ARR_N_SLOTS (FSP_EXTENT_SIZE / 2)
-/* number of slots in the array for
-the fragment pages */
-#define FSEG_FRAG_SLOT_SIZE              \
-  4 /* a fragment page slot contains its \
-    page number within space, FIL_NULL   \
-    means that the slot is not in use */
-/*-------------------------------------*/
-#define FSEG_INODE_SIZE \
-  (16 + 3 * FLST_BASE_NODE_SIZE + FSEG_FRAG_ARR_N_SLOTS * FSEG_FRAG_SLOT_SIZE)
 
-#define FSP_SEG_INODES_PER_PAGE(page_size) \
-  ((page_size.physical() - FSEG_ARR_OFFSET - 10) / FSEG_INODE_SIZE)
-/* Number of segment inodes which fit on a
-single page */
-
-#define FSEG_MAGIC_N_VALUE 97937874
-
-#define FSEG_FILLFACTOR                  \
-  8 /* If this value is x, then if       \
-    the number of unused but reserved    \
-    pages in a segment is less than      \
-    reserved pages * 1/x, and there are  \
-    at least FSEG_FRAG_LIMIT used pages, \
-    then we allow a new empty extent to  \
-    be added to the segment in           \
-    fseg_alloc_free_page. Otherwise, we  \
-    use unused pages of the segment. */
-
-#define FSEG_FRAG_LIMIT FSEG_FRAG_ARR_N_SLOTS
-/* If the segment has >= this many
-used pages, it may be expanded by
-allocating extents to the segment;
-until that only individual fragment
-pages are allocated from the space */
-
-#define FSEG_FREE_LIST_LIMIT              \
-  40 /* If the reserved size of a segment \
-     is at least this many extents, we    \
-     allow extents to be put to the free  \
-     list of the extent: at most          \
-     FSEG_FREE_LIST_MAX_LEN many */
-#define FSEG_FREE_LIST_MAX_LEN 4
-/* @} */
 
 /* @defgroup Extent Descriptor Constants (moved from fsp0fsp.c) @{ */
 
-/*			EXTENT DESCRIPTOR
-                        =================
 
-File extent descriptor data structure: contains bits to tell which pages in
-the extent are free and which contain old tuple version to clean. */
-
-/*-------------------------------------*/
-#define XDES_ID                      \
-  0 /* The identifier of the segment \
-    to which this extent belongs */
-#define XDES_FLST_NODE              \
-  8 /* The list node data structure \
-    for the descriptors */
-#define XDES_STATE (FLST_NODE_SIZE + 8)
-/* contains state information
-of the extent */
-#define XDES_BITMAP (FLST_NODE_SIZE + 12)
-/* Descriptor bitmap of the pages
-in the extent */
-/*-------------------------------------*/
-
-#define XDES_BITS_PER_PAGE 2 /* How many bits are there per page */
-#define XDES_FREE_BIT                  \
-  0 /* Index of the bit which tells if \
-    the page is free */
-#define XDES_CLEAN_BIT               \
-  1 /* NOTE: currently not used!     \
-    Index of the bit which tells if  \
-    there are old versions of tuples \
-    on the page */
 /** States of a descriptor */
 enum xdes_state_t {
 
@@ -260,25 +158,9 @@ enum xdes_state_t {
   XDES_FSEG_FRAG = 5
 };
 
-/** File extent data structure size in bytes. */
-#define XDES_SIZE \
-  (XDES_BITMAP + UT_BITS_IN_BYTES(FSP_EXTENT_SIZE * XDES_BITS_PER_PAGE))
+#include <innodb/page/page_no_t.h>
 
-/** File extent data structure size in bytes for MAX page size. */
-#define XDES_SIZE_MAX \
-  (XDES_BITMAP + UT_BITS_IN_BYTES(FSP_EXTENT_SIZE_MAX * XDES_BITS_PER_PAGE))
 
-/** File extent data structure size in bytes for MIN page size. */
-#define XDES_SIZE_MIN \
-  (XDES_BITMAP + UT_BITS_IN_BYTES(FSP_EXTENT_SIZE_MIN * XDES_BITS_PER_PAGE))
-
-/** Offset of the descriptor array on a descriptor page */
-#define XDES_ARR_OFFSET (FSP_HEADER_OFFSET + FSP_HEADER_SIZE)
-
-/** The number of reserved pages in a fragment extent. */
-const ulint XDES_FRAG_N_USED = 2;
-
-/* @} */
 
 /** Initializes the file space system. */
 void fsp_init(void);
@@ -581,13 +463,6 @@ ibool fseg_free_step_not_header(
     mtr_t *mtr)            /*!< in/out: mini-transaction */
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Checks if a page address is an extent descriptor page address.
-@param[in]	page_id		page id
-@param[in]	page_size	page size
-@return true if a descriptor page */
-UNIV_INLINE
-ibool fsp_descr_page(const page_id_t &page_id, const page_size_t &page_size);
-
 /** Parses a redo log record of a file page init.
  @return end of log record or NULL */
 byte *fsp_parse_init_file_page(byte *ptr,           /*!< in: buffer */
@@ -649,25 +524,8 @@ bool fsp_is_dd_tablespace(space_id_t space_id);
 UNIV_INLINE
 bool fsp_flags_is_compressed(uint32_t flags);
 
-/** Determine if two tablespaces are equivalent or compatible.
-@param[in]	flags1	First tablespace flags
-@param[in]	flags2	Second tablespace flags
-@return true the flags are compatible, false if not */
-UNIV_INLINE
-bool fsp_flags_are_equal(uint32_t flags1, uint32_t flags2);
 
-/** Initialize an FSP flags integer.
-@param[in]	page_size	page sizes in bytes and compression flag.
-@param[in]	atomic_blobs	Used by Dynammic and Compressed.
-@param[in]	has_data_dir	This tablespace is in a remote location.
-@param[in]	is_shared	This tablespace can be shared by many tables.
-@param[in]	is_temporary	This tablespace is temporary.
-@param[in]	is_encrypted	This tablespace is encrypted.
-@return tablespace flags after initialization */
-UNIV_INLINE
-uint32_t fsp_flags_init(const page_size_t &page_size, bool atomic_blobs,
-                        bool has_data_dir, bool is_shared, bool is_temporary,
-                        bool is_encrypted = false);
+
 
 /** Convert a 32 bit integer tablespace flags to the 32 bit table flags.
 This can only be done for a tablespace that was built as a file-per-table
@@ -681,29 +539,6 @@ dict_table_t::flags |     0     |    1    |     1      |    1
 @param[in]	compact		true if not Redundant row format
 @return tablespace flags (fil_space_t::flags) */
 uint32_t fsp_flags_to_dict_tf(uint32_t fsp_flags, bool compact);
-
-/** Calculates the descriptor index within a descriptor page.
-@param[in]	page_size	page size
-@param[in]	offset		page offset
-@return descriptor index */
-UNIV_INLINE
-ulint xdes_calc_descriptor_index(const page_size_t &page_size, ulint offset);
-
-/** Gets a descriptor bit of a page.
-@param[in]	descr	descriptor
-@param[in]	bit	XDES_FREE_BIT or XDES_CLEAN_BIT
-@param[in]	offset	page offset within extent: 0 ... FSP_EXTENT_SIZE - 1
-@return true if free */
-UNIV_INLINE
-ibool xdes_get_bit(const xdes_t *descr, ulint bit, page_no_t offset);
-
-/** Calculates the page where the descriptor of a page resides.
-@param[in]	page_size	page size
-@param[in]	offset		page offset
-@return descriptor page offset */
-UNIV_INLINE
-page_no_t xdes_calc_descriptor_page(const page_size_t &page_size,
-                                    page_no_t offset);
 
 /** Gets a pointer to the space header and x-locks its page.
 @param[in]	id		space id
@@ -732,15 +567,7 @@ void fsp_sdi_write_root_to_page(page_t *page, const page_size_t &page_size,
 
 #include "fsp0fsp.ic"
 
-/** Reads the server version from the first page of a tablespace.
-@param[in]	page	first page of a tablespace
-@return space server version */
-inline uint32 fsp_header_get_server_version(const page_t *page);
 
-/** Reads the server space version from the first page of a tablespace.
-@param[in]	page	first page of a tablespace
-@return space server version */
-inline uint32 fsp_header_get_space_version(const page_t *page);
 
 /** Get the state of an xdes.
 @param[in]	descr	extent descriptor
@@ -812,25 +639,6 @@ inline void fsp_header_size_update(fsp_header_t *header, ulint size,
 
   DBUG_VOID_RETURN;
 }
-
-/** Check if a specified page is inode page or not. This is used for
-index root pages of core DD table, we can safely assume that the passed in
-page number is in the range of pages which are only either index root page
-or inode page
-@param[in]	page	Page number to check
-@return true if it's inode page, otherwise false */
-inline bool fsp_is_inode_page(page_no_t page);
-
-/** Get the offset of SDI root page number in page 0
-@param[in]	page_size	page size
-@return offset on success, else 0 */
-inline ulint fsp_header_get_sdi_offset(const page_size_t &page_size);
-
-/** Get the offset of encrytion progress information in page 0.
-@param[in]      page_size       page size.
-@return offset on success, otherwise 0. */
-inline ulint fsp_header_get_encryption_progress_offset(
-    const page_size_t &page_size);
 
 /** Determine if the tablespace has SDI.
 @param[in]	space_id	Tablespace id

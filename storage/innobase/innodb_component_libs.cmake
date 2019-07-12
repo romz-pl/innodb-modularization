@@ -20,7 +20,7 @@ SET( INNODB_COMPONENT_LIBS
     #atomic
 
     # B
-    bit
+    #bit
     buffer
 
     # C

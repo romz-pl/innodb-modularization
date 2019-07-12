@@ -2,7 +2,7 @@
 
 #include <innodb/logger/error.h>
 #include <innodb/machine/data.h>
-#include <innodb/tablespace/header.h>
+#include <innodb/tablespace/consts.h>
 
 /** Reads the space id from the first page of a tablespace.
  @return space id, ULINT UNDEFINED if error */

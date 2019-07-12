@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_x_lock_move_ownership.h>
 #include <innodb/buffer/buf_pool_get_curr_size.h>
 #include <innodb/buffer/buf_pool_get.h>
+#include <innodb/tablespace/fsp_descr_page.h>
 
 #include "buf/buf.h"
 #include "btr0sea.h"

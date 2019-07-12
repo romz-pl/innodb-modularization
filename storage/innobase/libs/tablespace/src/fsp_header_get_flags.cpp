@@ -1,7 +1,7 @@
 #include <innodb/tablespace/fsp_header_get_flags.h>
 
 #include <innodb/tablespace/fsp_header_get_field.h>
-#include <innodb/tablespace/header.h>
+#include <innodb/tablespace/consts.h>
 
 /** Read the flags from the tablespace header page.
 @param[in]	page	first page of a tablespace
