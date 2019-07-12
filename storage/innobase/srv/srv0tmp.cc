@@ -70,7 +70,7 @@ char *srv_temp_dir = nullptr;
 /** Sesssion Temporary tablespace */
 Tablespace::Tablespace()
     : m_space_id(++m_last_used_space_id), m_inited(), m_thread_id() {
-  ut_ad(m_space_id <= dict_sys_t::s_max_temp_space_id);
+  ut_ad(m_space_id <= dict_sys_t_s_max_temp_space_id);
   m_purpose = TBSP_NONE;
 }
 
@@ -94,7 +94,7 @@ Tablespace::~Tablespace() {
 }
 
 dberr_t Tablespace::create() {
-  ut_ad(m_space_id > dict_sys_t::s_min_temp_space_id);
+  ut_ad(m_space_id > dict_sys_t_s_min_temp_space_id);
 
   /* Create the filespace flags */
   uint32_t fsp_flags =
@@ -156,7 +156,7 @@ bool Tablespace::truncate() {
 }
 
 uint32_t Tablespace::file_id() const {
-  return (m_space_id - dict_sys_t::s_min_temp_space_id);
+  return (m_space_id - dict_sys_t_s_min_temp_space_id);
 }
 
 std::string Tablespace::file_name() const {
@@ -173,9 +173,9 @@ std::string Tablespace::path() const {
 }
 
 /** Space_ids for Session temporary tablespace. The available range is
-from dict_sys_t::s_min_temp_space_id to dict_sys_t::s_max_temp_space_id.
+from dict_sys_t_s_min_temp_space_id to dict_sys_t_s_max_temp_space_id.
 Total 400K space_ids are reserved for session temporary tablespaces. */
-space_id_t Tablespace::m_last_used_space_id = dict_sys_t::s_min_temp_space_id;
+space_id_t Tablespace::m_last_used_space_id = dict_sys_t_s_min_temp_space_id;
 
 Tablespace_pool::Tablespace_pool(size_t init_size)
     : m_pool_initialized(),

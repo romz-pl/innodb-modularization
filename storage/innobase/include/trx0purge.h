@@ -159,8 +159,8 @@ extern struct space_id_account *space_id_bank;
 @param[in]	space_id	undo tablespace ID
 @return true if it is in the reserved undo space ID range. */
 inline bool is_reserved(space_id_t space_id) {
-  return (space_id >= dict_sys_t::s_min_undo_space_id &&
-          space_id <= dict_sys_t::s_max_undo_space_id);
+  return (space_id >= dict_sys_t_s_min_undo_space_id &&
+          space_id <= dict_sys_t_s_max_undo_space_id);
 }
 
 /** Convert an undo space number (from 1 to 127) into the undo space_id,
@@ -172,9 +172,9 @@ undo number.
 inline space_id_t num2id(space_id_t space_num, size_t ndx) {
   ut_ad(space_num > 0);
   ut_ad(space_num <= FSP_MAX_UNDO_TABLESPACES);
-  ut_ad(ndx < dict_sys_t::undo_space_id_range);
+  ut_ad(ndx < dict_sys_t_undo_space_id_range);
 
-  space_id_t space_id = dict_sys_t::s_max_undo_space_id + 1 - space_num -
+  space_id_t space_id = dict_sys_t_s_max_undo_space_id + 1 - space_num -
                         static_cast<space_id_t>(ndx * FSP_MAX_UNDO_TABLESPACES);
 
   return (space_id);
@@ -226,7 +226,7 @@ inline space_id_t id2num(space_id_t space_id) {
     return (space_id);
   }
 
-  return (((dict_sys_t::s_max_undo_space_id - space_id) %
+  return (((dict_sys_t_s_max_undo_space_id - space_id) %
            FSP_MAX_UNDO_TABLESPACES) +
           1);
 }
@@ -237,9 +237,9 @@ inline space_id_t id2next_id(space_id_t space_id) {
   ut_ad(is_reserved(space_id));
 
   space_id_t space_num = id2num(space_id);
-  space_id_t first_id = dict_sys_t::s_max_undo_space_id + 1 - space_num;
+  space_id_t first_id = dict_sys_t_s_max_undo_space_id + 1 - space_num;
   space_id_t last_id = first_id - (FSP_MAX_UNDO_TABLESPACES *
-                                   (dict_sys_t::undo_space_id_range - 1));
+                                   (dict_sys_t_undo_space_id_range - 1));
 
   return (space_id == SPACE_UNKNOWN || space_id == last_id
               ? first_id
@@ -789,7 +789,7 @@ segments written to them at startup.  This can be because they are
 newly initialized, were being truncated and the system crashed, or
 they were an old format at startup and were replaced when they were
 opened. Old format undo tablespaces do not have space_ids between
-dict_sys_t::s_min_undo_space_id and dict_sys_t::s_max_undo_space_id
+dict_sys_t_s_min_undo_space_id and dict_sys_t_s_max_undo_space_id
 and they do not contain an RSEG_ARRAY page. */
 extern Space_Ids s_under_construction;
 

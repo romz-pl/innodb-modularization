@@ -376,7 +376,7 @@ int Clone_Handle::apply_file_metadata(Clone_Task *task,
   if (file_desc.m_state == CLONE_SNAPSHOT_FILE_COPY) {
     auto file_type = OS_CLONE_DATA_FILE;
 
-    if (file_meta->m_space_id == dict_sys_t::s_invalid_space_id) {
+    if (file_meta->m_space_id == dict_sys_t_s_invalid_space_id) {
       file_type = OS_CLONE_LOG_FILE;
     }
 
@@ -435,7 +435,7 @@ int Clone_Handle::receive_data(Clone_Task *task, uint64_t offset,
   auto file_type = OS_CLONE_DATA_FILE;
   bool is_log_file = (snapshot->get_state() == CLONE_SNAPSHOT_REDO_COPY);
 
-  if (is_log_file || file_meta->m_space_id == dict_sys_t::s_invalid_space_id) {
+  if (is_log_file || file_meta->m_space_id == dict_sys_t_s_invalid_space_id) {
     file_type = OS_CLONE_LOG_FILE;
   }
 

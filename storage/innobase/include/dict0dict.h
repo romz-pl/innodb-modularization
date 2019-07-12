@@ -1165,7 +1165,7 @@ struct dict_sys_t {
   @param[in]	space	tablespace id to check
   @return true if a reserved tablespace id, otherwise false */
   static bool is_reserved(space_id_t space) {
-    return (space >= dict_sys_t::s_reserved_space_id ||
+    return (space >= dict_sys_t_s_reserved_space_id ||
             fsp_is_session_temporary(space));
   }
 
@@ -1181,47 +1181,6 @@ struct dict_sys_t {
   static bool is_dd_table_id(table_id_t id) {
     return (s_dd_table_ids.find(id) != s_dd_table_ids.end());
   }
-
-
-
-  /** Use maximum UINT value to indicate invalid space ID. */
-  static constexpr space_id_t s_invalid_space_id = 0xFFFFFFFF;
-
-  /** The data dictionary tablespace ID. */
-  static constexpr space_id_t s_space_id = 0xFFFFFFFE;
-
-  /** The innodb_temporary tablespace ID. */
-  static constexpr space_id_t s_temp_space_id = 0xFFFFFFFD;
-
-  /** The number of space IDs dedicated to each undo tablespace */
-  static constexpr space_id_t undo_space_id_range = 512;
-
-  /** The lowest undo tablespace ID. */
-  static constexpr space_id_t s_min_undo_space_id =
-      dict_sys_t_s_log_space_first_id - (FSP_MAX_UNDO_TABLESPACES * undo_space_id_range);
-
-  /** The highest undo  tablespace ID. */
-  static constexpr space_id_t s_max_undo_space_id = dict_sys_t_s_log_space_first_id - 1;
-
-  /** The first reserved tablespace ID */
-  static constexpr space_id_t s_reserved_space_id = s_min_undo_space_id;
-
-  /** Leave 1K space_ids and start space_ids for temporary
-  general tablespaces (total 400K space_ids)*/
-  static constexpr space_id_t s_max_temp_space_id = s_reserved_space_id - 1000;
-
-  /** Lowest temporary general space id */
-  static constexpr space_id_t s_min_temp_space_id =
-      s_reserved_space_id - 1000 - 400000;
-
-  /** The dd::Tablespace::id of the dictionary tablespace. */
-  static constexpr dd::Object_id s_dd_space_id = 1;
-
-  /** The dd::Tablespace::id of innodb_system. */
-  static constexpr dd::Object_id s_dd_sys_space_id = 2;
-
-  /** The dd::Tablespace::id of innodb_temporary. */
-  static constexpr dd::Object_id s_dd_temp_space_id = 3;
 
   /** The name of the data dictionary tablespace. */
   static const char *s_dd_space_name;

@@ -850,7 +850,7 @@ bool Fil_system::assign_new_space_id(space_id_t *space_id) {
 
   ++id;
 
-  space_id_t reserved_space_id = dict_sys_t::s_reserved_space_id;
+  space_id_t reserved_space_id = dict_sys_t_s_reserved_space_id;
 
   if (id > (reserved_space_id / 2) && (id % 1000000UL == 0)) {
     ib::warn(ER_IB_MSG_282)
@@ -7160,7 +7160,7 @@ space_id_t Fil_system::get_tablespace_id(const std::string &filename) {
 
   if (!ifs) {
     ib::warn(ER_IB_MSG_372) << "Unable to open '" << filename << "'";
-    return (dict_sys_t::s_invalid_space_id);
+    return (dict_sys_t_s_invalid_space_id);
   }
 
   std::vector<space_id_t> space_ids;
@@ -7181,13 +7181,13 @@ space_id_t Fil_system::get_tablespace_id(const std::string &filename) {
       if ((ifs.rdstate() & std::ifstream::eofbit) != 0 ||
           (ifs.rdstate() & std::ifstream::failbit) != 0 ||
           (ifs.rdstate() & std::ifstream::badbit) != 0) {
-        return (dict_sys_t::s_invalid_space_id);
+        return (dict_sys_t_s_invalid_space_id);
       }
 
       ifs.read(buf, sizeof(buf));
 
       if (!ifs.good() || (size_t)ifs.gcount() < sizeof(buf)) {
-        return (dict_sys_t::s_invalid_space_id);
+        return (dict_sys_t_s_invalid_space_id);
       }
 
       uint32_t flags;
@@ -7295,7 +7295,7 @@ void Tablespace_dirs::duplicate_check(const Const_iter &start,
 
     space_id = Fil_system::get_tablespace_id(phy_filename);
 
-    if (space_id != 0 && space_id != dict_sys_t::s_invalid_space_id) {
+    if (space_id != 0 && space_id != dict_sys_t_s_invalid_space_id) {
       std::lock_guard<std::mutex> guard(*mutex);
 
       auto ret = unique->insert(space_id);

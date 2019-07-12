@@ -244,7 +244,7 @@ uint32_t fsp_flags_to_dict_tf(uint32_t fsp_flags, bool compact) {
 @param[in]      space_id        tablespace ID
 @return true if tablespace is dd tablespace. */
 bool fsp_is_dd_tablespace(space_id_t space_id) {
-  return (space_id == dict_sys_t::s_space_id);
+  return (space_id == dict_sys_t_s_space_id);
 }
 
 /** Check whether a space id is an undo tablespace ID
@@ -257,8 +257,8 @@ is 127. The translation from an undo_space_num is:
 @return true if it is undo tablespace else false. */
 bool fsp_is_undo_tablespace(space_id_t space_id) {
   /* Starting with v8, undo space_ids have a unique range. */
-  if (space_id >= dict_sys_t::s_min_undo_space_id &&
-      space_id <= dict_sys_t::s_max_undo_space_id) {
+  if (space_id >= dict_sys_t_s_min_undo_space_id &&
+      space_id <= dict_sys_t_s_max_undo_space_id) {
     return (true);
   }
 
@@ -282,8 +282,8 @@ bool fsp_is_global_temporary(space_id_t space_id) {
 @param[in]      space_id        tablespace ID
 @return true if tablespace is a session temporary tablespace. */
 bool fsp_is_session_temporary(space_id_t space_id) {
-  return (space_id > dict_sys_t::s_min_temp_space_id &&
-          space_id <= dict_sys_t::s_max_temp_space_id);
+  return (space_id > dict_sys_t_s_min_temp_space_id &&
+          space_id <= dict_sys_t_s_max_temp_space_id);
 }
 
 /** Check if tablespace is system temporary.
@@ -971,7 +971,7 @@ bool fsp_header_rotate_encryption(fil_space_t *space, byte *encrypt_info,
 @param[out]     version server version from tablespace header
 @return false if success. */
 bool fsp_header_dict_get_server_version(uint *version) {
-  fil_space_t *space = fil_space_acquire(dict_sys_t::s_space_id);
+  fil_space_t *space = fil_space_acquire(dict_sys_t_s_space_id);
 
   if (space == nullptr) {
     return (true);
@@ -984,7 +984,7 @@ bool fsp_header_dict_get_server_version(uint *version) {
   const page_size_t page_size(space->flags);
 
   mtr_start(&mtr);
-  block = buf_page_get(page_id_t(dict_sys_t::s_space_id, 0), page_size,
+  block = buf_page_get(page_id_t(dict_sys_t_s_space_id, 0), page_size,
                        RW_SX_LATCH, &mtr);
   page = buf_block_get_frame(block);
   *version = fsp_header_get_server_version(page);

@@ -11,7 +11,7 @@ Tablespace_files::Names *Tablespace_files::find(space_id_t space_id) {
   ut_ad(space_id != TRX_SYS_SPACE);
 
   if (dict_sys_t::is_reserved(space_id) &&
-      space_id != dict_sys_t::s_space_id) {
+      space_id != dict_sys_t_s_space_id) {
     auto it = m_undo_paths.find(space_id);
 
     if (it != m_undo_paths.end()) {
@@ -34,7 +34,7 @@ bool Tablespace_files::erase(space_id_t space_id) {
   ut_ad(space_id != TRX_SYS_SPACE);
 
   if (dict_sys_t::is_reserved(space_id) &&
-      space_id != dict_sys_t::s_space_id) {
+      space_id != dict_sys_t_s_space_id) {
     auto n_erased = m_undo_paths.erase(space_id);
 
     return (n_erased == 1);

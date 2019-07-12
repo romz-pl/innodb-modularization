@@ -6,12 +6,15 @@ add_library( ${LIB_NAME} STATIC
     Char_Ptr_Hash.cpp
     Datafile.cpp
     Dirs.cpp
+    FLST_LEN.cpp
     Fil_iterator.cpp
     Fil_shard.cpp
     Fil_state.cpp
     Fil_system.cpp
     Scanned_files.cpp
+    Space_Ids.cpp
     Space_id_set.cpp
+    Tablespace.cpp
     Tablespace_dirs.cpp
     Tablespace_files.cpp
     Tablespaces.cpp
@@ -20,7 +23,9 @@ add_library( ${LIB_NAME} STATIC
     device_t.cpp
     encryption_op_type.cpp
     fil_addr_t.cpp
+    fil_buffering_disabled.cpp
     fil_faddr_t.cpp
+    fil_fusionio_enable_atomic_write.cpp
     fil_load_status.cpp
     fil_n_file_opened.cpp
     fil_no_punch_hole.cpp
@@ -28,44 +33,41 @@ add_library( ${LIB_NAME} STATIC
     fil_operation_t.cpp
     fil_space_t.cpp
     fil_type_t.cpp
+    flst_get_len.cpp
+    fsp_descr_page.cpp
+    fsp_flags_are_equal.cpp
+    fsp_flags_init.cpp
+    fsp_flags_is_compressed.cpp
+    fsp_flags_is_valid.cpp
+    fsp_flags_set_page_size.cpp
+    fsp_flags_set_zip_size.cpp
+    fsp_header_get_encryption_progress_offset.cpp
     fsp_header_get_field.cpp
     fsp_header_get_flags.cpp
     fsp_header_get_page_size.cpp
+    fsp_header_get_sdi_offset.cpp
+    fsp_header_get_server_version.cpp
     fsp_header_get_space_id.cpp
+    fsp_header_get_space_version.cpp
+    fsp_is_inode_page.cpp
     lsn_t.cpp
+    mach_read_ulint.cpp
+    mlog_id_t.cpp
     os_file_read_first_page.cpp
     os_file_read_first_page_func.cpp
     os_file_read_first_page_pfs.cpp
     page_id_t.cpp
+    page_size_to_ssize.cpp
     pfs_os_file_read_first_page_func.cpp
+    recv_recovery_on.cpp
     space_id_t.cpp
     srv_start_raw_disk_in_use.cpp
-    fil_buffering_disabled.cpp
-    FLST_LEN.cpp
-    flst_get_len.cpp
-    recv_recovery_on.cpp
-    Tablespace.cpp
-    fil_fusionio_enable_atomic_write.cpp
-    fsp_descr_page.cpp
-    fsp_flags_is_compressed.cpp
-    fsp_flags_are_equal.cpp
-    page_size_to_ssize.cpp
-    fsp_flags_is_valid.cpp
-    fsp_flags_set_zip_size.cpp
-    fsp_flags_set_page_size.cpp
-    fsp_flags_init.cpp
+    trx_sys_undo_spaces.cpp
+    xdes_arr_size.cpp
     xdes_calc_descriptor_index.cpp
+    xdes_calc_descriptor_page.cpp
     xdes_get_bit.cpp
     xdes_t.cpp
-    xdes_calc_descriptor_page.cpp
-    mlog_id_t.cpp
-    mach_read_ulint.cpp
-    xdes_arr_size.cpp
-    fsp_is_inode_page.cpp
-    fsp_header_get_sdi_offset.cpp
-    fsp_header_get_encryption_progress_offset.cpp
-    fsp_header_get_server_version.cpp
-    fsp_header_get_space_version.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

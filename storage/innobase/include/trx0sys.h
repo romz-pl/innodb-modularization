@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/page/FSEG_PAGE_DATA.h>
+#include <innodb/tablespace/Space_Ids.h>
+#include <innodb/tablespace/trx_sys_undo_spaces.h>
 
 #include "buf0buf.h"
 #include "fil0fil.h"
@@ -370,23 +372,9 @@ FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID. */
 #define TRX_SYS_DOUBLEWRITE_BLOCK_SIZE FSP_EXTENT_SIZE
 /* @} */
 
-/** List of undo tablespace IDs. */
-class Space_Ids : public std::vector<space_id_t, ut_allocator<space_id_t>> {
- public:
-  void sort() { std::sort(begin(), end()); }
 
-  bool contains(space_id_t id) {
-    if (size() == 0) {
-      return (false);
-    }
 
-    iterator it = std::find(begin(), end(), id);
 
-    return (it != end());
-  }
-
-  iterator find(space_id_t id) { return (std::find(begin(), end(), id)); }
-};
 
 #ifndef UNIV_HOTBACKUP
 /** The transaction system central memory data structure. */
@@ -476,11 +464,7 @@ struct trx_sys_t {
 
 #endif /* !UNIV_HOTBACKUP */
 
-/** A list of undo tablespace IDs found in the TRX_SYS page.
-This cannot be part of the trx_sys_t object because it is initialized before
-that object is created. These are the old type of undo tablespaces that do not
-have space_IDs in the reserved range nor contain an RSEG_ARRAY page. */
-extern Space_Ids *trx_sys_undo_spaces;
+
 
 /** When a trx id which is zero modulo this number (which must be a power of
 two) is assigned, the field TRX_SYS_TRX_ID_STORE on the transaction system

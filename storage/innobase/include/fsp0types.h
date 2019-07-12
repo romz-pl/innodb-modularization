@@ -157,18 +157,6 @@ bool fsp_skip_sanity_check(space_id_t space_id);
 #endif /* UNIV_DEBUG */
 
 
-/** Max number of rollback segments: the number of segment specification slots
-in the transaction system array; rollback segment id must fit in one (signed)
-byte, therefore 128; each slot is currently 8 bytes in size. If you want
-to raise the level to 256 then you will need to fix some assertions that
-impose the 7 bit restriction. e.g., mach_write_to_3() */
-#define TRX_SYS_N_RSEGS 128
 
-/** Minimum and Maximum number of implicit undo tablespaces.  This kind
-of undo tablespace is always created and found in --innodb-undo-directory. */
-#define FSP_MIN_UNDO_TABLESPACES 2
-#define FSP_MAX_UNDO_TABLESPACES (TRX_SYS_N_RSEGS - 1)
-#define FSP_IMPLICIT_UNDO_TABLESPACES 2
-#define FSP_MAX_ROLLBACK_SEGMENTS (TRX_SYS_N_RSEGS)
 
 #endif /* fsp0types_h */

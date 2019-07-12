@@ -764,7 +764,7 @@ static dberr_t srv_undo_tablespace_fixup_num(space_id_t space_num) {
   space_id_t space_id = SPACE_UNKNOWN;
   std::string scanned_name;
   for (size_t ndx = 0;
-       ndx < dict_sys_t::undo_space_id_range && scanned_name.length() == 0;
+       ndx < dict_sys_t_undo_space_id_range && scanned_name.length() == 0;
        ndx++) {
     space_id = undo::num2id(space_num, ndx);
 
@@ -1003,7 +1003,7 @@ static dberr_t srv_undo_tablespace_open_by_num(space_id_t space_num) {
   undo number. The directory scan assured that there are no duplicate files
   with the same space_id or with the same undo space number. */
   for (ndx = 0;
-       ndx < dict_sys_t::undo_space_id_range && scanned_name.length() == 0;
+       ndx < dict_sys_t_undo_space_id_range && scanned_name.length() == 0;
        ndx++) {
     space_id = undo::num2id(space_num, ndx);
 
@@ -1577,7 +1577,7 @@ static dberr_t srv_open_tmp_tablespace(bool create_new_db,
 
   bool create_new_temp_space = true;
 
-  tmp_space->set_space_id(dict_sys_t::s_temp_space_id);
+  tmp_space->set_space_id(dict_sys_t_s_temp_space_id);
 
   RECOVERY_CRASH(100);
 
@@ -2514,10 +2514,10 @@ files_checked:
         checkpoint. And because DD is not fully up yet,
         the table can be opened by internal APIs. */
 
-        fil_space_t *space = fil_space_acquire_silent(dict_sys_t::s_space_id);
+        fil_space_t *space = fil_space_acquire_silent(dict_sys_t_s_space_id);
         if (space == nullptr) {
           dberr_t error =
-              fil_ibd_open(true, FIL_TYPE_TABLESPACE, dict_sys_t::s_space_id,
+              fil_ibd_open(true, FIL_TYPE_TABLESPACE, dict_sys_t_s_space_id,
                            predefined_flags, dict_sys_t::s_dd_space_name,
                            dict_sys_t::s_dd_space_name,
                            dict_sys_t::s_dd_space_file_name, true, false);

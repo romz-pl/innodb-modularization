@@ -110,7 +110,7 @@ int Clone_Snapshot::add_buf_pool_file() {
     /* Always the first file in list */
     ut_ad(m_num_data_files == 0);
 
-    err = add_file(path, size_bytes, dict_sys_t::s_invalid_space_id, true);
+    err = add_file(path, size_bytes, dict_sys_t_s_invalid_space_id, true);
   }
 
   return (err);
@@ -667,7 +667,7 @@ int Clone_Handle::send_file_metadata(Clone_Task *task,
     file_desc.m_file_meta.m_file_name = nullptr;
     file_desc.m_file_meta.m_file_name_len = 0;
 
-  } else if (file_meta->m_space_id == dict_sys_t::s_invalid_space_id) {
+  } else if (file_meta->m_space_id == dict_sys_t_s_invalid_space_id) {
     /* Server buffer dump file ib_buffer_pool. */
     ut_ad(file_desc.m_state == CLONE_SNAPSHOT_FILE_COPY);
     ut_ad(file_meta->m_file_index == 0);
@@ -735,7 +735,7 @@ int Clone_Handle::send_data(Clone_Task *task, Clone_File_Meta *file_meta,
   auto file_type = OS_CLONE_DATA_FILE;
   bool is_log_file = (data_desc.m_state == CLONE_SNAPSHOT_REDO_COPY);
 
-  if (is_log_file || file_meta->m_space_id == dict_sys_t::s_invalid_space_id) {
+  if (is_log_file || file_meta->m_space_id == dict_sys_t_s_invalid_space_id) {
     file_type = OS_CLONE_LOG_FILE;
   }
 

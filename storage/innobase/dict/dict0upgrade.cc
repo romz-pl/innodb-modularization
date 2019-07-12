@@ -730,7 +730,7 @@ static bool dd_upgrade_partitions(THD *thd, const char *norm_name,
     dd::Object_id dd_space_id;
 
     if (part_table->space == SYSTEM_TABLE_SPACE) {
-      dd_space_id = dict_sys_t::s_dd_sys_space_id;
+      dd_space_id = dict_sys_t_s_dd_sys_space_id;
       /* Tables in system tablespace cannot be discarded. */
       ut_ad(!dict_table_is_discarded(part_table));
     } else {
@@ -882,7 +882,7 @@ bool dd_upgrade_table(THD *thd, const char *db_name, const char *table_name,
 
   dd::Object_id dd_space_id;
   if (ib_table->space == SYSTEM_TABLE_SPACE) {
-    dd_space_id = dict_sys_t::s_dd_sys_space_id;
+    dd_space_id = dict_sys_t_s_dd_sys_space_id;
     /* Tables in system tablespace cannot be discarded. */
     ut_ad(!dict_table_is_discarded(ib_table));
   } else {

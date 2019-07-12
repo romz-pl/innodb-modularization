@@ -3591,7 +3591,7 @@ static bool innobase_dict_recover(dict_recovery_mode_t dict_recovery_mode,
       dd::cache::Dictionary_client *client = dd::get_dd_client(thd);
       dd::cache::Dictionary_client::Auto_releaser releaser(client);
 
-      if (predefine_tablespace(client, thd, dict_sys_t::s_temp_space_id,
+      if (predefine_tablespace(client, thd, dict_sys_t_s_temp_space_id,
                                srv_tmp_space.flags(),
                                dict_sys_t::s_temp_space_name,
                                dict_sys_t::s_temp_space_file_name)) {
@@ -3723,7 +3723,7 @@ static bool innobase_dict_get_server_version(uint *version) {
 */
 static bool innobase_dict_set_server_version() {
   /* Update the server version number, but leave the space version unchanged */
-  return (upgrade_space_version(dict_sys_t::s_space_id, true));
+  return (upgrade_space_version(dict_sys_t_s_space_id, true));
 }
 
 /** Start page tracking.
@@ -5039,9 +5039,9 @@ static int innobase_init_files(dict_init_mode_t dict_init_mode,
 
   // For upgrade from 5.7, create mysql.ibd
   create |= (dict_init_mode == DICT_INIT_UPGRADE_57_FILES);
-  ret = create ? dd_create_hardcoded(dict_sys_t::s_space_id,
+  ret = create ? dd_create_hardcoded(dict_sys_t_s_space_id,
                                      dict_sys_t::s_dd_space_file_name)
-               : dd_open_hardcoded(dict_sys_t::s_space_id,
+               : dd_open_hardcoded(dict_sys_t_s_space_id,
                                    dict_sys_t::s_dd_space_file_name);
 
   /* Once hardcoded tablespace mysql is created or opened,
@@ -5057,7 +5057,7 @@ static int innobase_init_files(dict_init_mode_t dict_init_mode,
     snprintf(se_private_data_innodb_system, len, fmt, TRX_SYS_SPACE,
              predefined_flags, DD_SPACE_CURRENT_SRV_VERSION,
              DD_SPACE_CURRENT_SPACE_VERSION);
-    snprintf(se_private_data_dd, len, fmt, dict_sys_t::s_space_id,
+    snprintf(se_private_data_dd, len, fmt, dict_sys_t_s_space_id,
              predefined_flags, DD_SPACE_CURRENT_SRV_VERSION,
              DD_SPACE_CURRENT_SPACE_VERSION);
 
@@ -12704,12 +12704,12 @@ int create_table_info_t::create_table_update_global_dd(Table *dd_table) {
 
   bool file_per_table = dict_table_is_file_per_table(m_table);
   dd::Object_id dd_space_id = dd::INVALID_OBJECT_ID;
-  bool is_dd_table = m_table->space == dict_sys_t::s_space_id;
+  bool is_dd_table = m_table->space == dict_sys_t_s_space_id;
 
   if (is_dd_table) {
-    dd_space_id = dict_sys_t::s_dd_space_id;
+    dd_space_id = dict_sys_t_s_dd_space_id;
   } else if (m_table->space == TRX_SYS_SPACE) {
-    dd_space_id = dict_sys_t::s_dd_sys_space_id;
+    dd_space_id = dict_sys_t_s_dd_sys_space_id;
   } else if (file_per_table) {
     char *filename = fil_space_get_first_path(m_table->space);
 
@@ -13719,7 +13719,7 @@ bool ha_innobase::get_se_private_data(dd::Table *dd_table, bool reset) {
   DBUG_ASSERT(dd_table->name() == data.name);
 
   dd_table->set_se_private_id(++n_tables);
-  dd_table->set_tablespace_id(dict_sys_t::s_dd_space_id);
+  dd_table->set_tablespace_id(dict_sys_t_s_dd_space_id);
 
   /* Set the table id for each column to be conform with the
   implementation in dd_write_table(). */
@@ -13729,7 +13729,7 @@ bool ha_innobase::get_se_private_data(dd::Table *dd_table, bool reset) {
   }
 
   for (dd::Index *i : *dd_table->indexes()) {
-    i->set_tablespace_id(dict_sys_t::s_dd_space_id);
+    i->set_tablespace_id(dict_sys_t_s_dd_space_id);
 
     if (fsp_is_inode_page(n_pages)) {
       ++n_pages;
@@ -13741,7 +13741,7 @@ bool ha_innobase::get_se_private_data(dd::Table *dd_table, bool reset) {
     p.set(dd_index_key_strings[DD_INDEX_ROOT], n_pages++);
     p.set(dd_index_key_strings[DD_INDEX_ID], ++n_indexes);
     p.set(dd_index_key_strings[DD_INDEX_TRX_ID], 0);
-    p.set(dd_index_key_strings[DD_INDEX_SPACE_ID], dict_sys_t::s_space_id);
+    p.set(dd_index_key_strings[DD_INDEX_SPACE_ID], dict_sys_t_s_space_id);
     p.set(dd_index_key_strings[DD_TABLE_ID], n_tables);
   }
 
@@ -16294,7 +16294,7 @@ static bool innobase_get_tablespace_type(const dd::Tablespace &space,
     return true;
   }
 
-  if (space.id() == MYSQL_TABLESPACE_DD_ID && id == dict_sys_t::s_space_id) {
+  if (space.id() == MYSQL_TABLESPACE_DD_ID && id == dict_sys_t_s_space_id) {
     *space_type = Tablespace_type::SPACE_TYPE_DICTIONARY;
   } else if (id == TRX_SYS_SPACE) {
     *space_type = Tablespace_type::SPACE_TYPE_SYSTEM;

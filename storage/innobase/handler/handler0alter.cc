@@ -3925,7 +3925,7 @@ static void dd_commit_inplace_alter_table(
       /* Get the one created in prepare phase */
       dd_space_id = new_table->dd_space_id;
     } else if (new_table->space == TRX_SYS_SPACE) {
-      dd_space_id = dict_sys_t::s_dd_sys_space_id;
+      dd_space_id = dict_sys_t_s_dd_sys_space_id;
     } else {
       /* Currently, even if specifying a new TABLESPACE
       for partitioned table, existing partitions would not

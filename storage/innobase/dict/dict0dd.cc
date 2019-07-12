@@ -200,7 +200,7 @@ bool dd_table_match(const dict_table_t *table, const Table *dd_table) {
   }
 
   for (const auto dd_index : dd_table->indexes()) {
-    if (dd_table->tablespace_id() == dict_sys_t::s_dd_sys_space_id &&
+    if (dd_table->tablespace_id() == dict_sys_t_s_dd_sys_space_id &&
         dd_index->tablespace_id() != dd_table->tablespace_id()) {
       ib::warn(ER_IB_MSG_167)
           << "Tablespace id in table is " << dd_table->tablespace_id()
@@ -1897,7 +1897,7 @@ template <typename Table>
 void dd_write_table(dd::Object_id dd_space_id, Table *dd_table,
                     const dict_table_t *table) {
   /* Only set the tablespace id for tables in innodb_system tablespace */
-  if (dd_space_id == dict_sys_t::s_dd_sys_space_id) {
+  if (dd_space_id == dict_sys_t_s_dd_sys_space_id) {
     dd_table->set_tablespace_id(dd_space_id);
   }
 
@@ -3719,7 +3719,7 @@ void dd_load_tablespace(const Table *dd_table, dict_table_t *table,
   const char *tbl_name;
 
   if (DICT_TF_HAS_SHARED_SPACE(table->flags)) {
-    if (table->space == dict_sys_t::s_space_id) {
+    if (table->space == dict_sys_t_s_space_id) {
       shared_space_name = mem_strdup(dict_sys_t::s_dd_space_name);
     } else if (srv_sys_tablespaces_open) {
       /* For avoiding deadlock, we need to exit
@@ -3943,7 +3943,7 @@ dict_table_t *dd_open_table_one(dd::cache::Dictionary_client *client,
   bool implicit;
   dd::Tablespace *dd_space = nullptr;
 
-  if (dd_table->tablespace_id() == dict_sys_t::s_dd_space_id) {
+  if (dd_table->tablespace_id() == dict_sys_t_s_dd_space_id) {
     /* DD tables are in shared DD tablespace */
     implicit = false;
   } else if (dd_tablespace_is_implicit(
@@ -4014,10 +4014,10 @@ dict_table_t *dd_open_table_one(dd::cache::Dictionary_client *client,
     dd::Object_id index_space_id = dd_index->tablespace_id();
     dd::Tablespace *index_space = nullptr;
 
-    if (dd_table->tablespace_id() == dict_sys_t::s_dd_space_id) {
-      sid = dict_sys_t::s_space_id;
-    } else if (dd_table->tablespace_id() == dict_sys_t::s_dd_temp_space_id) {
-      sid = dict_sys_t::s_temp_space_id;
+    if (dd_table->tablespace_id() == dict_sys_t_s_dd_space_id) {
+      sid = dict_sys_t_s_space_id;
+    } else if (dd_table->tablespace_id() == dict_sys_t_s_dd_temp_space_id) {
+      sid = dict_sys_t_s_temp_space_id;
     } else {
       if (client->acquire_uncached_uncommitted<dd::Tablespace>(index_space_id,
                                                                &index_space) ||
@@ -4040,7 +4040,7 @@ dict_table_t *dd_open_table_one(dd::cache::Dictionary_client *client,
       m_table->dd_space_id = index_space_id;
 
       uint32 dd_fsp_flags;
-      if (dd_table->tablespace_id() == dict_sys_t::s_dd_space_id) {
+      if (dd_table->tablespace_id() == dict_sys_t_s_dd_space_id) {
         dd_fsp_flags = dict_tf_to_fsp_flags(m_table->flags);
       } else {
         ut_ad(dd_space != nullptr);
@@ -4869,7 +4869,7 @@ bool dd_process_dd_indexes_rec(mem_heap_t *heap, const rec_t *rec,
   }
 
   /* Skip mysql.* indexes. */
-  if (space_id == dict_sys->s_space_id) {
+  if (space_id == dict_sys_t_s_space_id) {
     delete p;
     mtr_commit(mtr);
     return (false);
@@ -5188,7 +5188,7 @@ bool dd_get_fts_tablespace_id(const dict_table_t *parent_table,
     /* This is a user table that resides in innodb_system
     tablespace */
     ut_ad(!dict_table_is_file_per_table(table));
-    dd_space_id = dict_sys_t::s_dd_sys_space_id;
+    dd_space_id = dict_sys_t_s_dd_sys_space_id;
   }
 
   return (true);
