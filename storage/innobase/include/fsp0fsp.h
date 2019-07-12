@@ -43,7 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fsp_header_get_space_id.h>
 #include <innodb/tablespace/fsp_header_get_page_size.h>
 
-#include "fsp0space.h"
 #include "fut0lst.h"
 #include "mtr0mtr.h"
 #include "mysql/components/services/mysql_cond_bits.h"

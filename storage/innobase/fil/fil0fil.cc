@@ -75,7 +75,6 @@ The tablespace memory cache */
 #include "dict0dd.h"
 #include "dict0dict.h"
 #include "fsp0fsp.h"
-#include "fsp0space.h"
 #include "fsp0sysspace.h"
 #include "ha_prototypes.h"
 #include "hash0hash.h"

@@ -35,17 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/Datafile.h>
-#include <innodb/allocator/ut_allocator.h>
-#include <innodb/allocator/mem_strdupl.h>
-#include <innodb/io/Fil_path.h>
 
-#include "fsp0fsp.h"
-#include "fsp0types.h"
 
-#include <vector>
 
-#include <innodb/tablespace/Tablespace.h>
 
 
 

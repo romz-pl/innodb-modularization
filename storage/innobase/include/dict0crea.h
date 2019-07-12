@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0dict.h"
 #include "dict0types.h"
-#include "fsp0space.h"
 #include "mtr0mtr.h"
 #include "que0types.h"
 #include "row0types.h"

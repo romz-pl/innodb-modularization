@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 
 #include "fsp0fsp.h"
-#include "fsp0space.h"
 #include "fsp0sysspace.h"
 #include "os0file.h"
 

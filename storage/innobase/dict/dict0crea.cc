@@ -38,7 +38,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "dict0priv.h"
 #include "dict0stats.h"
-#include "fsp0space.h"
 #include "fsp0sysspace.h"
 #include "fts0priv.h"
 #include "ha_prototypes.h"
