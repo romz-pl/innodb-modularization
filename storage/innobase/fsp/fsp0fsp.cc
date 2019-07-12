@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_get_sx_lock_count.h>
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/tablespace/xdes_calc_descriptor_index.h>
+#include <innodb/tablespace/srv_tmp_space.h>
+#include <innodb/tablespace/srv_sys_space.h>
 
 #include "fsp0fsp.h"
 #include "buf0buf.h"
@@ -66,7 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "dict0mem.h"
-#include "fsp0sysspace.h"
+
 #include "srv0start.h"
 #include "trx0purge.h"
 
@@ -240,80 +242,19 @@ uint32_t fsp_flags_to_dict_tf(uint32_t fsp_flags, bool compact) {
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Check if tablespace is dd tablespace.
-@param[in]      space_id        tablespace ID
-@return true if tablespace is dd tablespace. */
-bool fsp_is_dd_tablespace(space_id_t space_id) {
-  return (space_id == dict_sys_t_s_space_id);
-}
 
-/** Check whether a space id is an undo tablespace ID
-Undo tablespaces have space_id's starting 1 less than the redo logs.
-They are numbered down from this.  Since rseg_id=0 always refers to the
-system tablespace, undo_space_num values start at 1.  The current limit
-is 127. The translation from an undo_space_num is:
-   undo space_id = log_first_space_id - undo_space_num
-@param[in]	space_id	space id to check
-@return true if it is undo tablespace else false. */
-bool fsp_is_undo_tablespace(space_id_t space_id) {
-  /* Starting with v8, undo space_ids have a unique range. */
-  if (space_id >= dict_sys_t_s_min_undo_space_id &&
-      space_id <= dict_sys_t_s_max_undo_space_id) {
-    return (true);
-  }
 
-  /* If upgrading from 5.7, there may be a list of old-style
-  undo tablespaces.  Search them. */
-  if (trx_sys_undo_spaces != nullptr) {
-    return (trx_sys_undo_spaces->contains(space_id));
-  }
 
-  return (false);
-}
 
-/** Check if tablespace is global temporary.
-@param[in]	space_id	tablespace ID
-@return true if tablespace is global temporary. */
-bool fsp_is_global_temporary(space_id_t space_id) {
-  return (space_id == srv_tmp_space.space_id());
-}
 
-/** Check if the tablespace is session temporary.
-@param[in]      space_id        tablespace ID
-@return true if tablespace is a session temporary tablespace. */
-bool fsp_is_session_temporary(space_id_t space_id) {
-  return (space_id > dict_sys_t_s_min_temp_space_id &&
-          space_id <= dict_sys_t_s_max_temp_space_id);
-}
 
-/** Check if tablespace is system temporary.
-@param[in]	space_id	tablespace ID
-@return true if tablespace is system temporary. */
-bool fsp_is_system_temporary(space_id_t space_id) {
-  return (fsp_is_global_temporary(space_id) ||
-          fsp_is_session_temporary(space_id));
-}
 
-/** Check if checksum is disabled for the given space.
-@param[in]	space_id	tablespace ID
-@return true if checksum is disabled for given space. */
-bool fsp_is_checksum_disabled(space_id_t space_id) {
-  return (fsp_is_system_temporary(space_id));
-}
+
+
+
 
 #ifndef UNIV_HOTBACKUP
-#ifdef UNIV_DEBUG
 
-/** Skip some of the sanity checks that are time consuming even in debug mode
-and can affect frequent verification runs that are done to ensure stability of
-the product.
-@return true if check should be skipped for given space. */
-bool fsp_skip_sanity_check(space_id_t space_id) {
-  return (srv_skip_temp_table_checks_debug &&
-          fsp_is_system_temporary(space_id));
-}
-
-#endif /* UNIV_DEBUG */
 
 /** Gets a descriptor bit of a page.
  @return true if free */
@@ -763,20 +704,7 @@ byte *fsp_parse_init_file_page(
   return (ptr);
 }
 
-/** Initializes the fsp system. */
-void fsp_init() {
-  /* FSP_EXTENT_SIZE must be a multiple of page & zip size */
-  ut_a(UNIV_PAGE_SIZE > 0);
-  ut_a(0 == (UNIV_PAGE_SIZE % FSP_EXTENT_SIZE));
 
-  static_assert(!(UNIV_PAGE_SIZE_MAX % FSP_EXTENT_SIZE_MAX),
-                "UNIV_PAGE_SIZE_MAX % FSP_EXTENT_SIZE_MAX != 0");
-
-  static_assert(!(UNIV_ZIP_SIZE_MIN % FSP_EXTENT_SIZE_MIN),
-                "UNIV_ZIP_SIZE_MIN % FSP_EXTENT_SIZE_MIN != 0");
-
-  /* Does nothing at the moment */
-}
 
 /** Writes the space id and flags to a tablespace header.  The flags contain
  row type, physical/compressed page size, and logical/uncompressed page
@@ -1290,45 +1218,6 @@ static UNIV_COLD ulint fsp_try_extend_data_file(fil_space_t *space,
   fsp_header_size_update(header, space->size_in_header, mtr);
 
   DBUG_RETURN(true);
-}
-
-/** Calculate the number of pages to extend a datafile.
-We extend single-table and general tablespaces first one extent at a time,
-but 4 at a time for bigger tablespaces. It is not enough to extend always
-by one extent, because we need to add at least one extent to FSP_FREE.
-A single extent descriptor page will track many extents. And the extent
-that uses its extent descriptor page is put onto the FSP_FREE_FRAG list.
-Extents that do not use their extent descriptor page are added to FSP_FREE.
-The physical page size is used to determine how many extents are tracked
-on one extent descriptor page. See xdes_calc_descriptor_page().
-@param[in]	page_size	page_size of the datafile
-@param[in]	size		current number of pages in the datafile
-@return number of pages to extend the file. */
-page_no_t fsp_get_pages_to_extend_ibd(const page_size_t &page_size,
-                                      page_no_t size) {
-  page_no_t size_increase; /* number of pages to extend this file */
-  page_no_t extent_size;   /* one megabyte, in pages */
-  page_no_t threshold;     /* The size of the tablespace (in number
-                           of pages) where we start allocating more
-                           than one extent at a time. */
-
-  extent_size = fsp_get_extent_size_in_pages(page_size);
-
-  /* The threshold is set at 32MiB except when the physical page
-  size is small enough that it must be done sooner. */
-  threshold =
-      std::min(32 * extent_size, static_cast<page_no_t>(page_size.physical()));
-
-  if (size < threshold) {
-    size_increase = extent_size;
-  } else {
-    /* Below in fsp_fill_free_list() we assume
-    that we add at most FSP_FREE_ADD extents at
-    a time */
-    size_increase = FSP_FREE_ADD * extent_size;
-  }
-
-  return (size_increase);
 }
 
 /** Initialize a fragment extent and puts it into the free fragment list.

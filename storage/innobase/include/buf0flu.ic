@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_from_block.h>
 
 #include "buf0buf.h"
-#include "fsp0types.h"
 #include "mtr0mtr.h"
 #include "srv0srv.h"
 

@@ -6,6 +6,7 @@
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
 #include <innodb/page/FSEG_PAGE_DATA.h>
 #include "sql/dd/object_id.h"
+#include <innodb/page/page_no_t.h>
 
 #include <limits>
 
@@ -418,3 +419,37 @@ constexpr dd::Object_id dict_sys_t_s_dd_sys_space_id = 2;
 /** The dd::Tablespace::id of innodb_temporary. */
 constexpr dd::Object_id dict_sys_t_s_dd_temp_space_id = 3;
 
+
+
+
+/** Size of the doublewrite block in pages */
+#define TRX_SYS_DOUBLEWRITE_BLOCK_SIZE FSP_EXTENT_SIZE
+
+
+
+
+
+/** @name Flags for inserting records in order
+If records are inserted in order, there are the following
+flags to tell this (their type is made byte for the compiler
+to warn if direction and hint parameters are switched in
+fseg_alloc_free_page) */
+/* @{ */
+#define FSP_UP ((byte)111)     /*!< alphabetically upwards */
+#define FSP_DOWN ((byte)112)   /*!< alphabetically downwards */
+#define FSP_NO_DIR ((byte)113) /*!< no order */
+/* @} */
+
+
+
+/** @name File segment header
+The file segment header points to the inode describing the file segment. */
+/* @{ */
+#define FSEG_HDR_SPACE 0   /*!< space id of the inode */
+#define FSEG_HDR_PAGE_NO 4 /*!< page number of the inode */
+#define FSEG_HDR_OFFSET 8  /*!< byte offset of the inode */
+
+#define FSEG_HEADER_SIZE            \
+  10 /*!< Length of the file system \
+     header, in bytes */
+/* @} */

@@ -71,7 +71,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 #ifdef UNIV_HOTBACKUP
 #include "fil0fil.h"
-#include "fsp0types.h"
 
 /** MEB routine to get the master key. MEB will extract
 the key from the keyring encrypted file stored in backup.

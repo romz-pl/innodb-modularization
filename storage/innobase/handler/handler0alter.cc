@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/tablespace/srv_sys_space.h>
+
 /* Include necessary SQL headers */
 #include <assert.h>
 #include <current_thd.h>
@@ -67,7 +69,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0priv.h"
 #include "dict0stats.h"
 #include "dict0stats_bg.h"
-#include "fsp0sysspace.h"
+
 #include "fts0plugin.h"
 #include "fts0priv.h"
 #include "ha_innodb.h"

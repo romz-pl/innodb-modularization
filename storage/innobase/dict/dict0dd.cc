@@ -28,6 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 Data dictionary interface */
 
 #include <innodb/logger/info.h>
+#include <innodb/tablespace/srv_tmp_space.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <auto_thd.h>

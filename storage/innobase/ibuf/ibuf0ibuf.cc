@@ -70,7 +70,7 @@ bool srv_ibuf_disable_background_merge;
 #include "dict0boot.h"
 #include "fil0fil.h"
 #include "fsp0fsp.h"
-#include "fsp0sysspace.h"
+
 #include "fut0lst.h"
 #include "lock0lock.h"
 #include "log0recv.h"

@@ -41,13 +41,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_rw/rw_lock_get_waiters.h>
 #include <innodb/io/innodb_temp_file_key.h>
+#include <innodb/tablespace/Datafile.h>
 
 #include "os0file.h"
 #include <sql_class.h>
 #include "btr0bulk.h"
 #include "dict0crea.h"
 #include "dict0dd.h"
-#include "fsp0sysspace.h"
+
 #include "ha_prototypes.h"
 #include "handler0alter.h"
 #include "lob0lob.h"

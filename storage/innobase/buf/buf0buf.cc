@@ -93,7 +93,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "fil0fil.h"
-#include "fsp0sysspace.h"
+
 #include "ha_prototypes.h"
 #include "mem0mem.h"
 #include "my_dbug.h"

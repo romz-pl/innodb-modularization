@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0buf.h"
 #include "buf0flu.h"
-#include "fsp0sysspace.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "log0log.h"
 #include "log0recv.h"

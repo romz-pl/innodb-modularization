@@ -32,14 +32,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/io/innodb_data_file_key.h>
+#include <innodb/tablespace/Datafile.h>
 
 #include "ha_prototypes.h"
 
 #include "os0file.h"
 #include "dict0dd.h"
 #include "fil0fil.h"
-#include "fsp0sysspace.h"
-#include "fsp0types.h"
+
 #include "page0page.h"
 #include "srv0start.h"
 #include "trx0purge.h"

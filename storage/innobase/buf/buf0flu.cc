@@ -80,7 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0lru.h"
 #include "buf0rea.h"
 #include "fil0fil.h"
-#include "fsp0sysspace.h"
+
 #include "ibuf0ibuf.h"
 #include "log0log.h"
 #include "my_compiler.h"

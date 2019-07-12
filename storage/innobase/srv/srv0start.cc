@@ -63,6 +63,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_wake_all_threads_at_shutdown.h>
 #include <innodb/ioasync/os_aio_init.h>
 #include <innodb/ioasync/os_aio_free.h>
+#include <innodb/tablespace/srv_sys_space.h>
 
 #include <zlib.h>
 #include "btr0btr.h"
@@ -76,7 +77,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "fil0fil.h"
 #include "fsp0fsp.h"
-#include "fsp0sysspace.h"
+
 #include "ha_prototypes.h"
 #include "ibuf0ibuf.h"
 #include "log0log.h"

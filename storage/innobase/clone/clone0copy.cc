@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0dump.h"
 #include "clone0clone.h"
 #include "dict0dict.h"
-#include "fsp0sysspace.h"
+
 #include "handler.h"
 #include "srv0start.h"
 

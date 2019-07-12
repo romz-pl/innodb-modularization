@@ -43,6 +43,47 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fsp_header_get_space_id.h>
 #include <innodb/tablespace/fsp_header_get_page_size.h>
 #include <innodb/tablespace/xdes_t.h>
+#include <innodb/tablespace/fsp_is_dd_tablespace.h>
+#include <innodb/tablespace/fsp_is_undo_tablespace.h>
+#include <innodb/tablespace/fsp_is_system_tablespace.h>
+#include <innodb/tablespace/fsp_is_session_temporary.h>
+#include <innodb/tablespace/fsp_is_global_temporary.h>
+#include <innodb/tablespace/fsp_is_system_temporary.h>
+#include <innodb/tablespace/fsp_is_system_or_temp_tablespace.h>
+#include <innodb/tablespace/fsp_is_ibd_tablespace.h>
+#include <innodb/tablespace/fsp_is_file_per_table.h>
+#include <innodb/tablespace/fsp_is_checksum_disabled.h>
+#include <innodb/math/ut_2pow_remainder.h>
+#include <innodb/math/ut_2pow_round.h>
+#include <innodb/bit/ut_bit_get_nth.h>
+#include <innodb/bit/UT_BITS_IN_BYTES.h>
+#include <innodb/page/univ_page_size.h>
+#include <innodb/tablespace/consts.h>
+#include <innodb/tablespace/fsp_flags_is_compressed.h>
+#include <innodb/tablespace/fsp_flags_are_equal.h>
+#include <innodb/tablespace/page_size_to_ssize.h>
+#include <innodb/tablespace/fsp_flags_is_valid.h>
+#include <innodb/tablespace/fsp_flags_set_zip_size.h>
+#include <innodb/tablespace/fsp_flags_set_page_size.h>
+#include <innodb/tablespace/fsp_flags_init.h>
+#include <innodb/tablespace/xdes_calc_descriptor_index.h>
+#include <innodb/tablespace/xdes_get_bit.h>
+#include <innodb/tablespace/xdes_calc_descriptor_page.h>
+#include <innodb/tablespace/xdes_arr_size.h>
+#include <innodb/tablespace/fsp_is_inode_page.h>
+#include <innodb/tablespace/fsp_header_get_sdi_offset.h>
+#include <innodb/tablespace/fsp_header_get_encryption_progress_offset.h>
+#include <innodb/tablespace/fsp_header_get_server_version.h>
+#include <innodb/tablespace/fsp_header_get_space_version.h>
+#include <innodb/tablespace/xdes_state_t.h>
+#include <innodb/page/page_no_t.h>
+#include <innodb/tablespace/fsp_get_extent_size_in_pages.h>
+#include <innodb/tablespace/fsp_init.h>
+#include <innodb/tablespace/fsp_get_pages_to_extend_ibd.h>
+#include <innodb/tablespace/fseg_header_t.h>
+#include <innodb/tablespace/fsp_reserve_t.h>
+#include <innodb/tablespace/fsp_header_t.h>
+#include <innodb/tablespace/fseg_inode_t.h>
 
 
 #include "fut0lst.h"
@@ -50,9 +91,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/components/services/mysql_cond_bits.h"
 #include "mysql/components/services/mysql_mutex_bits.h"
 
-
-
-#include "fsp0types.h"
 
 #ifdef UNIV_HOTBACKUP
 #include "buf0buf.h"
@@ -63,14 +101,6 @@ extern std::vector<DDL_Record *> ts_encrypt_ddl_records;
 extern mysql_cond_t resume_encryption_cond;
 extern mysql_mutex_t resume_encryption_cond_m;
 
-/* @defgroup Tablespace Header Constants (moved from fsp0fsp.c) @{ */
-
-
-
-
-
-/* The data structures in files are defined just as byte strings in C */
-typedef byte fsp_header_t;
 
 
 #ifdef UNIV_DEBUG
@@ -124,46 +154,10 @@ inline std::ostream &operator<<(std::ostream &out,
 
 
 
-/* @defgroup File Segment Inode Constants (moved from fsp0fsp.c) @{ */
-
-
-
-typedef byte fseg_inode_t;
 
 
 
 
-/* @defgroup Extent Descriptor Constants (moved from fsp0fsp.c) @{ */
-
-
-/** States of a descriptor */
-enum xdes_state_t {
-
-  /** extent descriptor is not initialized */
-  XDES_NOT_INITED = 0,
-
-  /** extent is in free list of space */
-  XDES_FREE = 1,
-
-  /** extent is in free fragment list of space */
-  XDES_FREE_FRAG = 2,
-
-  /** extent is in full fragment list of space */
-  XDES_FULL_FRAG = 3,
-
-  /** extent belongs to a segment */
-  XDES_FSEG = 4,
-
-  /** fragment extent leased to segment */
-  XDES_FSEG_FRAG = 5
-};
-
-#include <innodb/page/page_no_t.h>
-
-
-
-/** Initializes the file space system. */
-void fsp_init(void);
 
 /** Gets the size of the system tablespace from the tablespace header.  If
  we do not have an auto-extending data file, this should be equal to
@@ -172,29 +166,9 @@ void fsp_init(void);
  @return size in pages */
 page_no_t fsp_header_get_tablespace_size(void);
 
-/** Calculate the number of pages to extend a datafile.
-We extend single-table and general tablespaces first one extent at a time,
-but 4 at a time for bigger tablespaces. It is not enough to extend always
-by one extent, because we need to add at least one extent to FSP_FREE.
-A single extent descriptor page will track many extents. And the extent
-that uses its extent descriptor page is put onto the FSP_FREE_FRAG list.
-Extents that do not use their extent descriptor page are added to FSP_FREE.
-The physical page size is used to determine how many extents are tracked
-on one extent descriptor page. See xdes_calc_descriptor_page().
-@param[in]	page_size	page_size of the datafile
-@param[in]	size		current number of pages in the datafile
-@return number of pages to extend the file. */
-page_no_t fsp_get_pages_to_extend_ibd(const page_size_t &page_size,
-                                      page_no_t size);
 
-/** Calculate the number of physical pages in an extent for this file.
-@param[in]	page_size	page_size of the datafile
-@return number of pages in an extent for this file. */
-UNIV_INLINE
-page_no_t fsp_get_extent_size_in_pages(const page_size_t &page_size) {
-  return (static_cast<page_no_t>(FSP_EXTENT_SIZE * UNIV_PAGE_SIZE /
-                                 page_size.physical()));
-}
+
+
 
 
 /** Read the server version number from the DD tablespace header.
@@ -474,55 +448,11 @@ void fseg_print(fseg_header_t *header, /*!< in: segment header */
                 mtr_t *mtr);           /*!< in/out: mini-transaction */
 #endif                                 /* UNIV_BTR_PRINT */
 
-/** Check whether a space id is an undo tablespace ID
-@param[in]	space_id	space id to check
-@return true if it is undo tablespace else false. */
-bool fsp_is_undo_tablespace(space_id_t space_id);
 
-UNIV_INLINE
-bool fsp_is_system_tablespace(space_id_t space_id) {
-  return (space_id == TRX_SYS_SPACE);
-}
 
-/** Check if the space_id is for a system-tablespace (shared + temp).
-@param[in]	space_id	tablespace ID
-@return true if id is a system tablespace, false if not. */
-UNIV_INLINE
-bool fsp_is_system_or_temp_tablespace(space_id_t space_id) {
-  return (fsp_is_system_tablespace(space_id) ||
-          fsp_is_system_temporary(space_id));
-}
 
-/** Determine if the space ID is an IBD tablespace, either file_per_table
-or a general shared tablespace, where user tables exist.
-@param[in]	space_id	tablespace ID
-@return true if it is a user tablespace ID */
-UNIV_INLINE
-bool fsp_is_ibd_tablespace(space_id_t space_id) {
-  return (space_id != TRX_SYS_SPACE && !fsp_is_undo_tablespace(space_id) &&
-          !fsp_is_system_temporary(space_id));
-}
 
-/** Check if tablespace is file-per-table.
-@param[in]	space_id	tablespace ID
-@param[in]	fsp_flags	tablespace flags
-@return true if tablespace is file-per-table. */
-UNIV_INLINE
-bool fsp_is_file_per_table(space_id_t space_id, uint32_t fsp_flags) {
-  return (!fsp_is_shared_tablespace(fsp_flags) &&
-          fsp_is_ibd_tablespace(space_id));
-}
 
-/** Check if tablespace is dd tablespace.
-@param[in]	space_id	tablespace ID
-@return true if tablespace is dd tablespace. */
-bool fsp_is_dd_tablespace(space_id_t space_id);
-
-/** Determine if the tablespace is compressed from tablespace flags.
-@param[in]	flags	Tablespace flags
-@return true if compressed, false if not compressed */
-UNIV_INLINE
-bool fsp_flags_is_compressed(uint32_t flags);
 
 
 
@@ -565,7 +495,7 @@ page_no_t fsp_sdi_get_root_page_num(space_id_t space,
 void fsp_sdi_write_root_to_page(page_t *page, const page_size_t &page_size,
                                 page_no_t root_page_num, mtr_t *mtr);
 
-#include "fsp0fsp.ic"
+
 
 
 

@@ -14,6 +14,7 @@ add_library( ${LIB_NAME} STATIC
     Scanned_files.cpp
     Space_Ids.cpp
     Space_id_set.cpp
+    SysTablespace.cpp
     Tablespace.cpp
     Tablespace_dirs.cpp
     Tablespace_files.cpp
@@ -49,7 +50,19 @@ add_library( ${LIB_NAME} STATIC
     fsp_header_get_server_version.cpp
     fsp_header_get_space_id.cpp
     fsp_header_get_space_version.cpp
+    fsp_is_checksum_disabled.cpp
+    fsp_is_dd_tablespace.cpp
+    fsp_is_file_per_table.cpp
+    fsp_is_global_temporary.cpp
+    fsp_is_global_temporary.cpp
+    fsp_is_ibd_tablespace.cpp
     fsp_is_inode_page.cpp
+    fsp_is_session_temporary.cpp
+    fsp_is_shared_tablespace.cpp
+    fsp_is_system_or_temp_tablespace.cpp
+    fsp_is_system_tablespace.cpp
+    fsp_is_system_temporary.cpp
+    fsp_is_undo_tablespace.cpp
     lsn_t.cpp
     mach_read_ulint.cpp
     mlog_id_t.cpp
@@ -62,12 +75,25 @@ add_library( ${LIB_NAME} STATIC
     recv_recovery_on.cpp
     space_id_t.cpp
     srv_start_raw_disk_in_use.cpp
+    srv_sys_space.cpp
+    srv_tmp_space.cpp
+    sys_tablespace_auto_extend_increment.cpp
     trx_sys_undo_spaces.cpp
     xdes_arr_size.cpp
     xdes_calc_descriptor_index.cpp
     xdes_calc_descriptor_page.cpp
     xdes_get_bit.cpp
     xdes_t.cpp
+    xdes_state_t.cpp
+    fsp_get_extent_size_in_pages.cpp
+    fsp_init.cpp
+    fsp_get_pages_to_extend_ibd.cpp
+    fseg_header_t.cpp
+    fseg_header.cpp
+    fsp_reserve_t.cpp
+    fsp_skip_sanity_check.cpp
+    fsp_header_t.cpp
+    fseg_inode_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -82,6 +108,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     io
+    ioasync
     memory
     bit
     string

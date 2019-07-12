@@ -55,6 +55,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/innodb_arch_file_key.h>
 #include <innodb/io/innodb_clone_file_key.h>
 #include <innodb/io/srv_use_native_aio.h>
+#include <innodb/tablespace/srv_tmp_space.h>
+#include <innodb/tablespace/srv_sys_space.h>
+#include <innodb/tablespace/fsp_is_shared_tablespace.h>
 
 #include <auto_thd.h>
 #include <errno.h>
@@ -133,7 +136,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0stats_bg.h"
 #include "fil0fil.h"
 #include "fsp0fsp.h"
-#include "fsp0sysspace.h"
+
 #include "fts0fts.h"
 #include "fts0plugin.h"
 #include "fts0priv.h"

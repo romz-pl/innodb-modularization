@@ -83,7 +83,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0boot.h"
 #include "dict0load.h"
 #include "dict0stats_bg.h"
-#include "fsp0sysspace.h"
+
 #include "ha_prototypes.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "ibuf0ibuf.h"

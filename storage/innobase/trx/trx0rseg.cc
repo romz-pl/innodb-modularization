@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stddef.h>
 #include <algorithm>
 
-#include "fsp0sysspace.h"
+
 #include "fut0lst.h"
 #include "srv0mon.h"
 #include "srv0srv.h"

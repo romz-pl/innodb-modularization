@@ -35,7 +35,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/align/ut_align_down.h>
 
 #include "buf0dblwr.h"
-#include "fsp0types.h"
 #include "trx0types.h"
 
 #include "mysqld_error.h"

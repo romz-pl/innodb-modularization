@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/memory/ut_memcmp.h>
 #include <innodb/string/ut_strlen.h>
+#include <innodb/tablespace/fsp_is_shared_tablespace.h>
 
 #include "current_thd.h"
 #include "ha_prototypes.h"
@@ -52,7 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0mem.h"
 #include "dict0priv.h"
 #include "dict0stats.h"
-#include "fsp0sysspace.h"
+
 #include "fts0priv.h"
 #include "ha_prototypes.h"
 #include <innodb/machine/data.h>

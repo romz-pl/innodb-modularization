@@ -46,7 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0sea.h"
 #include "buf0stats.h"
 #include "dict0boot.h"
-#include "fsp0sysspace.h"
+
 #include "gis0geo.h"
 #include "gis0rtree.h"
 #include "ibuf0ibuf.h"

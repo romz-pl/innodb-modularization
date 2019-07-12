@@ -1,50 +1,17 @@
-/*****************************************************************************
-
-Copyright (c) 2013, 2018, Oracle and/or its affiliates. All Rights Reserved.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License, version 2.0, as published by the
-Free Software Foundation.
-
-This program is also distributed with certain software (including but not
-limited to OpenSSL) that is licensed under separate terms, as designated in a
-particular file or component or in included license documentation. The authors
-of MySQL hereby grant you an additional permission to link the program and
-your derivative works with the separately licensed software that they have
-included with MySQL.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License, version 2.0,
-for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-*****************************************************************************/
-
-/** @file include/fsp0sysspace.h
- Multi file, shared, system tablespace implementation.
-
- Created 2013-7-26 by Kevin Lewis
- *******************************************************/
-
-#ifndef fsp0sysspace_h
-#define fsp0sysspace_h
+#pragma once
 
 #include <innodb/univ/univ.h>
 
 #include <innodb/tablespace/Datafile.h>
 #include <innodb/tablespace/Tablespace.h>
+#include <innodb/tablespace/sys_tablespace_auto_extend_increment.h>
+#include <innodb/io/os_offset_t.h>
 
 #ifdef UNIV_HOTBACKUP
 #include "srv0srv.h"
 #endif
 
-/** If the last data file is auto-extended, we add this many pages to it
-at a time. We have to make this public because it is a config variable. */
-extern ulong sys_tablespace_auto_extend_increment;
+
 
 #ifdef UNIV_DEBUG
 /** Control if extra debug checks need to be done for temporary tablespace.
@@ -55,7 +22,8 @@ extern bool srv_skip_temp_table_checks_debug;
 #endif /* UNIV_DEBUG */
 
 /** Data structure that contains the information about shared tablespaces.
-Currently this can be the system tablespace or a temporary table tablespace */
+Currently this can be the system tablespace or a temporary table tablespace.
+Multi file, shared, system tablespace implementation. */
 class SysTablespace : public Tablespace {
  public:
   SysTablespace()
@@ -248,12 +216,3 @@ class SysTablespace : public Tablespace {
   /** if false, then sanity checks are still pending */
   bool m_sanity_checks_done;
 };
-
-/* GLOBAL OBJECTS */
-
-/** The control info of the system tablespace. */
-extern SysTablespace srv_sys_space;
-
-/** The control info of a temporary table shared tablespace. */
-extern SysTablespace srv_tmp_space;
-#endif /* fsp0sysspace_h */

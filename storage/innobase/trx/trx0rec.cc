@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0undo.h"
 #ifndef UNIV_HOTBACKUP
 #include "dict0dict.h"
-#include "fsp0sysspace.h"
+
 #include "lob0index.h"
 #include "lob0inf.h"
 #include "lob0lob.h"

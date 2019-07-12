@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/FSEG_PAGE_DATA.h>
 #include <innodb/tablespace/Space_Ids.h>
 #include <innodb/tablespace/trx_sys_undo_spaces.h>
+#include <innodb/tablespace/consts.h>
 
 #include "buf0buf.h"
 #include "fil0fil.h"
@@ -368,8 +369,7 @@ FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID. */
 /** Contents of TRX_SYS_DOUBLEWRITE_SPACE_ID_STORED */
 #define TRX_SYS_DOUBLEWRITE_SPACE_ID_STORED_N 1783657386
 
-/** Size of the doublewrite block in pages */
-#define TRX_SYS_DOUBLEWRITE_BLOCK_SIZE FSP_EXTENT_SIZE
+
 /* @} */
 
 

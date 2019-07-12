@@ -1,70 +1,32 @@
-/*****************************************************************************
+#include <innodb/tablespace/SysTablespace.h>
 
-Copyright (c) 2013, 2018, Oracle and/or its affiliates. All Rights Reserved.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License, version 2.0, as published by the
-Free Software Foundation.
-
-This program is also distributed with certain software (including but not
-limited to OpenSSL) that is licensed under separate terms, as designated in a
-particular file or component or in included license documentation. The authors
-of MySQL hereby grant you an additional permission to link the program and
-your derivative works with the separately licensed software that they have
-included with MySQL.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License, version 2.0,
-for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-*****************************************************************************/
-
-/** @file fsp/fsp0space.cc
- Multi file, shared, system tablespace implementation.
-
- Created 2012-11-16 by Sunny Bains as srv/srv0space.cc
- Refactored 2013-7-26 by Kevin Lewis
- *******************************************************/
-
-#include <innodb/ioasync/os_file_set_size.h>
-
-#include <stdlib.h>
-#include <sys/types.h>
-
+#include <innodb/logger/error.h>
 #include <innodb/logger/info.h>
+#include <innodb/io/os_file_get_size.h>
+#include <innodb/io/srv_read_only_mode.h>
+#include <innodb/tablespace/srv_start_raw_disk_in_use.h>
+#include <innodb/ioasync/os_file_set_size.h>
+#include <innodb/tablespace/srv_start_raw_disk_in_use.h>
+#include <innodb/io/os_file_get_status.h>
+#include <innodb/tablespace/consts.h>
+#include <innodb/tablespace/fil_fusionio_enable_atomic_write.h>
+// #include <innodb/tablespace/fil_space_create.h>
+#include <innodb/tablespace/fil_type_t.h>
+#include <innodb/tablespace/fil_space_t.h>
 
-#include "os0file.h"
-#include "dict0load.h"
-#include "fsp0sysspace.h"
-#ifndef UNIV_HOTBACKUP
-#include "ha_prototypes.h"
-#include "mem0mem.h"
-#include "my_inttypes.h"
-/** The server header file is included to access opt_initialize global variable.
-If server passes the option for create/open DB to SE, we should remove such
-direct reference to server header and global variable */
-#include "mysqld.h"
-#endif /* !UNIV_HOTBACKUP */
-#ifndef UNIV_HOTBACKUP
-#include "row0mysql.h"
-#endif /* !UNIV_HOTBACKUP */
-#include "srv0start.h"
-#include "trx0sys.h"
 
-/** The control info of the system tablespace. */
-SysTablespace srv_sys_space;
+#include "sql/mysqld.h"
 
-/** The control info of a temporary table shared tablespace. */
-SysTablespace srv_tmp_space;
+extern ibool srv_use_doublewrite_buf;
 
-/** If the last data file is auto-extended, we add this many pages to it
-at a time. We have to make this public because it is a config variable. */
-ulong sys_tablespace_auto_extend_increment;
+dberr_t buf_dblwr_init_or_load_pages(pfs_os_file_t file, const char *path);
+
+fil_space_t *fil_space_create(const char *name, space_id_t space_id,
+                              uint32_t flags, fil_type_t purpose);
+
+char *fil_node_create(const char *name, page_no_t size, fil_space_t *space,
+                      bool is_raw, bool atomic_write, page_no_t max_pages);
+
 
 #ifdef UNIV_DEBUG
 /** Control if extra debug checks need to be done for temporary tablespace.
@@ -130,6 +92,7 @@ page_no_t SysTablespace::parse_units(char *&ptr) {
 
   return (static_cast<page_no_t>(megs * (1024 * 1024 / UNIV_PAGE_SIZE)));
 }
+
 
 /** Parse the input params and populate member variables.
 @param[in]	filepath_spec	path to data files
@@ -378,6 +341,7 @@ dberr_t SysTablespace::check_size(Datafile &file) {
   return (DB_SUCCESS);
 }
 
+
 /** Set the size of the file.
 @param[in]	file	data file object
 @return DB_SUCCESS or error code */
@@ -511,7 +475,9 @@ dberr_t SysTablespace::open_file(Datafile &file) {
   return (err);
 }
 
+
 #ifndef UNIV_HOTBACKUP
+
 /** Check the tablespace header for this tablespace.
 @param[out]	flushed_lsn	the value of FIL_PAGE_FILE_FLUSH_LSN
 @return DB_SUCCESS or error code */
@@ -571,6 +537,8 @@ dberr_t SysTablespace::read_lsn_and_check_flags(lsn_t *flushed_lsn) {
 
   return (DB_SUCCESS);
 }
+
+
 
 /** Check if a file can be opened in the correct mode.
 @param[in]	file	data file object
@@ -635,6 +603,7 @@ dberr_t SysTablespace::check_file_status(const Datafile &file,
 
   return (err);
 }
+
 
 /** Note that the data file was not found.
 @param[in]	file		data file object
@@ -910,7 +879,11 @@ dberr_t SysTablespace::open_or_create(bool is_temp, bool create_new_db,
 
   return (err);
 }
-#endif /* !UNIV_HOTBACKUP */
+
+
+#endif
+
+
 
 /**
 @return next increment size */

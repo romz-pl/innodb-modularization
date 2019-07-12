@@ -50,7 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0mem.h"
 #include "dict0types.h"
 #include "fsp0fsp.h"
-#include "fsp0sysspace.h"
+
 #include "hash0hash.h"
 #include "mem0mem.h"
 

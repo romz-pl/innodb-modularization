@@ -47,7 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0file.h"
 #include "btr0sea.h"
 #include "dict0dd.h"
-#include "fsp0sysspace.h"
+
 #include "ha_prototypes.h"
 #include "lock0lock.h"
 #include "log0log.h"

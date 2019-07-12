@@ -98,7 +98,6 @@ SET(INNOBASE_SOURCES
     fsp/fsp0fsp.cc
     fsp/fsp0file.cc
     fsp/fsp0space.cc
-    fsp/fsp0sysspace.cc
     fut/fut0lst.cc
     ha/ha0ha.cc
     ha/ha0storage.cc

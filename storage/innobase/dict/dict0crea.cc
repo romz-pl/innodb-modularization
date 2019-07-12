@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/tablespace/Tablespace.h>
+#include <innodb/tablespace/Datafile.h>
+
 #include "dict0crea.h"
 #include "btr0btr.h"
 #include "btr0pcur.h"
@@ -38,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "dict0priv.h"
 #include "dict0stats.h"
-#include "fsp0sysspace.h"
+
 #include "fts0priv.h"
 #include "ha_prototypes.h"
 #include "os0file.h"

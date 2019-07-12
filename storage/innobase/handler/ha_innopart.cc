@@ -61,7 +61,7 @@ Created Nov 22, 2013 Mattias Jonsson */
 #include "dict0dict.h"
 #include "dict0priv.h"
 #include "dict0stats.h"
-#include "fsp0sysspace.h"
+
 #include "ha_innodb.h"
 #include "ha_innopart.h"
 #include "key.h"

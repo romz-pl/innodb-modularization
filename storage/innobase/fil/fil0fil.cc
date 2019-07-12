@@ -65,6 +65,9 @@ The tablespace memory cache */
 #include <innodb/ioasync/os_aio_handler.h>
 #include <innodb/tablespace/os_file_read_first_page.h>
 #include <innodb/tablespace/fil_buffering_disabled.h>
+#include <innodb/tablespace/Datafile.h>
+#include <innodb/tablespace/srv_tmp_space.h>
+#include <innodb/tablespace/srv_sys_space.h>
 
 #include "os0file.h"
 #include "btr0btr.h"
@@ -75,7 +78,7 @@ The tablespace memory cache */
 #include "dict0dd.h"
 #include "dict0dict.h"
 #include "fsp0fsp.h"
-#include "fsp0sysspace.h"
+
 #include "ha_prototypes.h"
 #include "hash0hash.h"
 #include "log0recv.h"

@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 #include "row0types.h"
 
+class Tablespace;
+
 /** Build a table definition without updating SYSTEM TABLES
 @param[in,out]	table	dict table object
 @param[in,out]	trx	transaction instance

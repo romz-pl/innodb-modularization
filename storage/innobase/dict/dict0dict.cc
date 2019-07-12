@@ -101,7 +101,7 @@ extern uint ibuf_debug;
 #ifndef UNIV_HOTBACKUP
 #include "dict0stats.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "fsp0sysspace.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "fts0fts.h"
 #include "fts0types.h"
