@@ -21,7 +21,6 @@ add_library( ${LIB_NAME} STATIC
     mutex_own.cpp
     mutex_state_t.cpp
     mutex_validate.cpp
-    MutexMonitor.cpp
     OSTrackMutex.cpp
     PolicyMutex.cpp
     SpinMutex.cpp

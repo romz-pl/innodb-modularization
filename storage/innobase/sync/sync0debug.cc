@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_latch/create_tracker.h>
 #include <innodb/sync_latch/LATCH_ADD_MUTEX.h>
 #include <innodb/sync_latch/LATCH_ADD_RWLOCK.h>
-#include <innodb/sync_mutex/MutexMonitor.h>
+#include <innodb/sync_rw/MutexMonitor.h>
 #include <innodb/sync_rw/rw_lock_list_mutex.h>
 #include <innodb/sync_rw/rw_lock_t.h>
 #include <innodb/sync_rw/rw_lock_list.h>
@@ -1509,9 +1509,7 @@ static void sync_latch_meta_destroy() {
 
 
 
-
-/** Defined in sync0sync.cc */
-extern MutexMonitor *mutex_monitor;
+#include <innodb/sync_rw/mutex_monitor.h>
 
 
 /** Initializes the synchronization data structures.

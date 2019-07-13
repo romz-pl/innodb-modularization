@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lock0lock.h"
 #include "rem0cmp.h"
 #include "srv0mon.h"
-#include "sync0sync.h"
+
 #include "trx0trx.h"
 
 /** Restore the stored position of a persistent cursor bufferfixing the page */

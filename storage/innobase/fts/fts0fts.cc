@@ -59,7 +59,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0mysql.h"
 #include "row0sel.h"
 #include "row0upd.h"
-#include "sync0sync.h"
+
 #include "trx0roll.h"
 
 static const ulint FTS_MAX_ID_LEN = 32;

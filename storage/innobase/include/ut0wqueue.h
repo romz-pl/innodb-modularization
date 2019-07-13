@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ib_time_t.h>
 
 #include "mem0mem.h"
-#include "sync0sync.h"
+
 #include "ut0list.h"
 
 // Forward declaration

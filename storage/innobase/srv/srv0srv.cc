@@ -52,6 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_refresh_stats.h>
 #include <innodb/ioasync/os_aio_print.h>
 #include <innodb/tablespace/fil_n_file_opened.h>
+#include <innodb/sync_array/sync_print.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <mysqld.h>
@@ -106,7 +107,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 
-#include "sync0sync.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "trx0i_s.h"
 #include "trx0purge.h"

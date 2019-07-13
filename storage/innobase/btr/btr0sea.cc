@@ -61,7 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0cur.h"
 #include "page0page.h"
 #include "srv0mon.h"
-#include "sync0sync.h"
+
 
 /** Is search system enabled.
 Search system is protected by array of latches. */

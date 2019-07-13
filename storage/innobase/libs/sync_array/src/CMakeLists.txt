@@ -37,6 +37,7 @@ add_library( ${LIB_NAME} STATIC
     sync_wait_array.cpp
     srv_sync_array_size.cpp
     sg_count.cpp
+    sync_print.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -50,7 +51,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    formatting
     string
     sync_rw
     PRIVATE

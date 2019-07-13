@@ -2,8 +2,10 @@ set( LIB_NAME sync_rw )
 
 add_library( ${LIB_NAME} STATIC
     Infos.cpp
+    MutexMonitor.cpp
     X_LOCK_DECR.cpp
     X_LOCK_HALF_DECR.cpp
+    mutex_monitor.cpp
     pfs_rw_lock_create_func.cpp
     pfs_rw_lock_free_func.cpp
     pfs_rw_lock_s_lock_func.cpp
@@ -87,6 +89,7 @@ add_library( ${LIB_NAME} STATIC
     rw_lock_x_unlock_inline.cpp
     sync_check_iterate.cpp
     sync_check_lock.cpp
+    sync_print_wait_info.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -100,6 +103,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    formatting
     lst
     sync_mutex
     PRIVATE

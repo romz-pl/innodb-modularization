@@ -128,7 +128,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "sync0sync.h"
+
 
 #endif /* !UNIV_HOTBACKUP */
 

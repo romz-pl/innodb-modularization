@@ -101,7 +101,7 @@ The tablespace memory cache */
 #include "row0mysql.h"
 #include "sql_backup_lock.h"
 #include "sql_class.h"
-#include "sync0sync.h"
+
 #include "trx0purge.h"
 #else /* !UNIV_HOTBACKUP */
 #include <cstring>

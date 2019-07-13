@@ -188,7 +188,6 @@ SET(INNOBASE_SOURCES
     srv/srv0start.cc
     srv/srv0tmp.cc
     sync/sync0debug.cc
-    sync/sync0sync.cc
     trx/trx0i_s.cc
     trx/trx0purge.cc
     trx/trx0rec.cc

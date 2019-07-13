@@ -78,7 +78,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/os_large_page_size.h>
 #include <innodb/allocator/os_use_large_pages.h>
 #include <innodb/logger/info.h>
-#include <innodb/sync_mutex/MutexMonitor.h>
+#include <innodb/sync_rw/MutexMonitor.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/time/ut_time_us.h>
 #include <innodb/wait/UT_WAIT_FOR.h>
@@ -180,7 +180,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "sync0sync.h"
+
 #ifdef UNIV_DEBUG
 #include "trx0purge.h"
 #endif /* UNIV_DEBUG */
@@ -18027,9 +18027,7 @@ bool ShowStatus::to_string(handlerton *hton, THD *thd,
 
   return (true);
 }
-
-/** Defined in sync0sync.cc */
-extern MutexMonitor *mutex_monitor;
+#include <innodb/sync_rw/mutex_monitor.h>
 
 /** Implements the SHOW MUTEX STATUS command, for mutexes.
 @param[in,out]	hton		the innodb handlerton

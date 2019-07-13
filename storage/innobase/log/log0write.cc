@@ -75,7 +75,7 @@ the file COPYING.Google.
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "sync0sync.h"
+
 #include "trx0roll.h"
 #include "trx0sys.h"
 #include "trx0trx.h"

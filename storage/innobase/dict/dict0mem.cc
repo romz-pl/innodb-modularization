@@ -51,7 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <iostream>
 
-#include "sync0sync.h"
+
 #include <innodb/formatting/formatting.h>
 #include <innodb/time/ut_time.h>
 #include "ut0ut.h"
