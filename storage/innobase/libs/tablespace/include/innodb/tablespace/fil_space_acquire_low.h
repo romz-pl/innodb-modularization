@@ -1,0 +1,9 @@
+#pragma once
+
+#include <innodb/univ/univ.h>
+
+#include <innodb/tablespace/space_id_t.h>
+
+struct fil_space_t;
+
+fil_space_t *fil_space_acquire_low(space_id_t space_id, bool silent);

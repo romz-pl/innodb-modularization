@@ -314,88 +314,12 @@ static dberr_t fil_write(const page_id_t &page_id, const page_size_t &page_size,
 
 
 
-#ifndef UNIV_HOTBACKUP
-
-/** Returns the latch of a file space.
-@param[in]	space_id	Tablespace ID
-@return latch protecting storage allocation */
-rw_lock_t *fil_space_get_latch(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->get_space_by_id(space_id);
-
-  shard->mutex_release();
-
-  return (&space->latch);
-}
-
-#ifdef UNIV_DEBUG
-
-/** Gets the type of a file space.
-@param[in]	space_id	Tablespace ID
-@return file type */
-fil_type_t fil_space_get_type(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  auto space = shard->get_space_by_id(space_id);
-
-  shard->mutex_release();
-
-  return (space->purpose);
-}
-
-#endif /* UNIV_DEBUG */
-
-/** Note that a tablespace has been imported.
-It is initially marked as FIL_TYPE_IMPORT so that no logging is
-done during the import process when the space ID is stamped to each page.
-Now we change it to FIL_SPACE_TABLESPACE to start redo and undo logging.
-NOTE: temporary tablespaces are never imported.
-@param[in]	space_id	Tablespace ID */
-void fil_space_set_imported(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->get_space_by_id(space_id);
-
-  ut_ad(space->purpose == FIL_TYPE_IMPORT);
-  space->purpose = FIL_TYPE_TABLESPACE;
-
-  shard->mutex_release();
-}
-#endif /* !UNIV_HOTBACKUP */
 
 
 
 
 
-/** Attach a file to a tablespace. File must be closed.
-@param[in]	name		file name (file must be closed)
-@param[in]	size		file size in database blocks, rounded
-                                downwards to an integer
-@param[in,out]	space		space where to append
-@param[in]	is_raw		true if a raw device or a raw disk partition
-@param[in]	atomic_write	true if the file has atomic write enabled
-@param[in]	max_pages	maximum number of pages in file
-@return pointer to the file name
-@retval nullptr if error */
-char *fil_node_create(const char *name, page_no_t size, fil_space_t *space,
-                      bool is_raw, bool atomic_write, page_no_t max_pages) {
-  auto shard = fil_system->shard_by_id(space->id);
 
-  fil_node_t *file;
-
-  file = shard->create_node(name, size, space, is_raw,
-                            IORequest::is_punch_hole_supported(), atomic_write,
-                            max_pages);
-
-  return (file == nullptr ? nullptr : file->name);
-}
 
 
 
@@ -517,210 +441,23 @@ fil_space_t *Fil_shard::space_create(const char *name, space_id_t space_id,
   return (space);
 }
 
-/** Create a space memory object and put it to the fil_system hash table.
-The tablespace name is independent from the tablespace file-name.
-Error messages are issued to the server log.
-@param[in]	name		Tablespace name
-@param[in]	space_id	Tablespace ID
-@param[in]	flags		Tablespace flags
-@param[in]	purpose		Tablespace purpose
-@return pointer to created tablespace, to be filled in with fil_node_create()
-@retval nullptr on failure (such as when the same tablespace exists) */
-fil_space_t *fil_space_create(const char *name, space_id_t space_id,
-                              uint32_t flags, fil_type_t purpose) {
-  ut_ad(fsp_flags_is_valid(flags));
-  ut_ad(srv_page_size == UNIV_PAGE_SIZE_ORIG || flags != 0);
-
-  DBUG_EXECUTE_IF("fil_space_create_failure", return (nullptr););
-
-  if (purpose != FIL_TYPE_TEMPORARY) {
-    /* Mark the clone as aborted only while executing a DDL which creates
-    a base table, as any temporary table is ignored while cloning the database.
-    Clone state must be set back to active before returning from function. */
-    clone_mark_abort(true);
-  }
-
-  fil_system->mutex_acquire_all();
-
-  auto shard = fil_system->shard_by_id(space_id);
-
-  auto space = shard->space_create(name, space_id, flags, purpose);
-
-  if (space == nullptr) {
-    /* Duplicate error. */
-    fil_system->mutex_release_all();
-
-    if (purpose != FIL_TYPE_TEMPORARY) {
-      clone_mark_active();
-    }
-
-    return (nullptr);
-  }
-
-  /* Cache the system tablespaces, avoid looking them up during IO. */
-
-  if (space->id == TRX_SYS_SPACE) {
-    ut_a(fil_space_t::s_sys_space == nullptr ||
-         fil_space_t::s_sys_space == space);
-
-    fil_space_t::s_sys_space = space;
-
-  } else if (space->id == dict_sys_t_s_log_space_first_id) {
-    ut_a(fil_space_t::s_redo_space == nullptr ||
-         fil_space_t::s_redo_space == space);
-
-    fil_space_t::s_redo_space = space;
-  }
-
-  fil_system->mutex_release_all();
-
-  if (purpose != FIL_TYPE_TEMPORARY) {
-    clone_mark_active();
-  }
-
-  return (space);
-}
-
-
-/** Assigns a new space id for a new single-table tablespace. This works
-simply by incrementing the global counter. If 4 billion id's is not enough,
-we may need to recycle id's.
-@param[out]	space_id		Set this to the new tablespace ID
-@return true if assigned, false if not */
-bool fil_assign_new_space_id(space_id_t *space_id) {
-  return (fil_system->assign_new_space_id(space_id));
-}
-
-
-/** Returns the path from the first fil_node_t found with this space ID.
-The caller is responsible for freeing the memory allocated here for the
-value returned.
-@param[in]	space_id	Tablespace ID
-@return own: A copy of fil_node_t::path, nullptr if space ID is zero
-or not found. */
-char *fil_space_get_first_path(space_id_t space_id) {
-  ut_a(space_id != TRX_SYS_SPACE);
-
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->space_load(space_id);
-
-  char *path;
-
-  if (space != nullptr) {
-    path = mem_strdup(space->files.front().name);
-  } else {
-    path = nullptr;
-  }
-
-  shard->mutex_release();
-
-  return (path);
-}
-
-/** Returns the size of the space in pages. The tablespace must be cached
-in the memory cache.
-@param[in]	space_id	Tablespace ID
-@return space size, 0 if space not found */
-page_no_t fil_space_get_size(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->space_load(space_id);
-
-  page_no_t size = space ? space->size : 0;
-
-  shard->mutex_release();
-
-  return (size);
-}
-
-/** Returns the flags of the space. The tablespace must be cached
-in the memory cache.
-@param[in]	space_id	Tablespace ID for which to get the flags
-@return flags, ULINT_UNDEFINED if space not found */
-uint32_t fil_space_get_flags(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->space_load(space_id);
-
-  uint32_t flags;
-
-  flags = (space != nullptr) ? space->flags : UINT32_UNDEFINED;
-
-  shard->mutex_release();
-
-  return (flags);
-}
 
 
 
-/** Open each file of a tablespace if not already open.
-@param[in]	space_id	tablespace identifier
-@retval	true	if all file nodes were opened
-@retval	false	on failure */
-bool fil_space_open(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
 
-  shard->mutex_acquire();
 
-  bool success = shard->space_open(space_id);
 
-  shard->mutex_release();
 
-  return (success);
-}
 
-/** Close each file of a tablespace if open.
-@param[in]	space_id	tablespace identifier */
-void fil_space_close(space_id_t space_id) {
-  if (fil_system == nullptr) {
-    return;
-  }
 
-  auto shard = fil_system->shard_by_id(space_id);
 
-  shard->close_file(space_id);
-}
 
-/** Returns the page size of the space and whether it is compressed or not.
-The tablespace must be cached in the memory cache.
-@param[in]	space_id	Tablespace ID
-@param[out]	found		true if tablespace was found
-@return page size */
-const page_size_t fil_space_get_page_size(space_id_t space_id, bool *found) {
-  const uint32_t flags = fil_space_get_flags(space_id);
 
-  if (flags == UINT32_UNDEFINED) {
-    *found = false;
-    return (univ_page_size);
-  }
 
-  *found = true;
 
-  return (page_size_t(flags));
-}
 
-/** Initializes the tablespace memory cache.
-@param[in]	max_n_open	Maximum number of open files */
-void fil_init(ulint max_n_open) {
-  static_assert((1 << UNIV_PAGE_SIZE_SHIFT_MAX) == UNIV_PAGE_SIZE_MAX,
-                "(1 << UNIV_PAGE_SIZE_SHIFT_MAX) != UNIV_PAGE_SIZE_MAX");
 
-  static_assert((1 << UNIV_PAGE_SIZE_SHIFT_MIN) == UNIV_PAGE_SIZE_MIN,
-                "(1 << UNIV_PAGE_SIZE_SHIFT_MIN) != UNIV_PAGE_SIZE_MIN");
 
-  ut_a(fil_system == nullptr);
-
-  ut_a(max_n_open > 0);
-
-  fil_system = UT_NEW_NOKEY(Fil_system(MAX_SHARDS, max_n_open));
-}
 
 /** Open all the system files.
 @param[in]	max_n_open	Maximum number of open files allowed
@@ -760,29 +497,12 @@ void Fil_shard::open_system_tablespaces(size_t max_n_open, size_t *n_open) {
 
 
 
-/** Opens all log files and system tablespace data files. They stay open
-until the database server shutdown. This should be called at a server
-startup after the space objects for the log and the system tablespace
-have been created. The purpose of this operation is to make sure we
-never run out of file descriptors if we need to read from the insert
-buffer or to write to the log. */
-void fil_open_log_and_system_tablespace_files() {
-  fil_system->open_all_system_tablespaces();
-}
-
-
-/** Closes all open files. There must not be any pending i/o's or not flushed
-modifications in the files. */
-void fil_close_all_files() { fil_system->close_all_files(); }
 
 
 
-/** Closes the redo log files. There must not be any pending i/o's or not
-flushed modifications in the files.
-@param[in]	free_all	If set then free all instances */
-void fil_close_log_files(bool free_all) {
-  fil_system->close_all_log_files(free_all);
-}
+
+
+
 
 /** Iterate through all persistent tablespace files (FIL_TYPE_TABLESPACE)
 returning the nodes via callback function cbk.
@@ -793,16 +513,7 @@ dberr_t Fil_iterator::iterate(bool include_log, Function &&f) {
   return (fil_system->iterate(include_log, f));
 }
 
-/** Sets the max tablespace id counter if the given number is bigger than the
-previous value.
-@param[in]	max_id		Maximum known tablespace ID */
-void fil_set_max_space_id_if_bigger(space_id_t max_id) {
-  if (dict_sys_t_is_reserved(max_id)) {
-    ib::fatal(ER_IB_MSG_285, ulong{max_id});
-  }
 
-  fil_system->update_maximum_space_id(max_id);
-}
 
 /** Write the flushed LSN to the page header of the first page in the
 system tablespace.
@@ -833,66 +544,12 @@ dberr_t fil_write_flushed_lsn(lsn_t lsn) {
   return (err);
 }
 
-/** Acquire a tablespace when it could be dropped concurrently.
-Used by background threads that do not necessarily hold proper locks
-for concurrency control.
-@param[in]	space_id	Tablespace ID
-@param[in]	silent		Whether to silently ignore missing tablespaces
-@return the tablespace, or nullptr if missing or being deleted */
-inline fil_space_t *fil_space_acquire_low(space_id_t space_id, bool silent) {
-  auto shard = fil_system->shard_by_id(space_id);
 
-  shard->mutex_acquire();
 
-  fil_space_t *space = shard->get_space_by_id(space_id);
 
-  if (space == nullptr) {
-    if (!silent) {
-      ib::warn(ER_IB_MSG_286, ulong{space_id});
-    }
-  } else if (space->stop_new_ops) {
-    space = nullptr;
-  } else {
-    ++space->n_pending_ops;
-  }
 
-  shard->mutex_release();
 
-  return (space);
-}
 
-/** Acquire a tablespace when it could be dropped concurrently.
-Used by background threads that do not necessarily hold proper locks
-for concurrency control.
-@param[in]	space_id	Tablespace ID
-@return the tablespace, or nullptr if missing or being deleted */
-fil_space_t *fil_space_acquire(space_id_t space_id) {
-  return (fil_space_acquire_low(space_id, false));
-}
-
-/** Acquire a tablespace that may not exist.
-Used by background threads that do not necessarily hold proper locks
-for concurrency control.
-@param[in]	space_id	Tablespace ID
-@return the tablespace, or nullptr if missing or being deleted */
-fil_space_t *fil_space_acquire_silent(space_id_t space_id) {
-  return (fil_space_acquire_low(space_id, true));
-}
-
-/** Release a tablespace acquired with fil_space_acquire().
-@param[in,out]	space	tablespace to release  */
-void fil_space_release(fil_space_t *space) {
-  auto shard = fil_system->shard_by_id(space->id);
-
-  shard->mutex_acquire();
-
-  ut_ad(space->magic_n == FIL_SPACE_MAGIC_N);
-  ut_ad(space->n_pending_ops > 0);
-
-  --space->n_pending_ops;
-
-  shard->mutex_release();
-}
 
 
 
@@ -1044,15 +701,7 @@ static void fil_op_write_log(mlog_id_t type, space_id_t space_id,
   }
 }
 
-/** Fetch the file name opened for a space_id during recovery
-from the file map.
-@param[in]	space_id	Undo tablespace ID
-@return file name that was opened, empty string if space ID not found. */
-std::string fil_system_open_fetch(space_id_t space_id) {
-  ut_a(dict_sys_t_is_reserved(space_id) || srv_is_upgrade_mode);
 
-  return (fil_system->find(space_id));
-}
 
 #endif /* !UNIV_HOTBACKUP */
 
@@ -1193,18 +842,7 @@ dberr_t Fil_shard::space_delete(space_id_t space_id, buf_remove_t buf_remove) {
   return (err);
 }
 
-/** Deletes an IBD tablespace, either general or single-table.
-The tablespace must be cached in the memory cache. This will delete the
-datafile, fil_space_t & fil_node_t entries from the file_system_t cache.
-@param[in]	space_id	Tablespace ID
-@param[in]	buf_remove	Specify the action to take on the pages
-                                for this table in the buffer pool.
-@return DB_SUCCESS, DB_TABLESPCE_NOT_FOUND or DB_IO_ERROR */
-dberr_t fil_delete_tablespace(space_id_t space_id, buf_remove_t buf_remove) {
-  auto shard = fil_system->shard_by_id(space_id);
 
-  return (shard->space_delete(space_id, buf_remove));
-}
 
 /** Prepare for truncating a single-table tablespace.
 1) Check pending operations on a tablespace;
@@ -1277,15 +915,7 @@ bool Fil_shard::space_truncate(space_id_t space_id, page_no_t size_in_pages) {
   return (success);
 }
 
-/** Truncate the tablespace to needed size.
-@param[in]	space_id	Tablespace ID to truncate
-@param[in]	size_in_pages	Truncate size.
-@return true if truncate was successful. */
-bool fil_truncate_tablespace(space_id_t space_id, page_no_t size_in_pages) {
-  auto shard = fil_system->shard_by_id(space_id);
 
-  return (shard->space_truncate(space_id, size_in_pages));
-}
 
 /** Truncate the tablespace to needed size with a new space_id.
 @param[in]  old_space_id   Tablespace ID to truncate
@@ -4528,16 +4158,7 @@ void fil_page_reset_type(const page_id_t &page_id, byte *page, ulint type,
   mlog_write_ulint(page + FIL_PAGE_TYPE, type, MLOG_2BYTES, mtr);
 }
 
-/** Closes the tablespace memory cache. */
-void fil_close() {
-  if (fil_system == nullptr) {
-    return;
-  }
 
-  UT_DELETE(fil_system);
-
-  fil_system = nullptr;
-}
 
 #ifndef UNIV_HOTBACKUP
 /** Initializes a buffer control block when the buf_pool is created.
@@ -5272,20 +4893,7 @@ os_file_type_t Fil_path::get_file_type(const std::string &path) {
 }
 
 
-/** Sets the flags of the tablespace. The tablespace must be locked
-in MDL_EXCLUSIVE MODE.
-@param[in]	space	tablespace in-memory struct
-@param[in]	flags	tablespace flags */
-void fil_space_set_flags(fil_space_t *space, uint32_t flags) {
-  ut_ad(fsp_flags_is_valid(flags));
 
-  rw_lock_x_lock(&space->latch);
-
-  ut_a(flags < std::numeric_limits<uint32_t>::max());
-  space->flags = (uint32_t)flags;
-
-  rw_lock_x_unlock(&space->latch);
-}
 
 /* Unit Tests */
 #ifdef UNIV_ENABLE_UNIT_TEST_MAKE_FILEPATH

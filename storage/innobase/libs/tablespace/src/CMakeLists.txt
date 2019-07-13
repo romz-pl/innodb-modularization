@@ -11,9 +11,12 @@ add_library( ${LIB_NAME} STATIC
     Fil_shard.cpp
     Fil_state.cpp
     Fil_system.cpp
+    Filenames.cpp
+    MySQL_datadir_path.cpp
     Scanned_files.cpp
     Space_Ids.cpp
     Space_id_set.cpp
+    Space_ids.cpp
     SysTablespace.cpp
     Tablespace.cpp
     Tablespace_dirs.cpp
@@ -22,19 +25,56 @@ add_library( ${LIB_NAME} STATIC
     buf_remove_t.cpp
     consts.cpp
     device_t.cpp
+    dict_sys_t_is_reserved.cpp
     encryption_op_type.cpp
+    fil_addr_null.cpp
     fil_addr_t.cpp
+    fil_assign_new_space_id.cpp
     fil_buffering_disabled.cpp
+    fil_close.cpp
+    fil_close_all_files.cpp
+    fil_close_log_files.cpp
+    fil_delete_tablespace.cpp
     fil_faddr_t.cpp
     fil_fusionio_enable_atomic_write.cpp
+    fil_init.cpp
     fil_load_status.cpp
     fil_n_file_opened.cpp
+    fil_n_log_flushes.cpp
+    fil_n_pending_log_flushes.cpp
+    fil_n_pending_tablespace_flushes.cpp
     fil_no_punch_hole.cpp
+    fil_node_create.cpp
     fil_node_t.cpp
+    fil_open_log_and_system_tablespace_files.cpp
     fil_operation_t.cpp
+    fil_set_max_space_id_if_bigger.cpp
+    fil_space_acquire.cpp
+    fil_space_acquire_low.cpp
+    fil_space_acquire_silent.cpp
+    fil_space_close.cpp
+    fil_space_create.cpp
+    fil_space_get.cpp
+    fil_space_get_first_path.cpp
+    fil_space_get_flags.cpp
+    fil_space_get_latch.cpp
+    fil_space_get_page_size.cpp
+    fil_space_get_size.cpp
+    fil_space_get_type.cpp
+    fil_space_open.cpp
+    fil_space_release.cpp
+    fil_space_set_flags.cpp
+    fil_space_set_imported.cpp
     fil_space_t.cpp
+    fil_system.cpp
+    fil_system_open_fetch.cpp
+    fil_truncate_tablespace.cpp
     fil_type_t.cpp
+    fil_write_zeros.cpp
     flst_get_len.cpp
+    fseg_header.cpp
+    fseg_header_t.cpp
+    fseg_inode_t.cpp
     fsp_descr_page.cpp
     fsp_flags_are_equal.cpp
     fsp_flags_init.cpp
@@ -42,6 +82,8 @@ add_library( ${LIB_NAME} STATIC
     fsp_flags_is_valid.cpp
     fsp_flags_set_page_size.cpp
     fsp_flags_set_zip_size.cpp
+    fsp_get_extent_size_in_pages.cpp
+    fsp_get_pages_to_extend_ibd.cpp
     fsp_header_get_encryption_progress_offset.cpp
     fsp_header_get_field.cpp
     fsp_header_get_flags.cpp
@@ -50,6 +92,8 @@ add_library( ${LIB_NAME} STATIC
     fsp_header_get_server_version.cpp
     fsp_header_get_space_id.cpp
     fsp_header_get_space_version.cpp
+    fsp_header_t.cpp
+    fsp_init.cpp
     fsp_is_checksum_disabled.cpp
     fsp_is_dd_tablespace.cpp
     fsp_is_file_per_table.cpp
@@ -63,6 +107,8 @@ add_library( ${LIB_NAME} STATIC
     fsp_is_system_tablespace.cpp
     fsp_is_system_temporary.cpp
     fsp_is_undo_tablespace.cpp
+    fsp_reserve_t.cpp
+    fsp_skip_sanity_check.cpp
     lsn_t.cpp
     mach_read_ulint.cpp
     mlog_id_t.cpp
@@ -83,26 +129,8 @@ add_library( ${LIB_NAME} STATIC
     xdes_calc_descriptor_index.cpp
     xdes_calc_descriptor_page.cpp
     xdes_get_bit.cpp
-    xdes_t.cpp
     xdes_state_t.cpp
-    fsp_get_extent_size_in_pages.cpp
-    fsp_init.cpp
-    fsp_get_pages_to_extend_ibd.cpp
-    fseg_header_t.cpp
-    fseg_header.cpp
-    fsp_reserve_t.cpp
-    fsp_skip_sanity_check.cpp
-    fsp_header_t.cpp
-    fseg_inode_t.cpp
-    MySQL_datadir_path.cpp
-    fil_n_log_flushes.cpp
-    fil_n_pending_log_flushes.cpp
-    fil_n_pending_tablespace_flushes.cpp
-    fil_addr_null.cpp
-    fil_system.cpp
-    fil_space_get.cpp
-    dict_sys_t_is_reserved.cpp
-    fil_write_zeros.cpp
+    xdes_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
