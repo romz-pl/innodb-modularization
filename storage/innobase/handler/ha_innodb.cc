@@ -3246,7 +3246,7 @@ void Validate_files::check(const Const_iter &begin, const Const_iter &end,
     {
       std::lock_guard<std::mutex> guard(m_mutex);
 
-      if (!dict_sys_t::is_reserved(space_id) && space_id > m_space_max_id) {
+      if (!dict_sys_t_is_reserved(space_id) && space_id > m_space_max_id) {
         /* Currently try to find the max one only,
         it should be able to reuse the deleted smaller
         ones later */

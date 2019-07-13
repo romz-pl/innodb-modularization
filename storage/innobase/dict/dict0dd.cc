@@ -5984,7 +5984,7 @@ bool dd_tablespace_update_cache(THD *thd) {
       continue;
     }
 
-    if (!dict_sys_t::is_reserved(id) && id > max_id) {
+    if (!dict_sys_t_is_reserved(id) && id > max_id) {
       /* Currently try to find the max one only, it should
       be able to reuse the deleted smaller ones later */
       max_id = id;

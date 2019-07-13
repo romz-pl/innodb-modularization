@@ -2320,7 +2320,7 @@ ulint ibuf_merge_space(space_id_t space) /*!< in: tablespace id to merge */
   dtuple_t *tuple = ibuf_search_tuple_build(space, 0, heap);
   ulint n_pages = 0;
 
-  ut_ad(!dict_sys_t::is_reserved(space));
+  ut_ad(!dict_sys_t_is_reserved(space));
 
   ibuf_mtr_start(&mtr);
 

@@ -94,6 +94,15 @@ add_library( ${LIB_NAME} STATIC
     fsp_skip_sanity_check.cpp
     fsp_header_t.cpp
     fseg_inode_t.cpp
+    MySQL_datadir_path.cpp
+    fil_n_log_flushes.cpp
+    fil_n_pending_log_flushes.cpp
+    fil_n_pending_tablespace_flushes.cpp
+    fil_addr_null.cpp
+    fil_system.cpp
+    fil_space_get.cpp
+    dict_sys_t_is_reserved.cpp
+    fil_write_zeros.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -107,6 +116,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    enum
     io
     ioasync
     memory

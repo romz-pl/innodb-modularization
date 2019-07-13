@@ -42,6 +42,18 @@
 #include <innodb/time/ib_time_t.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/tablespace/recv_recovery_on.h>
+#include <innodb/tablespace/fil_write_zeros.h>
+#include <innodb/io/os_has_said_disk_full.h>
+#include <innodb/io/IORequestWrite.h>
+#include <innodb/tablespace/srv_sys_space.h>
+#include <innodb/tablespace/fsp_is_system_temporary.h>
+#include <innodb/tablespace/srv_tmp_space.h>
+#include <innodb/io/srv_read_only_mode.h>
+#include <innodb/tablespace/fsp_is_system_temporary.h>
+#include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
+#include <innodb/tablespace/fil_system.h>
+#include <innodb/enum/to_int.h>
+#include <innodb/tablespace/dict_sys_t_is_reserved.h>
 
 #include <atomic>
 
@@ -50,8 +62,6 @@ namespace undo {
 bool is_active(space_id_t space_id, bool get_latch);
 }
 
-
-bool fsp_is_system_temporary(space_id_t space_id);
 bool recv_recovery_is_on();
 
 
@@ -1220,3 +1230,409 @@ dberr_t Fil_shard::space_check_pending_operations(space_id_t space_id,
 
   return (DB_SUCCESS);
 }
+
+
+
+
+/** Try to extend a tablespace if it is smaller than the specified size.
+@param[in,out]	space		tablespace
+@param[in]	size		desired size in pages
+@return whether the tablespace is at least as big as requested */
+bool Fil_shard::space_extend(fil_space_t *space, page_no_t size) {
+  /* In read-only mode we allow write to shared temporary tablespace
+  as intrinsic table created by Optimizer reside in this tablespace. */
+  ut_ad(!srv_read_only_mode || fsp_is_system_temporary(space->id));
+
+#ifndef UNIV_HOTBACKUP
+  DBUG_EXECUTE_IF("fil_space_print_xdes_pages",
+                  space->print_xdes_pages("xdes_pages.log"););
+#endif /* !UNIV_HOTBACKUP */
+
+  fil_node_t *file;
+  bool slot;
+  size_t phy_page_size;
+  bool success = true;
+
+#ifdef UNIV_HOTBACKUP
+  page_no_t prev_size = 0;
+#endif /* UNIV_HOTBACKUP */
+
+  for (;;) {
+    slot = mutex_acquire_and_get_space(space->id, space);
+
+    /* Note:If the file is being opened for the first time then
+    we don't have the file physical size. There is no guarantee
+    that the file has been opened at this stage. */
+
+    if (size < space->size) {
+      /* Space already big enough */
+      mutex_release();
+
+      if (slot) {
+        release_open_slot(m_id);
+      }
+
+      return (true);
+    }
+
+    file = &space->files.back();
+
+    page_size_t page_size(space->flags);
+
+    phy_page_size = page_size.physical();
+
+#ifdef UNIV_HOTBACKUP
+    prev_size = space->size;
+
+    ib::trace_1() << "Extending space id : " << space->id
+                  << ", space name : " << space->name
+                  << ", space size : " << space->size
+                  << " page, page size : " << phy_page_size;
+#endif /* UNIV_HOTBACKUP */
+
+    if (file->in_use == 0) {
+      /* Mark this file as undergoing extension. This flag
+      is used by other threads to wait for the extension
+      opereation to finish or wait for open to complete. */
+
+      ++file->in_use;
+
+      break;
+    }
+
+    if (slot) {
+      release_open_slot(m_id);
+    }
+
+    /* Another thread is currently using the file. Wait
+    for it to finish.  It'd have been better to use an event
+    driven mechanism but the entire module is peppered with
+    polling code. */
+
+    mutex_release();
+
+    os_thread_sleep(100000);
+  }
+
+  bool opened = prepare_file_for_io(file, true);
+
+  if (slot) {
+    release_open_slot(m_id);
+  }
+
+  if (!opened) {
+    /* The tablespace data file, such as .ibd file, is missing */
+    ut_a(file->in_use > 0);
+    --file->in_use;
+
+    mutex_release();
+
+    return (false);
+  }
+
+  ut_a(file->is_open);
+
+  if (size <= space->size) {
+    ut_a(file->in_use > 0);
+    --file->in_use;
+
+    complete_io(file, IORequestRead);
+
+    mutex_release();
+
+    return (true);
+  }
+
+  /* At this point it is safe to release the shard mutex. No
+  other thread can rename, delete or close the file because
+  we have set the file->in_use flag. */
+
+  mutex_release();
+
+  page_no_t pages_added;
+  os_offset_t node_start = os_file_get_size(file->handle);
+
+  ut_a(node_start != (os_offset_t)-1);
+
+  /* File first page number */
+  page_no_t node_first_page = space->size - file->size;
+
+  /* Number of physical pages in the file */
+  page_no_t n_node_physical_pages =
+      static_cast<page_no_t>(node_start / phy_page_size);
+
+  /* Number of pages to extend in the file */
+  page_no_t n_node_extend;
+
+  n_node_extend = size - (node_first_page + file->size);
+
+  /* If we already have enough physical pages to satisfy the
+  extend request on the file then ignore it */
+  if (file->size + n_node_extend > n_node_physical_pages) {
+    DBUG_EXECUTE_IF("ib_crash_during_tablespace_extension", DBUG_SUICIDE(););
+
+    os_offset_t len;
+    dberr_t err = DB_SUCCESS;
+
+    len = ((file->size + n_node_extend) * phy_page_size) - node_start;
+
+    ut_ad(len > 0);
+
+#if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
+    /* This is required by FusionIO HW/Firmware */
+
+    int ret = posix_fallocate(file->handle.m_file, node_start, len);
+
+    DBUG_EXECUTE_IF("ib_posix_fallocate_fail_eintr", ret = EINTR;);
+
+    DBUG_EXECUTE_IF("ib_posix_fallocate_fail_einval", ret = EINVAL;);
+
+    if (ret != 0) {
+      /* We already pass the valid offset and len in, if EINVAL
+      is returned, it could only mean that the file system doesn't
+      support fallocate(), currently one known case is ext3 with O_DIRECT.
+
+      Also because above call could be interrupted, in this case,
+      simply go to plan B by writing zeroes.
+
+      Both error messages for above two scenarios are skipped in case
+      of flooding error messages, because they can be ignored by users. */
+      if (ret != EINTR && ret != EINVAL) {
+        ib::error(ER_IB_MSG_319)
+            << "posix_fallocate(): Failed to preallocate"
+               " data for file "
+            << file->name << ", desired size " << len
+            << " bytes."
+               " Operating system error number "
+            << ret
+            << ". Check"
+               " that the disk is not full or a disk quota"
+               " exceeded. Make sure the file system supports"
+               " this function. Some operating system error"
+               " numbers are described at " REFMAN
+               "operating-system-error-codes.html";
+      }
+
+      err = DB_IO_ERROR;
+    }
+#endif /* NO_FALLOCATE || !UNIV_LINUX */
+
+    if (!file->atomic_write || err == DB_IO_ERROR) {
+      bool read_only_mode;
+
+      read_only_mode =
+          (space->purpose != FIL_TYPE_TEMPORARY ? false : srv_read_only_mode);
+
+      err = fil_write_zeros(file, phy_page_size, node_start,
+                            static_cast<ulint>(len), read_only_mode);
+
+      if (err != DB_SUCCESS) {
+        ib::warn(ER_IB_MSG_320)
+            << "Error while writing " << len << " zeroes to " << file->name
+            << " starting at offset " << node_start;
+      }
+    }
+
+    /* Check how many pages actually added */
+    os_offset_t end = os_file_get_size(file->handle);
+    ut_a(end != static_cast<os_offset_t>(-1) && end >= node_start);
+
+    os_has_said_disk_full = !(success = (end == node_start + len));
+
+    pages_added = static_cast<page_no_t>(end / phy_page_size);
+
+    ut_a(pages_added >= file->size);
+    pages_added -= file->size;
+
+  } else {
+    success = true;
+    pages_added = n_node_extend;
+    os_has_said_disk_full = FALSE;
+  }
+
+  mutex_acquire();
+
+  file->size += pages_added;
+  space->size += pages_added;
+
+  ut_a(file->in_use > 0);
+  --file->in_use;
+
+  complete_io(file, IORequestWrite);
+
+#ifndef UNIV_HOTBACKUP
+  /* Keep the last data file size info up to date, rounded to
+  full megabytes */
+  page_no_t pages_per_mb =
+      static_cast<page_no_t>((1024 * 1024) / phy_page_size);
+
+  page_no_t size_in_pages = ((file->size / pages_per_mb) * pages_per_mb);
+
+  if (space->id == TRX_SYS_SPACE) {
+    srv_sys_space.set_last_file_size(size_in_pages);
+  } else if (fsp_is_system_temporary(space->id)) {
+    srv_tmp_space.set_last_file_size(size_in_pages);
+  }
+#else  /* !UNIV_HOTBACKUP */
+  ib::trace_2() << "Extended space : " << space->name << " from " << prev_size
+                << " pages to " << space->size << " pages "
+                << ", desired space size : " << size << " pages.";
+#endif /* !UNIV_HOTBACKUP */
+
+  space_flush(space->id);
+
+  mutex_release();
+
+  return (success);
+}
+
+/** We are going to do a rename file and want to stop new I/O for a while.
+@param[in]	space		Tablespace for which we want to wait for IO
+                                to stop */
+void Fil_shard::wait_for_io_to_stop(const fil_space_t *space) {
+  /* Note: We are reading the value of space->stop_ios without the
+  cover of the Fil_shard::mutex. We incremented the in_use counter
+  before waiting for IO to stop. */
+
+  auto begin_time = ut_time();
+  auto start_time = begin_time;
+
+  /* Spam the log after every minute. Ignore any race here. */
+
+  while (space->stop_ios) {
+    if ((ut_time() - start_time) == PRINT_INTERVAL_SECS) {
+      start_time = ut_time();
+
+      ib::warn(ER_IB_MSG_278, space->name, longlong{ut_time() - begin_time});
+    }
+
+#ifndef UNIV_HOTBACKUP
+
+    /* Wake the I/O handler threads to make sure
+    pending I/O's are performed */
+    os_aio_simulated_wake_handler_threads();
+
+#endif /* UNIV_HOTBACKUP */
+
+    /* Give the IO threads some time to work. */
+    os_thread_yield();
+  }
+}
+
+/** Reserves the mutex and tries to make sure we can open at least
+one file while holding it. This should be called before calling
+prepare_file_for_io(), because that function may need to open a file.
+@param[in]	space_id	Tablespace ID
+@param[out]	space		Tablespace instance
+@return true if a slot was reserved. */
+bool Fil_shard::mutex_acquire_and_get_space(space_id_t space_id,
+                                            fil_space_t *&space) {
+  mutex_acquire();
+
+  if (space_id == TRX_SYS_SPACE || dict_sys_t_is_reserved(space_id)) {
+    space = get_reserved_space(space_id);
+
+    return (false);
+  }
+
+  space = get_space_by_id(space_id);
+
+  if (space == nullptr) {
+    /* Caller handles the case of a missing tablespce. */
+    return (false);
+  }
+
+  ut_ad(space->files.size() == 1);
+
+  auto is_open = space->files.front().is_open;
+
+  if (is_open) {
+    /* Ensure that the file is not closed behind our back. */
+    ++space->files.front().in_use;
+  }
+
+  mutex_release();
+
+  if (is_open) {
+    wait_for_io_to_stop(space);
+
+    mutex_acquire();
+
+    /* We are guaranteed that this file cannot be closed
+    because we now own the mutex. */
+
+    ut_ad(space->files.front().in_use > 0);
+    --space->files.front().in_use;
+
+    return (false);
+  }
+
+  /* The number of open file descriptors is a shared resource, in
+  order to guarantee that we don't over commit, we use a ticket system
+  to reserve a slot/ticket to open a file. This slot/ticket should
+  be released after the file is opened. */
+
+  while (!reserve_open_slot(m_id)) {
+    os_thread_yield();
+  }
+
+  auto begin_time = ut_time();
+  auto start_time = begin_time;
+
+  for (size_t i = 0; i < 3; ++i) {
+    /* Flush tablespaces so that we can close modified
+    files in the LRU list */
+
+    auto type = to_int(FIL_TYPE_TABLESPACE);
+
+    fil_system->flush_file_spaces(type);
+
+    os_thread_yield();
+
+    /* Reserve an open slot for this shard. So that this
+    shard's open file succeeds. */
+
+    while (fil_system->m_max_n_open <= s_n_open &&
+           !fil_system->close_file_in_all_LRU(i > 1)) {
+      if (ut_time() - start_time == PRINT_INTERVAL_SECS) {
+        start_time = ut_time();
+
+        ib::warn(ER_IB_MSG_279) << "Trying to close a file for "
+                                << ut_time() - begin_time << " seconds"
+                                << ". Configuration only allows for "
+                                << fil_system->m_max_n_open << " open files.";
+      }
+    }
+
+    if (fil_system->m_max_n_open > s_n_open) {
+      break;
+    }
+
+#ifndef UNIV_HOTBACKUP
+    /* Wake the I/O-handler threads to make sure pending I/Os are
+    performed */
+    os_aio_simulated_wake_handler_threads();
+
+    os_thread_yield();
+#endif /* !UNIV_HOTBACKUP */
+  }
+
+#if 0
+    /* The magic value of 300 comes from innodb.open_file_lru.test */
+    if (fil_system->m_max_n_open == 300) {
+        ib::warn(ER_IB_MSG_280)
+            << "Too many (" << s_n_open
+            << ") files are open the maximum allowed"
+            << " value is " << fil_system->m_max_n_open
+            << ". You should raise the value of"
+            << " --innodb-open-files in my.cnf.";
+    }
+#endif
+
+  mutex_acquire();
+
+  return (true);
+}
+
+
+

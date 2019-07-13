@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/record/rec_format_t.h>
 #include <innodb/tablespace/consts.h>
+#include <innodb/tablespace/dict_sys_t_is_reserved.h>
 
 
 #include "buf0flu.h"
@@ -1161,13 +1162,6 @@ struct dict_sys_t {
     mutex_exit(&mutex);
   }
 
-  /** Check if a tablespace id is a reserved one
-  @param[in]	space	tablespace id to check
-  @return true if a reserved tablespace id, otherwise false */
-  static bool is_reserved(space_id_t space) {
-    return (space >= dict_sys_t_s_reserved_space_id ||
-            fsp_is_session_temporary(space));
-  }
 
   /** Set of ids of DD tables */
   static std::set<dd::Object_id> s_dd_table_ids;

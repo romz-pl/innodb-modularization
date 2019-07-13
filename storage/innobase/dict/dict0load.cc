@@ -1302,7 +1302,7 @@ space_id_t dict_check_sys_tablespaces(bool validate) {
                               << " because it could not be opened.";
     }
 
-    if (!dict_sys_t::is_reserved(space_id)) {
+    if (!dict_sys_t_is_reserved(space_id)) {
       max_space_id = std::max(max_space_id, space_id);
     }
 
@@ -1537,7 +1537,7 @@ space_id_t dict_check_sys_tables(bool validate) {
       }
     }
 
-    if (!dict_sys_t::is_reserved(space_id)) {
+    if (!dict_sys_t_is_reserved(space_id)) {
       max_space_id = std::max(max_space_id, space_id);
     }
 

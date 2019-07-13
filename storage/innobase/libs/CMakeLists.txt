@@ -10,6 +10,7 @@ add_subdirectory( compiler_hints )
 add_subdirectory( counter )
 
 add_subdirectory( error )
+add_subdirectory( enum )
 
 add_subdirectory( formatting )
 
