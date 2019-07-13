@@ -4,6 +4,7 @@
 #include <innodb/sync_latch/LatchCounter.h>
 #include <innodb/sync_latch/latch_id_t.h>
 #include <innodb/sync_latch/latch_level_t.h>
+#include <innodb/pfs/mysql_pfs_key_t.h>
 
 #ifndef UNIV_LIBRARY
 

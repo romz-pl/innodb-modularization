@@ -2,6 +2,7 @@
 
 #include <innodb/univ/univ.h>
 #include <innodb/sync_latch/sync_latch_get_meta.h>
+#include <innodb/pfs/mysql_pfs_key_t.h>
 
 #ifndef UNIV_LIBRARY
 #ifdef UNIV_PFS_MUTEX

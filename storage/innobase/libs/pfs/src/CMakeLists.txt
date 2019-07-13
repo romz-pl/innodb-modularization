@@ -1,9 +1,7 @@
-set( LIB_NAME sync_os )
+set( LIB_NAME pfs )
 
 add_library( ${LIB_NAME} STATIC
-    OSMutex.cpp
-    pfs.cpp
-    sys_mutex_t.cpp
+    mysql_pfs_key_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -17,8 +15,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    logger
-    pfs
+    univ
     PRIVATE
 )
 

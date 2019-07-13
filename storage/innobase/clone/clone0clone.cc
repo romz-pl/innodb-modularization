@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/logger/warn.h>
-#include <innodb/io/innodb_clone_file_key.h>
+#include <innodb/io/pfs.h>
 
 #include "clone0clone.h"
 

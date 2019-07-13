@@ -55,9 +55,9 @@ The tablespace memory cache */
 #include <innodb/io/os_has_said_disk_full.h>
 #include <innodb/io/IORequestRead.h>
 #include <innodb/io/IORequestWrite.h>
-#include <innodb/io/innodb_log_file_key.h>
-#include <innodb/io/innodb_data_file_key.h>
-#include <innodb/io/innodb_temp_file_key.h>
+#include <innodb/io/pfs.h>
+#include <innodb/io/pfs.h>
+#include <innodb/io/pfs.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/ioasync/os_file_set_size.h>
 #include <innodb/ioasync/os_aio_func.h>
@@ -248,40 +248,7 @@ because of the race condition below. */
   return (fil_validate());
 }
 
-/** Validate a shard */
-void Fil_shard::validate() const {
-  mutex_acquire();
 
-  size_t n_open = 0;
-
-  for (auto elem : m_spaces) {
-    page_no_t size = 0;
-    auto space = elem.second;
-
-    for (const auto &file : space->files) {
-      ut_a(file.is_open || !file.n_pending);
-
-      if (file.is_open) {
-        ++n_open;
-      }
-
-      size += file.size;
-    }
-
-    ut_a(space->size == size);
-  }
-
-  UT_LIST_CHECK(m_LRU);
-
-  for (auto file = UT_LIST_GET_FIRST(m_LRU); file != nullptr;
-       file = UT_LIST_GET_NEXT(LRU, file)) {
-    ut_a(file->is_open);
-    ut_a(file->n_pending == 0);
-    ut_a(fil_system->space_belongs_in_LRU(file->space));
-  }
-
-  mutex_release();
-}
 
 /** Checks the consistency of the tablespace cache.
 @return true if ok */

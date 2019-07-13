@@ -33,7 +33,7 @@
 
 #include <gtest/gtest.h>
 
-#include <innodb/io/innodb_log_file_key.h>
+#include <innodb/io/pfs.h>
 #include <innodb/io/srv_is_being_started.h>
 
 #include "clone0api.h" /* clone_init(), clone_free() */

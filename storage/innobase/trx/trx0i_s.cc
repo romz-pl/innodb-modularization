@@ -43,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include <innodb/time/ut_time_us.h>
+#include <innodb/sync_os/pfs.h>
 
 #include <sql_class.h>
 #include <stdio.h>

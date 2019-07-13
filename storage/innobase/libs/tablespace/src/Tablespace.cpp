@@ -1,7 +1,7 @@
 #include <innodb/tablespace/Tablespace.h>
 
 #include <innodb/logger/info.h>
-#include <innodb/io/innodb_data_file_key.h>
+#include <innodb/io/pfs.h>
 #include <innodb/io/os_file_delete_if_exists.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/page/univ_page_size.h>

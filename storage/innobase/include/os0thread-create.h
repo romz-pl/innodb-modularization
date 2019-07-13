@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/logger/warn.h>
+#include <innodb/sync_os/pfs.h>
 
 
 #include "sync0sync.h"

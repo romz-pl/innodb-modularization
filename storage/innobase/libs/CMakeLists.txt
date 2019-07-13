@@ -27,6 +27,7 @@ add_subdirectory( memory_check )
 add_subdirectory( monitor )
 
 add_subdirectory( page )
+add_subdirectory( pfs )
 add_subdirectory( print )
 
 add_subdirectory( random )

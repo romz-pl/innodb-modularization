@@ -116,11 +116,11 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    bit
     enum
     io
     ioasync
     memory
-    bit
     string
     sync_rw
     PRIVATE

@@ -29,7 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
-#include <innodb/io/innodb_clone_file_key.h>
+#include <innodb/io/pfs.h>
 #include <innodb/ioasync/os_file_set_size.h>
 
 #include "clone0clone.h"

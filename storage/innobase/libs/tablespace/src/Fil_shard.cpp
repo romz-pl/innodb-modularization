@@ -1,5 +1,6 @@
 #include <innodb/tablespace/Fil_shard.h>
 
+#include <innodb/allocator/ut_zalloc_nokey.h>
 #include <innodb/align/ut_align.h>
 #include <innodb/allocator/ut_free.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
@@ -8,8 +9,8 @@
 #include <innodb/io/IORequest.h>
 #include <innodb/io/IORequestRead.h>
 #include <innodb/io/access_type.h>
-#include <innodb/io/innodb_data_file_key.h>
-#include <innodb/io/innodb_log_file_key.h>
+#include <innodb/io/pfs.h>
+#include <innodb/io/pfs.h>
 #include <innodb/io/os_file_close.h>
 #include <innodb/io/os_file_create.h>
 #include <innodb/io/os_file_create_simple_no_error_handling.h>
@@ -74,6 +75,45 @@ std::atomic_size_t Fil_shard::s_n_open;
 
 /** Slot reserved for opening a file. */
 std::atomic_size_t Fil_shard::s_open_slot;
+
+
+#ifdef UNIV_DEBUG
+/** Validate a shard */
+void Fil_shard::validate() const {
+  mutex_acquire();
+
+  size_t n_open = 0;
+
+  for (auto elem : m_spaces) {
+    page_no_t size = 0;
+    auto space = elem.second;
+
+    for (const auto &file : space->files) {
+      ut_a(file.is_open || !file.n_pending);
+
+      if (file.is_open) {
+        ++n_open;
+      }
+
+      size += file.size;
+    }
+
+    ut_a(space->size == size);
+  }
+
+  UT_LIST_CHECK(m_LRU);
+
+  for (auto file = UT_LIST_GET_FIRST(m_LRU); file != nullptr;
+       file = UT_LIST_GET_NEXT(LRU, file)) {
+    ut_a(file->is_open);
+    ut_a(file->n_pending == 0);
+    ut_a(fil_system->space_belongs_in_LRU(file->space));
+  }
+
+  mutex_release();
+}
+
+#endif /* UNIV_DEBUG */
 
 /** Constructor
 @param[in]	shard_id	Shard ID  */

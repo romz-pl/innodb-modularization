@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <my_aes.h>
 
 #include <innodb/logger/info.h>
-#include <innodb/io/innodb_data_file_key.h>
+#include <innodb/io/pfs.h>
 
 #include "os0file.h"
 #include "dict0dd.h"

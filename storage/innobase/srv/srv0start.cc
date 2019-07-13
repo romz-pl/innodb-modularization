@@ -55,8 +55,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/MUTEX_TYPE.h>
 #include <innodb/buffer/buf_pool_get_curr_size.h>
 #include <innodb/io/os_has_said_disk_full.h>
-#include <innodb/io/innodb_log_file_key.h>
-#include <innodb/io/innodb_data_file_key.h>
+#include <innodb/io/pfs.h>
+#include <innodb/io/pfs.h>
 #include <innodb/io/srv_is_being_started.h>
 #include <innodb/ioasync/os_aio_all_slots_free.h>
 #include <innodb/ioasync/os_file_set_size.h>

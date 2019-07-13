@@ -22,11 +22,6 @@ add_library( ${LIB_NAME} STATIC
     create_purpose.cpp
     create_type.cpp
     ib_file_suffix.cpp
-    innodb_arch_file_key.cpp
-    innodb_clone_file_key.cpp
-    innodb_data_file_key.cpp
-    innodb_log_file_key.cpp
-    innodb_temp_file_key.cpp
     macros.cpp
     meb_free_block_cache.cpp
     os_alloc_block.cpp
@@ -123,6 +118,7 @@ add_library( ${LIB_NAME} STATIC
     os_n_pending_reads.cpp
     os_n_pending_writes.cpp
     os_offset_t.cpp
+    pfs.cpp
     pfs_os_file_close_func.cpp
     pfs_os_file_copy_func.cpp
     pfs_os_file_create_func.cpp
