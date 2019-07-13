@@ -39,6 +39,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/io/pfs.h>
+#include <innodb/io/os_file_write.h>
+#include <innodb/io/os_file_read.h>
+#include <innodb/io/os_file_delete.h>
+#include <innodb/io/os_file_copy.h>
+#include <innodb/io/os_file_create.h>
 
 #include "arch0page.h"
 #include "arch0recv.h"

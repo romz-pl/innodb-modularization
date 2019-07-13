@@ -148,6 +148,8 @@ add_library( ${LIB_NAME} STATIC
     srv_unix_file_flush_method.cpp
     srv_unix_flush_t.cpp
     srv_use_native_aio.cpp
+    os_file_create_tmpfile.cpp
+    os_file_decompress_page.cpp
 
 )
 
@@ -167,6 +169,8 @@ target_link_libraries(
     monitor
     page
     sync_mutex
+    ${ZLIB_LIBRARY}
+    ${LZ4_LIBRARY}
     PRIVATE
 )
 

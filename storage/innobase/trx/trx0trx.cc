@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/io/srv_is_being_started.h>
+#include <innodb/io/os_file_read_string.h>
 
 #include <sys/types.h>
 #include <time.h>

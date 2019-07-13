@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/buffer/buf_pool_get_curr_size.h>
 #include <innodb/io/pfs.h>
+#include <innodb/io/os_file_create_tmpfile.h>
+#include <innodb/io/os_file_delete_if_exists.h>
 
 #include "mysql/components/services/log_builtins.h"
 

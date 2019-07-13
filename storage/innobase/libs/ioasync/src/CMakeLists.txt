@@ -36,6 +36,7 @@ add_library( ${LIB_NAME} STATIC
     os_aio_print_pending_io.cpp
     os_aio.cpp
     os_file_set_size.cpp
+    os_aio_validate_skip.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

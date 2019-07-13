@@ -26,6 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/info.h>
 #include <innodb/io/pfs.h>
+#include <innodb/io/os_file_delete_if_exists.h>
 
 #include "buf0lru.h"
 #include "srv0tmp.h"

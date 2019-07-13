@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/io/os_file_delete_if_exists.h>
+
 #include <errno.h>
 #include <my_aes.h>
 

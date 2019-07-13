@@ -33,6 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/io/pfs.h>
 #include <innodb/tablespace/Datafile.h>
+#include <innodb/io/os_file_read_no_error_handling.h>
+#include <innodb/io/os_file_read.h>
+#include <innodb/io/os_file_write.h>
+#include <innodb/io/os_file_create.h>
+#include <innodb/io/os_file_create_simple_no_error_handling.h>
 
 #include "ha_prototypes.h"
 

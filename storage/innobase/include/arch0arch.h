@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_mutex/mutex_exit.h>
 #include <innodb/sync_mutex/mutex_enter.h>
+#include <innodb/io/os_file_flush.h>
 
 #include <mysql/components/services/page_track_service.h>
 #include "log0log.h"

@@ -45,6 +45,9 @@ external tools. */
 #include "page0page.h"
 #include "rem0rec.h"
 
+static_assert(DATA_TRX_ID_LEN <= 6, "COMPRESSION_ALGORITHM will not fit!");
+
+
 /* Enable some extra debugging output.  This code can be enabled
 independently of any UNIV_ debugging conditions. */
 #if defined UNIV_DEBUG || defined UNIV_ZIP_DEBUG

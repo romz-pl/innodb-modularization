@@ -33,6 +33,10 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/io/os_file_create_simple_no_error_handling.h>
+#include <innodb/io/os_file_create.h>
+#include <innodb/io/os_file_read.h>
+#include <innodb/io/os_file_flush.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
 #include <innodb/formatting/hex.h>
@@ -70,6 +74,10 @@ The tablespace memory cache */
 #include <innodb/tablespace/srv_sys_space.h>
 #include <innodb/tablespace/fil_space_get.h>
 #include <innodb/tablespace/fil_write_zeros.h>
+#include <innodb/io/os_file_delete_if_exists.h>
+#include <innodb/io/os_file_delete.h>
+#include <innodb/io/os_file_rename.h>
+#include <innodb/io/os_file_write.h>
 
 #include "os0file.h"
 #include "btr0btr.h"
@@ -134,9 +142,7 @@ The tablespace memory cache */
 
 
 
-#ifdef UNIV_PFS_IO
-mysql_pfs_key_t innodb_tablespace_open_file_key;
-#endif /* UNIV_PFS_IO */
+
 
 
 #ifdef UNIV_HOTBACKUP

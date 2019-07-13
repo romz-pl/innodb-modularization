@@ -26,5 +26,9 @@ extern mysql_pfs_key_t innodb_log_file_key;
 extern mysql_pfs_key_t innodb_temp_file_key;
 
 
+/* Keys to register InnoDB I/O with performance schema */
+extern mysql_pfs_key_t innodb_tablespace_open_file_key;
+
+
 #endif
 

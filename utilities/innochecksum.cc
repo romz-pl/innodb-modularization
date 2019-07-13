@@ -76,6 +76,10 @@ The parts not included are excluded by #ifndef UNIV_INNOCHECKSUM. */
 #include "storage/innobase/include/trx0undo.h" /* TRX_UNDO_* */
 #include "storage/innobase/include/ut0crc32.h" /* ut_crc32_init() */
 
+
+dberr_t os_file_decompress_page(bool dblwr_recover, byte *src, byte *dst,
+                                ulint dst_len);
+
 /* Global variables */
 static bool verbose;
 static bool just_count;

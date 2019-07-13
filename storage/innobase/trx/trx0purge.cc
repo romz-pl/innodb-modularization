@@ -33,12 +33,19 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/io/os_file_create_simple_no_error_handling.h>
+#include <innodb/io/os_file_create.h>
 #include <innodb/logger/info.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/time/ut_time_us.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_low.h>
 #include <innodb/io/pfs.h>
+#include <innodb/io/os_file_delete_if_exists.h>
+#include <innodb/io/os_file_write.h>
+#include <innodb/io/os_file_flush.h>
+#include <innodb/io/os_file_read.h>
+#include <innodb/io/os_file_delete.h>
 
 #include "os0file.h"
 #include "clone0api.h"

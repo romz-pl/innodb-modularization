@@ -1,8 +1,9 @@
 #include <innodb/io/Dir_Walker.h>
 
-#ifndef _WIN32
-
 #include <innodb/logger/info.h>
+#include <innodb/io/os_file_type_t.h>
+#include <innodb/io/os_file_status.h>
+
 #include <sys/types.h>
 #include <dirent.h>
 #include <stack>
@@ -71,5 +72,22 @@ void Dir_Walker::walk_posix(const Path &basedir, bool recursive, Function &&f) {
 }
 
 
+/** Check if the path is a directory. The file/directory must exist.
+@param[in]	path		The path to check
+@return true if it is a directory */
+bool Dir_Walker::is_directory(const Path &path) {
+  os_file_type_t type;
+  bool exists;
 
-#endif
+  if (os_file_status(path.c_str(), &exists, &type)) {
+    ut_ad(exists);
+    ut_ad(type != OS_FILE_TYPE_MISSING);
+
+    return (type == OS_FILE_TYPE_DIR);
+  }
+
+  ut_ad(exists || type == OS_FILE_TYPE_FAILED);
+  ut_ad(type != OS_FILE_TYPE_MISSING);
+
+  return (false);
+}

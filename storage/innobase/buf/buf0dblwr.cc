@@ -42,7 +42,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/IORequestWrite.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
-
+#include <innodb/io/os_file_read.h>
+#include <innodb/io/os_file_write.h>
+#include <innodb/io/os_file_flush.h>
 
 #include "buf0buf.h"
 #include "buf/buf.h"

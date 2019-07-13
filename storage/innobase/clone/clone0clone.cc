@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/logger/warn.h>
 #include <innodb/io/pfs.h>
+#include <innodb/io/os_file_delete.h>
+#include <innodb/io/os_file_create.h>
 
 #include "clone0clone.h"
 

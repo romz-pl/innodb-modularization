@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_from_array.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/io/os_file_create_tmpfile.h>
 
 #include <mysql/service_thd_engine_lock.h>
 #include <sys/types.h>

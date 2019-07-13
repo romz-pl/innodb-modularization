@@ -50,6 +50,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/io/os_file_create.h>
+#include <innodb/io/os_file_create_tmpfile.h>
+#include <innodb/io/os_file_delete_if_exists.h>
+#include <innodb/io/os_file_read_no_error_handling.h>
+#include <innodb/io/os_file_rename.h>
+#include <innodb/io/os_file_delete.h>
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/sync_mutex/MUTEX_TYPE.h>

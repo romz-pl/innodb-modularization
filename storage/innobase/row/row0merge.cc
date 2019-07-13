@@ -42,6 +42,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_get_waiters.h>
 #include <innodb/io/pfs.h>
 #include <innodb/tablespace/Datafile.h>
+#include <innodb/io/os_file_write_int_fd.h>
+#include <innodb/io/os_file_read_no_error_handling_int_fd.h>
 
 #include "os0file.h"
 #include <sql_class.h>
@@ -68,6 +70,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_dbug.h"
 #include "sql/table.h"
+
+char *innobase_mysql_tmpdir();
+int innobase_mysql_tmpfile(const char *path);
 
 /* Ignore posix_fadvise() on those platforms where it does not exist */
 #if defined _WIN32
