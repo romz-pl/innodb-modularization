@@ -270,96 +270,6 @@ bool fil_validate() { return (fil_system->validate()); }
 
 
 
-
-
-/** Reads data from a space to a buffer. Remember that the possible incomplete
-blocks at the end of file are ignored: they are not taken into account when
-calculating the byte offset within a space.
-@param[in]	page_id		page id
-@param[in]	page_size	page size
-@param[in]	byte_offset	remainder of offset in bytes; in aio this
-must be divisible by the OS block size
-@param[in]	len		how many bytes to read; this must not cross a
-file boundary; in aio this must be a block size multiple
-@param[in,out]	buf		buffer where to store data read; in aio this
-must be appropriately aligned
-@return DB_SUCCESS, or DB_TABLESPACE_DELETED if we are trying to do
-i/o on a tablespace which does not exist */
-static dberr_t fil_read(const page_id_t &page_id, const page_size_t &page_size,
-                        ulint byte_offset, ulint len, void *buf) {
-  return (fil_io(IORequestRead, true, page_id, page_size, byte_offset, len, buf,
-                 nullptr));
-}
-
-/** Writes data to a space from a buffer. Remember that the possible incomplete
-blocks at the end of file are ignored: they are not taken into account when
-calculating the byte offset within a space.
-@param[in]	page_id		page id
-@param[in]	page_size	page size
-@param[in]	byte_offset	remainder of offset in bytes; in aio this
-must be divisible by the OS block size
-@param[in]	len		how many bytes to write; this must not cross
-a file boundary; in aio this must be a block size multiple
-@param[in]	buf		buffer from which to write; in aio this must
-be appropriately aligned
-@return DB_SUCCESS, or DB_TABLESPACE_DELETED if we are trying to do
-        I/O on a tablespace which does not exist */
-static dberr_t fil_write(const page_id_t &page_id, const page_size_t &page_size,
-                         ulint byte_offset, ulint len, void *buf) {
-  ut_ad(!srv_read_only_mode);
-
-  return (fil_io(IORequestWrite, true, page_id, page_size, byte_offset, len,
-                 buf, nullptr));
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/** Frees a space object from the tablespace memory cache.
-Closes a tablespaces' files but does not delete them.
-There must not be any pending i/o's or flushes on the files.
-@param[in]	space_id	Tablespace ID
-@param[in]	x_latched	Whether the caller holds X-mode space->latch
-@return true if success */
-static bool fil_space_free(space_id_t space_id, bool x_latched) {
-  ut_ad(space_id != TRX_SYS_SPACE);
-
-  auto shard = fil_system->shard_by_id(space_id);
-  auto space = shard->space_free(space_id);
-
-  if (space == nullptr) {
-    return (false);
-  }
-
-  if (x_latched) {
-    rw_lock_x_unlock(&space->latch);
-  }
-
-  Fil_shard::space_free_low(space);
-  ut_a(space == nullptr);
-
-  return (true);
-}
-
 /** Create a space memory object and put it to the fil_system hash table.
 The tablespace name is independent from the tablespace file-name.
 Error messages are issued to the server log.
@@ -514,35 +424,6 @@ dberr_t Fil_iterator::iterate(bool include_log, Function &&f) {
 }
 
 
-
-/** Write the flushed LSN to the page header of the first page in the
-system tablespace.
-@param[in]	lsn	flushed LSN
-@return DB_SUCCESS or error number */
-dberr_t fil_write_flushed_lsn(lsn_t lsn) {
-  byte *buf1;
-  byte *buf;
-  dberr_t err;
-
-  buf1 = static_cast<byte *>(ut_malloc_nokey(2 * UNIV_PAGE_SIZE));
-  buf = static_cast<byte *>(ut_align(buf1, UNIV_PAGE_SIZE));
-
-  const page_id_t page_id(TRX_SYS_SPACE, 0);
-
-  err = fil_read(page_id, univ_page_size, 0, univ_page_size.physical(), buf);
-
-  if (err == DB_SUCCESS) {
-    mach_write_to_8(buf + FIL_PAGE_FILE_FLUSH_LSN, lsn);
-
-    err = fil_write(page_id, univ_page_size, 0, univ_page_size.physical(), buf);
-
-    fil_system->flush_file_spaces(to_int(FIL_TYPE_TABLESPACE));
-  }
-
-  ut_free(buf1);
-
-  return (err);
-}
 
 
 
@@ -917,80 +798,6 @@ bool Fil_shard::space_truncate(space_id_t space_id, page_no_t size_in_pages) {
 
 
 
-/** Truncate the tablespace to needed size with a new space_id.
-@param[in]  old_space_id   Tablespace ID to truncate
-@param[in]  new_space_id   Tablespace ID to for the new file
-@param[in]  size_in_pages  Truncate size.
-@return true if truncate was successful. */
-bool fil_replace_tablespace(space_id_t old_space_id, space_id_t new_space_id,
-                            page_no_t size_in_pages) {
-  fil_space_t *space = fil_space_get(old_space_id);
-  std::string space_name(space->name);
-  std::string file_name(space->files.front().name);
-  bool is_encrypted = FSP_FLAGS_GET_ENCRYPTION(space->flags);
-
-  /* Delete the old file and space object. */
-  dberr_t err = fil_delete_tablespace(old_space_id, BUF_REMOVE_ALL_NO_WRITE);
-  if (err != DB_SUCCESS) {
-    return (false);
-  }
-
-  /* Create the new one. */
-  bool success;
-  pfs_os_file_t fh = os_file_create(
-      innodb_data_file_key, file_name.c_str(),
-      srv_read_only_mode ? OS_FILE_OPEN : OS_FILE_CREATE, OS_FILE_NORMAL,
-      OS_DATA_FILE, srv_read_only_mode, &success);
-  if (!success) {
-    ib::error(ER_IB_MSG_1214, space_name.c_str(), "during truncate");
-    return (success);
-  }
-
-  /* Now write it full of zeros */
-  success = os_file_set_size(file_name.c_str(), fh, 0,
-                             size_in_pages << UNIV_PAGE_SIZE_SHIFT,
-                             srv_read_only_mode, true);
-  if (!success) {
-    ib::info(ER_IB_MSG_1074, file_name.c_str());
-    return (success);
-  }
-
-  os_file_close(fh);
-
-  uint32_t flags =
-      fsp_flags_init(univ_page_size, false, false, false, false, is_encrypted);
-
-  /* Delete the fil_space_t object for the new_space_id if it exists. */
-  if (fil_space_get(new_space_id) != nullptr) {
-    fil_space_free(new_space_id, false);
-  }
-
-  space = fil_space_create(space_name.c_str(), new_space_id, flags,
-                           FIL_TYPE_TABLESPACE);
-  if (space == nullptr) {
-    ib::error(ER_IB_MSG_1082, space_name.c_str());
-    return (false);
-  }
-
-  page_no_t n_pages = SRV_UNDO_TABLESPACE_SIZE_IN_PAGES;
-#if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
-  bool atomic_write = false;
-  if (!srv_use_doublewrite_buf) {
-    atomic_write = fil_fusionio_enable_atomic_write(fh);
-  }
-#else
-  bool atomic_write = false;
-#endif /* !NO_FALLOCATE && UNIV_LINUX */
-
-  char *fn =
-      fil_node_create(file_name.c_str(), n_pages, space, false, atomic_write);
-  if (fn == nullptr) {
-    ib::error(ER_IB_MSG_1082, space_name.c_str());
-    return (false);
-  }
-
-  return (true);
-}
 
 #ifdef UNIV_DEBUG
 /** Increase redo skipped count for a tablespace.
@@ -1116,32 +923,6 @@ static void fil_name_write_rename(space_id_t space_id, const char *old_name,
 
 
 
-/** Test if a tablespace file can be renamed to a new filepath by checking
-if that the old filepath exists and the new filepath does not exist.
-@param[in]	space_id	tablespace id
-@param[in]	old_path	old filepath
-@param[in]	new_path	new filepath
-@param[in]	is_discarded	whether the tablespace is discarded
-@return innodb error code */
-dberr_t fil_rename_tablespace_check(space_id_t space_id, const char *old_path,
-                                    const char *new_path, bool is_discarded) {
-  bool exists = false;
-  os_file_type_t ftype;
-
-  if (!is_discarded && os_file_status(old_path, &exists, &ftype) && !exists) {
-    ib::error(ER_IB_MSG_293, old_path, new_path, ulong{space_id});
-    return (DB_TABLESPACE_NOT_FOUND);
-  }
-
-  exists = false;
-
-  if (!os_file_status(new_path, &exists, &ftype) || exists) {
-    ib::error(ER_IB_MSG_294, old_path, new_path, ulong{space_id});
-    return (DB_TABLESPACE_EXISTS);
-  }
-
-  return (DB_SUCCESS);
-}
 
 /** Rename a single-table tablespace.
 The tablespace must exist in the memory cache.
@@ -2413,47 +2194,12 @@ bool Fil_shard::space_check_exists(space_id_t space_id, const char *name,
   return (false);
 }
 
-/** Returns true if a matching tablespace exists in the InnoDB tablespace
-memory cache.
-@param[in]	space_id	Tablespace ID
-@param[in]	name		Tablespace name used in space_create().
-@param[in]	print_err	Print detailed error information to the
-                                error log if a matching tablespace is
-                                not found from memory.
-@param[in]	adjust_space	Whether to adjust space id on mismatch
-@param[in]	heap		Heap memory
-@param[in]	table_id	table ID
-@return true if a matching tablespace exists in the memory cache */
-bool fil_space_exists_in_mem(space_id_t space_id, const char *name,
-                             bool print_err, bool adjust_space,
-                             mem_heap_t *heap, table_id_t table_id) {
-  auto shard = fil_system->shard_by_id(space_id);
 
-  return (shard->space_check_exists(space_id, name, print_err, adjust_space,
-                                    heap, table_id));
-}
 #endif /* !UNIV_HOTBACKUP */
 
-/** Return the space ID based on the tablespace name.
-The tablespace must be found in the tablespace memory cache.
-@param[in]	name		Tablespace name
-@return space ID if tablespace found, SPACE_UNKNOWN if space not. */
-space_id_t fil_space_get_id_by_name(const char *name) {
-  auto space = fil_system->get_space_by_name(name);
-
-  return ((space == nullptr) ? SPACE_UNKNOWN : space->id);
-}
 
 
-/** Try to extend a tablespace if it is smaller than the specified size.
-@param[in,out]	space	tablespace
-@param[in]	size	desired size in pages
-@return whether the tablespace is at least as big as requested */
-bool fil_space_extend(fil_space_t *space, page_no_t size) {
-  auto shard = fil_system->shard_by_id(space->id);
 
-  return (shard->space_extend(space, size));
-}
 
 #ifdef UNIV_HOTBACKUP
 /** Extends all tablespaces to the size stored in the space header. During the
@@ -3008,69 +2754,10 @@ static void meb_tablespace_redo_delete(const page_id_t &page_id,
 
 /*========== RESERVE FREE EXTENTS (for a B-tree split, for example) ===*/
 
-/** Tries to reserve free extents in a file space.
-@param[in]	space_id	Tablespace ID
-@param[in]	n_free_now	Number of free extents now
-@param[in]	n_to_reserve	How many one wants to reserve
-@return true if succeed */
-bool fil_space_reserve_free_extents(space_id_t space_id, ulint n_free_now,
-                                    ulint n_to_reserve) {
-  auto shard = fil_system->shard_by_id(space_id);
 
-  shard->mutex_acquire();
 
-  fil_space_t *space = shard->get_space_by_id(space_id);
 
-  bool success;
 
-  if (space->n_reserved_extents + n_to_reserve > n_free_now) {
-    success = false;
-  } else {
-    ut_a(n_to_reserve < std::numeric_limits<uint32_t>::max());
-    space->n_reserved_extents += (uint32_t)n_to_reserve;
-    success = true;
-  }
-
-  shard->mutex_release();
-
-  return (success);
-}
-
-/** Releases free extents in a file space.
-@param[in]	space_id	Tablespace ID
-@param[in]	n_reserved	How many were reserved */
-void fil_space_release_free_extents(space_id_t space_id, ulint n_reserved) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->get_space_by_id(space_id);
-
-  ut_a(n_reserved < std::numeric_limits<uint32_t>::max());
-  ut_a(space->n_reserved_extents >= n_reserved);
-
-  space->n_reserved_extents -= (uint32_t)n_reserved;
-
-  shard->mutex_release();
-}
-
-/** Gets the number of reserved extents. If the database is silent, this number
-should be zero.
-@param[in]	space_id	Tablespace ID
-@return the number of reserved extents */
-ulint fil_space_get_n_reserved_extents(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->get_space_by_id(space_id);
-
-  ulint n = space->n_reserved_extents;
-
-  shard->mutex_release();
-
-  return (n);
-}
 
 /*============================ FILE I/O ================================*/
 
@@ -3700,30 +3387,7 @@ dberr_t Fil_shard::do_io(const IORequest &type, bool sync,
 }
 
 #ifndef UNIV_HOTBACKUP
-/** Read or write redo log data (synchronous buffered IO).
-@param[in]	type		IO context
-@param[in]	page_id		where to read or write
-@param[in]	page_size	page size
-@param[in]	byte_offset	remainder of offset in bytes
-@param[in]	len		this must not cross a file boundary;
-@param[in,out]	buf		buffer where to store read data or from where
-                                to write
-@retval DB_SUCCESS if all OK */
-dberr_t fil_redo_io(const IORequest &type, const page_id_t &page_id,
-                    const page_size_t &page_size, ulint byte_offset, ulint len,
-                    void *buf) {
-  ut_ad(type.is_log());
 
-  auto shard = fil_system->shard_by_id(page_id.space());
-#if defined(_WIN32) && defined(WIN_ASYNC_IO)
-  /* On Windows we always open the redo log file in AIO mode. ie. we
-  use the AIO API for the read/write even for sync IO. */
-  return (shard->do_io(type, true, page_id, page_size, byte_offset, len, buf,
-                       nullptr));
-#else
-  return (shard->do_redo_io(type, page_id, page_size, byte_offset, len, buf));
-#endif /* _WIN32  || WIN_ASYNC_IO*/
-}
 
 /** Waits for an AIO operation to complete. This function is used to write the
 handler for completed requests. The aio array of pending requests is divided
@@ -3785,31 +3449,7 @@ void fil_aio_wait(ulint segment) {
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Read or write data from a file.
-@param[in]	type		IO context
-@param[in]	sync		If true then do synchronous IO
-@param[in]	page_id		page id
-@param[in]	page_size	page size
-@param[in]	byte_offset	remainder of offset in bytes; in aio this
-                                must be divisible by the OS block size
-@param[in]	len		how many bytes to read or write; this must
-                                not cross a file boundary; in AIO this must
-                                be a block size multiple
-@param[in,out]	buf		buffer where to store read data or from where
-                                to write; in AIO this must be appropriately
-                                aligned
-@param[in]	message		message for AIO handler if !sync, else ignored
-@return error code
-@retval DB_SUCCESS on success
-@retval DB_TABLESPACE_DELETED if the tablespace does not exist */
-dberr_t fil_io(const IORequest &type, bool sync, const page_id_t &page_id,
-               const page_size_t &page_size, ulint byte_offset, ulint len,
-               void *buf, void *message) {
-  auto shard = fil_system->shard_by_id(page_id.space());
 
-  return (shard->do_io(type, sync, page_id, page_size, byte_offset, len, buf,
-                       message));
-}
 
 /** If the tablespace is on the unflushed list and there are no pending
 flushes then remove from the unflushed list.

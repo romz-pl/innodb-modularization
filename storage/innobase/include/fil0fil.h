@@ -34,6 +34,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define fil0fil_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/tablespace/fil_redo_io.h>
+#include <innodb/tablespace/fil_space_get_n_reserved_extents.h>
+#include <innodb/tablespace/fil_space_release_free_extents.h>
+#include <innodb/tablespace/fil_space_reserve_free_extents.h>
 #include <innodb/page/page_type_t.h>
 #include <innodb/io/Fil_path.h>
 #include <innodb/io/ib_file_suffix.h>
@@ -161,14 +166,20 @@ See https://msdn.microsoft.com/en-us/library/1ywe7hcy.aspx */
 #include <innodb/tablespace/fil_space_acquire.h>
 #include <innodb/tablespace/fil_set_max_space_id_if_bigger.h>
 #include <innodb/tablespace/fil_space_create.h>
-
+#include <innodb/tablespace/fil_write_flushed_lsn.h>
+#include <innodb/tablespace/fil_write_flushed_lsn.h>
+#include <innodb/tablespace/fil_io.h>
+#include <innodb/tablespace/fil_replace_tablespace.h>
+#include <innodb/tablespace/fil_read.h>
+#include <innodb/tablespace/fil_write.h>
+#include <innodb/tablespace/fil_space_free.h>
+#include <innodb/tablespace/fil_rename_tablespace_check.h>
+#include <innodb/tablespace/fil_space_exists_in_mem.h>
+#include <innodb/tablespace/fil_space_get_id_by_name.h>
+#include <innodb/tablespace/fil_space_extend.h>
 
 #ifndef UNIV_HOTBACKUP
-/** Write the flushed LSN to the page header of the first page in the
-system tablespace.
-@param[in]	lsn		Flushed LSN
-@return DB_SUCCESS or error number */
-dberr_t fil_write_flushed_lsn(lsn_t lsn) MY_ATTRIBUTE((warn_unused_result));
+
 
 #else /* !UNIV_HOTBACKUP */
 /** Extends all tablespaces to the size stored in the space header. During the
@@ -193,14 +204,7 @@ void meb_fil_name_process(const char *name, space_id_t space_id);
 
 
 
-/** Truncate the tablespace to needed size with a new space_id.
-@param[in]  old_space_id   Tablespace ID to truncate
-@param[in]  new_space_id   Tablespace ID to for the new file
-@param[in]  size_in_pages  Truncate size.
-@return true if truncate was successful. */
-bool fil_replace_tablespace(space_id_t old_space_id, space_id_t new_space_id,
-                            page_no_t size_in_pages)
-    MY_ATTRIBUTE((warn_unused_result));
+
 
 /** Closes a single-table tablespace. The tablespace must be cached in the
 memory cache. Free all pages used by the tablespace.
@@ -227,16 +231,7 @@ memory cache. Discarding is like deleting a tablespace, but
 dberr_t fil_discard_tablespace(space_id_t space_id)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Test if a tablespace file can be renamed to a new filepath by checking
-if that the old filepath exists and the new filepath does not exist.
-@param[in]	space_id	Tablespace ID
-@param[in]	old_path	Old filepath
-@param[in]	new_path	New filepath
-@param[in]	is_discarded	Whether the tablespace is discarded
-@return innodb error code */
-dberr_t fil_rename_tablespace_check(space_id_t space_id, const char *old_path,
-                                    const char *new_path, bool is_discarded)
-    MY_ATTRIBUTE((warn_unused_result));
+
 
 /** Rename a single-table tablespace.
 The tablespace must exist in the memory cache.
@@ -309,22 +304,7 @@ dberr_t fil_ibd_open(bool validate, fil_type_t purpose, space_id_t space_id,
                      const char *table_name, const char *path_in, bool strict,
                      bool old_space) MY_ATTRIBUTE((warn_unused_result));
 
-/** Returns true if a matching tablespace exists in the InnoDB tablespace
-memory cache.
-@param[in]	space_id	Tablespace ID
-@param[in]	name		Tablespace name used in
-                                fil_space_create().
-@param[in]	print_err	detailed error information to the
-                                error log if a matching tablespace is
-                                not found from memory.
-@param[in]	adjust_space	Whether to adjust spaceid on mismatch
-@param[in]	heap		Heap memory
-@param[in]	table_id	table id
-@return true if a matching tablespace exists in the memory cache */
-bool fil_space_exists_in_mem(space_id_t space_id, const char *name,
-                             bool print_err, bool adjust_space,
-                             mem_heap_t *heap, table_id_t table_id)
-    MY_ATTRIBUTE((warn_unused_result));
+
 
 /** Extends all tablespaces to the size stored in the space header. During the
 mysqlbackup --apply-log phase we extended the spaces on-demand so that log
@@ -332,67 +312,17 @@ records could be appllied, but that may have left spaces still too small
 compared to the size stored in the space header. */
 void fil_extend_tablespaces_to_stored_len();
 
-/** Try to extend a tablespace if it is smaller than the specified size.
-@param[in,out]	space		Tablespace ID
-@param[in]	size		desired size in pages
-@return whether the tablespace is at least as big as requested */
-bool fil_space_extend(fil_space_t *space, page_no_t size)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Tries to reserve free extents in a file space.
-@param[in]	space_id	Tablespace ID
-@param[in]	n_free_now	Number of free extents now
-@param[in]	n_to_reserve	How many one wants to reserve
-@return true if succeed */
-bool fil_space_reserve_free_extents(space_id_t space_id, ulint n_free_now,
-                                    ulint n_to_reserve)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Releases free extents in a file space.
-@param[in]	space_id	Tablespace ID
-@param[in]	n_reserved	How many were reserved */
-void fil_space_release_free_extents(space_id_t space_id, ulint n_reserved);
 
-/** Gets the number of reserved extents. If the database is silent, this
-number should be zero.
-@param[in]	space_id	Tablespace ID
-@return the number of reserved extents */
-ulint fil_space_get_n_reserved_extents(space_id_t space_id)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Read or write redo log data (synchronous buffered IO).
-@param[in]	type		IO context
-@param[in]	page_id		where to read or write
-@param[in]	page_size	page size
-@param[in]	byte_offset	remainder of offset in bytes
-@param[in]	len		this must not cross a file boundary;
-@param[in,out]	buf		buffer where to store read data or from where
-                                to write
-@retval DB_SUCCESS if all OK */
-dberr_t fil_redo_io(const IORequest &type, const page_id_t &page_id,
-                    const page_size_t &page_size, ulint byte_offset, ulint len,
-                    void *buf) MY_ATTRIBUTE((warn_unused_result));
 
-/** Read or write data.
-@param[in]	type		IO context
-@param[in]	sync		If true then do synchronous IO
-@param[in]	page_id		page id
-@param[in]	page_size	page size
-@param[in]	byte_offset	remainder of offset in bytes; in aio this
-                                must be divisible by the OS block size
-@param[in]	len		how many bytes to read or write; this must
-                                not cross a file boundary; in aio this must
-                                be a block size multiple
-@param[in,out]	buf		buffer where to store read data or from where
-                                to write; in aio this must be appropriately
-                                aligned
-@param[in]	message		message for aio handler if !sync, else ignored
-@return error code
-@retval DB_SUCCESS on success
-@retval DB_TABLESPACE_DELETED if the tablespace does not exist */
-dberr_t fil_io(const IORequest &type, bool sync, const page_id_t &page_id,
-               const page_size_t &page_size, ulint byte_offset, ulint len,
-               void *buf, void *message) MY_ATTRIBUTE((warn_unused_result));
+
+
+
+
+
+
 
 /** Waits for an aio operation to complete. This function is used to write the
 handler for completed requests. The aio array of pending requests is divided
@@ -589,13 +519,7 @@ bool fil_space_read_name_and_filepath(space_id_t space_id, char **name,
 char *fil_path_to_space_name(const char *filename)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Returns the space ID based on the tablespace name.
-The tablespace must be found in the tablespace memory cache.
-This call is made from external to this module, so the mutex is not owned.
-@param[in]	name		Tablespace name
-@return space ID if tablespace found, SPACE_UNKNOWN if space not. */
-space_id_t fil_space_get_id_by_name(const char *name)
-    MY_ATTRIBUTE((warn_unused_result));
+
 
 /** Check if swapping two .ibd files can be done without failure
 @param[in]	old_table	old table

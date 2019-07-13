@@ -38,6 +38,7 @@ add_library( ${LIB_NAME} STATIC
     fil_faddr_t.cpp
     fil_fusionio_enable_atomic_write.cpp
     fil_init.cpp
+    fil_io.cpp
     fil_load_status.cpp
     fil_n_file_opened.cpp
     fil_n_log_flushes.cpp
@@ -48,21 +49,32 @@ add_library( ${LIB_NAME} STATIC
     fil_node_t.cpp
     fil_open_log_and_system_tablespace_files.cpp
     fil_operation_t.cpp
+    fil_read.cpp
+    fil_redo_io.cpp
+    fil_rename_tablespace_check.cpp
+    fil_replace_tablespace.cpp
     fil_set_max_space_id_if_bigger.cpp
     fil_space_acquire.cpp
     fil_space_acquire_low.cpp
     fil_space_acquire_silent.cpp
     fil_space_close.cpp
     fil_space_create.cpp
+    fil_space_exists_in_mem.cpp
+    fil_space_extend.cpp
+    fil_space_free.cpp
     fil_space_get.cpp
     fil_space_get_first_path.cpp
     fil_space_get_flags.cpp
+    fil_space_get_id_by_name.cpp
     fil_space_get_latch.cpp
+    fil_space_get_n_reserved_extents.cpp
     fil_space_get_page_size.cpp
     fil_space_get_size.cpp
     fil_space_get_type.cpp
     fil_space_open.cpp
     fil_space_release.cpp
+    fil_space_release_free_extents.cpp
+    fil_space_reserve_free_extents.cpp
     fil_space_set_flags.cpp
     fil_space_set_imported.cpp
     fil_space_t.cpp
@@ -70,6 +82,8 @@ add_library( ${LIB_NAME} STATIC
     fil_system_open_fetch.cpp
     fil_truncate_tablespace.cpp
     fil_type_t.cpp
+    fil_write.cpp
+    fil_write_flushed_lsn.cpp
     fil_write_zeros.cpp
     flst_get_len.cpp
     fseg_header.cpp

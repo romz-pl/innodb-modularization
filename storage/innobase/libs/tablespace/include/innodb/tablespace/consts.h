@@ -453,3 +453,9 @@ The file segment header points to the inode describing the file segment. */
   10 /*!< Length of the file system \
      header, in bytes */
 /* @} */
+
+
+
+/** Default undo tablespace size in UNIV_PAGEs count (10MB). */
+constexpr page_no_t SRV_UNDO_TABLESPACE_SIZE_IN_PAGES =
+    ((1024 * 1024) * 10) / UNIV_PAGE_SIZE_DEF;
