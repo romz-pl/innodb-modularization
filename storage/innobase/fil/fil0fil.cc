@@ -259,9 +259,7 @@ bool Fil_system::validate() const {
 
   return (true);
 }
-/** Checks the consistency of the tablespace cache.
-@return true if ok */
-bool fil_validate() { return (fil_system->validate()); }
+
 #endif /* UNIV_DEBUG */
 
 
@@ -1180,32 +1178,9 @@ dberr_t Fil_shard::space_rename(space_id_t space_id, const char *old_path,
   return (success ? DB_SUCCESS : DB_ERROR);
 }
 
-/** Rename a single-table tablespace.
-The tablespace must exist in the memory cache.
-@param[in]	space_id	Tablespace ID
-@param[in]	old_path	Old file name
-@param[in]	new_name	New tablespace name in the schema/name format
-@param[in]	new_path_in	New file name, or nullptr if it is located
-                                in the normal data directory
-@return InnoDB error code */
-dberr_t fil_rename_tablespace(space_id_t space_id, const char *old_path,
-                              const char *new_name, const char *new_path_in) {
-  auto shard = fil_system->shard_by_id(space_id);
 
-  dberr_t err = shard->space_rename(space_id, old_path, new_name, new_path_in);
 
-  return (err);
-}
 
-/* Rename a tablespace.  Use the space_id to find the shard.
-@param[in]	space_id	tablespace ID
-@param[in]	old_name	old tablespace name
-@param[in]	new_name	new tablespace name
-@return DB_SUCCESS on success */
-dberr_t fil_rename_tablespace_by_id(space_id_t space_id, const char *old_name,
-                                    const char *new_name) {
-  return (fil_system->rename_tablespace_name(space_id, old_name, new_name));
-}
 
 /** Create a tablespace (an IBD or IBT) file
 @param[in]	space_id	Tablespace ID
@@ -1685,82 +1660,7 @@ static char *meb_make_ibbackup_old_name(const char *name) {
 }
 #endif /* UNIV_HOTBACKUP */
 
-/** Looks for a pre-existing fil_space_t with the given tablespace ID
-and, if found, returns the name and filepath in newly allocated buffers
-that the caller must free.
-@param[in]	space_id	The tablespace ID to search for.
-@param[out]	name		Name of the tablespace found.
-@param[out]	filepath	The filepath of the first datafile for the
-tablespace.
-@return true if tablespace is found, false if not. */
-bool fil_space_read_name_and_filepath(space_id_t space_id, char **name,
-                                      char **filepath) {
-  bool success = false;
 
-  *name = nullptr;
-  *filepath = nullptr;
-
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  fil_space_t *space = shard->get_space_by_id(space_id);
-
-  if (space != nullptr) {
-    *name = mem_strdup(space->name);
-
-    *filepath = mem_strdup(space->files.front().name);
-
-    success = true;
-  }
-
-  shard->mutex_release();
-
-  return (success);
-}
-
-/** Convert a file name to a tablespace name. Strip the file name
-prefix and suffix, leaving only databasename/tablename.
-@param[in]	filename	directory/databasename/tablename.ibd
-@return database/tablename string, to be freed with ut_free() */
-char *fil_path_to_space_name(const char *filename) {
-  std::string path{filename};
-  auto pos = path.find_last_of(Fil_path::SEPARATOR);
-
-  ut_a(pos != std::string::npos && !Fil_path::is_separator(path.back()));
-
-  std::string db_name = path.substr(0, pos);
-  std::string space_name = path.substr(pos + 1, path.length());
-
-  /* If it is a path such as a/b/c.ibd, ignore everything before 'b'. */
-  pos = db_name.find_last_of(Fil_path::SEPARATOR);
-
-  if (pos != std::string::npos) {
-    db_name = db_name.substr(pos + 1);
-  }
-
-  char *name;
-
-  if (Fil_path::has_suffix(IBD, space_name)) {
-    /* fil_space_t::name always uses '/' . */
-
-    path = db_name;
-    path.push_back('/');
-
-    /* Strip the ".ibd" suffix. */
-    path.append(space_name.substr(0, space_name.length() - 4));
-
-    name = mem_strdupl(path.c_str(), path.length());
-
-  } else {
-    /* Must have an "undo" prefix. */
-    ut_ad(space_name.find("undo") == 0);
-
-    name = mem_strdupl(space_name.c_str(), space_name.length());
-  }
-
-  return (name);
-}
 
 /** Open an ibd tablespace and add it to the InnoDB data structures.
 This is similar to fil_ibd_open() except that it is used while processing
@@ -3704,20 +3604,6 @@ void Fil_shard::space_flush(space_id_t space_id) {
   --space->n_pending_flushes;
 }
 
-/** Flushes to disk possible writes cached by the OS. If the space does
-not exist or is being dropped, does not do anything.
-@param[in]	space_id	File space ID (this can be a group of log files
-                                or a tablespace of the database) */
-void fil_flush(space_id_t space_id) {
-  auto shard = fil_system->shard_by_id(space_id);
-
-  shard->mutex_acquire();
-
-  /* Note: Will release and reacquire the Fil_shard::mutex. */
-  shard->space_flush(space_id);
-
-  shard->mutex_release();
-}
 
 /** Flush any pending writes to disk for the redo log. */
 void Fil_shard::flush_file_redo() {
@@ -3763,23 +3649,10 @@ void Fil_shard::flush_file_spaces(uint8_t purpose) {
 
 
 
-/** Flush to disk the writes in file spaces of the given type
-possibly cached by the OS.
-@param[in]     purpose FIL_TYPE_TABLESPACE or FIL_TYPE_LOG, can be ORred */
-void fil_flush_file_spaces(uint8_t purpose) {
-  fil_system->flush_file_spaces(purpose);
-}
 
-/** Flush to disk the writes in file spaces of the given type
-possibly cached by the OS. */
-void fil_flush_file_redo() { fil_system->flush_file_redo(); }
 
-/** Returns true if file address is undefined.
-@param[in]	addr		Address
-@return true if undefined */
-bool fil_addr_is_null(const fil_addr_t &addr) {
-  return (addr.page == FIL_NULL);
-}
+
+
 
 
 
@@ -4152,40 +4025,7 @@ dberr_t fil_tablespace_iterate(dict_table_t *table, ulint n_io_buffers,
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Set the tablespace table size.
-@param[in]	page	a page belonging to the tablespace */
-void PageCallback::set_page_size(const buf_frame_t *page) UNIV_NOTHROW {
-  m_page_size.copy_from(fsp_header_get_page_size(page));
-}
 
-/** Delete the tablespace file and any related files like .cfg.
-This should not be called for temporary tables.
-@param[in]	path		File path of the IBD tablespace
-@return true on success */
-bool fil_delete_file(const char *path) {
-  bool success = true;
-
-  /* Force a delete of any stale .ibd files that are lying around. */
-  success = os_file_delete_if_exists(innodb_data_file_key, path, nullptr);
-
-  char *cfg_filepath = Fil_path::make_cfg(path);
-
-  if (cfg_filepath != nullptr) {
-    os_file_delete_if_exists(innodb_data_file_key, cfg_filepath, nullptr);
-
-    ut_free(cfg_filepath);
-  }
-
-  char *cfp_filepath = Fil_path::make_cfp(path);
-
-  if (cfp_filepath != nullptr) {
-    os_file_delete_if_exists(innodb_data_file_key, cfp_filepath, nullptr);
-
-    ut_free(cfp_filepath);
-  }
-
-  return (success);
-}
 
 #ifndef UNIV_HOTBACKUP
 /** Check if swapping two .ibd files can be done without failure.
@@ -4497,12 +4337,9 @@ bool Fil_system::encryption_rotate_in_a_shard(Fil_shard *shard) {
 
 
 
-/** Rotate the tablespace keys by new master key.
-@return true if the re-encrypt succeeds */
-bool fil_encryption_rotate() { return (fil_system->encryption_rotate_all()); }
+
 
 #endif /* !UNIV_HOTBACKUP */
-
 
 /** @return true if the path exists and is a file . */
 os_file_type_t Fil_path::get_file_type(const std::string &path) {
@@ -4827,12 +4664,7 @@ dberr_t Fil_system::prepare_open_for_business(bool read_only_mode) {
   return (failed == 0 ? DB_SUCCESS : DB_ERROR);
 }
 
-/** Free the Tablespace_files instance.
-@param[in]	read_only_mode	true if InnoDB is started in read only mode.
-@return DB_SUCCESS if all OK */
-dberr_t fil_open_for_business(bool read_only_mode) {
-  return (fil_system->prepare_open_for_business(read_only_mode));
-}
+
 
 /** Replay a file rename operation for ddl replay.
 @param[in]	page_id		Space ID and first page number in the file
@@ -4890,12 +4722,7 @@ bool Fil_system::lookup_for_recovery(space_id_t space_id) {
   return (result.second != nullptr);
 }
 
-/** Lookup the tablespace ID.
-@param[in]	space_id		Tablespace ID to lookup
-@return true if the space ID is known. */
-bool fil_tablespace_lookup_for_recovery(space_id_t space_id) {
-  return (fil_system->lookup_for_recovery(space_id));
-}
+
 
 /** Open a tablespace that has a redo/DDL log record to apply.
 @param[in]	space_id		Tablespace ID
@@ -4935,12 +4762,7 @@ bool Fil_system::open_for_recovery(space_id_t space_id) {
   return (false);
 }
 
-/** Open a tablespace that has a redo log record to apply.
-@param[in]	space_id		Tablespace ID
-@return true if the open was successful */
-bool fil_tablespace_open_for_recovery(space_id_t space_id) {
-  return (fil_system->open_for_recovery(space_id));
-}
+
 
 /** Lookup the tablespace ID and return the path to the file. The filename
 is ignored when testing for equality. Only the path up to the file name is
@@ -5122,14 +4944,7 @@ bool Fil_system::check_missing_tablespaces() {
   return (missing);
 }
 
-/** This function should be called after recovery has completed.
-Check for tablespace files for which we did not see any MLOG_FILE_DELETE
-or MLOG_FILE_RENAME record. These could not be recovered
-@return true if there were some filenames missing for which we had to
-        ignore redo log records during the apply phase */
-bool fil_check_missing_tablespaces() {
-  return (fil_system->check_missing_tablespaces());
-}
+
 
 /** Redo a tablespace create.
 @param[in]	ptr		redo log record
@@ -5864,12 +5679,7 @@ dberr_t Tablespace_dirs::scan(const std::string &in_directories) {
   return (err);
 }
 
-/** Discover tablespaces by reading the header from .ibd files.
-@param[in]	directories	Directories to scan
-@return DB_SUCCESS if all goes well */
-dberr_t fil_scan_for_tablespaces(const std::string &directories) {
-  return (fil_system->scan(directories));
-}
+
 
 /** Callback to check tablespace size with space header size and extend.
 Caller must own the Fil_shard mutex that the file belongs to.
@@ -5918,36 +5728,11 @@ dberr_t fil_check_extend_space(fil_node_t *file) {
   return (err);
 }
 
-/** Check if a path is known to InnoDB.
-@param[in]	path		Path to check
-@return true if path is known to InnoDB */
-bool fil_check_path(const std::string &path) {
-  return (fil_system->check_path(path));
-}
 
-/** Get the list of directories that datafiles can reside in.
-@return the list of directories 'dir1;dir2;....;dirN' */
-std::string fil_get_dirs() { return (fil_system->get_dirs()); }
 
-/** Free the data structures required for recovery. */
-void fil_free_scanned_files() { fil_system->free_scanned_files(); }
 
-/** Update the tablespace name. Incase, the new name
-and old name are same, no update done.
-@param[in,out]	space		tablespace object on which name
-                                will be updated
-@param[in]	name		new name for tablespace */
-void fil_space_update_name(fil_space_t *space, const char *name) {
-  if (space == nullptr || name == nullptr || space->name == nullptr ||
-      strcmp(space->name, name) == 0) {
-    return;
-  }
 
-  dberr_t err = fil_rename_tablespace_by_id(space->id, space->name, name);
 
-  if (err != DB_SUCCESS) {
-    ib::warn(ER_IB_MSG_387) << "Tablespace rename '" << space->name << "' to"
-                            << " '" << name << "' failed!";
-  }
-}
+
+
 

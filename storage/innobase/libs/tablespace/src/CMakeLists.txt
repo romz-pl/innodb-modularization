@@ -13,6 +13,7 @@ add_library( ${LIB_NAME} STATIC
     Fil_system.cpp
     Filenames.cpp
     MySQL_datadir_path.cpp
+    PageCallback.cpp
     Scanned_files.cpp
     Space_Ids.cpp
     Space_id_set.cpp
@@ -27,16 +28,26 @@ add_library( ${LIB_NAME} STATIC
     device_t.cpp
     dict_sys_t_is_reserved.cpp
     encryption_op_type.cpp
+    fil_addr_is_null.cpp
     fil_addr_null.cpp
     fil_addr_t.cpp
     fil_assign_new_space_id.cpp
     fil_buffering_disabled.cpp
+    fil_check_missing_tablespaces.cpp
+    fil_check_path.cpp
     fil_close.cpp
     fil_close_all_files.cpp
     fil_close_log_files.cpp
+    fil_delete_file.cpp
     fil_delete_tablespace.cpp
+    fil_encryption_rotate.cpp
     fil_faddr_t.cpp
+    fil_flush.cpp
+    fil_flush_file_redo.cpp
+    fil_flush_file_spaces.cpp
+    fil_free_scanned_files.cpp
     fil_fusionio_enable_atomic_write.cpp
+    fil_get_dirs.cpp
     fil_init.cpp
     fil_io.cpp
     fil_load_status.cpp
@@ -47,12 +58,17 @@ add_library( ${LIB_NAME} STATIC
     fil_no_punch_hole.cpp
     fil_node_create.cpp
     fil_node_t.cpp
+    fil_open_for_business.cpp
     fil_open_log_and_system_tablespace_files.cpp
     fil_operation_t.cpp
+    fil_path_to_space_name.cpp
     fil_read.cpp
     fil_redo_io.cpp
+    fil_rename_tablespace.cpp
+    fil_rename_tablespace_by_id.cpp
     fil_rename_tablespace_check.cpp
     fil_replace_tablespace.cpp
+    fil_scan_for_tablespaces.cpp
     fil_set_max_space_id_if_bigger.cpp
     fil_space_acquire.cpp
     fil_space_acquire_low.cpp
@@ -70,18 +86,25 @@ add_library( ${LIB_NAME} STATIC
     fil_space_get_n_reserved_extents.cpp
     fil_space_get_page_size.cpp
     fil_space_get_size.cpp
+    fil_space_get_sys_space.cpp
     fil_space_get_type.cpp
     fil_space_open.cpp
+    fil_space_open_if_needed.cpp
+    fil_space_read_name_and_filepath.cpp
     fil_space_release.cpp
     fil_space_release_free_extents.cpp
     fil_space_reserve_free_extents.cpp
     fil_space_set_flags.cpp
     fil_space_set_imported.cpp
     fil_space_t.cpp
+    fil_space_update_name.cpp
     fil_system.cpp
     fil_system_open_fetch.cpp
+    fil_tablespace_lookup_for_recovery.cpp
+    fil_tablespace_open_for_recovery.cpp
     fil_truncate_tablespace.cpp
     fil_type_t.cpp
+    fil_validate.cpp
     fil_write.cpp
     fil_write_flushed_lsn.cpp
     fil_write_zeros.cpp

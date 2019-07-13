@@ -64,6 +64,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_init.h>
 #include <innodb/ioasync/os_aio_free.h>
 #include <innodb/tablespace/srv_sys_space.h>
+#include <innodb/tablespace/fil_scan_for_tablespaces.h>
+#include <innodb/tablespace/fil_check_missing_tablespaces.h>
 
 #include <zlib.h>
 #include "btr0btr.h"
