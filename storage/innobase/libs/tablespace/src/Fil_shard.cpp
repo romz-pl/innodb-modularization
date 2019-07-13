@@ -1,5 +1,14 @@
 #include <innodb/tablespace/Fil_shard.h>
 
+#include <innodb/tablespace/fsp_is_session_temporary.h>
+#include <innodb/tablespace/fsp_is_global_temporary.h>
+#include <innodb/tablespace/fsp_is_system_tablespace.h>
+#include <innodb/sync_os/pfs.h>
+#include <innodb/sync_event/os_event_wait_low.h>
+#include <innodb/io/os_file_flush.h>
+#include <innodb/sync_event/os_event_reset.h>
+#include <innodb/tablespace/fil_n_log_flushes.h>
+#include <innodb/tablespace/fil_n_pending_log_flushes.h>
 #include <innodb/allocator/ut_zalloc_nokey.h>
 #include <innodb/align/ut_align.h>
 #include <innodb/allocator/ut_free.h>
@@ -1674,5 +1683,368 @@ bool Fil_shard::mutex_acquire_and_get_space(space_id_t space_id,
   return (true);
 }
 
+
+
+/** If the tablespace is on the unflushed list and there are no pending
+flushes then remove from the unflushed list.
+@param[in,out]	space		Tablespace to remove */
+void Fil_shard::remove_from_unflushed_list(fil_space_t *space) {
+  ut_ad(mutex_owned());
+
+  if (space->is_in_unflushed_spaces && space_is_flushed(space)) {
+    space->is_in_unflushed_spaces = false;
+
+    UT_LIST_REMOVE(m_unflushed_spaces, space);
+  }
+}
+
+/** Flushes to disk possible writes cached by the OS. */
+void Fil_shard::redo_space_flush() {
+  ut_ad(mutex_owned());
+  ut_ad(m_id == REDO_SHARD);
+
+  fil_space_t *space = fil_space_t::s_redo_space;
+
+  if (space == nullptr) {
+    space = get_space_by_id(dict_sys_t_s_log_space_first_id);
+  } else {
+    ut_ad(space == get_space_by_id(dict_sys_t_s_log_space_first_id));
+  }
+
+  ut_a(!space->stop_new_ops);
+  ut_a(space->purpose == FIL_TYPE_LOG);
+
+  /* Prevent dropping of the space while we are flushing */
+  ++space->n_pending_flushes;
+
+  for (auto &file : space->files) {
+    ut_a(!file.is_raw_disk);
+
+    int64_t old_mod_counter = file.modification_counter;
+
+    if (old_mod_counter <= file.flush_counter) {
+      continue;
+    }
+
+    ut_a(file.is_open);
+    ut_a(file.space == space);
+
+    ++fil_n_log_flushes;
+    ++fil_n_pending_log_flushes;
+
+    bool skip_flush = false;
+
+    /* Wait for some other thread that is flushing. */
+    while (file.n_pending_flushes > 0 && !skip_flush) {
+      /* Release the mutex to avoid deadlock with
+      the flushing thread. */
+
+      int64_t sig_count = os_event_reset(file.sync_event);
+
+      mutex_release();
+
+      os_event_wait_low(file.sync_event, sig_count);
+
+      mutex_acquire();
+
+      if (file.flush_counter >= old_mod_counter) {
+        skip_flush = true;
+      }
+    }
+
+    if (!skip_flush) {
+      ut_a(file.is_open);
+
+      ++file.n_pending_flushes;
+
+      mutex_release();
+
+      os_file_flush(file.handle);
+
+      mutex_acquire();
+
+      os_event_set(file.sync_event);
+
+      --file.n_pending_flushes;
+    }
+
+    if (file.flush_counter < old_mod_counter) {
+      file.flush_counter = old_mod_counter;
+
+      remove_from_unflushed_list(space);
+    }
+
+    --fil_n_pending_log_flushes;
+  }
+
+  --space->n_pending_flushes;
+}
+
+
+/** Create a space memory object and put it to the fil_system hash table.
+The tablespace name is independent from the tablespace file-name.
+Error messages are issued to the server log.
+@param[in]	name		Tablespace name
+@param[in]	space_id	Tablespace identifier
+@param[in]	flags		Tablespace flags
+@param[in]	purpose		Tablespace purpose
+@return pointer to created tablespace, to be filled in with fil_node_create()
+@retval nullptr on failure (such as when the same tablespace exists) */
+fil_space_t *Fil_shard::space_create(const char *name, space_id_t space_id,
+                                     uint32_t flags, fil_type_t purpose) {
+  ut_ad(mutex_owned());
+
+  /* Look for a matching tablespace. */
+  fil_space_t *space = get_space_by_name(name);
+
+  if (space == nullptr) {
+    space = get_space_by_id(space_id);
+  }
+
+  if (space != nullptr) {
+    std::ostringstream oss;
+
+    for (size_t i = 0; i < space->files.size(); ++i) {
+      oss << "'" << space->files[i].name << "'";
+
+      if (i < space->files.size() - 1) {
+        oss << ", ";
+      }
+    }
+
+    ib::info(ER_IB_MSG_281)
+        << "Trying to add tablespace '" << name << "'"
+        << " with id " << space_id << " to the tablespace"
+        << " memory cache, but tablespace"
+        << " '" << space->name << "'"
+        << " already exists in the cache with space ID " << space->id
+        << ". It maps to the following file(s): " << oss.str();
+
+    return (nullptr);
+  }
+
+  space = static_cast<fil_space_t *>(ut_zalloc_nokey(sizeof(*space)));
+
+  space->id = space_id;
+
+  space->name = mem_strdup(name);
+
+  new (&space->files) fil_space_t::Files();
+
+#ifndef UNIV_HOTBACKUP
+  if (fil_system->is_greater_than_max_id(space_id) &&
+      fil_type_is_data(purpose) && !recv_recovery_on &&
+      !dict_sys_t_is_reserved(space_id) &&
+      !fsp_is_system_temporary(space_id)) {
+    fil_system->set_maximum_space_id(space);
+  }
+#endif /* !UNIV_HOTBACKUP */
+
+  space->purpose = purpose;
+
+  ut_a(flags < std::numeric_limits<uint32_t>::max());
+  space->flags = (uint32_t)flags;
+
+  space->magic_n = FIL_SPACE_MAGIC_N;
+
+  space->encryption_type = Encryption::NONE;
+
+  rw_lock_create(fil_space_latch_key, &space->latch, SYNC_FSP);
+
+#ifndef UNIV_HOTBACKUP
+  if (space->purpose == FIL_TYPE_TEMPORARY) {
+    ut_d(space->latch.set_temp_fsp());
+  }
+#endif /* !UNIV_HOTBACKUP */
+
+  space_add(space);
+
+  return (space);
+}
+
+/** Open all the system files.
+@param[in]	max_n_open	Maximum number of open files allowed
+@param[in,out]	n_open		Current number of open files */
+void Fil_shard::open_system_tablespaces(size_t max_n_open, size_t *n_open) {
+  mutex_acquire();
+
+  for (auto elem : m_spaces) {
+    auto space = elem.second;
+
+    if (Fil_system::space_belongs_in_LRU(space)) {
+      continue;
+    }
+
+    for (auto &file : space->files) {
+      if (!file.is_open) {
+        if (!open_file(&file, false)) {
+          /* This func is called during server's
+          startup. If some file of log or system
+          tablespace is missing, the server
+          can't start successfully. So we should
+          assert for it. */
+          ut_a(0);
+        }
+
+        ++*n_open;
+      }
+
+      if (max_n_open < 10 + *n_open) {
+        ib::warn(ER_IB_MSG_284, *n_open, max_n_open);
+      }
+    }
+  }
+
+  mutex_release();
+}
+
+
+/** Prepare for truncating a single-table tablespace.
+1) Check pending operations on a tablespace;
+2) Remove all insert buffer entries for the tablespace;
+@param[in]	space_id	Tablespace ID
+@return DB_SUCCESS or error */
+dberr_t Fil_shard::space_prepare_for_truncate(space_id_t space_id) {
+  char *path = nullptr;
+  fil_space_t *space = nullptr;
+
+  ut_ad(space_id != TRX_SYS_SPACE);
+  ut_ad(!fsp_is_system_tablespace(space_id));
+  ut_ad(!fsp_is_global_temporary(space_id));
+  ut_ad(fsp_is_undo_tablespace(space_id) || fsp_is_session_temporary(space_id));
+
+  dberr_t err = space_check_pending_operations(space_id, space, &path);
+
+  ut_free(path);
+
+  return (err);
+}
+
+/** Prepares a file for I/O. Opens the file if it is closed. Updates the
+pending I/O's field in the file and the system appropriately. Takes the file
+off the LRU list if it is in the LRU list.
+@param[in]	file		Tablespace file
+@param[in]	extend		true if file is being extended
+@return false if the file can't be opened, otherwise true */
+bool Fil_shard::prepare_file_for_io(fil_node_t *file, bool extend) {
+  ut_ad(mutex_owned());
+
+  fil_space_t *space = file->space;
+
+  if (s_n_open > fil_system->m_max_n_open + 5) {
+    static ulint prev_time;
+    auto curr_time = ut_time();
+
+    /* Spam the log after every minute. Ignore any race here. */
+
+    if ((curr_time - prev_time) > 60) {
+      ib::warn(ER_IB_MSG_327)
+          << "Open files " << s_n_open.load() << " exceeds the limit "
+          << fil_system->m_max_n_open;
+
+      prev_time = curr_time;
+    }
+  }
+
+  if (!file->is_open) {
+    ut_a(file->n_pending == 0);
+
+    if (!open_file(file, extend)) {
+      return (false);
+    }
+  }
+
+  if (file->n_pending == 0 && Fil_system::space_belongs_in_LRU(space)) {
+    /* The file is in the LRU list, remove it */
+
+    ut_a(UT_LIST_GET_LEN(m_LRU) > 0);
+
+    UT_LIST_REMOVE(m_LRU, file);
+  }
+
+  ++file->n_pending;
+
+  return (true);
+}
+
+/** If the tablespace is not on the unflushed list, add it.
+@param[in,out]	space		Tablespace to add */
+void Fil_shard::add_to_unflushed_list(fil_space_t *space) {
+  ut_ad(m_id == REDO_SHARD || mutex_owned());
+
+  if (!space->is_in_unflushed_spaces) {
+    space->is_in_unflushed_spaces = true;
+
+    UT_LIST_ADD_FIRST(m_unflushed_spaces, space);
+  }
+}
+
+/** Note that a write IO has completed.
+@param[in,out]	file		File on which a write was completed */
+void Fil_shard::write_completed(fil_node_t *file) {
+  ut_ad(m_id == REDO_SHARD || mutex_owned());
+
+  ++m_modification_counter;
+
+  file->modification_counter = m_modification_counter;
+
+  if (fil_buffering_disabled(file->space)) {
+    /* We don't need to keep track of unflushed
+    changes as user has explicitly disabled
+    buffering. */
+    ut_ad(!file->space->is_in_unflushed_spaces);
+
+    file->flush_counter = file->modification_counter;
+
+  } else {
+    add_to_unflushed_list(file->space);
+  }
+}
+
+/** Updates the data structures when an I/O operation finishes. Updates the
+pending i/o's field in the file appropriately.
+@param[in]	file		Tablespace file
+@param[in]	type		Marks the file as modified if type == WRITE */
+void Fil_shard::complete_io(fil_node_t *file, const IORequest &type) {
+  ut_ad(m_id == REDO_SHARD || mutex_owned());
+
+  ut_a(file->n_pending > 0);
+
+  --file->n_pending;
+
+  ut_ad(type.validate());
+
+  if (type.is_write()) {
+    ut_ad(!srv_read_only_mode || fsp_is_system_temporary(file->space->id));
+
+    write_completed(file);
+  }
+
+  if (file->n_pending == 0 && Fil_system::space_belongs_in_LRU(file->space)) {
+    /* The file must be put back to the LRU list */
+    UT_LIST_ADD_FIRST(m_LRU, file);
+  }
+}
+
+/** Get the AIO mode.
+@param[in]	req_type	IO request type
+@param[in]	sync		true if Synchronous IO
+return the AIO mode */
+AIO_mode Fil_shard::get_AIO_mode(const IORequest &req_type, bool sync) {
+#ifndef UNIV_HOTBACKUP
+  if (sync) {
+    return (AIO_mode::SYNC);
+
+  } else if (req_type.is_log()) {
+    return (AIO_mode::LOG);
+
+  } else {
+    return (AIO_mode::NORMAL);
+  }
+#else  /* !UNIV_HOTBACKUP */
+  ut_a(sync);
+  return (AIO_mode::SYNC);
+#endif /* !UNIV_HOTBACKUP */
+}
 
 

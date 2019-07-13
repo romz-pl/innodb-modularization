@@ -12,7 +12,6 @@ add_library( ${LIB_NAME} STATIC
     Fil_state.cpp
     Fil_system.cpp
     Filenames.cpp
-    MySQL_datadir_path.cpp
     PageCallback.cpp
     Scanned_files.cpp
     Space_Ids.cpp
@@ -168,6 +167,10 @@ add_library( ${LIB_NAME} STATIC
     xdes_get_bit.cpp
     xdes_state_t.cpp
     xdes_t.cpp
+    fil_validate_skip.cpp
+    fil_set_encryption.cpp
+    fil_get_compression.cpp
+    fil_reset_encryption.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

@@ -4,6 +4,8 @@
 
 #include <innodb/error/dberr_t.h>
 
+#include <string>
+
 /** Compression algorithm. */
 struct Compression {
   /** Algorithm types supported */

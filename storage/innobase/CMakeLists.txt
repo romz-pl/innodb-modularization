@@ -93,8 +93,6 @@ SET(INNOBASE_SOURCES
     eval/eval0eval.cc
     eval/eval0proc.cc
     fil/fil0fil.cc
-    fil/fil0Tablespace_files.cpp
-    fil/fil0Tablespace_dirs.cpp
     fsp/fsp0fsp.cc
     fsp/fsp0file.cc
     fsp/fsp0space.cc

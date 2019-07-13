@@ -3,6 +3,8 @@
 #include <innodb/logger/error.h>
 #include <innodb/logger/info.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/MySQL_datadir_path.h>
 
 #include "my_io.h"
 
@@ -14,8 +16,6 @@ char *Fil_path::DOT_SLASH = "./";
 char *Fil_path::DOT_DOT_SLASH = "../";
 #endif /* defined(__SUNPRO_CC) */
 
-/** The MySQL server --datadir value */
-extern Fil_path MySQL_datadir_path;
 
 ulint innobase_get_lower_case_table_names(void);
 uint innobase_convert_to_filename_charset(char *to, const char *from, ulint len);
@@ -484,3 +484,34 @@ void Fil_path::convert_to_lower_case(std::string &path) {
 }
 
 #endif
+
+
+
+
+/** @return true if the path exists and is a file . */
+os_file_type_t Fil_path::get_file_type(const std::string &path) {
+  const std::string *ptr;
+  os_file_type_t type;
+  bool exists;
+
+#ifdef _WIN32
+  /* Temporarily strip the trailing_separator since it will cause
+  stat64() to fail on Windows unless the path is the root of some
+  drive; like "C:\".  _stat64() will fail if it is "C:". */
+
+  std::string p{path};
+
+  if (path.length() > 3 && is_separator(path.back()) &&
+      path.at(p.length() - 2) != ':') {
+    p.pop_back();
+  }
+
+  ptr = &p;
+#else
+  ptr = &path;
+#endif /* WIN32 */
+
+  os_file_status(ptr->c_str(), &exists, &type);
+
+  return (type);
+}

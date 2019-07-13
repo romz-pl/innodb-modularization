@@ -35,6 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/tablespace/fil_reset_encryption.h>
+#include <innodb/tablespace/fil_get_compression.h>
+#include <innodb/tablespace/fil_set_encryption.h>
+#include <innodb/tablespace/fil_validate_skip.h>
 #include <innodb/tablespace/fil_encryption_rotate.h>
 #include <innodb/tablespace/fil_tablespace_open_for_recovery.h>
 #include <innodb/tablespace/fil_open_for_business.h>
@@ -82,7 +86,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/Space_ids.h>
 #include <innodb/tablespace/Filenames.h>
-#include <innodb/tablespace/MySQL_datadir_path.h>
+#include <innodb/io/MySQL_datadir_path.h>
 #include <innodb/tablespace/fil_addr_null.h>
 #include <innodb/tablespace/fil_n_log_flushes.h>
 #include <innodb/tablespace/fil_n_pending_log_flushes.h>
@@ -450,11 +454,7 @@ dberr_t fil_rename_precheck(const dict_table_t *old_table,
 dberr_t fil_set_compression(dict_table_t *table, const char *algorithm)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Get the compression type for the tablespace
-@param[in]	space_id	Space ID to check
-@return the compression algorithm */
-Compression::Type fil_get_compression(space_id_t space_id)
-    MY_ATTRIBUTE((warn_unused_result));
+
 
 /** Set encryption.
 @param[in,out]	req_type	IO request
@@ -463,21 +463,9 @@ Compression::Type fil_get_compression(space_id_t space_id)
 void fil_io_set_encryption(IORequest &req_type, const page_id_t &page_id,
                            fil_space_t *space);
 
-/** Set the encryption type for the tablespace
-@param[in] space_id		Space ID of tablespace for which to set
-@param[in] algorithm		Encryption algorithm
-@param[in] key			Encryption key
-@param[in] iv			Encryption iv
-@return DB_SUCCESS or error code */
-dberr_t fil_set_encryption(space_id_t space_id, Encryption::Type algorithm,
-                           byte *key, byte *iv)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Reset the encryption type for the tablespace
-@param[in] space_id		Space ID of tablespace for which to set
-@return DB_SUCCESS or error code */
-dberr_t fil_reset_encryption(space_id_t space_id)
-    MY_ATTRIBUTE((warn_unused_result));
+
+
 
 
 

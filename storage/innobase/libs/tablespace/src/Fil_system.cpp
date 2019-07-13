@@ -344,3 +344,16 @@ dberr_t Fil_system::rename_tablespace_name(space_id_t space_id,
 }
 
 
+#ifdef UNIV_DEBUG
+
+/** Checks the consistency of the tablespace cache.
+@return true if ok */
+bool Fil_system::validate() const {
+  for (const auto shard : m_shards) {
+    shard->validate();
+  }
+
+  return (true);
+}
+
+#endif /* UNIV_DEBUG */

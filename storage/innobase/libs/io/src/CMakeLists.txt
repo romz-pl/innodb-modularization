@@ -12,6 +12,7 @@ add_library( ${LIB_NAME} STATIC
     IORequestLogWrite.cpp
     IORequestRead.cpp
     IORequestWrite.cpp
+    MySQL_datadir_path.cpp
     OPERATING_SYSTEM_ERROR_MSG.cpp
     OS_FD_FROM_FILE.cpp
     OS_FILE_CLOSE_FD.cpp
