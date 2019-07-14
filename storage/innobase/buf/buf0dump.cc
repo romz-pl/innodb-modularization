@@ -49,12 +49,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
+#include <innodb/io/os_file_status.h>
 
 #include "buf0rea.h"
 #include "buf0buf.h"
 #include "buf0dump.h"
 #include "dict0dict.h"
-#include "os0file.h"
 
 #include "my_io.h"
 #include "my_psi_config.h"

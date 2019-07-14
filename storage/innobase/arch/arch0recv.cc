@@ -31,6 +31,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
  *******************************************************/
 
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/Dir_Walker.h>
+
 #include "arch0recv.h"
 
 dberr_t Arch_Page_Sys::recover() {

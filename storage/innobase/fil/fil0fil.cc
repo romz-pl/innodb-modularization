@@ -33,6 +33,14 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/io/os_file_create_directory.h>
+#include <innodb/io/Dir_Walker.h>
+#include <innodb/io/access_type.h>
+#include <innodb/io/os_file_get_size.h>
+#include <innodb/io/os_file_punch_hole.h>
+#include <innodb/io/os_is_sparse_file_supported.h>
+#include <innodb/io/os_file_create_subdirs_if_needed.h>
+#include <innodb/io/os_file_truncate.h>
 #include <innodb/io/os_file_create_simple_no_error_handling.h>
 #include <innodb/io/os_file_create.h>
 #include <innodb/io/os_file_read.h>
@@ -60,8 +68,6 @@ The tablespace memory cache */
 #include <innodb/io/IORequestRead.h>
 #include <innodb/io/IORequestWrite.h>
 #include <innodb/io/pfs.h>
-#include <innodb/io/pfs.h>
-#include <innodb/io/pfs.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/ioasync/os_file_set_size.h>
 #include <innodb/ioasync/os_aio_func.h>
@@ -78,8 +84,9 @@ The tablespace memory cache */
 #include <innodb/io/os_file_delete.h>
 #include <innodb/io/os_file_rename.h>
 #include <innodb/io/os_file_write.h>
+#include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_get_last_error.h>
 
-#include "os0file.h"
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "buf0flu.h"

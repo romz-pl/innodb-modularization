@@ -31,10 +31,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/print/ut_print_timestamp.h>
+#include <innodb/io/os_file_set_eof.h>
 
 #include <sys/types.h>
 
-#include "os0file.h"
 #include "btr0btr.h"
 #include "btr0cur.h"
 #include "buf0lru.h"

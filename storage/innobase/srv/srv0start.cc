@@ -50,6 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/io/IORequest.h>
+#include <innodb/io/os_file_get_last_error.h>
 #include <innodb/io/os_file_create.h>
 #include <innodb/io/os_file_create_tmpfile.h>
 #include <innodb/io/os_file_delete_if_exists.h>
@@ -72,6 +74,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/srv_sys_space.h>
 #include <innodb/tablespace/fil_scan_for_tablespaces.h>
 #include <innodb/tablespace/fil_check_missing_tablespaces.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/os_file_create_subdirs_if_needed.h>
+#include <innodb/io/os_file_get_status.h>
+#include <innodb/io/os_create_block_cache.h>
 
 #include <zlib.h>
 #include "btr0btr.h"

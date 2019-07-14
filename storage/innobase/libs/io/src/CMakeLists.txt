@@ -22,6 +22,7 @@ add_library( ${LIB_NAME} STATIC
     block_cache.cpp
     create_purpose.cpp
     create_type.cpp
+    error_codes.cpp
     ib_file_suffix.cpp
     macros.cpp
     meb_free_block_cache.cpp

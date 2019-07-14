@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/Fil_iterator.h>
 #include <innodb/io/create_purpose.h>
 #include <innodb/io/create_type.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/os_file_seek.h>
 
 #include "buf0dump.h"
 #include "clone0clone.h"

@@ -59,7 +59,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0rea.h"
 #include "btr0cur.h"
-#include "os0file.h"
 
 #include <assert.h>
 

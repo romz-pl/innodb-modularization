@@ -63,6 +63,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_n_fsyncs.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
+#include <innodb/io/os_n_file_reads.h>
+#include <innodb/io/os_n_file_writes.h>
 
 #include "buf0lru.h"
 
@@ -78,7 +80,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "hash0hash.h"
 #include "ibuf0ibuf.h"
 #include "log0recv.h"
-#include "os0file.h"
 #include "my_dbug.h"
 
 #include "page0zip.h"

@@ -38,11 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/srv_sys_space.h>
 
 #include "ha_prototypes.h"
-
 #include "fsp0fsp.h"
-
-#include "os0file.h"
-
 #include "my_sys.h"
 
 

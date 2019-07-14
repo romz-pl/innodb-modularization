@@ -38,10 +38,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_write.h>
 #include <innodb/io/os_file_create.h>
 #include <innodb/io/os_file_create_simple_no_error_handling.h>
+#include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_compressed_page_size.h>
+#include <innodb/io/access_type.h>
+#include <innodb/io/os_file_get_size.h>
+#include <innodb/io/os_file_get_last_error.h>
+#include <innodb/io/IORequest.h>
 
 #include "ha_prototypes.h"
-
-#include "os0file.h"
 #include "dict0dd.h"
 #include "fil0fil.h"
 

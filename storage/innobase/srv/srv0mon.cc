@@ -39,6 +39,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get_n_pages.h>
 #include <innodb/io/os_n_fsyncs.h>
 #include <innodb/tablespace/fil_n_file_opened.h>
+#include <innodb/io/os_n_file_reads.h>
+#include <innodb/io/os_n_file_writes.h>
 
 #include "arch0arch.h"
 #include "buf0buf.h"

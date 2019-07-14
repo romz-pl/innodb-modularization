@@ -44,6 +44,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_delete.h>
 #include <innodb/io/os_file_copy.h>
 #include <innodb/io/os_file_create.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/os_file_create_t.h>
+#include <innodb/io/IORequest.h>
 
 #include "arch0page.h"
 #include "arch0recv.h"

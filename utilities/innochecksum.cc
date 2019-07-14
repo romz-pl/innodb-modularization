@@ -69,7 +69,6 @@ The parts not included are excluded by #ifndef UNIV_INNOCHECKSUM. */
 					   fsp_flags_get_zip_size() */
 #include "storage/innobase/include/fut0lst.h"   /* FLST_NODE_SIZE */
 #include <innodb/machine/data.h> /* mach_read_from_4() */
-#include "storage/innobase/include/os0file.h"
 #include "storage/innobase/include/page0page.h" /* PAGE_* */
 #include <innodb/page/page_size_t.h> /* page_size_t */
 #include "storage/innobase/include/page0zip.h"

@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/io/IORequest.h>
 #include <innodb/io/os_file_create_simple_no_error_handling.h>
 #include <innodb/io/os_file_create.h>
 #include <innodb/logger/info.h>
@@ -46,8 +47,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_flush.h>
 #include <innodb/io/os_file_read.h>
 #include <innodb/io/os_file_delete.h>
+#include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/access_type.h>
 
-#include "os0file.h"
 #include "clone0api.h"
 #include "dict0dd.h"
 #include "fil0fil.h"

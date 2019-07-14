@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/tablespace/Tablespace.h>
 #include <innodb/tablespace/Datafile.h>
+#include <innodb/io/os_file_status.h>
 
 #include "dict0crea.h"
 #include "btr0btr.h"
@@ -44,7 +45,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "fts0priv.h"
 #include "ha_prototypes.h"
-#include "os0file.h"
 #include <innodb/machine/data.h>
 
 #include "my_dbug.h"

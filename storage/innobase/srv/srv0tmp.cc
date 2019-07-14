@@ -27,6 +27,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/io/pfs.h>
 #include <innodb/io/os_file_delete_if_exists.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/Dir_Walker.h>
+#include <innodb/io/os_file_get_last_error.h>
+#include <innodb/io/os_file_create_directory.h>
 
 #include "buf0lru.h"
 #include "srv0tmp.h"
@@ -34,7 +38,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "os0file.h"
 
 namespace ibt {
 

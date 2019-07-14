@@ -66,6 +66,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
+#include <innodb/io/IORequest.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0buf.h"

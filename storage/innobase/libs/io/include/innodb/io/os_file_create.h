@@ -13,6 +13,7 @@ to original un-instrumented file I/O APIs */
 
 #include <innodb/io/create_type.h>
 #include <innodb/io/create_purpose.h>
+#include <innodb/io/os_file_create_t.h>
 
 #ifdef UNIV_PFS_IO
 

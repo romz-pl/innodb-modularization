@@ -53,6 +53,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_print.h>
 #include <innodb/tablespace/fil_n_file_opened.h>
 #include <innodb/sync_array/sync_print.h>
+#include <innodb/io/os_n_pending_reads.h>
+#include <innodb/io/os_n_pending_writes.h>
+#include <innodb/io/os_n_file_reads.h>
+#include <innodb/io/os_n_file_writes.h>
+#include <innodb/io/os_file_set_eof.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <mysqld.h>
@@ -77,7 +82,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_array/sync_array_print_long_waits.h>
 
 #include "sync0debug.h"
-#include "os0file.h"
 #include "btr0sea.h"
 #include "buf0flu.h"
 #include "buf0lru.h"

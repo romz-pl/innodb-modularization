@@ -40,6 +40,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_copy.h>
 #include <innodb/io/os_file_read.h>
 #include <innodb/io/os_file_write.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/os_file_seek.h>
+#include <innodb/io/os_file_scan_directory.h>
+#include <innodb/io/os_file_create_directory.h>
+#include <innodb/io/os_file_create_t.h>
+#include <innodb/io/IORequest.h>
 
 #include "arch0arch.h"
 #include "os0thread-create.h"

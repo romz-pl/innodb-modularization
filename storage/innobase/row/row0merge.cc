@@ -44,8 +44,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/Datafile.h>
 #include <innodb/io/os_file_write_int_fd.h>
 #include <innodb/io/os_file_read_no_error_handling_int_fd.h>
+#include <innodb/io/os_file_set_nocache.h>
+#include <innodb/io/IORequest.h>
 
-#include "os0file.h"
 #include <sql_class.h>
 #include "btr0bulk.h"
 #include "dict0crea.h"

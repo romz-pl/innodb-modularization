@@ -38,10 +38,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/mutex_exit.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/io/os_file_flush.h>
+#include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_get_size.h>
 
 #include <mysql/components/services/page_track_service.h>
 #include "log0log.h"
-#include "os0file.h"
 
 #include <list>
 

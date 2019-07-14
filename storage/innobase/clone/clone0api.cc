@@ -29,6 +29,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/io/os_file_status.h>
+
 #include "clone0api.h"
 #include "clone0clone.h"
 #include "os0thread-create.h"

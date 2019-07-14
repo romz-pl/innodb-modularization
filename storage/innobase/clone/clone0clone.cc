@@ -33,6 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/pfs.h>
 #include <innodb/io/os_file_delete.h>
 #include <innodb/io/os_file_create.h>
+#include <innodb/io/register_pfs_file_io_begin.h>
+#include <innodb/io/register_pfs_file_io_end.h>
+#include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_create_subdirs_if_needed.h>
+#include <innodb/io/os_file_status.h>
+#include <innodb/io/os_file_create_directory.h>
 
 #include "clone0clone.h"
 

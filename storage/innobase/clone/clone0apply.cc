@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/create_purpose.h>
 #include <innodb/io/create_type.h>
 #include <innodb/io/os_file_create.h>
+#include <innodb/io/os_file_close.h>
+#include <innodb/io/os_file_seek.h>
 
 #include "clone0clone.h"
 #include "dict0dict.h"

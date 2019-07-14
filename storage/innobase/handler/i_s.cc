@@ -40,6 +40,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_get_io_fix.h>
 #include <innodb/buffer/buf_get_nth_chunk_block.h>
 #include <innodb/tablespace/fsp_is_shared_tablespace.h>
+#include <innodb/io/os_file_get_status.h>
+#include <innodb/io/os_file_get_size.h>
 
 #include "storage/innobase/handler/i_s.h"
 
@@ -52,7 +54,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/string/ut_strcpy.h>
 
-#include "os0file.h"
 #include "auth_acls.h"
 #include "btr0btr.h"
 #include "btr0pcur.h"

@@ -45,10 +45,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/string/ut_strlcpy.h>
 #include <innodb/string/ut_strlen.h>
 
-#include "os0file.h"
 #include "btr0sea.h"
 #include "dict0dd.h"
-
 #include "ha_prototypes.h"
 #include "lock0lock.h"
 #include "log0log.h"
