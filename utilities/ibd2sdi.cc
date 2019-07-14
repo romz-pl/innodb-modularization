@@ -78,7 +78,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_size_t.h>
 #include <innodb/univ/univ.h>
 
-#include "ut0crc32.h"
+#include <innodb/crc32/crc32.h>
 
 typedef enum { SUCCESS, FALIURE, NO_RECORDS } err_t;
 

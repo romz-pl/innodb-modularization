@@ -152,7 +152,7 @@ IF(WITH_INNOBASE_STORAGE_ENGINE)
     ADD_COMPILE_FLAGS(innochecksum.cc COMPILE_FLAGS "-Wno-unused-parameter")
   ENDIF()
   TARGET_LINK_LIBRARIES(innochecksum
-    mysys_ssl innodb_zipdecompress ${LZ4_LIBRARY})
+    mysys_ssl innodb_zipdecompress ${LZ4_LIBRARY} ${INNODB_COMPONENT_LIBS} )
   ADD_DEPENDENCIES(innochecksum GenError)
 
   MYSQL_ADD_EXECUTABLE(ibd2sdi ibd2sdi.cc)

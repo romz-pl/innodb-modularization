@@ -59,7 +59,7 @@ Data dictionary interface */
 #include "gis/rtree_support.h"  // fetch_srs
 #endif                          /* !UNIV_HOTBACKUP */
 #include "srv0start.h"
-#include "ut0crc32.h"
+#include <innodb/crc32/crc32.h>
 #ifndef UNIV_HOTBACKUP
 #include "btr0sea.h"
 #include "derror.h"

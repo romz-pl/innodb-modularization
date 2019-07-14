@@ -116,7 +116,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0i_s.h"
 #include "trx0purge.h"
 #include "usr0sess.h"
-#include "ut0crc32.h"
+#include <innodb/crc32/crc32.h>
 #endif /* !UNIV_HOTBACKUP */
 #include "ut0ut.h"
 

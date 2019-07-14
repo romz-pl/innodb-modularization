@@ -26,6 +26,7 @@ SET( INNODB_COMPONENT_LIBS
     # C
     #compiler_hints
     #counter
+    crc32
 
     # E
     #error

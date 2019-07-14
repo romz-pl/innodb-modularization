@@ -62,7 +62,7 @@ const byte field_ref_zero[FIELD_REF_SIZE] = {
 #include "srv0mon.h"
 #include "srv0srv.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "ut0crc32.h"
+#include <innodb/crc32/crc32.h>
 #ifdef UNIV_HOTBACKUP
 #include "buf0checksum.h"
 

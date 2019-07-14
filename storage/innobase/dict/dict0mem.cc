@@ -46,7 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/machine/data.h>
 #include "my_dbug.h"
 #include "rem0rec.h"
-#include "ut0crc32.h"
+#include <innodb/crc32/crc32.h>
 #endif /* !UNIV_HOTBACKUP */
 
 #include <iostream>

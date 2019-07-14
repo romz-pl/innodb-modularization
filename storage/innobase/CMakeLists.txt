@@ -50,7 +50,7 @@ SET(INNOBASE_ZIP_DECOMPRESS_SOURCES
     os/os0thread.cc
     page/zipdecompress.cc
     rem/rec.cc
-    ut/crc32.cc)
+)
 
 SET(INNOBASE_SOURCES
     api/api0api.cc
@@ -234,7 +234,7 @@ IF(CMAKE_SYSTEM_NAME MATCHES "SunOS" AND CMAKE_SYSTEM_PROCESSOR MATCHES "i386")
   MY_CHECK_CXX_COMPILER_FLAG("-Wa,-nH" HAVE_WA_NH)
   IF(HAVE_WA_NH)
     ADD_COMPILE_FLAGS(
-      ut/crc32.cc
+#      ut/crc32.cc
       COMPILE_FLAGS "-Wa,-nH"
     )
   ENDIF()
