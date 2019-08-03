@@ -25,6 +25,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 *****************************************************************************/
 
 #include <innodb/error/dberr_t.h>
+#include <innodb/page/page_zip_get_size.h>
+
 #include "lob0zip.h"
 
 namespace lob {

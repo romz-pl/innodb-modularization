@@ -79,6 +79,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_get_infimum_offset.h>
 #include <innodb/page/page_get_supremum_offset.h>
 #include <innodb/page/page_rec_is_user_rec_low.h>
+#include <innodb/page/page_dir_find_owner_slot.h>
+#include <innodb/page/page_dir_slot_check.h>
 
 #include "buf0buf.h"
 #include "data0data.h"
@@ -260,10 +262,7 @@ void page_dir_slot_set_n_owned(page_dir_slot_t *slot, page_zip_des_t *page_zip,
                                ulint n);
 
 
-/** Looks for the directory slot which owns the given record.
- @return the directory slot number */
-ulint page_dir_find_owner_slot(
-    const rec_t *rec); /*!< in: the physical record */
+
 
 
 

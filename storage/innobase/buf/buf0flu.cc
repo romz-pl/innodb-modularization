@@ -68,6 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/io/IORequest.h>
 #include <innodb/disk/fil_page_set_type.h>
+#include <innodb/page/page_zip_get_size.h>
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0buf.h"

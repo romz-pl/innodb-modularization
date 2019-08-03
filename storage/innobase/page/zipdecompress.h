@@ -40,12 +40,11 @@ external tools. */
 
 #include <innodb/univ/univ.h>
 
-#include "btr0types.h"
-#include <innodb/disk/flags.h>
-#include "page0types.h"
+#include <innodb/disk/page_t.h>
 
-#include "page/page.ic"
-#include "page/zipdecompress.ic"
+struct page_zip_des_t;
+
+
 /** Decompress a page.  This function should tolerate errors on the compressed
  page.  Instead of letting assertions fail, it will return FALSE if an
  inconsistency is detected.

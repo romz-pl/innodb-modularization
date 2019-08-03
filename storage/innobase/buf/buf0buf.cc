@@ -99,6 +99,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_set_sizes.h>
 #include <innodb/page/page_zip_set_size.h>
 #include <innodb/page/page_zip_des_init.h>
+#include <innodb/page/page_zip_get_size.h>
 
 #include "buf0rea.h"
 #include "btr0btr.h"

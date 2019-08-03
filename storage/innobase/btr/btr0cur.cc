@@ -61,6 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_offs_nth_sql_null.h>
+#include <innodb/page/page_zip_rec_needs_ext.h>
 
 #include "buf0rea.h"
 #include "btr0cur.h"

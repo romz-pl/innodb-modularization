@@ -39,6 +39,9 @@ external tools. */
 #include <innodb/record/rec_get_end.h>
 #include <innodb/record/rec_offs_make_valid.h>
 #include <innodb/record/rec_get_start.h>
+#include <innodb/page/page_zip_get_size.h>
+#include <innodb/page/page_zip_dir_get.h>
+#include <innodb/page/page_zip_des_t.h>
 
 #include <stdarg.h>
 #include <sys/types.h>

@@ -2,6 +2,8 @@
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/disk/flags.h>
+
 /*
  * Page HEAP Flags
  */

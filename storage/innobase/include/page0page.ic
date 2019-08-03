@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_get_n_owned_new.h>
 #include <innodb/record/rec_get_n_owned_old.h>
 #include <innodb/record/rec_offs_size.h>
+#include <innodb/page/header.h>
 
 
 #ifdef UNIV_DEBUG

@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_level.h>
 #include <innodb/page/page_zip_log_pages.h>
 #include <innodb/page/page_zip_empty_size.h>
+#include <innodb/page/page_zip_rec_needs_ext.h>
 
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE
@@ -64,20 +65,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
-
-
-
-/** Determine if a record is so big that it needs to be stored externally.
-@param[in]	rec_size	length of the record in bytes
-@param[in]	comp		nonzero=compact format
-@param[in]	n_fields	number of fields in the record; ignored if
-tablespace is not compressed
-@param[in]	page_size	page size
-@return false if the entire record can be stored locally on the page */
-UNIV_INLINE
-ibool page_zip_rec_needs_ext(ulint rec_size, ulint comp, ulint n_fields,
-                             const page_size_t &page_size)
-    MY_ATTRIBUTE((warn_unused_result));
 
 
 #ifndef UNIV_HOTBACKUP
@@ -148,25 +135,6 @@ ibool page_zip_validate(
     const dict_index_t *index);     /*!< in: index of the page, if known */
 #endif                              /* UNIV_ZIP_DEBUG */
 
-/** Determine how big record can be inserted without recompressing the page.
- @return a positive number indicating the maximum size of a record
- whose insertion is guaranteed to succeed, or zero or negative */
-UNIV_INLINE
-lint page_zip_max_ins_size(
-    const page_zip_des_t *page_zip, /*!< in: compressed page */
-    ibool is_clust)                 /*!< in: TRUE if clustered index */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Determine if enough space is available in the modification log.
- @return true if page_zip_write_rec() will succeed */
-UNIV_INLINE
-ibool page_zip_available(
-    const page_zip_des_t *page_zip, /*!< in: compressed page */
-    bool is_clust,                  /*!< in: TRUE if clustered index */
-    ulint length,                   /*!< in: combined size of the record */
-    ulint create)                   /*!< in: nonzero=add the record to
-                                    the heap */
-    MY_ATTRIBUTE((warn_unused_result));
 
 /** Write data to the uncompressed header portion of a page. The data must
 already have been written to the uncompressed page.

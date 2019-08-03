@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/xdes_calc_descriptor_index.h>
 #include <innodb/tablespace/srv_tmp_space.h>
 #include <innodb/tablespace/srv_sys_space.h>
+#include <innodb/page/page_zip_get_size.h>
 
 #include "fsp0fsp.h"
 #include "buf0buf.h"

@@ -12,3 +12,4 @@
  @return pointer to the dense page directory */
 #define page_zip_dir_start_low(page_zip, n_dense) \
   ((page_zip)->data + page_zip_dir_start_offs(page_zip, n_dense))
+

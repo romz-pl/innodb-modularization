@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_buddy_free_t.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/buffer/buf_buddy_stat_t.h>
+#include <innodb/page/page_zip_get_size.h>
 
 #include "buf0buddy.h"
 

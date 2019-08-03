@@ -64,6 +64,18 @@ add_library( ${LIB_NAME} STATIC
     page_zip_stat_t.cpp
     page_zip_t.cpp
     supremum_extra_data.cpp
+    page_zip_get_trailer_len.cpp
+    page_zip_rec_needs_ext.cpp
+    page_zip_max_ins_size.cpp
+    page_zip_available.cpp
+    page_zip_dir_find_low.cpp
+    page_zip_dir_user_size.cpp
+    page_zip_dir_find_free.cpp
+    page_zip_dir_find.cpp
+    page_zip_fixed_field_encode.cpp
+    page_zip_dir_encode.cpp
+    page_dir_find_owner_slot.cpp
+    page_dir_slot_check.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
