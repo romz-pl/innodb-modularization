@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_offs_get_n_alloc.h>
+#include <innodb/record/rec_offsets_print.h>
 
 #include <debug_sync.h>
 #include <gstream.h>

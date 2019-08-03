@@ -34,6 +34,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define rem0rec_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/record/rec_print_old.h>
+#include <innodb/record/rec_offs_make_nth_extern.h>
+#include <innodb/record/rec_print_mbr_rec.h>
+#include <innodb/record/rec_print_new.h>
+#include <innodb/record/rec_print.h>
 
 #include <ostream>
 #include <sstream>
@@ -114,10 +119,7 @@ const byte *rec_get_nth_field_instant(const rec_t *rec, const ulint *offsets,
 
 
 
-/** Mark the nth field as externally stored.
-@param[in]	offsets		array returned by rec_get_offsets()
-@param[in]	n		nth field */
-void rec_offs_make_nth_extern(ulint *offsets, const ulint n);
+
 
 
 
@@ -245,32 +247,15 @@ UNIV_INLINE
 uint8_t rec_set_n_fields(rec_t *rec, ulint n_fields);
 
 
-/** Prints an old-style physical record. */
-void rec_print_old(FILE *file,        /*!< in: file where to print */
-                   const rec_t *rec); /*!< in: physical record */
+
 #ifndef UNIV_HOTBACKUP
-/** Prints a spatial index record. */
-void rec_print_mbr_rec(
-    FILE *file,            /*!< in: file where to print */
-    const rec_t *rec,      /*!< in: physical record */
-    const ulint *offsets); /*!< in: array returned by rec_get_offsets() */
-/** Prints a physical record. */
-void rec_print_new(
-    FILE *file,            /*!< in: file where to print */
-    const rec_t *rec,      /*!< in: physical record */
-    const ulint *offsets); /*!< in: array returned by rec_get_offsets() */
+
+
 /** Prints a physical record. */
 void rec_print(FILE *file,                 /*!< in: file where to print */
                const rec_t *rec,           /*!< in: physical record */
                const dict_index_t *index); /*!< in: record descriptor */
 
-/** Pretty-print a record.
-@param[in,out]	o	output stream
-@param[in]	rec	physical record
-@param[in]	info	rec_get_info_bits(rec)
-@param[in]	offsets	rec_get_offsets(rec) */
-void rec_print(std::ostream &o, const rec_t *rec, ulint info,
-               const ulint *offsets);
 
 /** Wrapper for pretty-printing a record */
 struct rec_index_print {
@@ -290,23 +275,7 @@ struct rec_index_print {
 @return	the output stream */
 std::ostream &operator<<(std::ostream &o, const rec_index_print &r);
 
-/** Wrapper for pretty-printing a record */
-struct rec_offsets_print {
-  /** Constructor */
-  rec_offsets_print(const rec_t *rec, const ulint *offsets)
-      : m_rec(rec), m_offsets(offsets) {}
 
-  /** Record */
-  const rec_t *m_rec;
-  /** Offsets to each field */
-  const ulint *m_offsets;
-};
-
-/** Display a record.
-@param[in,out]	o	output stream
-@param[in]	r	record to display
-@return	the output stream */
-std::ostream &operator<<(std::ostream &o, const rec_offsets_print &r);
 
 #ifdef UNIV_DEBUG
 /** Pretty-printer of records and tuples */

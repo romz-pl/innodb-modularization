@@ -48,6 +48,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_nth_default.h>
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_validate.h>
+#include <innodb/record/rec_copy_prefix_to_buf_old.h>
+#include <innodb/record/rec_print_comp.h>
+#include <innodb/record/rec_print_mbr_old.h>
 
 #include "rem0rec.h"
 
@@ -997,43 +1000,6 @@ void rec_copy_prefix_to_dtuple(
   }
 }
 
-/** Copies the first n fields of an old-style physical record
- to a new physical record in a buffer.
- @return own: copied record */
-static rec_t *rec_copy_prefix_to_buf_old(
-    const rec_t *rec, /*!< in: physical record */
-    ulint n_fields,   /*!< in: number of fields to copy */
-    ulint area_end,   /*!< in: end of the prefix data */
-    byte **buf,       /*!< in/out: memory buffer for
-                      the copied prefix, or NULL */
-    size_t *buf_size) /*!< in/out: buffer size */
-{
-  rec_t *copy_rec;
-  ulint area_start;
-  ulint prefix_len;
-
-  if (rec_get_1byte_offs_flag(rec)) {
-    area_start = REC_N_OLD_EXTRA_BYTES + n_fields;
-  } else {
-    area_start = REC_N_OLD_EXTRA_BYTES + 2 * n_fields;
-  }
-
-  prefix_len = area_start + area_end;
-
-  if ((*buf == NULL) || (*buf_size < prefix_len)) {
-    ut_free(*buf);
-    *buf_size = prefix_len;
-    *buf = static_cast<byte *>(ut_malloc_nokey(prefix_len));
-  }
-
-  ut_memcpy(*buf, rec - area_start, prefix_len);
-
-  copy_rec = *buf + area_start;
-
-  rec_set_n_fields_old(copy_rec, n_fields);
-
-  return (copy_rec);
-}
 
 rec_t *rec_copy_prefix_to_buf(const rec_t *rec, const dict_index_t *index,
                               ulint n_fields, byte **buf, size_t *buf_size) {
@@ -1155,262 +1121,11 @@ rec_t *rec_copy_prefix_to_buf(const rec_t *rec, const dict_index_t *index,
 #endif /* UNIV_HOTBACKUP */
 
 
-/** Prints an old-style physical record. */
-void rec_print_old(FILE *file,       /*!< in: file where to print */
-                   const rec_t *rec) /*!< in: physical record */
-{
-  const byte *data;
-  ulint len;
-  ulint n;
-  ulint i;
-
-  ut_ad(rec);
-
-  n = rec_get_n_fields_old_raw(rec);
-
-  fprintf(file,
-          "PHYSICAL RECORD: n_fields %lu;"
-          " %u-byte offsets; info bits %lu\n",
-          (ulong)n, rec_get_1byte_offs_flag(rec) ? 1 : 2,
-          (ulong)rec_get_info_bits(rec, FALSE));
-
-  for (i = 0; i < n; i++) {
-    data = rec_get_nth_field_old(rec, i, &len);
-
-    fprintf(file, " %lu:", (ulong)i);
-
-    if (len != UNIV_SQL_NULL) {
-      if (len <= 30) {
-        ut_print_buf(file, data, len);
-      } else {
-        ut_print_buf(file, data, 30);
-
-        fprintf(file, " (total %lu bytes)", (ulong)len);
-      }
-    } else {
-      fprintf(file, " SQL NULL, size " ULINTPF " ",
-              rec_get_nth_field_size(rec, i));
-    }
-
-    putc(';', file);
-    putc('\n', file);
-  }
-
-  rec_validate_old(rec);
-}
 
 #ifndef UNIV_HOTBACKUP
-/** Prints a physical record in ROW_FORMAT=COMPACT.  Ignores the
- record header. */
-static void rec_print_comp(
-    FILE *file,           /*!< in: file where to print */
-    const rec_t *rec,     /*!< in: physical record */
-    const ulint *offsets) /*!< in: array returned by rec_get_offsets() */
-{
-  ulint i;
 
-  for (i = 0; i < rec_offs_n_fields(offsets); i++) {
-    const byte *data = nullptr;
-    ulint len;
 
-    if (rec_offs_nth_default(offsets, i)) {
-      len = UNIV_SQL_ADD_COL_DEFAULT;
-    } else {
-      data = rec_get_nth_field(rec, offsets, i, &len);
-    }
 
-    fprintf(file, " %lu:", (ulong)i);
-
-    switch (len) {
-      case UNIV_SQL_NULL:
-        fputs(" SQL NULL", file);
-        break;
-      case UNIV_SQL_ADD_COL_DEFAULT:
-        fputs(" SQL DEFAULT", file);
-        break;
-      default:
-        if (len <= 30) {
-          ut_print_buf(file, data, len);
-        } else if (rec_offs_nth_extern(offsets, i)) {
-          ut_print_buf(file, data, 30);
-          fprintf(file, " (total %lu bytes, external)", (ulong)len);
-          ut_print_buf(file, data + len - BTR_EXTERN_FIELD_REF_SIZE,
-                       BTR_EXTERN_FIELD_REF_SIZE);
-        } else {
-          ut_print_buf(file, data, 30);
-
-          fprintf(file, " (total %lu bytes)", (ulong)len);
-        }
-    }
-    putc(';', file);
-    putc('\n', file);
-  }
-}
-
-/** Prints an old-style spatial index record. */
-static void rec_print_mbr_old(FILE *file,       /*!< in: file where to print */
-                              const rec_t *rec) /*!< in: physical record */
-{
-  const byte *data;
-  ulint len;
-  ulint n;
-  ulint i;
-
-  ut_ad(rec);
-
-  n = rec_get_n_fields_old_raw(rec);
-
-  fprintf(file,
-          "PHYSICAL RECORD: n_fields %lu;"
-          " %u-byte offsets; info bits %lu\n",
-          (ulong)n, rec_get_1byte_offs_flag(rec) ? 1 : 2,
-          (ulong)rec_get_info_bits(rec, FALSE));
-
-  for (i = 0; i < n; i++) {
-    data = rec_get_nth_field_old(rec, i, &len);
-
-    fprintf(file, " %lu:", (ulong)i);
-
-    if (len != UNIV_SQL_NULL) {
-      if (i == 0) {
-        fprintf(file, " MBR:");
-        for (; len > 0; len -= sizeof(double)) {
-          double d = mach_double_read(data);
-
-          if (len != sizeof(double)) {
-            fprintf(file, "%.2lf,", d);
-          } else {
-            fprintf(file, "%.2lf", d);
-          }
-
-          data += sizeof(double);
-        }
-      } else {
-        if (len <= 30) {
-          ut_print_buf(file, data, len);
-        } else {
-          ut_print_buf(file, data, 30);
-
-          fprintf(file, " (total %lu bytes)", (ulong)len);
-        }
-      }
-    } else {
-      fprintf(file, " SQL NULL, size " ULINTPF " ",
-              rec_get_nth_field_size(rec, i));
-    }
-
-    putc(';', file);
-    putc('\n', file);
-  }
-
-  if (rec_get_deleted_flag(rec, false)) {
-    fprintf(file, " Deleted");
-  }
-
-  if (rec_get_info_bits(rec, true) & REC_INFO_MIN_REC_FLAG) {
-    fprintf(file, " First rec");
-  }
-
-  rec_validate_old(rec);
-}
-
-/** Prints a spatial index record. */
-void rec_print_mbr_rec(
-    FILE *file,           /*!< in: file where to print */
-    const rec_t *rec,     /*!< in: physical record */
-    const ulint *offsets) /*!< in: array returned by rec_get_offsets() */
-{
-  ut_ad(rec);
-  ut_ad(offsets);
-  ut_ad(rec_offs_validate(rec, NULL, offsets));
-
-  if (!rec_offs_comp(offsets)) {
-    rec_print_mbr_old(file, rec);
-    return;
-  }
-
-  for (ulint i = 0; i < rec_offs_n_fields(offsets); i++) {
-    const byte *data;
-    ulint len;
-
-    ut_ad(!rec_offs_nth_default(offsets, i));
-    data = rec_get_nth_field(rec, offsets, i, &len);
-
-    if (i == 0) {
-      fprintf(file, " MBR:");
-      for (; len > 0; len -= sizeof(double)) {
-        double d = mach_double_read(data);
-
-        if (len != sizeof(double)) {
-          fprintf(file, "%.2lf,", d);
-        } else {
-          fprintf(file, "%.2lf", d);
-        }
-
-        data += sizeof(double);
-      }
-    } else {
-      fprintf(file, " %lu:", (ulong)i);
-
-      if (len != UNIV_SQL_NULL) {
-        if (len <= 30) {
-          ut_print_buf(file, data, len);
-        } else {
-          ut_print_buf(file, data, 30);
-
-          fprintf(file, " (total %lu bytes)", (ulong)len);
-        }
-      } else {
-        fputs(" SQL NULL", file);
-      }
-    }
-    putc(';', file);
-  }
-
-  if (rec_get_info_bits(rec, true) & REC_INFO_DELETED_FLAG) {
-    fprintf(file, " Deleted");
-  }
-
-  if (rec_get_info_bits(rec, true) & REC_INFO_MIN_REC_FLAG) {
-    fprintf(file, " First rec");
-  }
-
-  rec_validate(rec, offsets);
-}
-
-/** Prints a physical record. */
-/** Prints a physical record. */
-void rec_print_new(
-    FILE *file,           /*!< in: file where to print */
-    const rec_t *rec,     /*!< in: physical record */
-    const ulint *offsets) /*!< in: array returned by rec_get_offsets() */
-{
-  ut_ad(rec);
-  ut_ad(offsets);
-  ut_ad(rec_offs_validate(rec, NULL, offsets));
-
-#ifdef UNIV_DEBUG
-  if (rec_get_deleted_flag(rec, rec_offs_comp(offsets))) {
-    DBUG_PRINT("info", ("deleted "));
-  } else {
-    DBUG_PRINT("info", ("not-deleted "));
-  }
-#endif /* UNIV_DEBUG */
-
-  if (!rec_offs_comp(offsets)) {
-    rec_print_old(file, rec);
-    return;
-  }
-
-  fprintf(file,
-          "PHYSICAL RECORD: n_fields %lu;"
-          " compact format; info bits %lu\n",
-          (ulong)rec_offs_n_fields(offsets),
-          (ulong)rec_get_info_bits(rec, TRUE));
-
-  rec_print_comp(file, rec, offsets);
-  rec_validate(rec, offsets);
-}
 
 /** Prints a physical record. */
 void rec_print(FILE *file,                /*!< in: file where to print */
@@ -1436,56 +1151,6 @@ void rec_print(FILE *file,                /*!< in: file where to print */
   }
 }
 
-/** Pretty-print a record.
-@param[in,out]	o	output stream
-@param[in]	rec	physical record
-@param[in]	info	rec_get_info_bits(rec)
-@param[in]	offsets	rec_get_offsets(rec) */
-void rec_print(std::ostream &o, const rec_t *rec, ulint info,
-               const ulint *offsets) {
-  const ulint comp = rec_offs_comp(offsets);
-  const ulint n = rec_offs_n_fields(offsets);
-
-  ut_ad(rec_offs_validate(rec, NULL, offsets));
-
-  o << (comp ? "COMPACT RECORD" : "RECORD") << "(info_bits=" << info << ", "
-    << n << " fields): {";
-
-  for (ulint i = 0; i < n; i++) {
-    const byte *data;
-    ulint len;
-
-    if (i) {
-      o << ',';
-    }
-
-    if (rec_offs_nth_default(offsets, i)) {
-      o << "DEFAULT";
-      continue;
-    }
-
-    data = rec_get_nth_field(rec, offsets, i, &len);
-
-    if (len == UNIV_SQL_NULL) {
-      o << "NULL";
-      continue;
-    }
-
-    if (rec_offs_nth_extern(offsets, i)) {
-      ulint local_len = len - BTR_EXTERN_FIELD_REF_SIZE;
-      ut_ad(len >= BTR_EXTERN_FIELD_REF_SIZE);
-
-      o << '[' << local_len << '+' << BTR_EXTERN_FIELD_REF_SIZE << ']';
-      ut_print_buf(o, data, local_len);
-      ut_print_buf_hex(o, data + local_len, BTR_EXTERN_FIELD_REF_SIZE);
-    } else {
-      o << '[' << len << ']';
-      ut_print_buf(o, data, len);
-    }
-  }
-
-  o << "}";
-}
 
 /** Display a record.
 @param[in,out]	o	output stream
@@ -1501,15 +1166,7 @@ std::ostream &operator<<(std::ostream &o, const rec_index_print &r) {
   return (o);
 }
 
-/** Display a record.
-@param[in,out]	o	output stream
-@param[in]	r	record to display
-@return	the output stream */
-std::ostream &operator<<(std::ostream &o, const rec_offsets_print &r) {
-  rec_print(o, r.m_rec, rec_get_info_bits(r.m_rec, rec_offs_comp(r.m_offsets)),
-            r.m_offsets);
-  return (o);
-}
+
 
 /** Reads the DB_TRX_ID of a clustered index record.
  @return the value of DB_TRX_ID */
@@ -1549,10 +1206,4 @@ trx_id_t rec_get_trx_id(const rec_t *rec,          /*!< in: record */
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Mark the nth field as externally stored.
-@param[in]	offsets		array returned by rec_get_offsets()
-@param[in]	n		nth field */
-void rec_offs_make_nth_extern(ulint *offsets, const ulint n) {
-  ut_ad(!rec_offs_nth_sql_null(offsets, n));
-  rec_offs_base(offsets)[1 + n] |= REC_OFFS_EXTERNAL;
-}
+

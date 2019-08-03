@@ -53,12 +53,6 @@ extern bool btr_search_enabled;
 /** Number of adaptive hash index partition. */
 extern ulong btr_ahi_parts;
 
-/** The size of a reference to data stored on a different page.
-The reference is stored at the end of the prefix of the field
-in the index record. */
-#define BTR_EXTERN_FIELD_REF_SIZE FIELD_REF_SIZE
 
-/** If the data don't exceed the size, the data are stored locally. */
-#define BTR_EXTERN_LOCAL_STORED_MAX_SIZE (BTR_EXTERN_FIELD_REF_SIZE * 2)
 
 #endif

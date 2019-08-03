@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_create_tmpfile.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offsets_print.h>
 
 #include <mysql/service_thd_engine_lock.h>
 #include <sys/types.h>

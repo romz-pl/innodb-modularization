@@ -2,6 +2,9 @@
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/disk/page_size_t.h>
+
+
 /* Compact flag ORed to the extra size returned by rec_get_offsets() */
 #define REC_OFFS_COMPACT ((ulint)1 << 31)
 /* SQL NULL flag in offsets returned by rec_get_offsets() */
@@ -178,3 +181,14 @@ constexpr ulint REC_2BYTE_OFFS_LIMIT = 0x7FFFUL;
 /* The data size of record must be smaller than this because we reserve
 two upmost bits in a two byte offset for special purposes */
 constexpr ulint REC_MAX_DATA_SIZE = 16384;
+
+
+
+
+/** The size of a reference to data stored on a different page.
+The reference is stored at the end of the prefix of the field
+in the index record. */
+#define BTR_EXTERN_FIELD_REF_SIZE FIELD_REF_SIZE
+
+/** If the data don't exceed the size, the data are stored locally. */
+#define BTR_EXTERN_LOCAL_STORED_MAX_SIZE (BTR_EXTERN_FIELD_REF_SIZE * 2)
