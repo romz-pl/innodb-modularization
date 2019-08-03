@@ -29,6 +29,9 @@ Parallel read adapter interface implementation
 
 Created 2018-02-28 by Darshan M N */
 
+
+#include <innodb/record/rec_offs_init.h>
+
 #include "row0pread-adapter.h"
 #include "row0sel.h"
 

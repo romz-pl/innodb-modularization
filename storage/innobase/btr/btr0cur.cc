@@ -58,6 +58,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/page/fil_page_get_prev.h>
 #include <innodb/page/fil_page_get_next.h>
+#include <innodb/record/rec_offs_init.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_nth_sql_null.h>
 
 #include "buf0rea.h"
 #include "btr0cur.h"

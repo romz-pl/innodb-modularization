@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_init.h>
+
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/io/os_file_set_eof.h>
 

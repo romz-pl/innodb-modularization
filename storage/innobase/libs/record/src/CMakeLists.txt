@@ -2,8 +2,91 @@ set( LIB_NAME record )
 
 add_library( ${LIB_NAME} STATIC
     flag.cpp
+    rec_1_get_field_end_info.cpp
+    rec_1_get_field_start_offs.cpp
+    rec_1_get_prev_field_end_info.cpp
+    rec_2_get_field_end_info.cpp
+    rec_2_get_field_start_offs.cpp
+    rec_2_get_prev_field_end_info.cpp
+    rec_2_is_field_extern.cpp
     rec_format_t.cpp
+    rec_get_1byte_offs_flag.cpp
+    rec_get_bit_field_1.cpp
+    rec_get_bit_field_2.cpp
+    rec_get_deleted_flag.cpp
+    rec_get_field_start_offs.cpp
+    rec_get_heap_no_new.cpp
+    rec_get_heap_no_old.cpp
+    rec_get_info_and_status_bits.cpp
+    rec_get_info_bits.cpp
+    rec_get_info_bits_temp.cpp
+    rec_get_instant_flag_new.cpp
+    rec_get_instant_flag_new_temp.cpp
+    rec_get_n_fields_instant.cpp
+    rec_get_n_fields_old_raw.cpp
+    rec_get_n_owned_new.cpp
+    rec_get_n_owned_old.cpp
+    rec_get_next_offs.cpp
+    rec_get_next_ptr.cpp
+    rec_get_next_ptr_const.cpp
+    rec_get_node_ptr_flag.cpp
+    rec_get_nth_field_offs_old.cpp
+    rec_get_nth_field_old.cpp
+    rec_get_nth_field_size.cpp
+    rec_get_status.cpp
+    rec_info_bits_valid.cpp
+    rec_offs_get_n_alloc.cpp
+    rec_offs_init.cpp
+    rec_offs_n_fields.cpp
+    rec_offs_set_n_alloc.cpp
+    rec_offs_set_n_fields.cpp
+    rec_set_1byte_offs_flag.cpp
+    rec_set_bit_field_1.cpp
+    rec_set_bit_field_2.cpp
+    rec_set_deleted_flag_old.cpp
+    rec_set_heap_no_new.cpp
+    rec_set_heap_no_old.cpp
+    rec_set_info_and_status_bits.cpp
+    rec_set_info_bits_new.cpp
+    rec_set_info_bits_old.cpp
+    rec_set_instant_flag_new.cpp
+    rec_set_n_owned_old.cpp
+    rec_set_next_offs_new.cpp
+    rec_set_next_offs_old.cpp
+    rec_set_status.cpp
     rec_t.cpp
+    rec_get_nth_field_offs.cpp
+    rec_offs_base.cpp
+    rec_get_nth_field.cpp
+    rec_field_not_null_not_add_col_def.cpp
+    rec_offs_comp.cpp
+    rec_offs_validate.cpp
+    rec_offs_make_valid.cpp
+    rec_offs_cmp.cpp
+    rec_offs_print.cpp
+    rec_offs_any_extern.cpp
+    rec_offs_nth_sql_null.cpp
+    rec_offs_nth_default.cpp
+    rec_offs_nth_size.cpp
+    rec_offs_nth_extern.cpp
+    rec_offs_n_extern.cpp
+    rec_1_set_field_end_info.cpp
+    rec_2_set_field_end_info.cpp
+    rec_set_nth_field.cpp
+    data_write_sql_null.cpp
+    rec_set_nth_field_sql_null.cpp
+    rec_set_nth_field_null_bit.cpp
+    rec_set_n_fields_old.cpp
+    rec_get_data_size_old.cpp
+    rec_offs_data_size.cpp
+    rec_offs_extra_size.cpp
+    rec_offs_size.cpp
+    rec_copy.cpp
+    rec_get_end.cpp
+    rec_get_start.cpp
+    rec_get_converted_extra_size.cpp
+    rec_validate.cpp
+    rec_validate_old.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -17,6 +100,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    logger
     machine
     memory
     memory_check

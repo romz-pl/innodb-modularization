@@ -35,6 +35,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/warn.h>
 #include <innodb/buffer/buf_frame_copy.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/record/rec_offs_data_size.h>
+#include <innodb/record/rec_offs_init.h>
+#include <innodb/record/rec_set_info_bits_old.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_field_not_null_not_add_col_def.h>
 
 #include "btr0btr.h"
 

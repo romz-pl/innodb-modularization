@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed by Sunny Bains and Marko Makela
  *******************************************************/
 
+#include <innodb/record/rec_offs_data_size.h>
+#include <innodb/record/rec_offs_extra_size.h>
+
 #include <fcntl.h>
 #include <math.h>
 #include <sys/types.h>

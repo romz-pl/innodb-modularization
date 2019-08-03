@@ -31,6 +31,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  ***********************************************************************/
 
 #include <innodb/buffer/buf_pool_is_obsolete.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_copy.h>
+#include <innodb/record/rec_offs_data_size.h>
+#include <innodb/record/rec_offs_extra_size.h>
+#include <innodb/record/rec_offs_init.h>
 #include <innodb/sync_os/pfs.h>
 
 #include <new>

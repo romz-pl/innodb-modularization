@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/6/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_copy.h>
+
 #include <stddef.h>
 
 #include "btr0btr.h"

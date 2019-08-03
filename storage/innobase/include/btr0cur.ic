@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/record/rec_set_deleted_flag_old.h>
+
 #ifndef UNIV_HOTBACKUP
 #endif /* !UNIV_HOTBACKUP */
 #include "btr0btr.h"

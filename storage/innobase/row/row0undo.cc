@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_offs_init.h>
+
 #include <stddef.h>
 
 #include "fsp0fsp.h"

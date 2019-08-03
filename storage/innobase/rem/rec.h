@@ -40,6 +40,13 @@ external tools. */
 #include <innodb/univ/univ.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
 #include <innodb/record/flag.h>
+#include <innodb/record/rec_get_n_fields_old_raw.h>
+#include <innodb/record/rec_get_status.h>
+#include <innodb/record/rec_get_instant_flag_new_temp.h>
+#include <innodb/record/rec_get_n_fields_instant.h>
+#include <innodb/record/rec_get_instant_flag_new.h>
+#include <innodb/record/rec_offs_base.h>
+#include <innodb/record/rec_offs_n_fields.h>
 
 #include "dict0boot.h"
 #include "dict0dict.h"
@@ -215,93 +222,7 @@ void rec_init_offsets(const rec_t *rec,          /*!< in: physical record */
                       ulint *offsets);           /*!< in/out: array of offsets;
                                                 in: n=rec_offs_n_fields(offsets) */
 
-#ifdef UNIV_DEBUG
-/** Validates offsets returned by rec_get_offsets().
- @return true if valid */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ibool rec_offs_validate(
-    const rec_t *rec,          /*!< in: record or NULL */
-    const dict_index_t *index, /*!< in: record descriptor or NULL */
-    const ulint *offsets)      /*!< in: array returned by
-                               rec_get_offsets() */
-{
-  ulint i = rec_offs_n_fields(offsets);
-  ulint last = ULINT_MAX;
-  ulint comp = *rec_offs_base(offsets) & REC_OFFS_COMPACT;
 
-  if (rec) {
-    ut_ad((ulint)rec == offsets[2]);
-    if (!comp && index != nullptr) {
-      ut_a(rec_get_n_fields_old(rec, index) >= i);
-    }
-  }
-  if (index) {
-    ulint max_n_fields;
-    ut_ad((ulint)index == offsets[3]);
-    ulint n_fields = dict_index_get_n_fields(index);
-    ulint n_unique_in_tree = dict_index_get_n_unique_in_tree(index) + 1;
-    max_n_fields = std::max(n_fields, n_unique_in_tree);
-    if (!comp && rec != nullptr && rec_get_n_fields_old_raw(rec) < i) {
-      ut_a(index->has_instant_cols());
-    }
-
-    if (comp && rec) {
-      switch (rec_get_status(rec)) {
-        case REC_STATUS_ORDINARY:
-          break;
-        case REC_STATUS_NODE_PTR:
-          max_n_fields = dict_index_get_n_unique_in_tree(index) + 1;
-          break;
-        case REC_STATUS_INFIMUM:
-        case REC_STATUS_SUPREMUM:
-          max_n_fields = 1;
-          break;
-        default:
-          ut_error;
-      }
-    }
-    /* index->n_def == 0 for dummy indexes if !comp */
-    ut_a(!comp || index->n_def);
-    ut_a(!index->n_def || i <= max_n_fields);
-  }
-  while (i--) {
-    ulint curr = rec_offs_base(offsets)[1 + i] & REC_OFFS_MASK;
-    ut_a(curr <= last);
-    last = curr;
-  }
-  return (TRUE);
-}
-
-/** Updates debug data in offsets, in order to avoid bogus
- rec_offs_validate() failures. */
-UNIV_INLINE
-void rec_offs_make_valid(
-    const rec_t *rec,          /*!< in: record */
-    const dict_index_t *index, /*!< in: record descriptor */
-    ulint *offsets)            /*!< in: array returned by
-                               rec_get_offsets() */
-{
-  ut_ad(rec);
-  ut_ad(index);
-  ut_ad(offsets);
-  ut_ad(rec_get_n_fields(rec, index) >= rec_offs_n_fields(offsets));
-  offsets[2] = (ulint)rec;
-  offsets[3] = (ulint)index;
-}
-
-/** Check if the given two record offsets are identical.
-@param[in]  offsets1  field offsets of a record
-@param[in]  offsets2  field offsets of a record
-@return true if they are identical, false otherwise. */
-bool rec_offs_cmp(ulint *offsets1, ulint *offsets2);
-
-/** Print the record offsets.
-@param[in]    out         the output stream to which offsets are printed.
-@param[in]    offsets     the field offsets of the record.
-@return the output stream. */
-std::ostream &rec_offs_print(std::ostream &out, const ulint *offsets);
-#else
-#define rec_offs_make_valid(rec, index, offsets) ((void)0)
-#endif /* UNIV_DEBUG */
 
 
 /** Determines the information about null bytes and variable length bytes

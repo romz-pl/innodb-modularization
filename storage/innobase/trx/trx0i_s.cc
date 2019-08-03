@@ -44,6 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/time/ut_time_us.h>
 #include <innodb/sync_os/pfs.h>
+#include <innodb/record/rec_offs_init.h>
 
 #include <sql_class.h>
 #include <stdio.h>

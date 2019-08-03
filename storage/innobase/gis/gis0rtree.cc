@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013/03/27 Allen Lai and Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/record/rec_set_nth_field.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_init.h>
+
 #include <sys/types.h>
 #include <cmath>
 

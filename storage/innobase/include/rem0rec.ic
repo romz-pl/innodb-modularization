@@ -31,6 +31,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *************************************************************************/
 
 #include <innodb/memory/ut_memcpy.h>
+#include <innodb/record/rec_set_bit_field_1.h>
+#include <innodb/record/rec_get_info_bits.h>
+#include <innodb/record/rec_set_info_bits_new.h>
+#include <innodb/record/rec_offs_any_extern.h>
+#include <innodb/record/rec_get_nth_field.h>
+#include <innodb/record/rec_offs_nth_extern.h>
+#include <innodb/record/rec_get_converted_extra_size.h>
+#include <innodb/record/rec_get_nth_field_old.h>
+#include <innodb/record/rec_get_n_fields_old_raw.h>
 
 #include "btr0types.h"
 #include "dict0boot.h"

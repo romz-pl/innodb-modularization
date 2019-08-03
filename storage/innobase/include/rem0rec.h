@@ -121,28 +121,6 @@ void rec_offs_make_nth_extern(ulint *offsets, const ulint n);
 
 
 
-
-#ifdef UNIV_DEBUG
-/** Returns a pointer to the start of the record.
- @return pointer to start */
-UNIV_INLINE
-byte *rec_get_start(
-    const rec_t *rec,     /*!< in: pointer to record */
-    const ulint *offsets) /*!< in: array returned by rec_get_offsets() */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Returns a pointer to the end of the record.
- @return pointer to end */
-UNIV_INLINE
-byte *rec_get_end(
-    const rec_t *rec,     /*!< in: pointer to record */
-    const ulint *offsets) /*!< in: array returned by rec_get_offsets() */
-    MY_ATTRIBUTE((warn_unused_result));
-#else /* UNIV_DEBUG */
-#define rec_get_start(rec, offsets) ((rec)-rec_offs_extra_size(offsets))
-#define rec_get_end(rec, offsets) ((rec) + rec_offs_data_size(offsets))
-#endif /* UNIV_DEBUG */
-
-
 #ifndef UNIV_HOTBACKUP
 /** Determines the size of a data tuple prefix in a temporary file.
  @return total size */
@@ -266,11 +244,7 @@ This is only needed for table after instant ADD COLUMN.
 UNIV_INLINE
 uint8_t rec_set_n_fields(rec_t *rec, ulint n_fields);
 
-/** Validates the consistency of a physical record.
- @return true if ok */
-ibool rec_validate(
-    const rec_t *rec,      /*!< in: physical record */
-    const ulint *offsets); /*!< in: array returned by rec_get_offsets() */
+
 /** Prints an old-style physical record. */
 void rec_print_old(FILE *file,        /*!< in: file where to print */
                    const rec_t *rec); /*!< in: physical record */

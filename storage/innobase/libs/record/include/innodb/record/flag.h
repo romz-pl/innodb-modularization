@@ -129,10 +129,7 @@ offsets[] array, first passed to rec_get_offsets() */
 #define REC_OFFS_NORMAL_SIZE 100
 #define REC_OFFS_SMALL_SIZE 10
 
-/* Get the base address of offsets.  The extra_size is stored at
-this position, and following positions hold the end offsets of
-the fields. */
-#define rec_offs_base(offsets) (offsets + REC_OFFS_HEADER_SIZE)
+
 
 /** Number of fields flag which means it occupies two bytes */
 static const uint8_t REC_N_FIELDS_TWO_BYTES_FLAG = 0x80;

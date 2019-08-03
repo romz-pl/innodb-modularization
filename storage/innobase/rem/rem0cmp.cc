@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 7/1/1994 Heikki Tuuri
  ************************************************************************/
 
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_nth_sql_null.h>
+
 #include <gstream.h>
 #include <page0cur.h>
 #include <spatial.h>

@@ -47,6 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_block_get_state.h>
 #include <innodb/buffer/buf_block_state_valid.h>
 #include <innodb/sync_os/pfs.h>
+#include <innodb/record/rec_offs_init.h>
 
 #include "btr0sea.h"
 

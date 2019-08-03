@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/14/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_offs_init.h>
+
 #include "row0purge.h"
 
 #include <stddef.h>

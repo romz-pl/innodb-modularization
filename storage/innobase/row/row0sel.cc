@@ -38,6 +38,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/print/ut_print_buf.h>
+#include <innodb/record/rec_offs_init.h>
+#include <innodb/record/rec_field_not_null_not_add_col_def.h>
+#include <innodb/record/rec_offs_extra_size.h>
+#include <innodb/record/rec_validate.h>
+#include <innodb/record/rec_copy.h>
+#include <innodb/record/rec_offs_nth_sql_null.h>
 
 #include "row0sel.h"
 

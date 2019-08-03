@@ -45,6 +45,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_delete_if_exists.h>
 #include <innodb/io/os_file_status.h>
 #include <innodb/io/os_file_create_subdirs_if_needed.h>
+#include <innodb/record/rec_offs_init.h>
+#include <innodb/record/rec_offs_set_n_fields.h>
 
 #include "mysql/components/services/log_builtins.h"
 

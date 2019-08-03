@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/warn.h>
 #include <innodb/string/ut_strcmp_functor.h>
 #include <innodb/print/ut_print_timestamp.h>
+#include <innodb/record/rec_offs_set_n_alloc.h>
 
 #include "dict0stats.h"
 #include "dyn0buf.h"

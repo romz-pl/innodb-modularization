@@ -36,6 +36,9 @@ other files in library. The code in this file is used to make a library for
 external tools. */
 
 #include <innodb/page/page_zip_dir_start_low.h>
+#include <innodb/record/rec_get_end.h>
+#include <innodb/record/rec_offs_make_valid.h>
+#include <innodb/record/rec_get_start.h>
 
 #include <stdarg.h>
 #include <sys/types.h>

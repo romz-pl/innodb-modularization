@@ -32,6 +32,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/string/ut_str_sql_format.h>
 #include <innodb/string/ut_raw_to_hex.h>
+#include <innodb/record/rec_copy.h>
+#include <innodb/record/rec_offs_n_extern.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_init.h>
 
 #include "row0row.h"
 

@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/record/rec_offs_init.h>
+
 #include <errno.h>
 #include <my_aes.h>
 #include <sys/types.h>

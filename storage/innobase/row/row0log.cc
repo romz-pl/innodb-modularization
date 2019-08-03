@@ -33,6 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_write_int_fd.h>
 #include <innodb/io/os_file_read_no_error_handling_int_fd.h>
 #include <innodb/io/IORequest.h>
+#include <innodb/record/rec_get_1byte_offs_flag.h>
+#include <innodb/record/rec_2_is_field_extern.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_extra_size.h>
+#include <innodb/record/rec_offs_data_size.h>
+#include <innodb/record/rec_offs_set_n_fields.h>
 
 #include "row0log.h"
 

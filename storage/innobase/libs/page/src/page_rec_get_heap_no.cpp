@@ -1,6 +1,8 @@
 #include <innodb/page/page_rec_get_heap_no.h>
 
 #include <innodb/page/page_rec_is_comp.h>
+#include <innodb/record/rec_get_heap_no_new.h>
+#include <innodb/record/rec_get_heap_no_old.h>
 
 /** Returns the heap number of a record.
  @return heap number */

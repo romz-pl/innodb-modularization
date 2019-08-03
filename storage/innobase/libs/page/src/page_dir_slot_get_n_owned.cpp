@@ -2,7 +2,8 @@
 
 #include <innodb/page/page_dir_slot_get_rec.h>
 #include <innodb/page/page_rec_is_comp.h>
-#include <innodb/record/rec_t.h>
+#include <innodb/record/rec_get_n_owned_new.h>
+#include <innodb/record/rec_get_n_owned_old.h>
 
 /** Gets the number of records owned by a directory slot.
  @return number of records */

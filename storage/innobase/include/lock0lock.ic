@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/7/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_heap_no_new.h>
+#include <innodb/record/rec_get_heap_no_old.h>
+
 #include "btr0cur.h"
 #include "buf0buf.h"
 #include "dict0dict.h"

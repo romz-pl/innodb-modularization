@@ -33,6 +33,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 
 #include <innodb/logger/info.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_nth_size.h>
+#include <innodb/record/rec_offs_nth_sql_null.h>
+#include <innodb/record/rec_offs_nth_default.h>
+#include <innodb/record/rec_get_instant_flag_new.h>
+#include <innodb/record/rec_set_instant_flag_new.h>
+#include <innodb/record/rec_set_info_bits_old.h>
+#include <innodb/record/rec_set_nth_field.h>
+#include <innodb/record/rec_offs_init.h>
 
 #include "dict0dict.h"
 #include "ha_prototypes.h"

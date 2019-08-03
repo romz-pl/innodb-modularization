@@ -35,6 +35,21 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/math/ut_pair_min.h>
 #include <innodb/time/ut_time_us.h>
 #include <innodb/page/cursor_movement.h>
+#include <innodb/record/rec_offs_init.h>
+#include <innodb/record/rec_offs_extra_size.h>
+#include <innodb/record/rec_get_info_and_status_bits.h>
+#include <innodb/record/rec_set_info_and_status_bits.h>
+#include <innodb/record/rec_set_info_bits_old.h>
+#include <innodb/record/rec_get_heap_no_new.h>
+#include <innodb/record/rec_get_next_ptr.h>
+#include <innodb/record/rec_get_heap_no_old.h>
+#include <innodb/record/rec_copy.h>
+#include <innodb/record/rec_set_heap_no_new.h>
+#include <innodb/record/rec_set_heap_no_old.h>
+#include <innodb/record/rec_get_start.h>
+#include <innodb/record/rec_offs_make_valid.h>
+#include <innodb/record/rec_offs_data_size.h>
+#include <innodb/record/rec_get_end.h>
 
 #include "page0cur.h"
 

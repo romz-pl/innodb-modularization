@@ -36,6 +36,7 @@ Created 2018-01-27 by Sunny Bains */
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_wait_time_low.h>
 #include <innodb/sync_rw/rw_lock_get_waiters.h>
+#include <innodb/record/rec_offs_init.h>
 
 #include "btr0pcur.h"
 #include "dict0dict.h"
