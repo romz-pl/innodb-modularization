@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_t.h>
+#include <innodb/disk/page_t.h>
 
 /** Determine whether the page is a B-tree leaf.
  @return true if the page is a B-tree leaf (PAGE_LEVEL = 0) */

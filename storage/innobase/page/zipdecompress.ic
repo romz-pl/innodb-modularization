@@ -39,7 +39,7 @@ external tools. */
 #define zip_decompress_ic
 
 #include "btr0types.h"
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include <innodb/page/flag.h>
 #include <innodb/page/page_dir_get_n_heap.h>
 #include <innodb/page/page_zip_get_size.h>

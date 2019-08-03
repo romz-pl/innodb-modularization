@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/page_no_t.h>
 
 struct fil_space_t;
 

@@ -4,9 +4,8 @@
 
 #include <innodb/tablespace/space_id_t.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
-#include <innodb/page/FSEG_PAGE_DATA.h>
 #include "sql/dd/object_id.h"
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/page_no_t.h>
 
 #include <limits>
 
@@ -115,7 +114,7 @@ every XDES_DESCRIBED_PER_PAGE pages in every tablespace. */
 /* @} */
 
 
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 
 /* The physical size of a list base node in bytes */
 constexpr ulint FLST_BASE_NODE_SIZE = 4 + 2 * FIL_ADDR_SIZE;
@@ -286,6 +285,12 @@ Segment inode which is created for each segment in a tablespace. NOTE: in
 purge we assume that a segment having only one currently used page can be
 freed in a few steps, so that the freeing cannot fill the file buffer with
 bufferfixed file pages. */
+
+#include <innodb/disk/flags.h>
+
+/** On a page of any file segment, data may be put starting from this
+offset */
+#define FSEG_PAGE_DATA FIL_PAGE_DATA
 
 #define FSEG_INODE_PAGE_NODE FSEG_PAGE_DATA
 /* the list node for linking

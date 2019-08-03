@@ -1,6 +1,6 @@
 #include <innodb/tablespace/fsp_header_get_sdi_offset.h>
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/io/Encryption.h>
 #include <innodb/tablespace/xdes_arr_size.h>
 #include <innodb/tablespace/consts.h>

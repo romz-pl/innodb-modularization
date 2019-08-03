@@ -10,6 +10,8 @@ add_subdirectory( compiler_hints )
 add_subdirectory( crc32 )
 add_subdirectory( counter )
 
+add_subdirectory( disk )
+
 add_subdirectory( error )
 add_subdirectory( enum )
 

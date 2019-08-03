@@ -1,6 +1,6 @@
 #include <innodb/tablespace/fsp_header_get_encryption_progress_offset.h>
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/tablespace/fsp_header_get_sdi_offset.h>
 #include <innodb/tablespace/consts.h>
 

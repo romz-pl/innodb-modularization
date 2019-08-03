@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 
 
 //

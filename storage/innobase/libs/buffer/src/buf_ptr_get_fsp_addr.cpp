@@ -4,8 +4,8 @@
 #include <innodb/align/ut_align_offset.h>
 #include <innodb/buffer/macros.h>
 #include <innodb/machine/data.h>
-#include <innodb/page/page_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/page_t.h>
+#include <innodb/disk/flags.h>
 #include <innodb/tablespace/fil_addr_t.h>
 
 /** Gets the space id, page offset, and byte offset within page of a

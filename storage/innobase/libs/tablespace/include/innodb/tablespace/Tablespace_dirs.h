@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/error/dberr_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include <innodb/tablespace/Scanned_files.h>
 #include <innodb/tablespace/Space_id_set.h>
 #include <innodb/tablespace/Tablespace_files.h>

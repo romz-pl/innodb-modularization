@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/machine/data.h>
 #include <innodb/buffer/buf_block_get_frame.h>
 #include <innodb/page/page_header_get_field.h>
-#include <innodb/page/fil_page_index_page_check.h>
+#include <innodb/disk/fil_page_index_page_check.h>
 #include <innodb/record/rec_set_n_owned_old.h>
 #include <innodb/record/rec_get_next_offs.h>
 #include <innodb/record/rec_get_deleted_flag.h>

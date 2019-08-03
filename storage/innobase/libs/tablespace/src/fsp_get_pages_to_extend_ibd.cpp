@@ -1,6 +1,6 @@
 #include <innodb/tablespace/fsp_get_pages_to_extend_ibd.h>
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/tablespace/fsp_get_extent_size_in_pages.h>
 #include <innodb/tablespace/consts.h>
 

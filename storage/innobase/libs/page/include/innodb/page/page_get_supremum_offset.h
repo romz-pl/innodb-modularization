@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_t.h>
+#include <innodb/disk/page_t.h>
 
 /** Gets the offset of the last record on the page.
  @return offset of the last record in record list, relative from page */

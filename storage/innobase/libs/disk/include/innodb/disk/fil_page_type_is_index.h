@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_type_t.h>
+#include <innodb/disk/page_type_t.h>
 
 /** Check whether the page type is index (Btree or Rtree or SDI) type */
 #define fil_page_type_is_index(page_type)                      \

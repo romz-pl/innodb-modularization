@@ -20,7 +20,7 @@
 #include <innodb/ioasync/srv_reset_io_thread_op_info.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include <innodb/sync_event/os_event_create.h>
 #include <innodb/sync_event/os_event_destroy.h>
 #include <innodb/sync_event/os_event_reset.h>

@@ -5,7 +5,7 @@
 #include <innodb/error/dberr_t.h>
 #include <innodb/lst/lst.h>
 #include <innodb/memory/mem_heap_t.h>
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>

@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_type_t.h>
+#include <innodb/disk/page_type_t.h>
 
 /** Get the file page type.
 @param[in]	page		File page

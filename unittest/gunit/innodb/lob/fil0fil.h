@@ -26,7 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef _fil0fil_h_
 #define _fil0fil_h_
 
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include "lot0types.h"
 #include <innodb/machine/data.h>
 

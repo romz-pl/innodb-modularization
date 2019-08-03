@@ -3,7 +3,7 @@
 #include <innodb/io/IORequest.h>
 #include <innodb/io/os_file_read_page.h>
 #include <innodb/tablespace/fsp_header_get_flags.h>
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 
 /** NOTE! Use the corresponding macro os_file_read_first_page(), not
 directly this function!

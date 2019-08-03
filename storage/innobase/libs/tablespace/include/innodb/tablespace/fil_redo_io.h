@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/error/dberr_t.h>
 
 class page_id_t;

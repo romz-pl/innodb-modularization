@@ -42,8 +42,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/ioasync/os_aio_simulated_put_read_threads_to_sleep.h>
 #include <innodb/io/IORequest.h>
-#include <innodb/page/fil_page_get_prev.h>
-#include <innodb/page/fil_page_get_next.h>
+#include <innodb/disk/fil_page_get_prev.h>
+#include <innodb/disk/fil_page_get_next.h>
 
 #include "buf0buf.h"
 #include "buf0dblwr.h"

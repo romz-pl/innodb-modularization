@@ -1,7 +1,7 @@
 #include <innodb/tablespace/fsp_flags_is_valid.h>
 
-#include <innodb/page/page_zip_t.h>
-#include <innodb/page/flag.h>
+#include <innodb/tablespace/consts.h>
+#include <innodb/disk/flags.h>
 
 /** Validate the tablespace flags.
 These flags are stored in the tablespace header at offset FSP_SPACE_FLAGS.

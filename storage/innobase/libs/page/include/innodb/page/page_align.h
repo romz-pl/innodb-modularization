@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_t.h>
+#include <innodb/disk/page_t.h>
 
 /** Gets the start of a page.
  @return start of the page */

@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/5/1995 Heikki Tuuri
  *******************************************************/
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 // #include <innodb/univ/univ.h>
 #include <innodb/univ/univ.h>
 

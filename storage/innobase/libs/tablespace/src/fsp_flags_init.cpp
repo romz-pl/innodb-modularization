@@ -1,6 +1,6 @@
 #include <innodb/tablespace/fsp_flags_init.h>
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/tablespace/fsp_flags_set_page_size.h>
 #include <innodb/tablespace/fsp_flags_set_zip_size.h>
 

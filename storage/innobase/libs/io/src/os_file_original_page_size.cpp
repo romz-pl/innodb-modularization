@@ -2,8 +2,8 @@
 
 #include <innodb/assert/assert.h>
 #include <innodb/machine/data.h>
-#include <innodb/page/page_type_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/page_type_t.h>
+#include <innodb/disk/flags.h>
 
 /** If it is a compressed page return the original page data + footer size
 @param[in] buf		Buffer to check, must include header + 10 bytes

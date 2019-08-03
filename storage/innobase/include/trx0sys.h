@@ -35,7 +35,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/FSEG_PAGE_DATA.h>
 #include <innodb/tablespace/Space_Ids.h>
 #include <innodb/tablespace/trx_sys_undo_spaces.h>
 #include <innodb/tablespace/consts.h>

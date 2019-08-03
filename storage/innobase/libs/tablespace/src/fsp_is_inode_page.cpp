@@ -2,7 +2,7 @@
 
 #include <innodb/tablespace/consts.h>
 #include <innodb/assert/assert.h>
-#include <innodb/page/univ_page_size.h>
+#include <innodb/disk/univ_page_size.h>
 
 /** Check if a specified page is inode page or not. This is used for
 index root pages of hard-coded DD tables, we can safely assume that the passed

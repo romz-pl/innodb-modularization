@@ -188,6 +188,7 @@ target_link_libraries(
     enum
     io
     ioasync
+    memory
     string
     sync_rw
     PRIVATE

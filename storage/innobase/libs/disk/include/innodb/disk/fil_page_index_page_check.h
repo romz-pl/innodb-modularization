@@ -2,8 +2,8 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/fil_page_type_is_index.h>
-#include <innodb/page/fil_page_get_type.h>
+#include <innodb/disk/fil_page_type_is_index.h>
+#include <innodb/disk/fil_page_get_type.h>
 
 /** Check whether the page is index page (either regular Btree index or Rtree
 index */

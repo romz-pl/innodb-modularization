@@ -41,7 +41,7 @@ external tools. */
 #include <innodb/univ/univ.h>
 
 #include "btr0types.h"
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include "page0types.h"
 
 #include "page/page.ic"

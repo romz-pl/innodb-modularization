@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/page_id_t.h>
 
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 
 /** Calculates the CRC32 checksum of a page. The value is stored to the page
 when it is written to a file and also checked for a match when reading from

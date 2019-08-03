@@ -1,6 +1,6 @@
-#include <innodb/page/fil_page_get_next.h>
+#include <innodb/disk/fil_page_get_next.h>
 
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include <innodb/machine/data.h>
 
 /** Get the successor of a file page.

@@ -5,7 +5,7 @@
 #include <innodb/tablespace/encryption_op_type.h>
 #include <innodb/tablespace/lsn_t.h>
 #include <innodb/tablespace/space_id_t.h>
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/page_no_t.h>
 #include <innodb/tablespace/device_t.h>
 #include <innodb/io/os_file_create_t.h>
 #include <innodb/io/pfs_os_file_t.h>

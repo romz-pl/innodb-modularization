@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_t.h>
+#include <innodb/disk/page_t.h>
 
 /** Returns the offset stored in the given header field.
  @return offset from the start of the page, or 0 */

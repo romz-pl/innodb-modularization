@@ -1,6 +1,6 @@
 #include <innodb/tablespace/fsp_flags_is_compressed.h>
 
-#include <innodb/page/flag.h>
+#include <innodb/tablespace/consts.h>
 
 /** Determine if the tablespace is compressed from tablespace flags.
 @param[in]	flags	Tablespace flags

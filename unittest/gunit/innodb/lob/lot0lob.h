@@ -29,7 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <string.h>
 
 #include "db0err.h"
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include "fut0fut.h"
 #include "fut0lst.h"
 #include "lob0int.h"

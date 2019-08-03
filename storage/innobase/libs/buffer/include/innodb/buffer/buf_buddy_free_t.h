@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/lst/lst.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include <innodb/buffer/buf_page_t.h>
 
 /** Struct that is embedded in the free zip blocks */

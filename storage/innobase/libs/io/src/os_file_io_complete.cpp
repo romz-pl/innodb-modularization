@@ -1,7 +1,7 @@
 #include <innodb/io/os_file_io_complete.h>
 
 #include <innodb/io/os_file_punch_hole.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 
 
 dberr_t os_file_decompress_page(bool dblwr_recover, byte *src, byte *dst, ulint dst_len);

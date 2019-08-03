@@ -1,6 +1,6 @@
 #include <innodb/tablespace/xdes_arr_size.h>
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/tablespace/consts.h>
 
 /** Calculates the descriptor array size.

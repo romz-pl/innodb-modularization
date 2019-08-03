@@ -1,7 +1,7 @@
 #include <innodb/tablespace/fil_space_get_page_size.h>
 
 #include <innodb/tablespace/fil_space_get_flags.h>
-#include <innodb/page/univ_page_size.h>
+#include <innodb/disk/univ_page_size.h>
 
 /** Returns the page size of the space and whether it is compressed or not.
 The tablespace must be cached in the memory cache.

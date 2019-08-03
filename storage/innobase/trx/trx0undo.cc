@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
-#include <innodb/page/fil_page_set_type.h>
+#include <innodb/disk/fil_page_set_type.h>
 
 #include <sql_thd_internal_api.h>
 

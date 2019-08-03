@@ -5,7 +5,7 @@
 #include <innodb/error/dberr_t.h>
 #include <innodb/io/os_offset_t.h>
 #include <innodb/io/pfs_os_file_t.h>
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/tablespace/space_id_t.h>
 
 struct buf_block_t;

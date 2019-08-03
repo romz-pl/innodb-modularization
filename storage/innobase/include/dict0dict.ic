@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/allocator/UT_NEW_NOKEY.h>
 #include <innodb/sync_mutex/mutex_create.h>
-#include <innodb/page/univ_page_size.h>
+#include <innodb/disk/univ_page_size.h>
 #include <innodb/record/flag.h>
 
 #include "buf0flu.h"

@@ -28,7 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define _buf0buf_h_
 
 #include "fil0fil.h"
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include "lot0types.h"
 
 inline void buf_ptr_get_fsp_addr(const void *ptr, space_id_t *space,

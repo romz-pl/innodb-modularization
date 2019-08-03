@@ -1,6 +1,6 @@
-#include <innodb/page/fil_page_get_type.h>
+#include <innodb/disk/fil_page_get_type.h>
 
-#include <innodb/page/page_type_t.h>
+#include <innodb/disk/page_type_t.h>
 #include <innodb/machine/data.h>
 
 /** Get the file page type.

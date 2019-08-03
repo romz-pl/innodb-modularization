@@ -2,7 +2,7 @@
 
 #include <innodb/math/ut_2pow_remainder.h>
 #include <innodb/tablespace/consts.h>
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 
 /** Calculates the descriptor index within a descriptor page.
 @param[in]	page_size	page size

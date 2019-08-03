@@ -4,7 +4,7 @@
 #include <innodb/io/pfs.h>
 #include <innodb/io/os_file_delete_if_exists.h>
 #include <innodb/io/srv_read_only_mode.h>
-#include <innodb/page/univ_page_size.h>
+#include <innodb/disk/univ_page_size.h>
 #include <innodb/string/innobase_strcasecmp.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fil_fusionio_enable_atomic_write.h>

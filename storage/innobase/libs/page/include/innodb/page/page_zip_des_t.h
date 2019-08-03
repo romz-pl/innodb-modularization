@@ -3,6 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/page/page_zip_t.h>
+#include <innodb/disk/flags.h>
 
 
 /** Compressed page descriptor */

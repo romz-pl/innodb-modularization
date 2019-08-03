@@ -1,6 +1,6 @@
-#include <innodb/page/fil_page_get_prev.h>
+#include <innodb/disk/fil_page_get_prev.h>
 
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include <innodb/machine/data.h>
 
 /** Get the predecessor of a file page.

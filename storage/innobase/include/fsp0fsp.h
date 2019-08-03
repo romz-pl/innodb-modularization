@@ -35,8 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_t.h>
-#include <innodb/page/FSEG_PAGE_DATA.h>
+#include <innodb/disk/page_t.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fsp_header_get_field.h>
 #include <innodb/tablespace/fsp_header_get_flags.h>
@@ -57,7 +56,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/math/ut_2pow_round.h>
 #include <innodb/bit/ut_bit_get_nth.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
-#include <innodb/page/univ_page_size.h>
+#include <innodb/disk/univ_page_size.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fsp_flags_is_compressed.h>
 #include <innodb/tablespace/fsp_flags_are_equal.h>
@@ -76,7 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fsp_header_get_server_version.h>
 #include <innodb/tablespace/fsp_header_get_space_version.h>
 #include <innodb/tablespace/xdes_state_t.h>
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/page_no_t.h>
 #include <innodb/tablespace/fsp_get_extent_size_in_pages.h>
 #include <innodb/tablespace/fsp_init.h>
 #include <innodb/tablespace/fsp_get_pages_to_extend_ibd.h>

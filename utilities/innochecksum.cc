@@ -63,14 +63,14 @@
 The parts not included are excluded by #ifndef UNIV_INNOCHECKSUM. */
 
 #include "storage/innobase/include/buf0checksum.h"
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include "storage/innobase/include/fsp0fsp.h"   /* fsp_flags_get_page_size() &
 
 					   fsp_flags_get_zip_size() */
 #include "storage/innobase/include/fut0lst.h"   /* FLST_NODE_SIZE */
 #include <innodb/machine/data.h> /* mach_read_from_4() */
 #include "storage/innobase/include/page0page.h" /* PAGE_* */
-#include <innodb/page/page_size_t.h> /* page_size_t */
+#include <innodb/disk/page_size_t.h> /* page_size_t */
 #include "storage/innobase/include/page0zip.h"
 #include "storage/innobase/include/trx0undo.h" /* TRX_UNDO_* */
 #include "storage/innobase/libs/crc32/include/innodb/crc32/crc32.h" /* ut_crc32_init() */

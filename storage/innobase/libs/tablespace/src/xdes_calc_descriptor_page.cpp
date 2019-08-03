@@ -3,7 +3,7 @@
 #include <innodb/tablespace/consts.h>
 #include <innodb/math/ut_2pow_round.h>
 #include <innodb/assert/assert.h>
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 
 /** Calculates the page where the descriptor of a page resides.
 @param[in]	page_size	page size

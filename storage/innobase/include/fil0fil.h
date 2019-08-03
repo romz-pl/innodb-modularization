@@ -65,7 +65,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fil_space_get_n_reserved_extents.h>
 #include <innodb/tablespace/fil_space_release_free_extents.h>
 #include <innodb/tablespace/fil_space_reserve_free_extents.h>
-#include <innodb/page/page_type_t.h>
+#include <innodb/disk/page_type_t.h>
 #include <innodb/io/Fil_path.h>
 #include <innodb/io/ib_file_suffix.h>
 #include <innodb/io/Encryption.h>
@@ -106,13 +106,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fil_space_get_page_size.h>
 #include <innodb/tablespace/fil_init.h>
 #include <innodb/tablespace/fil_close.h>
-#include <innodb/page/fil_page_get_type.h>
+#include <innodb/disk/fil_page_get_type.h>
 
 #include "dict0types.h"
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 #include "log0recv.h"
 #include <innodb/machine/data.h>
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #ifndef UNIV_HOTBACKUP
 #include "ibuf0types.h"
 #endif /* !UNIV_HOTBACKUP */

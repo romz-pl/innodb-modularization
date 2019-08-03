@@ -5,8 +5,8 @@
 #include <innodb/ioasync/Slot.h>
 #include <innodb/io/os_file_io_complete.h>
 #include <innodb/machine/data.h>
-#include <innodb/page/page_type_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/page_type_t.h>
+#include <innodb/disk/flags.h>
 
 /** Generic AIO Handler methods. Currently handles IO post processing. */
 class AIOHandler {

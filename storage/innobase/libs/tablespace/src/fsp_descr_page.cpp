@@ -1,7 +1,7 @@
 #include <innodb/tablespace/fsp_descr_page.h>
 
 #include <innodb/tablespace/page_id_t.h>
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include <innodb/tablespace/consts.h>
 
 /** Checks if a page address is an extent descriptor page address.

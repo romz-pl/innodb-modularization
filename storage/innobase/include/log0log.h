@@ -48,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/tablespace/space_id_t.h>
 #include <innodb/wait/Wait_stats.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 
 #include "dyn0buf.h"
 #ifndef UNIV_HOTBACKUP

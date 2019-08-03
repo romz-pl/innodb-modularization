@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/io/pfs_os_file_t.h>
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/page_no_t.h>
 #include <innodb/sync_event/os_event_t.h>
 #include <innodb/lst/lst.h>
 

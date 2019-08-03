@@ -2,9 +2,9 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/type.h>
-#include <innodb/page/FSEG_PAGE_DATA.h>
-#include <innodb/page/page_t.h>
+#include <innodb/disk/flags.h>
+#include <innodb/tablespace/consts.h>
+#include <innodb/disk/page_t.h>
 #include <innodb/record/flag.h>
 
 

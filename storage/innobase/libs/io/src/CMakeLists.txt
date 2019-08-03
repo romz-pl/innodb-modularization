@@ -166,9 +166,9 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     allocator
+    disk
     formatting
     monitor
-    page
     sync_mutex
     ${ZLIB_LIBRARY}
     ${LZ4_LIBRARY}

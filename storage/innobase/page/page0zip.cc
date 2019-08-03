@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "page0zip.h"
 
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 
 /** A BLOB field reference full of zero, for use in assertions and tests.
 Initially, BLOB field references are set to zero, in

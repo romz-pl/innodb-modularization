@@ -9,7 +9,7 @@
 #include <innodb/ioasync/os_file_set_size.h>
 #include <innodb/logger/error.h>
 #include <innodb/logger/info.h>
-#include <innodb/page/univ_page_size.h>
+#include <innodb/disk/univ_page_size.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fil_delete_tablespace.h>
 #include <innodb/tablespace/fil_fusionio_enable_atomic_write.h>

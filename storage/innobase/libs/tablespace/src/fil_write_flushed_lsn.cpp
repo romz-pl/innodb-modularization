@@ -6,7 +6,7 @@
 #include <innodb/tablespace/fil_system.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/align/ut_align.h>
-#include <innodb/page/univ_page_size.h>
+#include <innodb/disk/univ_page_size.h>
 #include <innodb/enum/to_int.h>
 #include <innodb/allocator/ut_free.h>
 #include <innodb/tablespace/fil_system.h>

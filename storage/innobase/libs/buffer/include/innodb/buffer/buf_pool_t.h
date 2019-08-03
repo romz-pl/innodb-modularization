@@ -15,7 +15,7 @@
 #include <innodb/buffer/buf_pool_stat_t.h>
 #include <innodb/buffer/macros.h>
 #include <innodb/lst/lst.h>
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/page_no_t.h>
 #include <innodb/sync_event/os_event_t.h>
 
 

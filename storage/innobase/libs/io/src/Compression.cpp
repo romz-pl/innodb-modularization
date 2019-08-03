@@ -5,8 +5,8 @@
 #include <innodb/assert/assert.h>
 #include <innodb/logger/error.h>
 #include <innodb/machine/data.h>
-#include <innodb/page/page_type_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/page_type_t.h>
+#include <innodb/disk/flags.h>
 
 #include <sstream>
 #include <lz4.h>

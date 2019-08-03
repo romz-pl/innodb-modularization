@@ -1,6 +1,6 @@
 #include <innodb/tablespace/fsp_flags_are_equal.h>
 
-#include <innodb/page/flag.h>
+#include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fsp_is_shared_tablespace.h>
 
 #define ACTUAL_SSIZE(ssize) (0 == ssize ? UNIV_PAGE_SSIZE_ORIG : ssize)

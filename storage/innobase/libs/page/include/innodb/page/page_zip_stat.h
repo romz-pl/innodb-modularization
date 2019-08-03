@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_zip_t.h>
+#include <innodb/disk/flags.h>
 #include <innodb/page/page_zip_stat_t.h>
 
 /** Statistics on compression, indexed by page_zip_des_t::ssize - 1 */

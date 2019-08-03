@@ -1,8 +1,8 @@
 #include <innodb/page/page_is_root.h>
 
 #include <innodb/page/header.h>
-#include <innodb/page/fil_page_index_page_check.h>
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/fil_page_index_page_check.h>
+#include <innodb/disk/page_no_t.h>
 
 /** Determine whether a page is an index root page.
 @param[in]	page	page frame

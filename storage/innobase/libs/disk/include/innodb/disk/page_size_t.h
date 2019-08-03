@@ -36,8 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/assert/assert.h>
 #include <innodb/math/ut_is_2pow.h>
-#include <innodb/page/flag.h>
-#include <innodb/page/page_no_t.h>
+#include <innodb/disk/flags.h>
+#include <innodb/disk/page_no_t.h>
 
 #include <ostream>
 

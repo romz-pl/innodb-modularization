@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "data0types.h"
 #include "dict0types.h"
 #include "mem0mem.h"
-#include <innodb/page/page_size_t.h>
+#include <innodb/disk/page_size_t.h>
 #include "row0types.h"
 
 

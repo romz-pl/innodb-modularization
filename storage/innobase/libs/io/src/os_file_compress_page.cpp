@@ -6,8 +6,8 @@
 #include <innodb/error/ut_error.h>
 #include <innodb/io/os_alloc_block.h>
 #include <innodb/machine/data.h>
-#include <innodb/page/page_type_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/page_type_t.h>
+#include <innodb/disk/flags.h>
 #include <innodb/io/os_io_ptr_align.h>
 
 #include <string.h>

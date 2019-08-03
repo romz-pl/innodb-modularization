@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_t.h>
+#include <innodb/disk/page_t.h>
 
 /** Returns the maximum combined size of records which can be inserted on top
 of record heap if page is first reorganized.

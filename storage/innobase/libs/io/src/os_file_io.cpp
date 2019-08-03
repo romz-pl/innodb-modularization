@@ -8,7 +8,7 @@
 #include <innodb/io/os_file_io_complete.h>
 #include <innodb/io/os_free_block.h>
 #include <innodb/logger/warn.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/flags.h>
 
 /** Number of retries for partial I/O's */
 static const ulint NUM_RETRIES_ON_PARTIAL_IO = 10;

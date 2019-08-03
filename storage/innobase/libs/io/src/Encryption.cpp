@@ -9,8 +9,7 @@
 #include <innodb/sync_mutex/ib_mutex_t.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
-#include <innodb/page/page_type_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/page_type_t.h>
 
 #include "my_aes.h"
 #include "my_rnd.h"

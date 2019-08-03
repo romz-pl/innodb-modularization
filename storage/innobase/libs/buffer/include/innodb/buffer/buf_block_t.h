@@ -5,8 +5,8 @@
 #include <innodb/buffer/buf_page_t.h>
 #include <innodb/buffer/BPageLock.h>
 #include <innodb/buffer/BPageMutex.h>
-#include <innodb/page/page_type_t.h>
-#include <innodb/page/type.h>
+#include <innodb/disk/page_type_t.h>
+#include <innodb/disk/flags.h>
 #include <innodb/machine/data.h>
 
 struct dict_index_t;
