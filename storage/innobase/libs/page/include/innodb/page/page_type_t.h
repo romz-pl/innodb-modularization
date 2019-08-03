@@ -116,26 +116,5 @@ constexpr page_type_t FIL_PAGE_TYPE_ZLOB_FRAG_ENTRY = 29;
 /** Used by i_s.cc to index into the text description. */
 constexpr page_type_t FIL_PAGE_TYPE_LAST = FIL_PAGE_TYPE_ZLOB_FRAG_ENTRY;
 
-/** Check whether the page type is index (Btree or Rtree or SDI) type */
-#define fil_page_type_is_index(page_type)                      \
-  (page_type == FIL_PAGE_INDEX || page_type == FIL_PAGE_SDI || \
-   page_type == FIL_PAGE_RTREE)
 
-
-
-/** Sets the file page type.
-@param[in,out]	page		File page
-@param[in]	type		File page type to set */
-void fil_page_set_type(byte *page, ulint type);
-
-
-/** Get the file page type.
-@param[in]	page		File page
-@return page type */
-page_type_t fil_page_get_type(const byte *page);
-
-/** Check whether the page is index page (either regular Btree index or Rtree
-index */
-#define fil_page_index_page_check(page) \
-  fil_page_type_is_index(fil_page_get_type(page))
 

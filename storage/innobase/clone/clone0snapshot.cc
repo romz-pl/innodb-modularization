@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/io/IORequest.h>
+#include <innodb/page/page_zip_set_size.h>
 
 #include "clone0snapshot.h"
 #include "handler.h"

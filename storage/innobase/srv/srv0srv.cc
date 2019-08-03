@@ -392,33 +392,12 @@ with mutex_enter(), which will wait until it gets the mutex. */
 
 /** Dedicated server setting */
 bool srv_dedicated_server = true;
-/** Requested size in bytes */
-ulint srv_buf_pool_size = ULINT_MAX;
-/** Minimum pool size in bytes */
-const ulint srv_buf_pool_min_size = 5 * 1024 * 1024;
-/** Default pool size in bytes */
-const ulint srv_buf_pool_def_size = 128 * 1024 * 1024;
-/** Requested buffer pool chunk size. Each buffer pool instance consists
-of one or more chunks. */
-ulonglong srv_buf_pool_chunk_unit;
-/** Requested number of buffer pool instances */
-ulong srv_buf_pool_instances;
-/** Default number of buffer pool instances */
-const ulong srv_buf_pool_instances_default = 0;
 /** Number of locks to protect buf_pool->page_hash */
 ulong srv_n_page_hash_locks = 16;
 /** Scan depth for LRU flush batch i.e.: number of blocks scanned*/
 ulong srv_LRU_scan_depth = 1024;
 /** Whether or not to flush neighbors of a block */
 ulong srv_flush_neighbors = 1;
-/** Previously requested size. Accesses protected by memory barriers. */
-ulint srv_buf_pool_old_size = 0;
-/** Current size as scaling factor for the other components */
-ulint srv_buf_pool_base_size = 0;
-/** Current size in bytes */
-long long srv_buf_pool_curr_size = 0;
-/** Dump this % of each buffer pool during BP dump */
-ulong srv_buf_pool_dump_pct;
 /** Lock table size in bytes */
 ulint srv_lock_table_size = ULINT_MAX;
 

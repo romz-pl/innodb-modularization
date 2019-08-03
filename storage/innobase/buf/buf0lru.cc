@@ -65,6 +65,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/io/os_n_file_reads.h>
 #include <innodb/io/os_n_file_writes.h>
+#include <innodb/page/page_zip_set_size.h>
 
 #include "buf0lru.h"
 

@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define UNIV_INLINE
 #endif
 
+#include <innodb/page/page_dir_get_n_heap.h>
+#include <innodb/page/page_zip_dir_start_offs.h>
 #include "mtr0log.h"
 #include "page0page.h"
 #include "page0zip.h"
@@ -379,18 +381,6 @@ byte *page_zip_dir_find_free(
                                 offset));
 }
 
-/** Gets an offset to the compressed page trailer (the dense page directory),
- including deleted records (the free list).
- @return offset of the dense page directory */
-UNIV_INLINE
-ulint page_zip_dir_start_offs(
-    const page_zip_des_t *page_zip, /*!< in: compressed page */
-    ulint n_dense)                  /*!< in: directory size */
-{
-  ut_ad(n_dense * PAGE_ZIP_DIR_SLOT_SIZE < page_zip_get_size(page_zip));
-
-  return (page_zip_get_size(page_zip) - n_dense * PAGE_ZIP_DIR_SLOT_SIZE);
-}
 
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE

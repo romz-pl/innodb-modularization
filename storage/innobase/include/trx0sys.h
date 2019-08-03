@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/Space_Ids.h>
 #include <innodb/tablespace/trx_sys_undo_spaces.h>
 #include <innodb/tablespace/consts.h>
+#include <innodb/page/header.h>
 
 #include "buf0buf.h"
 #include "fil0fil.h"

@@ -5,6 +5,21 @@
 #include <innodb/page/type.h>
 #include <innodb/page/FSEG_PAGE_DATA.h>
 #include <innodb/page/page_t.h>
+#include <innodb/record/flag.h>
+
+
+/** @name File segment header
+The file segment header points to the inode describing the file segment. */
+/* @{ */
+#define FSEG_HDR_SPACE 0   /*!< space id of the inode */
+#define FSEG_HDR_PAGE_NO 4 /*!< page number of the inode */
+#define FSEG_HDR_OFFSET 8  /*!< byte offset of the inode */
+
+#define FSEG_HEADER_SIZE            \
+  10 /*!< Length of the file system \
+     header, in bytes */
+/* @} */
+
 
 
 /*			PAGE HEADER
@@ -95,12 +110,8 @@ a new-style compact page */
 /*-----------------------------*/
 
 
-/** Reads the given header field. */
-ulint page_header_get_field(const page_t *page, /*!< in: page */
-                            ulint field);        /*!< in: PAGE_LEVEL, ... */
 
 
-/** Gets the number of records in the heap.
- @return number of user records */
-ulint page_dir_get_n_heap(const page_t *page); /*!< in: index page */
+
+
 

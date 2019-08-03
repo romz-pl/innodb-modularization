@@ -88,6 +88,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/CheckInLRUList.h>
 #include <innodb/buffer/buf_block_get_state.h>
 #include <innodb/buffer/buf_block_buf_fix_inc.h>
+#include <innodb/buffer/buf_pool_should_madvise.h>
+#include <innodb/buffer/innobase_disable_core_dump.h>
+#include <innodb/buffer/innobase_should_madvise_buf_pool.h>
+#include <innodb/buffer/buf_pool_register_chunk.h>
+#include <innodb/buffer/buf_pool_get_oldest_modification_approx.h>
+#include <innodb/buffer/buf_block_init.h>
+#include <innodb/buffer/buf_chunk_init.h>
+#include <innodb/buffer/buf_chunk_not_freed.h>
+#include <innodb/buffer/buf_pool_set_sizes.h>
+#include <innodb/page/page_zip_set_size.h>
+#include <innodb/page/page_zip_des_init.h>
 
 #include "buf0rea.h"
 #include "btr0btr.h"
@@ -395,55 +406,7 @@ on the io_type */
 #define MONITOR_RW_COUNTER(io_type, counter) \
   ((io_type == BUF_IO_READ) ? (counter##_READ) : (counter##_WRITTEN))
 
-/** Registers a chunk to buf_pool_chunk_map
-@param[in]	chunk	chunk of buffers */
-static void buf_pool_register_chunk(buf_chunk_t *chunk) {
-  buf_chunk_map_reg->insert(
-      buf_pool_chunk_map_t::value_type(chunk->blocks->frame, chunk));
-}
 
-lsn_t buf_pool_get_oldest_modification_approx(void) {
-  lsn_t lsn = 0;
-  lsn_t oldest_lsn = 0;
-
-  /* When we traverse all the flush lists we don't care if previous
-  flush lists changed. We do not require consistent result. */
-
-  for (ulint i = 0; i < srv_buf_pool_instances; i++) {
-    buf_pool_t *buf_pool;
-
-    buf_pool = buf_pool_from_array(i);
-
-    buf_flush_list_mutex_enter(buf_pool);
-
-    buf_page_t *bpage;
-
-    /* We don't let log-checkpoint halt because pages from system
-    temporary are not yet flushed to the disk. Anyway, object
-    residing in system temporary doesn't generate REDO logging. */
-    for (bpage = UT_LIST_GET_LAST(buf_pool->flush_list);
-         bpage != NULL && fsp_is_system_temporary(bpage->id.space());
-         bpage = UT_LIST_GET_PREV(list, bpage)) {
-      /* Do nothing. */
-    }
-
-    if (bpage != NULL) {
-      ut_ad(bpage->in_flush_list);
-      lsn = bpage->oldest_modification;
-    }
-
-    buf_flush_list_mutex_exit(buf_pool);
-
-    if (!oldest_lsn || oldest_lsn > lsn) {
-      oldest_lsn = lsn;
-    }
-  }
-
-  /* The returned answer may be out of date: the flush_list can
-  change after the mutex has been released. */
-
-  return (oldest_lsn);
-}
 
 lsn_t buf_pool_get_oldest_modification_lwm(void) {
   const lsn_t lsn = buf_pool_get_oldest_modification_approx();
@@ -702,348 +665,8 @@ static void pfs_register_buffer_block(
 }
 #endif /* PFS_GROUP_BUFFER_SYNC */
 
-/** Initializes a buffer control block when the buf_pool is created. */
-static void buf_block_init(
-    buf_pool_t *buf_pool, /*!< in: buffer pool instance */
-    buf_block_t *block,   /*!< in: pointer to control block */
-    byte *frame)          /*!< in: pointer to buffer frame */
-{
-  UNIV_MEM_DESC(frame, UNIV_PAGE_SIZE);
 
-  /* This function should only be executed at database startup or by
-  buf_pool_resize(). Either way, adaptive hash index must not exist. */
-  assert_block_ahi_empty_on_init(block);
 
-  block->frame = frame;
-
-  block->page.buf_pool_index = buf_pool_index(buf_pool);
-  block->page.state = BUF_BLOCK_NOT_USED;
-  block->page.buf_fix_count = 0;
-  block->page.io_fix = BUF_IO_NONE;
-  block->page.flush_observer = NULL;
-
-  block->modify_clock = 0;
-
-  ut_d(block->page.file_page_was_freed = FALSE);
-
-  block->index = NULL;
-  block->made_dirty_with_no_latch = false;
-
-  ut_d(block->page.in_page_hash = FALSE);
-  ut_d(block->page.in_zip_hash = FALSE);
-  ut_d(block->page.in_flush_list = FALSE);
-  ut_d(block->page.in_free_list = FALSE);
-  ut_d(block->page.in_LRU_list = FALSE);
-  ut_d(block->in_unzip_LRU_list = FALSE);
-  ut_d(block->in_withdraw_list = FALSE);
-
-  page_zip_des_init(&block->page.zip);
-
-  mutex_create(LATCH_ID_BUF_BLOCK_MUTEX, &block->mutex);
-
-#if defined PFS_SKIP_BUFFER_MUTEX_RWLOCK || defined PFS_GROUP_BUFFER_SYNC
-  /* If PFS_SKIP_BUFFER_MUTEX_RWLOCK is defined, skip registration
-  of buffer block rwlock with performance schema.
-
-  If PFS_GROUP_BUFFER_SYNC is defined, skip the registration
-  since buffer block rwlock will be registered later in
-  pfs_register_buffer_block(). */
-
-  rw_lock_create(PFS_NOT_INSTRUMENTED, &block->lock, SYNC_LEVEL_VARYING);
-
-  ut_d(rw_lock_create(PFS_NOT_INSTRUMENTED, &block->debug_latch,
-                      SYNC_NO_ORDER_CHECK));
-
-#else /* PFS_SKIP_BUFFER_MUTEX_RWLOCK || PFS_GROUP_BUFFER_SYNC */
-
-  rw_lock_create(buf_block_lock_key, &block->lock, SYNC_LEVEL_VARYING);
-
-  ut_d(rw_lock_create(buf_block_debug_latch_key, &block->debug_latch,
-                      SYNC_NO_ORDER_CHECK));
-
-#endif /* PFS_SKIP_BUFFER_MUTEX_RWLOCK || PFS_GROUP_BUFFER_SYNC */
-
-  block->lock.is_block_lock = 1;
-
-  ut_ad(rw_lock_validate(&(block->lock)));
-}
-/* We maintain our private view of innobase_should_madvise_buf_pool() which we
-initialize at the beginning of buf_pool_init() and then update when the
-@@global.innodb_buffer_pool_in_core_file changes.
-Changes to buf_pool_should_madvise are protected by holding chunk_mutex for all
-buf_pool_t instances.
-This way, even if @@global.innodb_buffer_pool_in_core_file changes during
-execution of buf_pool_init() (unlikely) or during buf_pool_resize(), we will use
-a single consistent value for all (de)allocated chunks.
-The function buf_pool_update_madvise() handles updating buf_pool_should_madvise
-in reaction to changes to @@global.innodb_buffer_pool_in_core_file and makes
-sure before releasing chunk_mutex-es that all chunks are properly madvised
-according to new value.
-It is important that initial value of this variable is `false` and not `true`,
-as on some platforms which do not support madvise() or MADV_DONT_DUMP we need to
-avoid taking any actions which might trigger a warning or disabling @@core_file.
-*/
-static bool buf_pool_should_madvise = false;
-
-// Doxygen gets confused by buf_chunk_t somehow.
-
-//! @cond
-
-/* Implementation of buf_chunk_t's methods */
-
-/** Advices the OS that this chunk should not be dumped to a core file.
-Emits a warning to the log if could not succeed.
-@return true iff succeeded, false if no OS support or failed */
-bool buf_chunk_t::madvise_dump() {
-#ifdef HAVE_MADV_DONTDUMP
-  if (madvise(mem, mem_size(), MADV_DODUMP)) {
-    ib::warn(ER_IB_MSG_MADVISE_FAILED, mem, mem_size(), "MADV_DODUMP",
-             strerror(errno));
-    return false;
-  }
-  return true;
-#else  /* HAVE_MADV_DONTDUMP */
-  ib::warn(ER_IB_MSG_MADV_DONTDUMP_UNSUPPORTED);
-  return false;
-#endif /* HAVE_MADV_DONTDUMP */
-}
-
-/** Advices the OS that this chunk should be dumped to a core file.
-Emits a warning to the log if could not succeed.
-@return true iff succeeded, false if no OS support or failed */
-bool buf_chunk_t::madvise_dont_dump() {
-#ifdef HAVE_MADV_DONTDUMP
-  if (madvise(mem, mem_size(), MADV_DONTDUMP)) {
-    ib::warn(ER_IB_MSG_MADVISE_FAILED, mem, mem_size(), "MADV_DONTDUMP",
-             strerror(errno));
-    return false;
-  }
-  return true;
-#else  /* HAVE_MADV_DONTDUMP */
-  ib::warn(ER_IB_MSG_MADV_DONTDUMP_UNSUPPORTED);
-  return false;
-#endif /* HAVE_MADV_DONTDUMP */
-}
-
-/* End of implementation of buf_chunk_t's methods */
-
-//! @endcond
-
-/* Implementation of buf_pool_t's methods */
-
-/** A wrapper for buf_pool_t::allocator.alocate_large which also advices the OS
-that this chunk should not be dumped to a core file if that was requested.
-Emits a warning to the log and disables @@global.core_file if advising was
-requested but could not be performed, but still return true as the allocation
-itself succeeded.
-@param[in]	mem_size  number of bytes to allocate
-@param[in,out]  chunk     mem and mem_pfx fields of this chunk will be updated
-                          to contain information about allocated memory region
-@return true iff allocated successfully */
-bool buf_pool_t::allocate_chunk(ulonglong mem_size, buf_chunk_t *chunk) {
-  ut_ad(mutex_own(&chunks_mutex));
-  chunk->mem = allocator.allocate_large(mem_size, &chunk->mem_pfx);
-  if (chunk->mem == NULL) {
-    return false;
-  }
-  /* Dump core without large memory buffers */
-  if (buf_pool_should_madvise) {
-    if (!chunk->madvise_dont_dump()) {
-      innobase_disable_core_dump();
-    }
-  }
-  return true;
-}
-
-/** A wrapper for buf_pool_t::allocator.deallocate_large which also advices the
-OS that this chunk can be dumped to a core file.
-Emits a warning to the log and disables @@global.core_file if advising was
-requested but could not be performed.
-@param[in]  chunk    mem and mem_pfx fields of this chunk will be used to locate
-                     the memory region to free */
-void buf_pool_t::deallocate_chunk(buf_chunk_t *chunk) {
-  ut_ad(mutex_own(&chunks_mutex));
-  /* Undo the effect of the earlier MADV_DONTDUMP */
-  if (buf_pool_should_madvise) {
-    if (!chunk->madvise_dump()) {
-      innobase_disable_core_dump();
-    }
-  }
-  allocator.deallocate_large(chunk->mem, &chunk->mem_pfx);
-}
-
-/** Advices the OS that all chunks in this buffer pool instance can be dumped
-to a core file.
-Emits a warning to the log if could not succeed.
-@return true iff succeeded, false if no OS support or failed */
-bool buf_pool_t::madvise_dump() {
-  ut_ad(mutex_own(&chunks_mutex));
-  for (buf_chunk_t *chunk = chunks; chunk < chunks + n_chunks; chunk++) {
-    if (!chunk->madvise_dump()) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/** Advices the OS that all chunks in this buffer pool instance should not
-be dumped to a core file.
-Emits a warning to the log if could not succeed.
-@return true iff succeeded, false if no OS support or failed */
-bool buf_pool_t::madvise_dont_dump() {
-  ut_ad(mutex_own(&chunks_mutex));
-  for (buf_chunk_t *chunk = chunks; chunk < chunks + n_chunks; chunk++) {
-    if (!chunk->madvise_dont_dump()) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/* End of implementation of buf_pool_t's methods */
-
-/** Checks if innobase_should_madvise_buf_pool() value has changed since we've
-last check and if so, then updates buf_pool_should_madvise and calls madvise
-for all chunks in all srv_buf_pool_instances.
-@see buf_pool_should_madvise comment for a longer explanation. */
-void buf_pool_update_madvise() {
-  /* We need to make sure that buf_pool_should_madvise value change does not
-  occur in parallel with allocation or deallocation of chunks in some buf_pool
-  as this could lead to inconsistency - we would call madvise for some but not
-  all chunks, perhaps with a wrong MADV_DO(NT)_DUMP flag.
-  Moreover, we are about to iterate over chunks, which requires the bounds of
-  for loop to be fixed.
-  To solve both problems we first latch all buf_pool_t::chunks_mutex-es, and
-  only then update the buf_pool_should_madvise, and perform iteration over
-  buf_pool-s and their chunks.*/
-  for (ulint i = 0; i < srv_buf_pool_instances; i++) {
-    mutex_enter(&buf_pool_from_array(i)->chunks_mutex);
-  }
-
-  auto should_madvise = innobase_should_madvise_buf_pool();
-  /* This `if` is here not for performance, but for correctness: on platforms
-  which do not support madvise MADV_DONT_DUMP we prefer to not call madvice to
-  avoid warnings and disabling @@global.core_file in cases where the user did
-  not really intend to change anything */
-  if (should_madvise != buf_pool_should_madvise) {
-    buf_pool_should_madvise = should_madvise;
-    for (ulint i = 0; i < srv_buf_pool_instances; i++) {
-      buf_pool_t *buf_pool = buf_pool_from_array(i);
-      bool success = buf_pool_should_madvise ? buf_pool->madvise_dont_dump()
-                                             : buf_pool->madvise_dump();
-      if (!success) {
-        innobase_disable_core_dump();
-        break;
-      }
-    }
-  }
-  for (ulint i = 0; i < srv_buf_pool_instances; i++) {
-    mutex_exit(&buf_pool_from_array(i)->chunks_mutex);
-  }
-}
-
-/** Allocates a chunk of buffer frames. If called for an existing buf_pool, its
- free_list_mutex must be locked.
- @return chunk, or NULL on failure */
-static buf_chunk_t *buf_chunk_init(
-    buf_pool_t *buf_pool, /*!< in: buffer pool instance */
-    buf_chunk_t *chunk,   /*!< out: chunk of buffers */
-    ulonglong mem_size,   /*!< in: requested size in bytes */
-    std::mutex *mutex)    /*!< in,out: Mutex protecting chunk map. */
-{
-  buf_block_t *block;
-  byte *frame;
-  ulint i;
-
-  mutex_own(&buf_pool->chunks_mutex);
-
-  /* Round down to a multiple of page size,
-  although it already should be. */
-  mem_size = ut_2pow_round(mem_size, UNIV_PAGE_SIZE);
-  /* Reserve space for the block descriptors. */
-  mem_size += ut_2pow_round(
-      (mem_size / UNIV_PAGE_SIZE) * (sizeof *block) + (UNIV_PAGE_SIZE - 1),
-      UNIV_PAGE_SIZE);
-
-  DBUG_EXECUTE_IF("ib_buf_chunk_init_fails", return (NULL););
-
-  if (!buf_pool->allocate_chunk(mem_size, chunk)) {
-    return (NULL);
-  }
-
-#ifdef HAVE_LIBNUMA
-  if (srv_numa_interleave) {
-    int st = mbind(chunk->mem, chunk->mem_size(), MPOL_INTERLEAVE,
-                   numa_all_nodes_ptr->maskp, numa_all_nodes_ptr->size,
-                   MPOL_MF_MOVE);
-    if (st != 0) {
-      ib::warn(ER_IB_MSG_54) << "Failed to set NUMA memory policy of"
-                                " buffer pool page frames to MPOL_INTERLEAVE"
-                                " (error: "
-                             << strerror(errno) << ").";
-    }
-  }
-#endif /* HAVE_LIBNUMA */
-
-  /* Allocate the block descriptors from
-  the start of the memory block. */
-  chunk->blocks = (buf_block_t *)chunk->mem;
-
-  /* Align a pointer to the first frame.  Note that when
-  os_large_page_size is smaller than UNIV_PAGE_SIZE,
-  we may allocate one fewer block than requested.  When
-  it is bigger, we may allocate more blocks than requested. */
-
-  frame = (byte *)ut_align(chunk->mem, UNIV_PAGE_SIZE);
-  chunk->size = chunk->mem_pfx.m_size / UNIV_PAGE_SIZE - (frame != chunk->mem);
-
-  /* Subtract the space needed for block descriptors. */
-  {
-    ulint size = chunk->size;
-
-    while (frame < (byte *)(chunk->blocks + size)) {
-      frame += UNIV_PAGE_SIZE;
-      size--;
-    }
-
-    chunk->size = size;
-  }
-
-  /* Init block structs and assign frames for them. Then we
-  assign the frames to the first blocks (we already mapped the
-  memory above). */
-
-  block = chunk->blocks;
-
-  for (i = chunk->size; i--;) {
-    buf_block_init(buf_pool, block, frame);
-    UNIV_MEM_INVALID(block->frame, UNIV_PAGE_SIZE);
-
-    /* Add the block to the free list */
-    UT_LIST_ADD_LAST(buf_pool->free, &block->page);
-
-    ut_d(block->page.in_free_list = TRUE);
-    ut_ad(buf_pool_from_block(block) == buf_pool);
-
-    block++;
-    frame += UNIV_PAGE_SIZE;
-  }
-
-  if (mutex != nullptr) {
-    mutex->lock();
-  }
-
-  buf_pool_register_chunk(chunk);
-
-  if (mutex != nullptr) {
-    mutex->unlock();
-  }
-
-#ifdef PFS_GROUP_BUFFER_SYNC
-  pfs_register_buffer_block(chunk);
-#endif /* PFS_GROUP_BUFFER_SYNC */
-  return (chunk);
-}
 
 #ifdef UNIV_DEBUG
 /** Finds a block in the given buffer chunk that points to a
@@ -1091,71 +714,7 @@ buf_block_t *buf_pool_contains_zip(buf_pool_t *buf_pool, const void *data) {
 }
 #endif /* UNIV_DEBUG */
 
-/** Checks that all file pages in the buffer chunk are in a replaceable state.
- @return address of a non-free block, or NULL if all freed */
-static const buf_block_t *buf_chunk_not_freed(
-    buf_chunk_t *chunk) /*!< in: chunk being checked */
-{
-  buf_block_t *block;
-  ulint i;
 
-  block = chunk->blocks;
-
-  for (i = chunk->size; i--; block++) {
-    ibool ready;
-
-    switch (buf_block_get_state(block)) {
-      case BUF_BLOCK_POOL_WATCH:
-      case BUF_BLOCK_ZIP_PAGE:
-      case BUF_BLOCK_ZIP_DIRTY:
-        /* The uncompressed buffer pool should never
-        contain compressed block descriptors. */
-        ut_error;
-        break;
-      case BUF_BLOCK_NOT_USED:
-      case BUF_BLOCK_READY_FOR_USE:
-      case BUF_BLOCK_MEMORY:
-      case BUF_BLOCK_REMOVE_HASH:
-        /* Skip blocks that are not being used for
-        file pages. */
-        break;
-      case BUF_BLOCK_FILE_PAGE:
-        buf_page_mutex_enter(block);
-        ready = buf_flush_ready_for_replace(&block->page);
-        buf_page_mutex_exit(block);
-
-        if (!ready) {
-          return (block);
-        }
-
-        break;
-    }
-  }
-
-  return (NULL);
-}
-
-/** Set buffer pool size variables
- Note: It's safe without mutex protection because of startup only. */
-static void buf_pool_set_sizes(void) {
-  ulint i;
-  ulint curr_size = 0;
-
-  for (i = 0; i < srv_buf_pool_instances; i++) {
-    buf_pool_t *buf_pool;
-
-    buf_pool = buf_pool_from_array(i);
-    curr_size += buf_pool->curr_pool_size;
-  }
-  if (srv_buf_pool_curr_size == 0) {
-    srv_buf_pool_curr_size = curr_size;
-  } else {
-    srv_buf_pool_curr_size = srv_buf_pool_size;
-  }
-  srv_buf_pool_old_size = srv_buf_pool_size;
-  srv_buf_pool_base_size = srv_buf_pool_size;
-  os_wmb;
-}
 
 /** Initialize a buffer pool instance.
 @param[in]	buf_pool	    buffer pool instance
@@ -2602,72 +2161,11 @@ static void buf_relocate(buf_page_t *bpage, buf_page_t *dpage) {
 
 /** Hazard Pointer implementation. */
 
-/** Set current value
-@param bpage	buffer block to be set as hp */
-void HazardPointer::set(buf_page_t *bpage) {
-  ut_ad(mutex_own(m_mutex));
-  ut_ad(!bpage || buf_pool_from_bpage(bpage) == m_buf_pool);
-  ut_ad(!bpage || buf_page_in_file(bpage) ||
-        buf_page_get_state(bpage) == BUF_BLOCK_REMOVE_HASH);
 
-  m_hp = bpage;
-}
 
-/** Checks if a bpage is the hp
-@param bpage    buffer block to be compared
-@return true if it is hp */
 
-bool HazardPointer::is_hp(const buf_page_t *bpage) {
-  ut_ad(mutex_own(m_mutex));
-  ut_ad(!m_hp || buf_pool_from_bpage(m_hp) == m_buf_pool);
-  ut_ad(!bpage || buf_pool_from_bpage(bpage) == m_buf_pool);
 
-  return (bpage == m_hp);
-}
 
-/** Adjust the value of hp. This happens when some other thread working
-on the same list attempts to remove the hp from the list.
-@param bpage	buffer block to be compared */
-
-void FlushHp::adjust(const buf_page_t *bpage) {
-  ut_ad(bpage != NULL);
-
-  /** We only support reverse traversal for now. */
-  if (is_hp(bpage)) {
-    m_hp = UT_LIST_GET_PREV(list, m_hp);
-  }
-
-  ut_ad(!m_hp || m_hp->in_flush_list);
-}
-
-/** Adjust the value of hp. This happens when some other thread working
-on the same list attempts to remove the hp from the list.
-@param bpage	buffer block to be compared */
-
-void LRUHp::adjust(const buf_page_t *bpage) {
-  ut_ad(bpage);
-
-  /** We only support reverse traversal for now. */
-  if (is_hp(bpage)) {
-    m_hp = UT_LIST_GET_PREV(LRU, m_hp);
-  }
-
-  ut_ad(!m_hp || m_hp->in_LRU_list);
-}
-
-/** Selects from where to start a scan. If we have scanned too deep into
-the LRU list it resets the value to the tail of the LRU list.
-@return buf_page_t from where to start scan. */
-
-buf_page_t *LRUItr::start() {
-  ut_ad(mutex_own(m_mutex));
-
-  if (!m_hp || m_hp->old) {
-    m_hp = UT_LIST_GET_LAST(m_buf_pool->LRU);
-  }
-
-  return (m_hp);
-}
 
 /** Determine if a block is a sentinel for a buffer pool watch.
 @param[in]	buf_pool	buffer pool instance
@@ -6224,50 +5722,6 @@ void meb_page_init(const page_id_t &page_id, const page_size_t &page_size,
 }
 
 #endif /* !UNIV_HOTBACKUP */
-/** Get the page type as a string.
-@return the page type as a string. */
-const char *buf_block_t::get_page_type_str() const {
-  page_type_t type = get_page_type();
-
-#define PAGE_TYPE(x) \
-  case x:            \
-    return (#x);
-
-  switch (type) {
-    PAGE_TYPE(FIL_PAGE_INDEX);
-    PAGE_TYPE(FIL_PAGE_RTREE);
-    PAGE_TYPE(FIL_PAGE_SDI);
-    PAGE_TYPE(FIL_PAGE_UNDO_LOG);
-    PAGE_TYPE(FIL_PAGE_INODE);
-    PAGE_TYPE(FIL_PAGE_IBUF_FREE_LIST);
-    PAGE_TYPE(FIL_PAGE_TYPE_ALLOCATED);
-    PAGE_TYPE(FIL_PAGE_IBUF_BITMAP);
-    PAGE_TYPE(FIL_PAGE_TYPE_SYS);
-    PAGE_TYPE(FIL_PAGE_TYPE_TRX_SYS);
-    PAGE_TYPE(FIL_PAGE_TYPE_FSP_HDR);
-    PAGE_TYPE(FIL_PAGE_TYPE_XDES);
-    PAGE_TYPE(FIL_PAGE_TYPE_BLOB);
-    PAGE_TYPE(FIL_PAGE_TYPE_ZBLOB);
-    PAGE_TYPE(FIL_PAGE_TYPE_ZBLOB2);
-    PAGE_TYPE(FIL_PAGE_TYPE_UNKNOWN);
-    PAGE_TYPE(FIL_PAGE_COMPRESSED);
-    PAGE_TYPE(FIL_PAGE_ENCRYPTED);
-    PAGE_TYPE(FIL_PAGE_COMPRESSED_AND_ENCRYPTED);
-    PAGE_TYPE(FIL_PAGE_ENCRYPTED_RTREE);
-    PAGE_TYPE(FIL_PAGE_SDI_BLOB);
-    PAGE_TYPE(FIL_PAGE_SDI_ZBLOB);
-    PAGE_TYPE(FIL_PAGE_TYPE_LOB_INDEX);
-    PAGE_TYPE(FIL_PAGE_TYPE_LOB_DATA);
-    PAGE_TYPE(FIL_PAGE_TYPE_LOB_FIRST);
-    PAGE_TYPE(FIL_PAGE_TYPE_ZLOB_FIRST);
-    PAGE_TYPE(FIL_PAGE_TYPE_ZLOB_DATA);
-    PAGE_TYPE(FIL_PAGE_TYPE_ZLOB_INDEX);
-    PAGE_TYPE(FIL_PAGE_TYPE_ZLOB_FRAG);
-    PAGE_TYPE(FIL_PAGE_TYPE_ZLOB_FRAG_ENTRY);
-  }
-  ut_ad(0);
-  return ("UNKNOWN");
-}
 
 #ifndef UNIV_HOTBACKUP
 /** Frees the buffer pool instances and the global data structures. */

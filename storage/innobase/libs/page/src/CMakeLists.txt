@@ -3,18 +3,79 @@ set( LIB_NAME page )
 add_library( ${LIB_NAME} STATIC
     FSEG_PAGE_DATA.cpp
     cursor_movement.cpp
+    fil_page_get_next.cpp
+    fil_page_get_prev.cpp
+    fil_page_get_type.cpp
+    fil_page_index_page_check.cpp
+    fil_page_set_type.cpp
+    fil_page_type_is_index.cpp
     flag.cpp
     header.cpp
+    infimum_data.cpp
+    infimum_extra.cpp
+    page_align.cpp
     page_cur_mode_t.cpp
+    page_dir_get_n_heap.cpp
+    page_dir_slot_t.cpp
+    page_dir_t.cpp
+    page_get_free_space_of_empty.cpp
+    page_get_infimum_offset.cpp
+    page_has_garbage.cpp
+    page_header_get_field.cpp
+    page_header_get_offs.cpp
+    page_is_comp.cpp
+    page_is_empty.cpp
+    page_is_leaf.cpp
+    page_is_root.cpp
     page_no_t.cpp
+    page_offset.cpp
+    page_rec_get_heap_no.cpp
+    page_rec_is_comp.cpp
     page_size_t.cpp
     page_t.cpp
     page_type_t.cpp
+    page_zip_des_init.cpp
     page_zip_des_t.cpp
+    page_zip_dir_elems.cpp
+    page_zip_dir_get.cpp
+    page_zip_dir_size.cpp
+    page_zip_dir_start.cpp
+    page_zip_dir_start_low.cpp
+    page_zip_dir_start_offs.cpp
+    page_zip_empty_size.cpp
+    page_zip_get_size.cpp
+    page_zip_level.cpp
+    page_zip_log_pages.cpp
+    page_zip_set_size.cpp
+    page_zip_simple_validate.cpp
     page_zip_stat.cpp
     page_zip_stat_t.cpp
     page_zip_t.cpp
+    supremum_extra_data.cpp
     univ_page_size.cpp
+    page_get_supremum_offset.cpp
+    page_rec_is_user_rec_low.cpp
+    page_rec_is_supremum_low.cpp
+    page_rec_is_infimum_low.cpp
+    page_rec_check.cpp
+    page_rec_is_user_rec.cpp
+    page_rec_is_supremum.cpp
+    page_rec_is_infimum.cpp
+    page_get_infimum_rec.cpp
+    page_get_supremum_rec.cpp
+    page_dir_get_nth_slot.cpp
+    page_dir_slot_get_rec.cpp
+    page_dir_slot_set_rec.cpp
+    page_dir_slot_get_n_owned.cpp
+    page_dir_calc_reserved_space.cpp
+    page_dir_get_n_slots.cpp
+    page_get_n_recs.cpp
+    page_get_page_no.cpp
+    page_rec_get_base_extra_size.cpp
+    page_get_data_size.cpp
+    page_get_max_insert_size.cpp
+    page_get_max_insert_size_after_reorganize.cpp
+    page_size_validate.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -28,8 +89,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    machine
-    math
+    record
     PRIVATE
 )
 

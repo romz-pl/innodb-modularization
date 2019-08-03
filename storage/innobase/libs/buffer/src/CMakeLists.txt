@@ -98,6 +98,28 @@ add_library( ${LIB_NAME} STATIC
     buf_withdraw_clock.cpp
     macros.cpp
     srv_checksum_algorithm_t.cpp
+    buf_pool_should_madvise.cpp
+    srv_buffer_pool_in_core_file.cpp
+    innobase_should_madvise_buf_pool.cpp
+    innobase_disable_core_dump.cpp
+    srv_buf_pool_instances.cpp
+    buf_pool_update_madvise.cpp
+    buf_pool_register_chunk.cpp
+    buf_pool_get_oldest_modification_approx.cpp
+    buf_block_init.cpp
+    buf_chunk_init.cpp
+    buf_chunk_not_freed.cpp
+    buf_flush_ready_for_replace.cpp
+    srv_buf_pool_curr_size.cpp
+    srv_buf_pool_old_size.cpp
+    srv_buf_pool_base_size.cpp
+    srv_buf_pool_size.cpp
+    srv_buf_pool_min_size.cpp
+    srv_buf_pool_def_size.cpp
+    srv_buf_pool_chunk_unit.cpp
+    srv_buf_pool_instances_default.cpp
+    srv_buf_pool_dump_pct.cpp
+    buf_pool_set_sizes.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

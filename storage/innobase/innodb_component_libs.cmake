@@ -36,7 +36,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # I
     #io
-    ioasync
+    #ioasync
 
     # L
     #logger
@@ -56,7 +56,7 @@ SET( INNODB_COMPONENT_LIBS
     # R
     #random
     rbt
-    record
+    #record
 
     # S
     #string

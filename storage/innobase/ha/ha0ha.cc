@@ -32,12 +32,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ha0ha.h"
 
+#include <innodb/allocator/ut_free.h>
+#include <innodb/sync_mutex/mutex_destroy.h>
+#include <innodb/sync_rw/rw_lock_free.h>
+
 #include <sys/types.h>
 
 #ifdef UNIV_DEBUG
 #include "buf0buf.h"
 #endif /* UNIV_DEBUG */
-#include "btr0sea.h"
+// #include "btr0sea.h"
 #include "page0page.h"
 
 #if defined UNIV_AHI_DEBUG || defined UNIV_DEBUG

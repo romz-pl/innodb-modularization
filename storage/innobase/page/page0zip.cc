@@ -85,12 +85,7 @@ static_assert(DATA_TRX_ID + 1 == DATA_ROLL_PTR, "DATA_TRX_ID invalid value!");
 page_zip_stat_per_index_t page_zip_stat_per_index;
 #endif /* !UNIV_HOTBACKUP */
 
-/* Compression level to be used by zlib. Settable by user. */
-uint page_zip_level = DEFAULT_COMPRESSION_LEVEL;
 
-/* Whether or not to log compressed page images to avoid possible
-compression algorithm changes in zlib. */
-bool page_zip_log_pages = true;
 
 /* Please refer to ../include/page0zip.ic for a description of the
 compressed page format. */
@@ -107,23 +102,6 @@ Compare at most sizeof(field_ref_zero) bytes.
 #define ASSERT_ZERO_BLOB(b) \
   ut_ad(!memcmp(b, field_ref_zero, sizeof field_ref_zero))
 
-/** Determine the guaranteed free space on an empty page.
- @return minimum payload size on the page */
-ulint page_zip_empty_size(
-    ulint n_fields, /*!< in: number of columns in the index */
-    ulint zip_size) /*!< in: compressed page size in bytes */
-{
-  lint size = zip_size
-              /* subtract the page header and the longest
-              uncompressed data needed for one record */
-              - (PAGE_DATA + PAGE_ZIP_CLUST_LEAF_SLOT_SIZE +
-                 1   /* encoded heap_no==2 in page_zip_write_rec() */
-                 + 1 /* end of modification log */
-                 - REC_N_NEW_EXTRA_BYTES /* omitted bytes */)
-              /* subtract the space for page_zip_fields_encode() */
-              - compressBound(static_cast<uLong>(2 * (n_fields + 1)));
-  return (size > 0 ? (ulint)size : 0);
-}
 
 /** Check whether a tuple is too big for compressed table
 @param[in]	index	dict index object

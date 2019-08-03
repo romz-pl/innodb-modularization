@@ -3,16 +3,12 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <algorithm>
+#include <innodb/buffer/srv_buf_pool_min_size.h>
+#include <innodb/buffer/srv_buf_pool_chunk_unit.h>
 
 /** Requested number of buffer pool instances */
 extern ulong srv_buf_pool_instances;
 
-/** Requested buffer pool chunk size. Each buffer pool instance consists
-of one or more chunks. */
-extern ulonglong srv_buf_pool_chunk_unit;
-
-/** Minimum pool size in bytes */
-extern const ulint srv_buf_pool_min_size;
 
 /** Calculate aligned buffer pool size based on srv_buf_pool_chunk_unit,
 if needed.

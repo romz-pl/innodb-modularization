@@ -87,6 +87,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_list_mutex.h>
 #include <innodb/sync_rw/rw_lock_list.h>
 #include <innodb/string/innobase_basename.h>
+#include <innodb/buffer/srv_buffer_pool_in_core_file.h>
 
 
 #ifndef UNIV_HOTBACKUP
@@ -255,8 +256,6 @@ static long innobase_open_files;
 static long innobase_autoinc_lock_mode;
 static ulong innobase_commit_concurrency = 0;
 
-/* Boolean @@innodb_buffer_pool_in_core_file. */
-bool srv_buffer_pool_in_core_file = TRUE;
 
 extern thread_local ulint ut_rnd_ulint_counter;
 
@@ -1720,33 +1719,7 @@ ibool thd_is_select(const THD *thd) /*!< in: thread handle */
   return (thd_sql_command(thd) == SQLCOM_SELECT);
 }
 
-/** Checks sys_vars and determines if allocator should mark
-large memory segments with MADV_DONTDUMP
-@return true iff @@global.core_file AND
-NOT @@global.innodb_buffer_pool_in_core_file */
-bool innobase_should_madvise_buf_pool() {
-  return (test_flags & TEST_CORE_ON_SIGNAL) && !srv_buffer_pool_in_core_file;
-}
 
-/** Make sure that core file will not be generated, as generating a core file
-might violate our promise to not dump buffer pool data, and/or might dump not
-the expected memory pages due to failure in using madvise */
-void innobase_disable_core_dump() {
-  /* TODO: There is a race condition here, as test_flags is not an atomic<>
-  and there might be multiple threads calling this function
-  in parallel (once for each buffer pool thread).
-  One approach would be to use a loop with os_compare_and_swap_ulint
-  unfortunately test_flags is defined as uint, not ulint, and we don't
-  have nice portable function for dealing with uint in InnoDB.
-  Moreover that would only prevent problems with mangled bits, but not
-  help at all with that some other thread might be reading test_flags
-  and making decisions based on observed value while we are changing it.
-  The good news is that all these threads try to do the same thing: clear the
-  same bit. So this happens to work.
-  */
-
-  test_flags &= ~TEST_CORE_ON_SIGNAL;
-}
 
 /** Returns the lock wait timeout for the current connection.
  @return the lock wait timeout, in seconds */

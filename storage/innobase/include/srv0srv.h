@@ -53,6 +53,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_stat_t.h>
 #include <innodb/ioasync/srv_reset_io_thread_op_info.h>
 #include <innodb/ioasync/srv_set_io_thread_op_info.h>
+#include <innodb/buffer/srv_buf_pool_instances.h>
+#include <innodb/buffer/buf_pool_get_curr_size.h>
+#include <innodb/buffer/srv_buf_pool_old_size.h>
+#include <innodb/buffer/srv_buf_pool_curr_size.h>
+#include <innodb/buffer/srv_buf_pool_base_size.h>
+#include <innodb/buffer/srv_buf_pool_size.h>
+#include <innodb/buffer/srv_buf_pool_min_size.h>
+#include <innodb/buffer/srv_buf_pool_def_size.h>
+#include <innodb/buffer/srv_buf_pool_chunk_unit.h>
+#include <innodb/buffer/srv_buf_pool_instances_default.h>
+#include <innodb/buffer/srv_buf_pool_dump_pct.h>
 
 #include "buf0checksum.h"
 #include "fil0fil.h"
@@ -437,33 +448,13 @@ extern bool srv_load_corrupted;
 
 /** Dedicated server setting */
 extern bool srv_dedicated_server;
-/** Requested size in bytes */
-extern ulint srv_buf_pool_size;
-/** Minimum pool size in bytes */
-extern const ulint srv_buf_pool_min_size;
-/** Default pool size in bytes */
-extern const ulint srv_buf_pool_def_size;
-/** Requested buffer pool chunk size. Each buffer pool instance consists
-of one or more chunks. */
-extern ulonglong srv_buf_pool_chunk_unit;
-/** Requested number of buffer pool instances */
-extern ulong srv_buf_pool_instances;
-/** Default number of buffer pool instances */
-extern const ulong srv_buf_pool_instances_default;
+
 /** Number of locks to protect buf_pool->page_hash */
 extern ulong srv_n_page_hash_locks;
 /** Scan depth for LRU flush batch i.e.: number of blocks scanned*/
 extern ulong srv_LRU_scan_depth;
 /** Whether or not to flush neighbors of a block */
 extern ulong srv_flush_neighbors;
-/** Previously requested size. Accesses protected by memory barriers. */
-extern ulint srv_buf_pool_old_size;
-/** Current size as scaling factor for the other components */
-extern ulint srv_buf_pool_base_size;
-/** Current size in bytes */
-extern long long srv_buf_pool_curr_size;
-/** Dump this % of each buffer pool during BP dump */
-extern ulong srv_buf_pool_dump_pct;
 /** Lock table size in bytes */
 extern ulint srv_lock_table_size;
 

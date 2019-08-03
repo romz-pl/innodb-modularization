@@ -106,6 +106,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fil_space_get_page_size.h>
 #include <innodb/tablespace/fil_init.h>
 #include <innodb/tablespace/fil_close.h>
+#include <innodb/page/fil_page_get_type.h>
 
 #include "dict0types.h"
 #include <innodb/page/type.h>

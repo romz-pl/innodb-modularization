@@ -36,6 +36,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/flag.h>
+#include <innodb/page/page_zip_level.h>
+#include <innodb/page/page_zip_log_pages.h>
+#include <innodb/page/page_zip_empty_size.h>
+
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE
 #define UNIV_INLINE
@@ -56,28 +61,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0types.h"
 #include <innodb/crc32/crc32.h>
 
-/* Compression level to be used by zlib. Settable by user. */
-extern uint page_zip_level;
 
-/* Default compression level. */
-#define DEFAULT_COMPRESSION_LEVEL 6
-/** Start offset of the area that will be compressed */
-#define PAGE_ZIP_START PAGE_NEW_SUPREMUM_END
-/** Size of an compressed page directory entry */
-#define PAGE_ZIP_DIR_SLOT_SIZE 2
-/** Predefine the sum of DIR_SLOT, TRX_ID & ROLL_PTR */
-#define PAGE_ZIP_CLUST_LEAF_SLOT_SIZE \
-  (PAGE_ZIP_DIR_SLOT_SIZE + DATA_TRX_ID_LEN + DATA_ROLL_PTR_LEN)
-/** Mask of record offsets */
-#define PAGE_ZIP_DIR_SLOT_MASK 0x3fff
-/** 'owned' flag */
-#define PAGE_ZIP_DIR_SLOT_OWNED 0x4000
-/** 'deleted' flag */
-#define PAGE_ZIP_DIR_SLOT_DEL 0x8000
 
-/* Whether or not to log compressed page images to avoid possible
-compression algorithm changes in zlib. */
-extern bool page_zip_log_pages;
+
 
 
 
@@ -93,12 +79,6 @@ ibool page_zip_rec_needs_ext(ulint rec_size, ulint comp, ulint n_fields,
                              const page_size_t &page_size)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Determine the guaranteed free space on an empty page.
- @return minimum payload size on the page */
-ulint page_zip_empty_size(
-    ulint n_fields, /*!< in: number of columns in the index */
-    ulint zip_size) /*!< in: compressed page size in bytes */
-    MY_ATTRIBUTE((const));
 
 #ifndef UNIV_HOTBACKUP
 /** Check whether a tuple is too big for compressed table

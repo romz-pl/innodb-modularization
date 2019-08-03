@@ -17,7 +17,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    align
     machine
     memory
     memory_check

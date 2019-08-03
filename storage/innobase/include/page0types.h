@@ -38,19 +38,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/page/page_zip_stat_t.h>
 #include <innodb/page/page_zip_des_t.h>
+#include <innodb/page/flag.h>
 
 #include "dict0types.h"
 
 #include <map>
 
-/* Heap numbers */
-#define PAGE_HEAP_NO_INFIMUM 0  /* page infimum */
-#define PAGE_HEAP_NO_SUPREMUM 1 /* page supremum */
-#define PAGE_HEAP_NO_USER_LOW        \
-  2 /* first user record in          \
-    creation (insertion) order,      \
-    not necessarily collation order; \
-    this record may have been deleted */
+
 
 
 

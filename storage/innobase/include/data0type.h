@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define data0type_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/page/flag.h>
 
 extern ulint data_mysql_default_charset_coll;
 #define DATA_MYSQL_BINARY_CHARSET_COLL 63
@@ -176,14 +177,10 @@ be less than 256 */
 /** Transaction id: 6 bytes */
 constexpr size_t DATA_TRX_ID = 1;
 
-/** Transaction ID type size in bytes. */
-constexpr size_t DATA_TRX_ID_LEN = 6;
 
 /** Rollback data pointer: 7 bytes */
 constexpr size_t DATA_ROLL_PTR = 2;
 
-/** Rollback data pointer type size in bytes. */
-constexpr size_t DATA_ROLL_PTR_LEN = 7;
 
 #define DATA_N_SYS_COLS 3 /* number of system columns defined above */
 

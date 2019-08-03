@@ -39,6 +39,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get_curr_size.h>
 #include <innodb/buffer/buf_pool_get.h>
 #include <innodb/tablespace/fsp_descr_page.h>
+#include <innodb/page/fil_page_set_type.h>
+#include <innodb/page/fil_page_get_prev.h>
 
 #include "buf/buf.h"
 #include "btr0sea.h"

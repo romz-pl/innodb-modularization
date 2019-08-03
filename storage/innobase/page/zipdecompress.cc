@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 other files in library. The code in this file is used to make a library for
 external tools. */
 
+#include <innodb/page/page_zip_dir_start_low.h>
+
 #include <stdarg.h>
 #include <sys/types.h>
 #include <zlib.h>

@@ -26,17 +26,8 @@ struct page_zip_des_t {
   (UNIV_ZIP_SIZE_MIN >> 1) << ssize. */
 };
 
-/** Determine the size of a compressed page in bytes.
- @return size in bytes */
-ulint page_zip_get_size(
-    const page_zip_des_t *page_zip); /*!< in: compressed page */
 
-/** Set the size of a compressed page in bytes.
-@param[in,out]	page_zip	compressed page
-@param[in]	size		size in bytes */
-void page_zip_set_size(page_zip_des_t *page_zip, ulint size);
 
-/** Initialize a compressed page descriptor. */
-void page_zip_des_init(page_zip_des_t *page_zip); /*!< in/out: compressed page
-                                                  descriptor */
+
+
 
