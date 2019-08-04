@@ -41,12 +41,7 @@ bool rec_field_not_null_not_add_col_def(ulint len);
 
 ulint innobase_get_at_most_n_mbchars(ulint charset_id, ulint prefix_len, ulint data_len, const char *str);
 
-/* At the database startup we store the default-charset collation number of
-this MySQL installation to this global variable. If we have < 4.1.2 format
-column definitions, or records in the insert buffer, we use this
-charset-collation code for them. */
 
-ulint data_mysql_default_charset_coll;
 
 /** Determine how many bytes the first n characters of the given string occupy.
  If the string is shorter than n characters, returns the number of bytes
@@ -82,49 +77,11 @@ ulint dtype_get_at_most_n_mbchars(
   return (data_len);
 }
 
-/** Checks if a data main type is a string type. Also a BLOB is considered a
- string type.
- @return true if string type */
-ibool dtype_is_string_type(
-    ulint mtype) /*!< in: InnoDB main data type code: DATA_CHAR, ... */
-{
-  if (mtype <= DATA_BLOB || mtype == DATA_MYSQL || mtype == DATA_VARMYSQL) {
-    return (TRUE);
-  }
 
-  return (FALSE);
-}
 
-/** Checks if a type is a binary string type. Note that for tables created with
- < 4.0.14, we do not know if a DATA_BLOB column is a BLOB or a TEXT column. For
- those DATA_BLOB columns this function currently returns FALSE.
- @return true if binary string type */
-ibool dtype_is_binary_string_type(ulint mtype,  /*!< in: main data type */
-                                  ulint prtype) /*!< in: precise type */
-{
-  if ((mtype == DATA_FIXBINARY) || (mtype == DATA_BINARY) ||
-      (mtype == DATA_BLOB && (prtype & DATA_BINARY_TYPE))) {
-    return (TRUE);
-  }
 
-  return (FALSE);
-}
 
-/** Checks if a type is a non-binary string type. That is, dtype_is_string_type
- is TRUE and dtype_is_binary_string_type is FALSE. Note that for tables created
- with < 4.0.14, we do not know if a DATA_BLOB column is a BLOB or a TEXT column.
- For those DATA_BLOB columns this function currently returns TRUE.
- @return true if non-binary string type */
-ibool dtype_is_non_binary_string_type(ulint mtype,  /*!< in: main data type */
-                                      ulint prtype) /*!< in: precise type */
-{
-  if (dtype_is_string_type(mtype) == TRUE &&
-      dtype_is_binary_string_type(mtype, prtype) == FALSE) {
-    return (TRUE);
-  }
 
-  return (FALSE);
-}
 
 /** Forms a precise type from the < 4.1.2 format precise type plus the
  charset-collation code.
@@ -140,22 +97,7 @@ ulint dtype_form_prtype(
   return (old_prtype + (charset_coll << 16));
 }
 
-/** Validates a data type structure.
- @return true if ok */
-ibool dtype_validate(const dtype_t *type) /*!< in: type struct to validate */
-{
-  ut_a(type);
-  ut_a(type->mtype >= DATA_VARCHAR);
-  ut_a(type->mtype <= DATA_MTYPE_MAX);
 
-  if (type->mtype == DATA_SYS) {
-    ut_a((type->prtype & DATA_MYSQL_TYPE_MASK) < DATA_N_SYS_COLS);
-  }
-
-  ut_a(dtype_get_mbminlen(type) <= dtype_get_mbmaxlen(type));
-
-  return (TRUE);
-}
 
 #ifdef UNIV_DEBUG
 /** Print a data type structure.

@@ -119,11 +119,6 @@ at least ENUM and SET, and unsigned integer types are 'unsigned types'
 @return DATA_BINARY, DATA_VARCHAR, ... */
 ulint get_innobase_type_from_mysql_type(ulint *unsigned_flag, const void *f);
 
-/** Get the variable length bounds of the given character set. */
-void innobase_get_cset_width(
-    ulint cset,       /*!< in: MySQL charset-collation code */
-    ulint *mbminlen,  /*!< out: minimum length of a char (in bytes) */
-    ulint *mbmaxlen); /*!< out: maximum length of a char (in bytes) */
 
 /** Compares NUL-terminated UTF-8 strings case insensitively.
  @return 0 if a=b, < 0 if a < b, > 1 if a > b */

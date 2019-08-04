@@ -34,118 +34,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/machine/data.h>
 #include <innodb/assert/assert.h>
 #include <innodb/error/ut_error.h>
+#include <innodb/data_types/dtype_get_charset_coll.h>
+#include <innodb/data_types/dtype_is_utf8.h>
+#include <innodb/data_types/dtype_get_mblen.h>
+#include <innodb/data_types/innobase_get_cset_width.h>
+#include <innodb/data_types/dtype_set_mbminmaxlen.h>
+#include <innodb/data_types/dtype_set_mblen.h>
+#include <innodb/data_types/dtype_get_mbminlen.h>
+#include <innodb/data_types/dtype_get_mbmaxlen.h>
+#include <innodb/data_types/dtype_get_mbmaxlen.h>
 
 #include <string.h>
 #include <cstdio>
-
-void innobase_get_cset_width(ulint cset, ulint *mbminlen, ulint *mbmaxlen);
-
-/** Gets the MySQL charset-collation code for MySQL string types.
- @return MySQL charset-collation code */
-UNIV_INLINE
-ulint dtype_get_charset_coll(ulint prtype) /*!< in: precise data type */
-{
-  return ((prtype >> 16) & CHAR_COLL_MASK);
-}
-
-#ifndef UNIV_HOTBACKUP
-/** Determines if a MySQL string type is a subset of UTF-8.  This function
- may return false negatives, in case further character-set collation
- codes are introduced in MySQL later.
- @return true if a subset of UTF-8 */
-UNIV_INLINE
-ibool dtype_is_utf8(ulint prtype) /*!< in: precise data type */
-{
-  /* These codes have been copied from strings/ctype-extra.c
-  and strings/ctype-utf8.c. */
-  switch (dtype_get_charset_coll(prtype)) {
-    case 11:  /* ascii_general_ci */
-    case 65:  /* ascii_bin */
-    case 33:  /* utf8_general_ci */
-    case 83:  /* utf8_bin */
-    case 254: /* utf8_general_cs */
-      return (TRUE);
-  }
-
-  return (FALSE);
-}
-
-/** Gets the MySQL type code from a dtype.
- @return MySQL type code; this is NOT an InnoDB type code! */
-UNIV_INLINE
-ulint dtype_get_mysql_type(const dtype_t *type) /*!< in: type struct */
-{
-  return (type->prtype & 0xFFUL);
-}
-
-/** Compute the mbminlen and mbmaxlen members of a data type structure. */
-UNIV_INLINE
-void dtype_get_mblen(ulint mtype,     /*!< in: main type */
-                     ulint prtype,    /*!< in: precise type (and collation) */
-                     ulint *mbminlen, /*!< out: minimum length of a
-                                      multi-byte character */
-                     ulint *mbmaxlen) /*!< out: maximum length of a
-                                      multi-byte character */
-{
-  if (dtype_is_string_type(mtype)) {
-    innobase_get_cset_width(dtype_get_charset_coll(prtype), mbminlen, mbmaxlen);
-    ut_ad(*mbminlen <= *mbmaxlen);
-    ut_ad(*mbminlen < DATA_MBMAX);
-    ut_ad(*mbmaxlen < DATA_MBMAX);
-  } else {
-    *mbminlen = *mbmaxlen = 0;
-  }
-}
-
-/** Sets the minimum and maximum length of a character, in bytes. */
-UNIV_INLINE
-void dtype_set_mbminmaxlen(dtype_t *type,  /*!< in/out: type */
-                           ulint mbminlen, /*!< in: minimum length of a char,
-                                           in bytes, or 0 if this is not
-                                           a character type */
-                           ulint mbmaxlen) /*!< in: maximum length of a char,
-                                           in bytes, or 0 if this is not
-                                           a character type */
-{
-  ut_ad(mbminlen < DATA_MBMAX);
-  ut_ad(mbmaxlen < DATA_MBMAX);
-  ut_ad(mbminlen <= mbmaxlen);
-
-  type->mbminmaxlen = DATA_MBMINMAXLEN(mbminlen, mbmaxlen);
-}
-
-/** Compute the mbminlen and mbmaxlen members of a data type structure. */
-UNIV_INLINE
-void dtype_set_mblen(dtype_t *type) /*!< in/out: type */
-{
-  ulint mbminlen;
-  ulint mbmaxlen;
-
-  dtype_get_mblen(type->mtype, type->prtype, &mbminlen, &mbmaxlen);
-  dtype_set_mbminmaxlen(type, mbminlen, mbmaxlen);
-
-  ut_ad(dtype_validate(type));
-}
-#else /* !UNIV_HOTBACKUP */
-#define dtype_set_mblen(type) (void)0
-#endif /* !UNIV_HOTBACKUP */
-
-/** Sets a data type structure. */
-UNIV_INLINE
-void dtype_set(dtype_t *type, /*!< in: type struct to init */
-               ulint mtype,   /*!< in: main data type */
-               ulint prtype,  /*!< in: precise type */
-               ulint len)     /*!< in: precision of type */
-{
-  ut_ad(type);
-  ut_ad(mtype <= DATA_MTYPE_MAX);
-
-  type->mtype = mtype;
-  type->prtype = prtype;
-  type->len = len;
-
-  dtype_set_mblen(type);
-}
 
 /** Copies a data type structure. */
 UNIV_INLINE
@@ -188,24 +88,8 @@ ulint dtype_get_len(const dtype_t *type) /*!< in: data type */
 }
 
 #ifndef UNIV_HOTBACKUP
-/** Gets the minimum length of a character, in bytes.
- @return minimum length of a char, in bytes, or 0 if this is not a
- character type */
-UNIV_INLINE
-ulint dtype_get_mbminlen(const dtype_t *type) /*!< in: type */
-{
-  ut_ad(type);
-  return (DATA_MBMINLEN(type->mbminmaxlen));
-}
-/** Gets the maximum length of a character, in bytes.
- @return maximum length of a char, in bytes, or 0 if this is not a
- character type */
-UNIV_INLINE
-ulint dtype_get_mbmaxlen(const dtype_t *type) /*!< in: type */
-{
-  ut_ad(type);
-  return (DATA_MBMAXLEN(type->mbminmaxlen));
-}
+
+
 
 /** Stores for a type the information which determines its alphabetical ordering
  and the storage size of an SQL NULL value. This is the >= 4.1.x storage

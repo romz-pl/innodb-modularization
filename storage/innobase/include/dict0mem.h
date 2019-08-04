@@ -35,10 +35,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define dict0mem_h
 
 #include <innodb/univ/univ.h>
+
 #include <innodb/string/ut_strcmp.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/record/rec_t.h>
+#include <innodb/dict/id_name_t.h>
+#include <innodb/dict/table_name_t.h>
+
 
 #include "buf0flu.h"
 
@@ -412,40 +416,8 @@ char *dict_mem_create_temporary_tablename(mem_heap_t *heap, const char *dbtab,
 /** Initialize dict memory variables */
 void dict_mem_init(void);
 
-/** SQL identifier name wrapper for pretty-printing */
-class id_name_t {
- public:
-  /** Default constructor */
-  id_name_t() : m_name() {}
-  /** Constructor
-  @param[in]	name	identifier to assign */
-  explicit id_name_t(const char *name) : m_name(name) {}
 
-  /** Assignment operator
-  @param[in]	name	identifier to assign */
-  id_name_t &operator=(const char *name) {
-    m_name = name;
-    return (*this);
-  }
 
-  /** Implicit type conversion
-  @return the name */
-  operator const char *() const { return (m_name); }
-
-  /** Explicit type conversion
-  @return the name */
-  const char *operator()() const { return (m_name); }
-
- private:
-  /** The name in internal representation */
-  const char *m_name;
-};
-
-/** Table name wrapper for pretty-printing */
-struct table_name_t {
-  /** The name in internal representation */
-  char *m_name;
-};
 
 /** Data structure for default value of a column in a table */
 struct dict_col_default_t {

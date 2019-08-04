@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/memory/ut_memcmp.h>
 #include <innodb/string/ut_strlen.h>
 #include <innodb/tablespace/fsp_is_shared_tablespace.h>
+#include <innodb/data_types/dtype_is_binary_string_type.h>
 
 #include "current_thd.h"
 #include "ha_prototypes.h"
