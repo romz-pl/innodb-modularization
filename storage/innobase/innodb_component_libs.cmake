@@ -38,6 +38,9 @@ SET( INNODB_COMPONENT_LIBS
     # F
     #formatting
 
+    # H
+    hash
+
     # I
     #io
     #ioasync

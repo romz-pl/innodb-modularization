@@ -19,6 +19,8 @@ add_subdirectory( enum )
 
 add_subdirectory( formatting )
 
+add_subdirectory( hash )
+
 add_subdirectory( io )
 add_subdirectory( ioasync )
 
