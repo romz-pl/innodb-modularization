@@ -128,11 +128,7 @@ ibool page_zip_validate_low(
     const dict_index_t *index,      /*!< in: index of the page, if known */
     ibool sloppy);                  /*!< in: FALSE=strict,
                             TRUE=ignore the MIN_REC_FLAG */
-/** Check that the compressed and decompressed pages match. */
-ibool page_zip_validate(
-    const page_zip_des_t *page_zip, /*!< in: compressed page */
-    const page_t *page,             /*!< in: uncompressed page */
-    const dict_index_t *index);     /*!< in: index of the page, if known */
+
 #endif                              /* UNIV_ZIP_DEBUG */
 
 
@@ -200,12 +196,7 @@ void page_zip_write_trx_id_and_roll_ptr(
     trx_id_t trx_id,          /*!< in: transaction identifier */
     roll_ptr_t roll_ptr);     /*!< in: roll_ptr */
 
-/** Write the "deleted" flag of a record on a compressed page.  The flag must
- already have been written on the uncompressed page. */
-void page_zip_rec_set_deleted(
-    page_zip_des_t *page_zip, /*!< in/out: compressed page */
-    const byte *rec,          /*!< in: record on the uncompressed page */
-    ulint flag);              /*!< in: the deleted flag (nonzero=TRUE) */
+
 
 /** Write the "owned" flag of a record on a compressed page.  The n_owned field
  must already have been written on the uncompressed page. */

@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created June 2005 by Marko Makela
  *******************************************************/
 
+#include <innodb/assert/ASSERT_ZERO.h>
+#include <innodb/assert/ASSERT_ZERO_BLOB.h>
 #include <innodb/buffer/buf_frame_copy.h>
 #include <innodb/disk/page_size_t.h>
 #include <innodb/page/page_zip_dir_encode.h>
@@ -101,17 +103,7 @@ page_zip_stat_per_index_t page_zip_stat_per_index;
 /* Please refer to ../include/page0zip.ic for a description of the
 compressed page format. */
 
-/** Assert that a block of memory is filled with zero bytes.
-Compare at most sizeof(field_ref_zero) bytes.
-@param b in: memory block
-@param s in: size of the memory block, in bytes */
-#define ASSERT_ZERO(b, s)          \
-  ut_ad(!memcmp(b, field_ref_zero, \
-                std::min(static_cast<size_t>(s), sizeof field_ref_zero)));
-/** Assert that a BLOB pointer is filled with zero bytes.
-@param b in: BLOB pointer */
-#define ASSERT_ZERO_BLOB(b) \
-  ut_ad(!memcmp(b, field_ref_zero, sizeof field_ref_zero))
+
 
 
 /** Check whether a tuple is too big for compressed table
@@ -1369,15 +1361,7 @@ func_exit:
   return (valid);
 }
 
-/** Check that the compressed and decompressed pages match.
- @return true if valid, false if not */
-ibool page_zip_validate(
-    const page_zip_des_t *page_zip, /*!< in: compressed page */
-    const page_t *page,             /*!< in: uncompressed page */
-    const dict_index_t *index)      /*!< in: index of the page, if known */
-{
-  return (page_zip_validate_low(page_zip, page, index, recv_recovery_is_on()));
-}
+
 #endif /* UNIV_ZIP_DEBUG */
 
 #ifdef UNIV_DEBUG
@@ -2057,42 +2041,9 @@ static void page_zip_clear_rec(
 #endif /* UNIV_ZIP_DEBUG */
 }
 
-/** Write the "deleted" flag of a record on a compressed page.  The flag must
- already have been written on the uncompressed page. */
-void page_zip_rec_set_deleted(
-    page_zip_des_t *page_zip, /*!< in/out: compressed page */
-    const byte *rec,          /*!< in: record on the uncompressed page */
-    ulint flag)               /*!< in: the deleted flag (nonzero=TRUE) */
-{
-  byte *slot = page_zip_dir_find(page_zip, page_offset(rec));
-  ut_a(slot);
-  UNIV_MEM_ASSERT_RW(page_zip->data, page_zip_get_size(page_zip));
-  if (flag) {
-    *slot |= (PAGE_ZIP_DIR_SLOT_DEL >> 8);
-  } else {
-    *slot &= ~(PAGE_ZIP_DIR_SLOT_DEL >> 8);
-  }
-#ifdef UNIV_ZIP_DEBUG
-  ut_a(page_zip_validate(page_zip, page_align(rec), NULL));
-#endif /* UNIV_ZIP_DEBUG */
-}
 
-/** Write the "owned" flag of a record on a compressed page.  The n_owned field
- must already have been written on the uncompressed page. */
-void page_zip_rec_set_owned(
-    page_zip_des_t *page_zip, /*!< in/out: compressed page */
-    const byte *rec,          /*!< in: record on the uncompressed page */
-    ulint flag)               /*!< in: the owned flag (nonzero=TRUE) */
-{
-  byte *slot = page_zip_dir_find(page_zip, page_offset(rec));
-  ut_a(slot);
-  UNIV_MEM_ASSERT_RW(page_zip->data, page_zip_get_size(page_zip));
-  if (flag) {
-    *slot |= (PAGE_ZIP_DIR_SLOT_OWNED >> 8);
-  } else {
-    *slot &= ~(PAGE_ZIP_DIR_SLOT_OWNED >> 8);
-  }
-}
+
+
 
 /** Insert a record to the dense page directory. */
 void page_zip_dir_insert(
@@ -2251,48 +2202,6 @@ skip_blobs:
   page_zip_clear_rec(page_zip, rec, index, offsets);
 }
 
-/** Add a slot to the dense page directory. */
-void page_zip_dir_add_slot(
-    page_zip_des_t *page_zip, /*!< in/out: compressed page */
-    bool is_clustered)        /*!< in: nonzero for clustered index,
-                              zero for others */
-{
-  ulint n_dense;
-  byte *dir;
-  byte *stored;
-
-  ut_ad(page_is_comp(page_zip->data));
-  UNIV_MEM_ASSERT_RW(page_zip->data, page_zip_get_size(page_zip));
-
-  /* Read the old n_dense (n_heap has already been incremented). */
-  n_dense = page_dir_get_n_heap(page_zip->data) - (PAGE_HEAP_NO_USER_LOW + 1);
-
-  dir = page_zip->data + page_zip_get_size(page_zip) -
-        PAGE_ZIP_DIR_SLOT_SIZE * n_dense;
-
-  if (!page_is_leaf(page_zip->data)) {
-    ut_ad(!page_zip->n_blobs);
-    stored = dir - n_dense * REC_NODE_PTR_SIZE;
-  } else if (is_clustered) {
-    /* Move the BLOB pointer array backwards to make space for the
-    roll_ptr and trx_id columns and the dense directory slot. */
-    byte *externs;
-
-    stored = dir - n_dense * (DATA_TRX_ID_LEN + DATA_ROLL_PTR_LEN);
-    externs = stored - page_zip->n_blobs * BTR_EXTERN_FIELD_REF_SIZE;
-    ASSERT_ZERO(externs - PAGE_ZIP_CLUST_LEAF_SLOT_SIZE,
-                PAGE_ZIP_CLUST_LEAF_SLOT_SIZE);
-    memmove(externs - PAGE_ZIP_CLUST_LEAF_SLOT_SIZE, externs, stored - externs);
-  } else {
-    stored = dir - page_zip->n_blobs * BTR_EXTERN_FIELD_REF_SIZE;
-    ASSERT_ZERO(stored - PAGE_ZIP_DIR_SLOT_SIZE,
-                static_cast<size_t>(PAGE_ZIP_DIR_SLOT_SIZE));
-  }
-
-  /* Move the uncompressed area backwards to make space
-  for one directory slot. */
-  memmove(stored - PAGE_ZIP_DIR_SLOT_SIZE, stored, dir - stored);
-}
 
 /** Parses a log record of writing to the header of a page.
  @return end of log record or NULL */

@@ -39,6 +39,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_stat_t.h>
 #include <innodb/page/page_zip_des_t.h>
 #include <innodb/page/flag.h>
+#include <innodb/page/page_zip_rec_set_deleted.h>
+#include <innodb/page/page_zip_rec_set_owned.h>
+#include <innodb/page/page_zip_dir_add_slot.h>
 
 #include "dict0types.h"
 
@@ -63,19 +66,8 @@ typedef std::map<index_id_t, page_zip_stat_t, std::less<index_id_t>,
 extern page_zip_stat_per_index_t page_zip_stat_per_index;
 
 
-/** Write the "deleted" flag of a record on a compressed page.  The flag must
- already have been written on the uncompressed page. */
-void page_zip_rec_set_deleted(
-    page_zip_des_t *page_zip, /*!< in/out: compressed page */
-    const byte *rec,          /*!< in: record on the uncompressed page */
-    ulint flag);              /*!< in: the deleted flag (nonzero=TRUE) */
 
-/** Write the "owned" flag of a record on a compressed page.  The n_owned field
- must already have been written on the uncompressed page. */
-void page_zip_rec_set_owned(
-    page_zip_des_t *page_zip, /*!< in/out: compressed page */
-    const byte *rec,          /*!< in: record on the uncompressed page */
-    ulint flag);              /*!< in: the owned flag (nonzero=TRUE) */
+
 
 /** Shift the dense page directory when a record is deleted.
 @param[in,out]	page_zip	compressed page
@@ -87,9 +79,5 @@ void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
                          dict_index_t *index, const ulint *offsets,
                          const byte *free);
 
-/** Add a slot to the dense page directory. */
-void page_zip_dir_add_slot(
-    page_zip_des_t *page_zip, /*!< in/out: compressed page */
-    bool is_clustered);       /*!< in: nonzero for clustered index,
-                              zero for others */
+
 #endif

@@ -76,6 +76,10 @@ add_library( ${LIB_NAME} STATIC
     page_zip_dir_encode.cpp
     page_dir_find_owner_slot.cpp
     page_dir_slot_check.cpp
+    page_zip_rec_set_deleted.cpp
+    page_zip_validate.cpp
+    page_zip_rec_set_owned.cpp
+    page_zip_dir_add_slot.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -89,6 +93,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    memory_check
     record
     tablespace
     PRIVATE

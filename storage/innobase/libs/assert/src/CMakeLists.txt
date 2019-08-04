@@ -2,6 +2,8 @@ set( LIB_NAME assert )
 
 add_library( ${LIB_NAME} STATIC
     assert.cpp
+    ASSERT_ZERO.cpp
+    ASSERT_ZERO_BLOB.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
