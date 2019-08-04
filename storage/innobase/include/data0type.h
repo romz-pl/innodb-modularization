@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtype_get_mbminlen.h>
 #include <innodb/data_types/dtype_get_mblen.h>
 #include <innodb/data_types/dtype_is_binary_string_type.h>
+#include <innodb/data_types/dtype_is_utf8.h>
 
 /* SQL data type struct */
 struct dtype_t;
@@ -104,12 +105,7 @@ ulint dtype_form_prtype(
     ulint old_prtype,    /*!< in: the MySQL type code and the flags
                          DATA_BINARY_TYPE etc. */
     ulint charset_coll); /*!< in: MySQL charset-collation code */
-/** Determines if a MySQL string type is a subset of UTF-8.  This function
- may return false negatives, in case further character-set collation
- codes are introduced in MySQL later.
- @return true if a subset of UTF-8 */
-UNIV_INLINE
-ibool dtype_is_utf8(ulint prtype); /*!< in: precise data type */
+
 /** Gets the type length.
  @return fixed length of the type, in bytes, or 0 if variable-length */
 UNIV_INLINE

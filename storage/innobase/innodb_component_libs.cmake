@@ -64,7 +64,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # S
     #string
-    #sync_array
+    sync_array
     #sync_event
     #sync_latch
     #sync_mutex
