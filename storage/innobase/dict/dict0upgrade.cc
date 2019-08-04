@@ -27,6 +27,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/tablespace/Datafile.h>
 #include <innodb/tablespace/fsp_is_shared_tablespace.h>
+#include <innodb/data_types/dtype_is_string_type.h>
 
 #include "dict0upgrade.h"
 #include <sql_backup_lock.h>

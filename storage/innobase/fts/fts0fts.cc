@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/data_types/dtype_form_prtype.h>
+#include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/warn.h>
 #include <innodb/logger/info.h>

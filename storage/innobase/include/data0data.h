@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define data0data_h
 
 #include <innodb/univ/univ.h>
+#include <innodb/data_types/dtype_t.h>
+
 
 #include "data0type.h"
 #include "data0types.h"

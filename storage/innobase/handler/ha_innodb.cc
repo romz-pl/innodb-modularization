@@ -46,6 +46,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/data_types/dtype_form_prtype.h>
+#include <innodb/data_types/data_mysql_default_charset_coll.h>
+#include <innodb/data_types/dtype_is_string_type.h>
 #include <innodb/io/os_file_status.h>
 #include <innodb/string/ut_str_sql_format.h>
 #include <innodb/buffer/buf_pool_ptr.h>

@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/allocator/ut_realloc.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/error_or_warn.h>

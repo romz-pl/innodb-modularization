@@ -30,9 +30,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/data_types/dtype_get_mbmaxlen.h>
+#include <innodb/data_types/dtype_get_mbminlen.h>
 #include <innodb/logger/warn.h>
 #include <innodb/print/ut_print_buf_hex.h>
 #include <innodb/print/ut_print_buf.h>
+#include <innodb/data_types/dtype_get_prtype.h>
+#include <innodb/data_types/dtype_get_len.h>
+#include <innodb/data_types/dtype_get_mtype.h>
 
 #include <sys/types.h>
 #include <new>

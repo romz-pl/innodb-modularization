@@ -28,6 +28,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/data_types/dtype_get_mblen.h>
+#include <innodb/data_types/dtype_form_prtype.h>
+#include <innodb/data_types/dtype_is_string_type.h>
 #include <innodb/tablespace/srv_sys_space.h>
 
 /* Include necessary SQL headers */

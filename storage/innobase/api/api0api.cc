@@ -37,11 +37,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/data_types/dtype_get_mbmaxlen.h>
+#include <innodb/data_types/dtype_get_charset_coll.h>
+#include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/string/ut_strlen.h>
 #include <innodb/string/ut_strcpy.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_copy.h>
+#include <innodb/data_types/dtype_get_prtype.h>
+#include <innodb/data_types/dtype_get_len.h>
 
 #include "api0api.h"
 #include "api0misc.h"

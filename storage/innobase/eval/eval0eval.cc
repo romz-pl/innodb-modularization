@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/29/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/ib_like_t.h>
+#include <innodb/data_types/dtype_get_mtype.h>
+
 #include "eval0eval.h"
 
 #include "data0data.h"

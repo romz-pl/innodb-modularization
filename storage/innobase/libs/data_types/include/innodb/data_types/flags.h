@@ -135,6 +135,8 @@ constexpr size_t DATA_TRX_ID = 1;
 /** Rollback data pointer: 7 bytes */
 constexpr size_t DATA_ROLL_PTR = 2;
 
+static_assert(DATA_TRX_ID + 1 == DATA_ROLL_PTR, "DATA_TRX_ID value invalid!");
+
 
 #define DATA_N_SYS_COLS 3 /* number of system columns defined above */
 

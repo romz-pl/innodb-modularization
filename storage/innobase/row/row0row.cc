@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_n_extern.h>
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_offs_init.h>
+#include <innodb/data_types/dtype_get_mtype.h>
+#include <innodb/data_types/dtype_is_utf8.h>
 
 #include "row0row.h"
 

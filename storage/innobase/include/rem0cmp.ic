@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 7/1/1994 Heikki Tuuri
  ************************************************************************/
 
+#include <innodb/data_types/dtype_get_charset_coll.h>
+
 #include <mysql_com.h>
 
 #include "field_types.h"  // enum_field_types

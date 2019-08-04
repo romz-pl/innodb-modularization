@@ -27,8 +27,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** @file dict/dict0dd.cc
 Data dictionary interface */
 
+#include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/logger/info.h>
 #include <innodb/tablespace/srv_tmp_space.h>
+#include <innodb/data_types/dtype_is_string_type.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <auto_thd.h>

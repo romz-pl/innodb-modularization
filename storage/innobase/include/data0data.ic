@@ -28,8 +28,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  SQL data field and tuple
 
  Created 5/30/1994 Heikki Tuuri
- *************************************************************************/
+ **********************************
+***************************************/
 
+#include <innodb/data_types/dtype_set.h>
+#include <innodb/data_types/dtype_get_sql_null_size.h>
+#include <innodb/data_types/flags.h>
+#include <innodb/machine/data.h>
 #include <innodb/random/random.h>
 #include "btr0types.h"
 #include "mem0mem.h"

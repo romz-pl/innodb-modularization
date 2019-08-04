@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/data_types/dtype_get_mtype.h>
+#include <innodb/data_types/dtype_get_len.h>
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/print/ut_print_buf_hex.h>
 #include <innodb/record/rec_set_n_fields_old.h>
@@ -51,6 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_copy_prefix_to_buf_old.h>
 #include <innodb/record/rec_print_comp.h>
 #include <innodb/record/rec_print_mbr_old.h>
+#include <innodb/data_types/dtype_get_prtype.h>
 
 #include "rem0rec.h"
 

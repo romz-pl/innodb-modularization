@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/data_types/dtype_new_read_for_order_and_null_size.h>
+#include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/logger/info.h>
 #include <innodb/formatting/formatting.h>
 #include <innodb/bit/ut_bit_set_nth.h>
@@ -42,6 +44,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/disk/fil_page_set_type.h>
 #include <innodb/disk/fil_page_get_prev.h>
 #include <innodb/record/rec_offs_init.h>
+#include <innodb/data_types/dtype_get_prtype.h>
+#include <innodb/data_types/dtype_get_len.h>
+#include <innodb/data_types/dtype_new_store_for_order_and_null_size.h>
 
 #include "buf/buf.h"
 #include "btr0sea.h"

@@ -29,6 +29,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  Created 12/15/1997 Heikki Tuuri
  *******************************************************/
+
+#include <innodb/data_types/dtype_get_mtype.h>
+
 #include "current_thd.h"
 
 #include "pars0sym.h"

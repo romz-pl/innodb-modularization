@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2007/5/9 Sunny Bains
  ***********************************************************************/
 
+#include <innodb/data_types/dtype_get_mtype.h>
+
 #include <stdlib.h>
 
 #include "fts0priv.h"

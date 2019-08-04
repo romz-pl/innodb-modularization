@@ -31,10 +31,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtype_get_len.h>
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_offs_get_n_alloc.h>
 #include <innodb/record/rec_offsets_print.h>
+#include <innodb/data_types/dtype_get_mysql_type.h>
+#include <innodb/data_types/dtype_get_mbminlen.h>
+#include <innodb/data_types/dtype_get_mbmaxlen.h>
 
 #include <debug_sync.h>
 #include <gstream.h>
