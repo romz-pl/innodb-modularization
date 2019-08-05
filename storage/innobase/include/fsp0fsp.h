@@ -83,6 +83,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fsp_reserve_t.h>
 #include <innodb/tablespace/fsp_header_t.h>
 #include <innodb/tablespace/fseg_inode_t.h>
+#include <innodb/tablespace/fsp_header_init_fields.h>
 
 
 #include "fut0lst.h"
@@ -203,15 +204,7 @@ encryption_op_type fsp_header_encryption_op_type_in_progress(
 @return true if valid, false if invalid. */
 bool fsp_check_tablespace_size(space_id_t space_id);
 
-/** Writes the space id and flags to a tablespace header.  The flags contain
- row type, physical/compressed page size, and logical/uncompressed page
- size of the tablespace. */
-void fsp_header_init_fields(
-    page_t *page,        /*!< in/out: first page in the space */
-    space_id_t space_id, /*!< in: space id */
-    uint32_t flags);     /*!< in: tablespace flags
-                         (FSP_SPACE_FLAGS): 0, or
-                         table->flags if newer than COMPACT */
+
 
 /** Get the offset of encrytion information in page 0.
 @param[in]	page_size	page size.

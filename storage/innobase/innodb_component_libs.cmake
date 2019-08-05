@@ -58,7 +58,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # P
     #page
-    print
+    #print
 
     # R
     #random

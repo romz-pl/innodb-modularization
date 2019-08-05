@@ -127,11 +127,7 @@ enum dd_column_keys {
 
 #endif /* !UNIV_HOTBACKUP */
 
-/** Server version that the tablespace created */
-const uint32 DD_SPACE_CURRENT_SRV_VERSION = MYSQL_VERSION_ID;
 
-/** The tablespace version that the tablespace created */
-const uint32 DD_SPACE_CURRENT_SPACE_VERSION = 1;
 
 #ifndef UNIV_HOTBACKUP
 /** InnoDB private keys for dd::Partition */

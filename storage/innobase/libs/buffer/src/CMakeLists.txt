@@ -133,7 +133,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    page
+    tablespace
     PRIVATE
 )
 

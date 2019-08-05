@@ -3,7 +3,6 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/disk/flags.h>
-#include <innodb/tablespace/consts.h>
 #include <innodb/disk/page_t.h>
 #include <innodb/record/flag.h>
 

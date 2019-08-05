@@ -6,6 +6,7 @@
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
 #include "sql/dd/object_id.h"
 #include <innodb/disk/page_no_t.h>
+#include "mysql_version.h"
 
 #include <limits>
 
@@ -288,9 +289,7 @@ bufferfixed file pages. */
 
 #include <innodb/disk/flags.h>
 
-/** On a page of any file segment, data may be put starting from this
-offset */
-#define FSEG_PAGE_DATA FIL_PAGE_DATA
+
 
 #define FSEG_INODE_PAGE_NODE FSEG_PAGE_DATA
 /* the list node for linking
@@ -453,3 +452,13 @@ fseg_alloc_free_page) */
 /** Default undo tablespace size in UNIV_PAGEs count (10MB). */
 constexpr page_no_t SRV_UNDO_TABLESPACE_SIZE_IN_PAGES =
     ((1024 * 1024) * 10) / UNIV_PAGE_SIZE_DEF;
+
+
+
+
+
+/** Server version that the tablespace created */
+const uint32 DD_SPACE_CURRENT_SRV_VERSION = MYSQL_VERSION_ID;
+
+/** The tablespace version that the tablespace created */
+const uint32 DD_SPACE_CURRENT_SPACE_VERSION = 1;

@@ -104,6 +104,10 @@ constexpr uint32_t LOG_FILE_HDR_SIZE = 4 * OS_FILE_LOG_BLOCK_SIZE;
  * Page TABLESPACE Flags
  */
 
+/** On a page of any file segment, data may be put starting from this
+offset */
+#define FSEG_PAGE_DATA FIL_PAGE_DATA
+
 
 /* @defgroup fsp_flags InnoDB Tablespace Flag Constants @{ */
 

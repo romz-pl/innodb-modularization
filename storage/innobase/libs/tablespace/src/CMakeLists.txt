@@ -171,6 +171,12 @@ add_library( ${LIB_NAME} STATIC
     fil_set_encryption.cpp
     fil_get_compression.cpp
     fil_reset_encryption.cpp
+    general_space_name.cpp
+    undo_space_name.cpp
+    fil_close_tablespace.cpp
+    fil_discard_tablespace.cpp
+    fil_create_tablespace.cpp
+    fsp_header_init_fields.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -188,7 +194,7 @@ target_link_libraries(
     enum
     io
     ioasync
-    memory
+    page
     string
     sync_rw
     PRIVATE

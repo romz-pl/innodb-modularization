@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/buffer/buf_flush_t.h>
 #include <innodb/memory/mem_heap_t.h>
-
+#include <innodb/tablespace/recv_recovery_on.h>
 
 #include "dict0types.h"
 
@@ -177,10 +177,6 @@ void recv_sys_var_init();
 size_t meb_heap_used();
 #endif /* UNIV_HOTBACKUP */
 
-/** Returns true if recovery is currently running.
-@return recv_recovery_on */
-UNIV_INLINE
-bool recv_recovery_is_on() MY_ATTRIBUTE((warn_unused_result));
 
 /** Start recovering from a redo log checkpoint.
 @see recv_recovery_from_checkpoint_finish

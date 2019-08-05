@@ -94,7 +94,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     record
-    tablespace
     PRIVATE
 )
 

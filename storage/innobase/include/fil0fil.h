@@ -107,6 +107,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fil_init.h>
 #include <innodb/tablespace/fil_close.h>
 #include <innodb/disk/fil_page_get_type.h>
+#include <innodb/tablespace/general_space_name.h>
+#include <innodb/tablespace/undo_space_name.h>
+#include <innodb/tablespace/recv_recovery_on.h>
 
 #include "dict0types.h"
 #include <innodb/disk/flags.h>
@@ -125,16 +128,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 struct buf_block_t;
 
-/** This tablespace name is used internally during file discovery to open a
-general tablespace before the data dictionary is recovered and available. */
-static constexpr char general_space_name[] = "innodb_general";
 
-/** This tablespace name is used as the prefix for implicit undo tablespaces
-and during file discovery to open an undo tablespace before the DD is
-recovered and available. */
-static constexpr char undo_space_name[] = "innodb_undo";
-
-extern volatile bool recv_recovery_on;
 
 #ifdef UNIV_HOTBACKUP
 #include <unordered_set>
@@ -204,6 +198,8 @@ See https://msdn.microsoft.com/en-us/library/1ywe7hcy.aspx */
 #include <innodb/tablespace/fil_space_exists_in_mem.h>
 #include <innodb/tablespace/fil_space_get_id_by_name.h>
 #include <innodb/tablespace/fil_space_extend.h>
+#include <innodb/tablespace/fil_close_tablespace.h>
+#include <innodb/tablespace/fil_discard_tablespace.h>
 
 #ifndef UNIV_HOTBACKUP
 
@@ -233,30 +229,8 @@ void meb_fil_name_process(const char *name, space_id_t space_id);
 
 
 
-/** Closes a single-table tablespace. The tablespace must be cached in the
-memory cache. Free all pages used by the tablespace.
-@param[in,out]	trx		Transaction covering the close
-@param[in]	space_id	Tablespace ID
-@return DB_SUCCESS or error */
-dberr_t fil_close_tablespace(trx_t *trx, space_id_t space_id)
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Discards a single-table tablespace. The tablespace must be cached in the
-memory cache. Discarding is like deleting a tablespace, but
 
- 1. We do not drop the table from the data dictionary;
-
- 2. We remove all insert buffer entries for the tablespace immediately;
-    in DROP TABLE they are only removed gradually in the background;
-
- 3. When the user does IMPORT TABLESPACE, the tablespace will have the
-    same id as it originally had.
-
- 4. Free all the pages in use by the tablespace if rename=true.
-@param[in]	space_id	Tablespace ID
-@return DB_SUCCESS or error */
-dberr_t fil_discard_tablespace(space_id_t space_id)
-    MY_ATTRIBUTE((warn_unused_result));
 
 
 

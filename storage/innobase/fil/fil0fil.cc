@@ -206,8 +206,255 @@ static void meb_tablespace_redo_delete(const page_id_t &page_id,
 
 #endif /* UNIV_HOTBACKUP */
 
+static void fil_op_write_log(mlog_id_t type, space_id_t space_id,
+                             const char *path, const char *new_path,
+                             uint32_t flags, mtr_t *mtr);
 
+/** Create a tablespace (an IBD or IBT) file
+@param[in]	space_id	Tablespace ID
+@param[in]	name		Tablespace name in dbname/tablename format.
+                                For general tablespaces, the 'dbname/' part
+                                may be missing.
+@param[in]	path		Path and filename of the datafile to create.
+@param[in]	flags		Tablespace flags
+@param[in]	size		Initial size of the tablespace file in pages,
+                                must be >= FIL_IBD_FILE_INITIAL_SIZE
+@param[in]	type		FIL_TYPE_TABLESPACE or FIL_TYPE_TEMPORARY
+@return DB_SUCCESS or error code */
+dberr_t fil_create_tablespace(space_id_t space_id, const char *name,
+                                     const char *path, uint32_t flags,
+                                     page_no_t size, fil_type_t type) {
+  pfs_os_file_t file;
+  dberr_t err;
+  byte *buf2;
+  byte *page;
+  bool success;
+  bool has_shared_space = FSP_FLAGS_GET_SHARED(flags);
+  fil_space_t *space = nullptr;
 
+  ut_ad(!fsp_is_system_tablespace(space_id));
+  ut_ad(!fsp_is_global_temporary(space_id));
+  ut_a(fsp_flags_is_valid(flags));
+  ut_a(type == FIL_TYPE_TEMPORARY || type == FIL_TYPE_TABLESPACE);
+
+  const page_size_t page_size(flags);
+
+  /* Create the subdirectories in the path, if they are
+  not there already. */
+  if (!has_shared_space) {
+    err = os_file_create_subdirs_if_needed(path);
+
+    if (err != DB_SUCCESS) {
+      return (err);
+    }
+  }
+
+  file = os_file_create(
+      type == FIL_TYPE_TEMPORARY ? innodb_temp_file_key : innodb_data_file_key,
+      path, OS_FILE_CREATE | OS_FILE_ON_ERROR_NO_EXIT, OS_FILE_NORMAL,
+      OS_DATA_FILE, srv_read_only_mode && (type != FIL_TYPE_TEMPORARY),
+      &success);
+
+  if (!success) {
+    /* The following call will print an error message */
+    ulint error = os_file_get_last_error(true);
+
+    ib::error(ER_IB_MSG_301, path);
+
+    if (error == OS_FILE_ALREADY_EXISTS) {
+      ib::error(ER_IB_MSG_302, path, path);
+
+      return (DB_TABLESPACE_EXISTS);
+    }
+
+    if (error == OS_FILE_DISK_FULL) {
+      return (DB_OUT_OF_DISK_SPACE);
+    }
+
+    return (DB_ERROR);
+  }
+
+  bool atomic_write;
+
+#if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
+  if (fil_fusionio_enable_atomic_write(file)) {
+    int ret = posix_fallocate(file.m_file, 0, size * page_size.physical());
+
+    if (ret != 0) {
+      ib::error(ER_IB_MSG_303, path, ulonglong{size * page_size.physical()},
+                ret, REFMAN);
+      success = false;
+    } else {
+      success = true;
+    }
+
+    atomic_write = true;
+  } else {
+    atomic_write = false;
+
+    success = os_file_set_size(path, file, 0, size * page_size.physical(),
+                               srv_read_only_mode, true);
+  }
+#else
+  atomic_write = false;
+
+  success = os_file_set_size(path, file, 0, size * page_size.physical(),
+                             srv_read_only_mode, true);
+
+#endif /* !NO_FALLOCATE && UNIV_LINUX */
+
+  if (!success) {
+    os_file_close(file);
+    os_file_delete(innodb_data_file_key, path);
+    return (DB_OUT_OF_DISK_SPACE);
+  }
+
+  /* Note: We are actually punching a hole, previous contents will
+  be lost after this call, if it succeeds. In this case the file
+  should be full of NULs. */
+
+  bool punch_hole = os_is_sparse_file_supported(path, file);
+
+  if (punch_hole) {
+    dberr_t punch_err;
+
+    punch_err = os_file_punch_hole(file.m_file, 0, size * page_size.physical());
+
+    if (punch_err != DB_SUCCESS) {
+      punch_hole = false;
+    }
+  }
+
+  /* We have to write the space id to the file immediately and flush the
+  file to disk. This is because in crash recovery we must be aware what
+  tablespaces exist and what are their space id's, so that we can apply
+  the log records to the right file. It may take quite a while until
+  buffer pool flush algorithms write anything to the file and flush it to
+  disk. If we would not write here anything, the file would be filled
+  with zeros from the call of os_file_set_size(), until a buffer pool
+  flush would write to it. */
+
+  buf2 = static_cast<byte *>(ut_malloc_nokey(3 * page_size.logical()));
+
+  /* Align the memory for file i/o if we might have O_DIRECT set */
+  page = static_cast<byte *>(ut_align(buf2, page_size.logical()));
+
+  memset(page, '\0', page_size.logical());
+
+  /* Add the UNIV_PAGE_SIZE to the table flags and write them to the
+  tablespace header. */
+  flags = fsp_flags_set_page_size(flags, page_size);
+  fsp_header_init_fields(page, space_id, flags);
+  mach_write_to_4(page + FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID, space_id);
+
+  mach_write_to_4(page + FIL_PAGE_SRV_VERSION, DD_SPACE_CURRENT_SRV_VERSION);
+  mach_write_to_4(page + FIL_PAGE_SPACE_VERSION,
+                  DD_SPACE_CURRENT_SPACE_VERSION);
+
+  IORequest request(IORequest::WRITE);
+
+  if (!page_size.is_compressed()) {
+    buf_flush_init_for_writing(nullptr, page, nullptr, 0,
+                               fsp_is_checksum_disabled(space_id),
+                               true /* skip_lsn_check */);
+
+    err = os_file_write(request, path, file, page, 0, page_size.physical());
+
+    ut_ad(err != DB_IO_NO_PUNCH_HOLE);
+
+  } else {
+    page_zip_des_t page_zip;
+
+    page_zip_set_size(&page_zip, page_size.physical());
+    page_zip.data = page + page_size.logical();
+#ifdef UNIV_DEBUG
+    page_zip.m_start =
+#endif /* UNIV_DEBUG */
+        page_zip.m_end = page_zip.m_nonempty = page_zip.n_blobs = 0;
+
+    buf_flush_init_for_writing(nullptr, page, &page_zip, 0,
+                               fsp_is_checksum_disabled(space_id),
+                               true /* skip_lsn_check */);
+
+    err = os_file_write(request, path, file, page_zip.data, 0,
+                        page_size.physical());
+
+    ut_a(err != DB_IO_NO_PUNCH_HOLE);
+
+    punch_hole = false;
+  }
+
+  ut_free(buf2);
+
+  if (err != DB_SUCCESS) {
+    ib::error(ER_IB_MSG_304, path);
+
+    os_file_close(file);
+    os_file_delete(innodb_data_file_key, path);
+
+    return (DB_ERROR);
+  }
+
+  success = os_file_flush(file);
+
+  if (!success) {
+    ib::error(ER_IB_MSG_305, path);
+
+    os_file_close(file);
+    os_file_delete(innodb_data_file_key, path);
+    return (DB_ERROR);
+  }
+
+  space = fil_space_create(name, space_id, flags, type);
+
+  if (space == nullptr) {
+    os_file_close(file);
+    os_file_delete(innodb_data_file_key, path);
+    return (DB_ERROR);
+  }
+
+  DEBUG_SYNC_C("fil_ibd_created_space");
+
+  auto shard = fil_system->shard_by_id(space_id);
+
+  fil_node_t *file_node =
+      shard->create_node(path, size, space, false, punch_hole, atomic_write);
+
+  err = (file_node == nullptr) ? DB_ERROR : DB_SUCCESS;
+
+#ifndef UNIV_HOTBACKUP
+  /* Temporary tablespace creation need not be redo logged */
+  if (err == DB_SUCCESS && type != FIL_TYPE_TEMPORARY) {
+    const auto &file = space->files.front();
+
+    mtr_t mtr;
+
+    mtr_start(&mtr);
+
+    fil_op_write_log(MLOG_FILE_CREATE, space_id, file.name, nullptr,
+                     space->flags, &mtr);
+
+    mtr_commit(&mtr);
+
+    DBUG_EXECUTE_IF("fil_ibd_create_log", log_make_latest_checkpoint(););
+  }
+
+#endif /* !UNIV_HOTBACKUP */
+
+  /* For encryption tablespace, initial encryption information. */
+  if (space != nullptr && FSP_FLAGS_GET_ENCRYPTION(space->flags)) {
+    err = fil_set_encryption(space->id, Encryption::AES, nullptr, nullptr);
+
+    ut_ad(err == DB_SUCCESS);
+  }
+
+  os_file_close(file);
+  if (err != DB_SUCCESS) {
+    os_file_delete(innodb_data_file_key, path);
+  }
+
+  return (err);
+}
 
 
 
@@ -247,76 +494,6 @@ static bool fil_op_replay_rename(const page_id_t &page_id,
 
 
 
-/** Closes a single-table tablespace. The tablespace must be cached in the
-memory cache. Free all pages used by the tablespace.
-@param[in,out]	trx		Transaction covering the close
-@param[in]	space_id	Tablespace ID
-@return DB_SUCCESS or error */
-dberr_t fil_close_tablespace(trx_t *trx, space_id_t space_id) {
-  char *path = nullptr;
-  fil_space_t *space = nullptr;
-
-  ut_ad(!fsp_is_undo_tablespace(space_id));
-  ut_ad(!fsp_is_system_or_temp_tablespace(space_id));
-
-  auto shard = fil_system->shard_by_id(space_id);
-
-  dberr_t err;
-
-  err = shard->space_check_pending_operations(space_id, space, &path);
-
-  if (err != DB_SUCCESS) {
-    return (err);
-  }
-
-  ut_a(path != nullptr);
-
-  rw_lock_x_lock(&space->latch);
-
-#ifndef UNIV_HOTBACKUP
-  /* Invalidate in the buffer pool all pages belonging to the
-  tablespace. Since we have set space->stop_new_ops = true, readahead
-  or ibuf merge can no longer read more pages of this tablespace to the
-  buffer pool. Thus we can clean the tablespace out of the buffer pool
-  completely and permanently. The flag stop_new_ops also prevents
-  fil_flush() from being applied to this tablespace. */
-
-  buf_LRU_flush_or_remove_pages(space_id, BUF_REMOVE_FLUSH_WRITE, trx);
-#endif /* !UNIV_HOTBACKUP */
-
-  /* If the free is successful, the X lock will be released before
-  the space memory data structure is freed. */
-
-  if (!fil_space_free(space_id, true)) {
-    rw_lock_x_unlock(&space->latch);
-    err = DB_TABLESPACE_NOT_FOUND;
-  } else {
-    err = DB_SUCCESS;
-  }
-
-  /* If it is a delete then also delete any generated files, otherwise
-  when we drop the database the remove directory will fail. */
-
-  char *cfg_name = Fil_path::make_cfg(path);
-
-  if (cfg_name != nullptr) {
-    os_file_delete_if_exists(innodb_data_file_key, cfg_name, nullptr);
-
-    ut_free(cfg_name);
-  }
-
-  char *cfp_name = Fil_path::make_cfp(path);
-
-  if (cfp_name != nullptr) {
-    os_file_delete_if_exists(innodb_data_file_key, cfp_name, nullptr);
-
-    ut_free(cfp_name);
-  }
-
-  ut_free(path);
-
-  return (err);
-}
 
 #ifndef UNIV_HOTBACKUP
 /** Write a log record about an operation on a tablespace file.
@@ -639,46 +816,6 @@ bool fil_space_is_redo_skipped(space_id_t space_id) {
 #endif /* UNIV_DEBUG */
 
 #ifndef UNIV_HOTBACKUP
-/** Discards a single-table tablespace. The tablespace must be cached in the
-memory cache. Discarding is like deleting a tablespace, but
-
- 1. We do not drop the table from the data dictionary;
-
- 2. We remove all insert buffer entries for the tablespace immediately;
-    in DROP TABLE they are only removed gradually in the background;
-
- 3. Free all the pages in use by the tablespace.
-@param[in]	space_id		Tablespace ID
-@return DB_SUCCESS or error */
-dberr_t fil_discard_tablespace(space_id_t space_id) {
-  dberr_t err;
-
-  err = fil_delete_tablespace(space_id, BUF_REMOVE_ALL_NO_WRITE);
-
-  switch (err) {
-    case DB_SUCCESS:
-      break;
-
-    case DB_IO_ERROR:
-
-      ib::warn(ER_IB_MSG_291, ulong{space_id}, ut_strerr(err));
-      break;
-
-    case DB_TABLESPACE_NOT_FOUND:
-
-      ib::warn(ER_IB_MSG_292, ulong{space_id}, ut_strerr(err));
-      break;
-
-    default:
-      ut_error;
-  }
-
-  /* Remove all insert buffer entries for the tablespace */
-
-  ibuf_delete_for_discarded_space(space_id);
-
-  return (err);
-}
 
 /** Write redo log for renaming a file.
 @param[in]	space_id	tablespace id
@@ -969,251 +1106,6 @@ dberr_t Fil_shard::space_rename(space_id_t space_id, const char *old_path,
 
 
 
-/** Create a tablespace (an IBD or IBT) file
-@param[in]	space_id	Tablespace ID
-@param[in]	name		Tablespace name in dbname/tablename format.
-                                For general tablespaces, the 'dbname/' part
-                                may be missing.
-@param[in]	path		Path and filename of the datafile to create.
-@param[in]	flags		Tablespace flags
-@param[in]	size		Initial size of the tablespace file in pages,
-                                must be >= FIL_IBD_FILE_INITIAL_SIZE
-@param[in]	type		FIL_TYPE_TABLESPACE or FIL_TYPE_TEMPORARY
-@return DB_SUCCESS or error code */
-static dberr_t fil_create_tablespace(space_id_t space_id, const char *name,
-                                     const char *path, uint32_t flags,
-                                     page_no_t size, fil_type_t type) {
-  pfs_os_file_t file;
-  dberr_t err;
-  byte *buf2;
-  byte *page;
-  bool success;
-  bool has_shared_space = FSP_FLAGS_GET_SHARED(flags);
-  fil_space_t *space = nullptr;
-
-  ut_ad(!fsp_is_system_tablespace(space_id));
-  ut_ad(!fsp_is_global_temporary(space_id));
-  ut_a(fsp_flags_is_valid(flags));
-  ut_a(type == FIL_TYPE_TEMPORARY || type == FIL_TYPE_TABLESPACE);
-
-  const page_size_t page_size(flags);
-
-  /* Create the subdirectories in the path, if they are
-  not there already. */
-  if (!has_shared_space) {
-    err = os_file_create_subdirs_if_needed(path);
-
-    if (err != DB_SUCCESS) {
-      return (err);
-    }
-  }
-
-  file = os_file_create(
-      type == FIL_TYPE_TEMPORARY ? innodb_temp_file_key : innodb_data_file_key,
-      path, OS_FILE_CREATE | OS_FILE_ON_ERROR_NO_EXIT, OS_FILE_NORMAL,
-      OS_DATA_FILE, srv_read_only_mode && (type != FIL_TYPE_TEMPORARY),
-      &success);
-
-  if (!success) {
-    /* The following call will print an error message */
-    ulint error = os_file_get_last_error(true);
-
-    ib::error(ER_IB_MSG_301, path);
-
-    if (error == OS_FILE_ALREADY_EXISTS) {
-      ib::error(ER_IB_MSG_302, path, path);
-
-      return (DB_TABLESPACE_EXISTS);
-    }
-
-    if (error == OS_FILE_DISK_FULL) {
-      return (DB_OUT_OF_DISK_SPACE);
-    }
-
-    return (DB_ERROR);
-  }
-
-  bool atomic_write;
-
-#if !defined(NO_FALLOCATE) && defined(UNIV_LINUX)
-  if (fil_fusionio_enable_atomic_write(file)) {
-    int ret = posix_fallocate(file.m_file, 0, size * page_size.physical());
-
-    if (ret != 0) {
-      ib::error(ER_IB_MSG_303, path, ulonglong{size * page_size.physical()},
-                ret, REFMAN);
-      success = false;
-    } else {
-      success = true;
-    }
-
-    atomic_write = true;
-  } else {
-    atomic_write = false;
-
-    success = os_file_set_size(path, file, 0, size * page_size.physical(),
-                               srv_read_only_mode, true);
-  }
-#else
-  atomic_write = false;
-
-  success = os_file_set_size(path, file, 0, size * page_size.physical(),
-                             srv_read_only_mode, true);
-
-#endif /* !NO_FALLOCATE && UNIV_LINUX */
-
-  if (!success) {
-    os_file_close(file);
-    os_file_delete(innodb_data_file_key, path);
-    return (DB_OUT_OF_DISK_SPACE);
-  }
-
-  /* Note: We are actually punching a hole, previous contents will
-  be lost after this call, if it succeeds. In this case the file
-  should be full of NULs. */
-
-  bool punch_hole = os_is_sparse_file_supported(path, file);
-
-  if (punch_hole) {
-    dberr_t punch_err;
-
-    punch_err = os_file_punch_hole(file.m_file, 0, size * page_size.physical());
-
-    if (punch_err != DB_SUCCESS) {
-      punch_hole = false;
-    }
-  }
-
-  /* We have to write the space id to the file immediately and flush the
-  file to disk. This is because in crash recovery we must be aware what
-  tablespaces exist and what are their space id's, so that we can apply
-  the log records to the right file. It may take quite a while until
-  buffer pool flush algorithms write anything to the file and flush it to
-  disk. If we would not write here anything, the file would be filled
-  with zeros from the call of os_file_set_size(), until a buffer pool
-  flush would write to it. */
-
-  buf2 = static_cast<byte *>(ut_malloc_nokey(3 * page_size.logical()));
-
-  /* Align the memory for file i/o if we might have O_DIRECT set */
-  page = static_cast<byte *>(ut_align(buf2, page_size.logical()));
-
-  memset(page, '\0', page_size.logical());
-
-  /* Add the UNIV_PAGE_SIZE to the table flags and write them to the
-  tablespace header. */
-  flags = fsp_flags_set_page_size(flags, page_size);
-  fsp_header_init_fields(page, space_id, flags);
-  mach_write_to_4(page + FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID, space_id);
-
-  mach_write_to_4(page + FIL_PAGE_SRV_VERSION, DD_SPACE_CURRENT_SRV_VERSION);
-  mach_write_to_4(page + FIL_PAGE_SPACE_VERSION,
-                  DD_SPACE_CURRENT_SPACE_VERSION);
-
-  IORequest request(IORequest::WRITE);
-
-  if (!page_size.is_compressed()) {
-    buf_flush_init_for_writing(nullptr, page, nullptr, 0,
-                               fsp_is_checksum_disabled(space_id),
-                               true /* skip_lsn_check */);
-
-    err = os_file_write(request, path, file, page, 0, page_size.physical());
-
-    ut_ad(err != DB_IO_NO_PUNCH_HOLE);
-
-  } else {
-    page_zip_des_t page_zip;
-
-    page_zip_set_size(&page_zip, page_size.physical());
-    page_zip.data = page + page_size.logical();
-#ifdef UNIV_DEBUG
-    page_zip.m_start =
-#endif /* UNIV_DEBUG */
-        page_zip.m_end = page_zip.m_nonempty = page_zip.n_blobs = 0;
-
-    buf_flush_init_for_writing(nullptr, page, &page_zip, 0,
-                               fsp_is_checksum_disabled(space_id),
-                               true /* skip_lsn_check */);
-
-    err = os_file_write(request, path, file, page_zip.data, 0,
-                        page_size.physical());
-
-    ut_a(err != DB_IO_NO_PUNCH_HOLE);
-
-    punch_hole = false;
-  }
-
-  ut_free(buf2);
-
-  if (err != DB_SUCCESS) {
-    ib::error(ER_IB_MSG_304, path);
-
-    os_file_close(file);
-    os_file_delete(innodb_data_file_key, path);
-
-    return (DB_ERROR);
-  }
-
-  success = os_file_flush(file);
-
-  if (!success) {
-    ib::error(ER_IB_MSG_305, path);
-
-    os_file_close(file);
-    os_file_delete(innodb_data_file_key, path);
-    return (DB_ERROR);
-  }
-
-  space = fil_space_create(name, space_id, flags, type);
-
-  if (space == nullptr) {
-    os_file_close(file);
-    os_file_delete(innodb_data_file_key, path);
-    return (DB_ERROR);
-  }
-
-  DEBUG_SYNC_C("fil_ibd_created_space");
-
-  auto shard = fil_system->shard_by_id(space_id);
-
-  fil_node_t *file_node =
-      shard->create_node(path, size, space, false, punch_hole, atomic_write);
-
-  err = (file_node == nullptr) ? DB_ERROR : DB_SUCCESS;
-
-#ifndef UNIV_HOTBACKUP
-  /* Temporary tablespace creation need not be redo logged */
-  if (err == DB_SUCCESS && type != FIL_TYPE_TEMPORARY) {
-    const auto &file = space->files.front();
-
-    mtr_t mtr;
-
-    mtr_start(&mtr);
-
-    fil_op_write_log(MLOG_FILE_CREATE, space_id, file.name, nullptr,
-                     space->flags, &mtr);
-
-    mtr_commit(&mtr);
-
-    DBUG_EXECUTE_IF("fil_ibd_create_log", log_make_latest_checkpoint(););
-  }
-
-#endif /* !UNIV_HOTBACKUP */
-
-  /* For encryption tablespace, initial encryption information. */
-  if (space != nullptr && FSP_FLAGS_GET_ENCRYPTION(space->flags)) {
-    err = fil_set_encryption(space->id, Encryption::AES, nullptr, nullptr);
-
-    ut_ad(err == DB_SUCCESS);
-  }
-
-  os_file_close(file);
-  if (err != DB_SUCCESS) {
-    os_file_delete(innodb_data_file_key, path);
-  }
-
-  return (err);
-}
 
 /** Create a IBD tablespace file.
 @param[in]	space_id	Tablespace ID
