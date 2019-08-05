@@ -48,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "lock0types.h"
 #include "log0log.h"
-#include "mem0mem.h"
+
 #include "que0types.h"
 #include "trx0xa.h"
 #include "usr0types.h"

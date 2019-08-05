@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/string/mem_strdup.h>
 #include <innodb/data_types/dtype_get_len.h>
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/record/rec_offs_init.h>
@@ -39,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtype_get_mysql_type.h>
 #include <innodb/data_types/dtype_get_mbminlen.h>
 #include <innodb/data_types/dtype_get_mbmaxlen.h>
+#include <innodb/memory/mem_heap_empty.h>
 
 #include <debug_sync.h>
 #include <gstream.h>

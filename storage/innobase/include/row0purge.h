@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/memory/mem_heap_allocator.h>
+
 #include "btr0pcur.h"
 #include "btr0types.h"
 #include "data0data.h"

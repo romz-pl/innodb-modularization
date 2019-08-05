@@ -35,6 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/hash/hash_lock_s_confirm.h>
+#include <innodb/hash/hash_lock_x_confirm.h>
+#include <innodb/hash/hash_get_lock.h>
 #include <innodb/page/page_zip_des_t.h>
 #include <innodb/buffer/buf_page_state.h>
 #include <innodb/buffer/Page_fetch.h>

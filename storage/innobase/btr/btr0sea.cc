@@ -37,6 +37,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/17/1996 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/hash/hash_table_clear.h>
+#include <innodb/hash/hash_table_free.h>
+#include <innodb/hash/hash_table_t.h>
 #include <innodb/math/ut_pair_cmp.h>
 #include <innodb/allocator/ut_malloc.h>
 #include <innodb/buffer/buf_pool_from_array.h>

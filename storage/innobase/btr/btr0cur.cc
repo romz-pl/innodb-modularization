@@ -49,6 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/sync_rw/rw_lock_get_writer.h>
 #include <innodb/buffer/buf_withdraw_clock.h>
 #include <innodb/buffer/buf_pool_is_obsolete.h>

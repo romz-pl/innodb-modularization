@@ -31,6 +31,7 @@ Created 2018-01-27 by Sunny Bains */
 
 #include <vector>
 
+#include <innodb/memory/mem_heap_empty.h>
 #include <innodb/math/ut_2_power_up.h>
 #include <innodb/sync_event/OS_SYNC_INFINITE_TIME.h>
 #include <innodb/sync_event/os_event_reset.h>

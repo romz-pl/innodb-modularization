@@ -71,7 +71,7 @@ que_node_t */
 #include <math.h>
 
 #include "pars0pars.h"
-#include "mem0mem.h"
+
 #include "que0types.h"
 #include "que0que.h"
 #include "row0sel.h"

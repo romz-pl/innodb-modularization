@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/allocator/ut_zalloc_nokey.h>
 #include <innodb/allocator/ut_free.h>
+#include <innodb/memory/mem_heap_alloc.h>
 #include "ut0list.h"
 
 #include <stddef.h>

@@ -42,6 +42,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <innodb/hash/hash_unlock_x_all_but.h>
+#include <innodb/hash/hash_lock_s_confirm.h>
+#include <innodb/hash/HASH_SEARCH.h>
+#include <innodb/hash/hash_unlock_x_all.h>
+#include <innodb/hash/hash_get_n_cells.h>
+#include <innodb/hash/hash_table_free.h>
+#include <innodb/hash/hash_lock_x_all.h>
+#include <innodb/hash/hash_table_free.h>
+#include <innodb/hash/HASH_INSERT.h>
+#include <innodb/hash/HASH_DELETE.h>
+#include <innodb/hash/hash_table_free.h>
+#include <innodb/hash/hash_create.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
 #include <innodb/math/ut_2_power_up.h>
@@ -107,7 +119,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fil0fil.h"
 
 #include "ha_prototypes.h"
-#include "mem0mem.h"
+
 #include "my_dbug.h"
 #include <innodb/disk/page_size_t.h>
 #ifndef UNIV_HOTBACKUP

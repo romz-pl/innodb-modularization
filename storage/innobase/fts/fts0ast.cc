@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2007/3/16 Sunny Bains.
  ***********************************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
+
 #include <stdlib.h>
 #include "row0sel.h"
 

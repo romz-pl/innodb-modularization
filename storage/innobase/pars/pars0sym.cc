@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/data_types/dtype_get_mtype.h>
+#include <innodb/memory/mem_heap_create_typed.h>
+#include <innodb/memory/mem_heap_strdupl.h>
 
 #include "current_thd.h"
 
@@ -40,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "data0type.h"
 #include "dict0dd.h"
 #include "eval0eval.h"
-#include "mem0mem.h"
+
 #include "pars0grm.h"
 #include "pars0pars.h"
 #include "que0que.h"

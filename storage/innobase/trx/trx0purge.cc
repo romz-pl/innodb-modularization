@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/io/IORequest.h>
 #include <innodb/io/os_file_create_simple_no_error_handling.h>
 #include <innodb/io/os_file_create.h>

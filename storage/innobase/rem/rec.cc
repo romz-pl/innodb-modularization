@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 other files in library. The code in this file is used to make a library for
 external tools. */
 
+#include <innodb/univ/univ.h>
+
 #include <stddef.h>
 
 #include <innodb/record/rec_offs_make_valid.h>
@@ -43,9 +45,10 @@ external tools. */
 #include <innodb/record/rec_offs_get_n_alloc.h>
 #include <innodb/record/rec_offs_set_n_alloc.h>
 #include <innodb/record/rec_offs_set_n_fields.h>
+#include <innodb/memory/mem_heap_create_at.h>
 
 #include "dict0dict.h"
-#include "mem0mem.h"
+
 #include "rem/rec.h"
 #include "rem0rec.h"
 

@@ -37,8 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_create.h>
 #include <innodb/sync_os/pfs.h>
 
-#include "hash0hash.h"
-#include "mem0mem.h"
+
+
 
 
 

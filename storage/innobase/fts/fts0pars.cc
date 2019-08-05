@@ -73,11 +73,13 @@
 
 /* Copy the first part of user declarations.  */
 
+#include <innodb/allocator/ut_malloc_nokey.h>
+
 /* Line 268 of yacc.c  */
 #line 26 "fts0pars.y"
 
 #include "ha_prototypes.h"
-#include "mem0mem.h"
+
 #include "fts0ast.h"
 #include "fts0blex.h"
 #include "fts0tlex.h"

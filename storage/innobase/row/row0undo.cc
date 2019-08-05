@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/record/rec_offs_init.h>
+#include <innodb/memory/mem_heap_empty.h>
 
 #include <stddef.h>
 

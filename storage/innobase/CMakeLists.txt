@@ -46,7 +46,6 @@ SET(INNOBASE_ZIP_DECOMPRESS_SOURCES
     buf/checksum.cc
     dict/dict.cc
     dict/mem.cc
-    mem/memory.cc
     os/os0thread.cc
     page/zipdecompress.cc
     rem/rec.cc

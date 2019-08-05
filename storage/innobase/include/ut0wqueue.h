@@ -40,8 +40,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/time/ib_time_t.h>
+#include <innodb/memory/mem_heap_t.h>
 
-#include "mem0mem.h"
+
 
 #include "ut0list.h"
 

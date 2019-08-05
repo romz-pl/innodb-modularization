@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1996 Heikki Tuuri
  ***********************************************************************/
 
+#include <innodb/memory/mem_heap_strdup.h>
+
 #include "data0type.h"
 #include "dict0mem.h"
 #include "fil0fil.h"

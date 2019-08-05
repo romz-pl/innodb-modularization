@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/6/2006 Osku Salerma
  ************************************************************************/
 
+#include <innodb/memory/mem_heap_alloc.h>
+#include <innodb/memory/mem_heap_free.h>
 
 #define IB_VEC_OFFSET(v, i) (vec->sizeof_value * i)
 

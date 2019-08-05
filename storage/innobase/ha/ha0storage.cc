@@ -32,10 +32,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created September 22, 2007 Vasil Dimov
  *******************************************************/
 
+#include <innodb/hash/HASH_INSERT.h>
+#include <innodb/hash/HASH_SEARCH.h>
 #include "ha0storage.h"
 #include "ha_prototypes.h"
-#include "hash0hash.h"
-#include "mem0mem.h"
+
+
 #include <innodb/random/random.h>
 
 /** Retrieves a data from a storage. If it is present, a pointer to the

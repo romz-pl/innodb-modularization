@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fil0fil.h"
 #include "trx0types.h"
 #ifndef UNIV_HOTBACKUP
-#include "mem0mem.h"
+
 #include "mtr0mtr.h"
 
 #include <innodb/lst/lst.h>

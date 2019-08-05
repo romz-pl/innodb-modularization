@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/data_types/dtype_get_len.h>
 #include <innodb/print/ut_print_buf.h>

@@ -35,11 +35,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/hash/hash_table_t.h>
 #include <innodb/disk/page_t.h>
 #include <innodb/record/rec_t.h>
 
 
-#include "hash0hash.h"
+
 
 
 /** Looks for an element in a hash table.

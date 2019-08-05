@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/hash/hash_node_t.h>
 #include <innodb/data_types/dtype_get_fixed_size_low.h>
 #include <innodb/data_types/dtype_get_min_size_low.h>
 #include <innodb/string/ut_strcmp.h>
@@ -57,14 +58,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "data0type.h"
 #include "dict0types.h"
-#include "mem0mem.h"
+
 
 #include "row0types.h"
 #ifndef UNIV_HOTBACKUP
 #include "lock0types.h"
 #include "que0types.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "hash0hash.h"
+
 
 #include "trx0types.h"
 

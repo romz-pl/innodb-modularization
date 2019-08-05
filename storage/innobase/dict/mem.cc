@@ -36,6 +36,8 @@ other files in library. The code in this file is used to make a library for
 external tools. */
 
 #include <innodb/data_types/dtype_get_mblen.h>
+#include <innodb/string/mem_strdup.h>
+
 #include <new>
 
 #include "dict0dict.h"

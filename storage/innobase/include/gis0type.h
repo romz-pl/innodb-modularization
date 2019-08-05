@@ -42,8 +42,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "data0types.h"
 #include "dict0types.h"
 #include "gis0geo.h"
-#include "hash0hash.h"
-#include "mem0mem.h"
+
+
 #include "que0types.h"
 
 #include "row0types.h"

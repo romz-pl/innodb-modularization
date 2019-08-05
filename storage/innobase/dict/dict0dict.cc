@@ -33,6 +33,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/memory/mem_heap_strdupl.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/memory/mem_heap_strdupl.h>
+#include <innodb/string/mem_strdup.h>
+#include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/hash/hash_table_free.h>
+#include <innodb/hash/hash_get_n_cells.h>
+#include <innodb/hash/HASH_DELETE.h>
+#include <innodb/hash/HASH_INSERT.h>
+#include <innodb/hash/hash_create.h>
 #include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/allocator/ut_realloc.h>
 #include <innodb/logger/info.h>
@@ -114,7 +125,7 @@ extern uint ibuf_debug;
 #include "lock0lock.h"
 #endif /* !UNIV_HOTBACKUP */
 #include <innodb/machine/data.h>
-#include "mem0mem.h"
+
 #include "os0once.h"
 #include "page0page.h"
 #include "page0zip.h"

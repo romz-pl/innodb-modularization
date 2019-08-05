@@ -109,9 +109,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    allocator
     disk
-    logger
     memory
     print
     PRIVATE

@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/logger/info.h>
 
 #include "dict0dd.h"

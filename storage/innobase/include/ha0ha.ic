@@ -30,11 +30,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 8/18/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/hash/hash_get_nth_cell.h>
+#include <innodb/hash/hash_cell_t.h>
+#include <innodb/hash/hash_calc_hash.h>
 #include <innodb/record/rec_t.h>
 #include <innodb/random/random.h>
 
 #include "btr0types.h"
-#include "mem0mem.h"
+
 
 /** Deletes a hash node. */
 void ha_delete_hash_node(hash_table_t *table,  /*!< in: hash table */

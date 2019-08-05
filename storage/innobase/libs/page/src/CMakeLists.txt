@@ -93,7 +93,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    memory_check
     record
     tablespace
     PRIVATE

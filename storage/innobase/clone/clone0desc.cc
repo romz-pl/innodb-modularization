@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "clone0desc.h"
 #include <innodb/machine/data.h>
+#include <innodb/memory/mem_heap_alloc.h>
+#include <innodb/memory/mem_heap_zalloc.h>
 
 /** Maximum supported descriptor version. The version represents the current
 set of descriptors and its elements. */

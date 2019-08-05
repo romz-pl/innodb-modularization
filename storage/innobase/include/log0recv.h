@@ -36,10 +36,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/buffer/buf_flush_t.h>
+#include <innodb/memory/mem_heap_t.h>
 
 
 #include "dict0types.h"
-#include "hash0hash.h"
+
 #include "log0types.h"
 #include "mtr0types.h"
 

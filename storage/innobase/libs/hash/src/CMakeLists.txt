@@ -29,6 +29,12 @@ add_library( ${LIB_NAME} STATIC
     HASH_ASSERT_VALID.cpp
     HASH_INVALIDATE.cpp
     HASH_DELETE.cpp
+    HASH_GET_FIRST.cpp
+    HASH_GET_NEXT.cpp
+    HASH_SEARCH.cpp
+    HASH_SEARCH_ALL.cpp
+    HASH_DELETE_AND_COMPACT.cpp
+    HASH_MIGRATE.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

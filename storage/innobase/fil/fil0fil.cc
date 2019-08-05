@@ -33,6 +33,7 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/io/os_file_create_directory.h>
 #include <innodb/io/Dir_Walker.h>
 #include <innodb/io/access_type.h>
@@ -99,10 +100,10 @@ The tablespace memory cache */
 #include "fsp0fsp.h"
 
 #include "ha_prototypes.h"
-#include "hash0hash.h"
+
 #include "log0recv.h"
 #include <innodb/machine/data.h>
-#include "mem0mem.h"
+
 #include "mtr0log.h"
 #include "my_dbug.h"
 #include "my_inttypes.h"

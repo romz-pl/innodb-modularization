@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/io/IORequest.h>
 #include <innodb/io/os_file_get_last_error.h>
 #include <innodb/io/os_file_create.h>
@@ -96,7 +97,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ibuf0ibuf.h"
 #include "log0log.h"
 #include "log0recv.h"
-#include "mem0mem.h"
+
 #include "mtr0mtr.h"
 #include "my_compiler.h"
 #include "my_dbug.h"

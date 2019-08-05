@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed by Sunny Bains and Marko Makela
  *******************************************************/
 
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/data_types/dtype_get_prtype.h>
 #include <innodb/record/rec_offs_data_size.h>
 #include <innodb/record/rec_offs_extra_size.h>

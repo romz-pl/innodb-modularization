@@ -43,8 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "data0types.h"
 #include "dict0types.h"
 #include "ft_global.h"
-#include "hash0hash.h"
-#include "mem0mem.h"
+
+
 #include "mysql/plugin_ftparser.h"
 #include "que0types.h"
 

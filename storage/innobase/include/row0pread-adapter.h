@@ -34,6 +34,8 @@ Created 2018-02-28 by Darshan M N. */
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/allocator/ut_malloc_nokey.h>
+
 #include "row0pread.h"
 
 /** Size of the buffer used to store InnoDB records and sent to the adapter*/

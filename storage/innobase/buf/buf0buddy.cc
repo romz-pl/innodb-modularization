@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created December 2006 by Marko Makela
  *******************************************************/
 
+#include <innodb/hash/HASH_INSERT.h>
+#include <innodb/hash/HASH_SEARCH.h>
+#include <innodb/hash/HASH_DELETE.h>
 #include <innodb/time/ut_time_us.h>
 #include <innodb/buffer/buf_get_withdraw_depth.h>
 #include <innodb/buffer/buf_pool_get.h>

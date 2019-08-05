@@ -48,7 +48,7 @@ external tools. */
 #include <zlib.h>
 
 #include "btr0btr.h"
-#include "mem0mem.h"
+
 #include "page/zipdecompress.h"
 #include "page0page.h"
 #include "rem0rec.h"

@@ -3,6 +3,23 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/align/ut_calc_align.h>
+#include <innodb/memory/MEM_BLOCK_HEADER_SIZE.h>
+
+/* Before and after any allocated object we will put MEM_NO_MANS_LAND bytes of
+some data (different before and after) which is supposed not to be modified by
+anyone. This way it would be much easier to determine whether anyone was
+writing on not his memory, especially that Valgrind can assure there was no
+reads or writes to this memory. */
+#ifdef UNIV_DEBUG
+const int MEM_NO_MANS_LAND = 16;
+#else
+const int MEM_NO_MANS_LAND = 0;
+#endif
+
+/* Byte that we would put before allocated object MEM_NO_MANS_LAND times.*/
+const byte MEM_NO_MANS_LAND_BEFORE_BYTE = 0xCE;
+/* Byte that we would put after allocated object MEM_NO_MANS_LAND times.*/
+const byte MEM_NO_MANS_LAND_AFTER_BYTE = 0xDF;
 
 /** Types of allocation for memory heaps: DYNAMIC means allocation from the
 dynamic memory pool of the C compiler, BUFFER means allocation from the
@@ -44,21 +61,7 @@ part that cannot be divided by UNIV_MEM_ALINGMENT): */
   ((UNIV_PAGE_SIZE - MEM_BLOCK_HEADER_SIZE - 2 * MEM_NO_MANS_LAND) & \
    ~(UNIV_MEM_ALIGNMENT - 1))
 
-/* Before and after any allocated object we will put MEM_NO_MANS_LAND bytes of
-some data (different before and after) which is supposed not to be modified by
-anyone. This way it would be much easier to determine whether anyone was
-writing on not his memory, especially that Valgrind can assure there was no
-reads or writes to this memory. */
-#ifdef UNIV_DEBUG
-const int MEM_NO_MANS_LAND = 16;
-#else
-const int MEM_NO_MANS_LAND = 0;
-#endif
 
-/* Byte that we would put before allocated object MEM_NO_MANS_LAND times.*/
-const byte MEM_NO_MANS_LAND_BEFORE_BYTE = 0xCE;
-/* Byte that we would put after allocated object MEM_NO_MANS_LAND times.*/
-const byte MEM_NO_MANS_LAND_AFTER_BYTE = 0xDF;
 
 /** Space needed when allocating for a user a field of length N.
 The space is allocated only in multiples of UNIV_MEM_ALIGNMENT. In debug mode

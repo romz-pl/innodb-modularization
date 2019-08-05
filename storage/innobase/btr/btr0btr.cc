@@ -41,6 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_field_not_null_not_add_col_def.h>
 #include <innodb/page/page_zip_get_size.h>
+#include <innodb/memory/mem_heap_empty.h>
 
 #include "btr0btr.h"
 

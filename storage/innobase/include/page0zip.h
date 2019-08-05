@@ -55,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0types.h"
 #include <innodb/machine/data.h>
-#include "mem0mem.h"
+
 #include "mtr0types.h"
 #include "page/zipdecompress.h"
 #include "srv0srv.h"

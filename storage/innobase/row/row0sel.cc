@@ -45,6 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_copy.h>
 #include <innodb/record/rec_offs_nth_sql_null.h>
 #include <innodb/data_types/dtype_get_mysql_type.h>
+#include <innodb/memory/mem_heap_empty.h>
 
 #include "row0sel.h"
 

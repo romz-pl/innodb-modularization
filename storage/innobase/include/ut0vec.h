@@ -35,7 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "mem0mem.h"
+#include <innodb/memory/mem_heap_t.h>
+
+
 
 struct ib_alloc_t;
 struct ib_vector_t;

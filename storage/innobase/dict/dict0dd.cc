@@ -27,6 +27,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** @file dict/dict0dd.cc
 Data dictionary interface */
 
+#include <innodb/memory/mem_heap_strdupl.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/logger/info.h>
 #include <innodb/tablespace/srv_tmp_space.h>

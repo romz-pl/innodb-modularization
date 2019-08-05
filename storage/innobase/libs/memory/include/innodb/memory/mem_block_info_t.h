@@ -2,8 +2,12 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/memory/mem_block_t.h>
+//#include <innodb/memory/mem_block_t.h>
 #include <innodb/lst/lst.h>
+
+/** A block of a memory heap consists of the info structure
+followed by an area of memory */
+typedef struct mem_block_info_t mem_block_t;
 
 /** The info structure stored at the beginning of a heap block */
 struct mem_block_info_t {

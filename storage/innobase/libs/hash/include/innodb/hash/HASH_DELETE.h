@@ -6,6 +6,10 @@
 #include <innodb/hash/HASH_ASSERT_VALID.h>
 #include <innodb/hash/hash_cell_t.h>
 #include <innodb/hash/hash_calc_hash.h>
+#include <innodb/hash/HASH_INVALIDATE.h>
+#include <innodb/hash/HASH_ASSERT_OWN.h>
+
+/** Deletes a struct from a hash table. */
 
 #define HASH_DELETE(TYPE, NAME, TABLE, FOLD, DATA)                    \
   do {                                                                \

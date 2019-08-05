@@ -39,6 +39,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_extra_size.h>
 #include <innodb/record/rec_offs_data_size.h>
 #include <innodb/record/rec_offs_set_n_fields.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
 
 #include "row0log.h"
 

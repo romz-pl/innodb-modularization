@@ -29,6 +29,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/logger/fatal.h>
+
 #include <zlib.h>
 
 /** Decompress SDI record */

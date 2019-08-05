@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  ************************************************************************/
 
 #include "ut0vec.h"
-#include "mem0mem.h"
+
 
 /********************************************************************
 Create a new vector with the given initial size. */

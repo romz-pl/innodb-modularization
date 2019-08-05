@@ -35,8 +35,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/memory/mem_heap_t.h>
+#include <innodb/memory/mem_heap_create.h>
+#include <innodb/memory/mem_heap_alloc.h>
+
 #include "dyn0types.h"
-#include "mem0mem.h"
+
 #include <innodb/lst/lst.h>
 
 /** Class that manages dynamic buffers. It uses a UT_LIST of

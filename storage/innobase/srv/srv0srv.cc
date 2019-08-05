@@ -95,7 +95,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "lock0lock.h"
 #include "log0recv.h"
-#include "mem0mem.h"
+
 #include "my_compiler.h"
 #include "my_dbug.h"
 #include "my_inttypes.h"

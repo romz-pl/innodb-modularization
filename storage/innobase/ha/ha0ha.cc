@@ -32,6 +32,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ha0ha.h"
 
+#include <innodb/memory/mem_heap_create_typed.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/hash/hash_get_n_cells.h>
+#include <innodb/hash/HASH_DELETE_AND_COMPACT.h>
+#include <innodb/hash/hash_create_sync_obj.h>
+#include <innodb/hash/hash_create.h>
 #include <innodb/allocator/ut_free.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/sync_rw/rw_lock_free.h>

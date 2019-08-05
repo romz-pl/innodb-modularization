@@ -32,6 +32,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/memory/mem_heap_allocator.h>
+#include <innodb/hash/HASH_DELETE.h>
+#include <innodb/hash/HASH_SEARCH.h>
+#include <innodb/hash/hash_table_free.h>
+#include <innodb/hash/HASH_MIGRATE.h>
+#include <innodb/hash/hash_create.h>
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/buffer/buf_pool_from_array.h>
 #include <innodb/buffer/buf_pool_t.h>

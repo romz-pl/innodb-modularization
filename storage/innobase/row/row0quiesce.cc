@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/io/os_file_delete_if_exists.h>
+#include <innodb/memory/mem_heap_get_size.h>
 
 #include <errno.h>
 #include <my_aes.h>

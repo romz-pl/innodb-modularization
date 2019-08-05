@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/5/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/hash/HASH_DELETE.h>
+#include <innodb/hash/HASH_INSERT.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
 #include <innodb/print/ut_print_buf.h>
@@ -78,7 +81,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0rea.h"
 #include "buf0stats.h"
 #include "fil0fil.h"
-#include "hash0hash.h"
+
 #include "ibuf0ibuf.h"
 #include "log0recv.h"
 #include "my_dbug.h"

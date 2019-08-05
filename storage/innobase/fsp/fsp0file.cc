@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013-7-26 by Kevin Lewis
  *******************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/logger/info.h>
 #include <innodb/io/pfs.h>
 #include <innodb/tablespace/Datafile.h>

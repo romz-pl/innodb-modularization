@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/buffer/buf_pool_is_obsolete.h>
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_copy.h>

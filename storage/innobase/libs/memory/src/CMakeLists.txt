@@ -24,6 +24,33 @@ add_library( ${LIB_NAME} STATIC
     mem_heap_is_top.cpp
     validate_no_mans_land.cpp
     mem_heap_get_top.cpp
+    mem_heap_create_block_func.cpp
+    MEM_BLOCK_HEADER_SIZE.cpp
+    mem_heap_create_block.cpp
+    mem_heap_create_at.cpp
+    mem_heap_block_free.cpp
+    mem_heap_create_func.cpp
+    mem_heap_create.cpp
+    mem_heap_create_typed.cpp
+    mem_heap_free.cpp
+    mem_heap_zalloc.cpp
+    mem_heap_alloc.cpp
+    mem_heap_free_heap_top.cpp
+    mem_heap_empty.cpp
+    mem_heap_replace.cpp
+    mem_heap_dup_replace.cpp
+    mem_heap_strdup_replace.cpp
+    mem_heap_free_top.cpp
+    mem_heap_strdup.cpp
+    mem_heap_strdupl.cpp
+    mem_heap_strcat.cpp
+    mem_heap_dup.cpp
+    mem_heap_printf.cpp
+    ut_strlcpy_rev.cpp
+    mem_heap_printf_low.cpp
+    mem_heap_add_block.cpp
+    mem_heap_free_block_free.cpp
+    mem_heap_allocator.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -37,9 +64,8 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    align
+    allocator
     lst
-    logger
     PRIVATE
 )
 

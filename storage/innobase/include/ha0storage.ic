@@ -32,10 +32,21 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created September 24, 2007 Vasil Dimov
  *******************************************************/
 
-#include "ha0storage.h"
-#include "hash0hash.h"
-#include "mem0mem.h"
 #include <innodb/univ/univ.h>
+
+#include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/memory/mem_heap_free.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/memory/mem_heap_alloc.h>
+#include <innodb/memory/mem_heap_create.h>
+#include <innodb/hash/hash_get_n_cells.h>
+#include <innodb/hash/hash_table_clear.h>
+#include <innodb/hash/hash_table_free.h>
+#include <innodb/hash/hash_create.h>
+#include <innodb/hash/hash_table_t.h>
+#include "ha0storage.h"
+
+
 
 /** Hash storage for strings */
 struct ha_storage_t {

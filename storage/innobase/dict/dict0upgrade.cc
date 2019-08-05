@@ -24,6 +24,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+#include <innodb/memory/mem_heap_empty.h>
 #include <innodb/logger/info.h>
 #include <innodb/tablespace/Datafile.h>
 #include <innodb/tablespace/fsp_is_shared_tablespace.h>

@@ -36,13 +36,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
 #include <innodb/sync_mutex/ib_mutex_t.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
 
 #include "ut0wqueue.h"
 
 #include <stddef.h>
 #include <sys/types.h>
 
-#include "mem0mem.h"
+
 #include "ut0list.h"
 
 /** @file ut/ut0wqueue.cc

@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/record/rec_get_heap_no_new.h>
 #include <innodb/record/rec_get_heap_no_old.h>
+#include <innodb/hash/hash_calc_hash.h>
 
 #include "btr0cur.h"
 #include "buf0buf.h"

@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/memory/mem_heap_printf.h>
+#include <innodb/string/mem_strdup.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/time/ut_time.h>

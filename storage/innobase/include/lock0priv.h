@@ -43,7 +43,7 @@ those functions in lock/ */
 #endif
 
 #include "dict0types.h"
-#include "hash0hash.h"
+
 #include "trx0types.h"
 
 #include <utility>

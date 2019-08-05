@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stddef.h>
 
 #include <innodb/disk/fil_page_set_type.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
 
 #include <sql_thd_internal_api.h>
 

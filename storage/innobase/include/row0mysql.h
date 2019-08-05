@@ -52,7 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "gis0type.h"
 #include "lob0undo.h"
 #include "lock0types.h"
-#include "mem0mem.h"
+
 #include "my_compiler.h"
 #include "my_inttypes.h"
 #include "que0types.h"

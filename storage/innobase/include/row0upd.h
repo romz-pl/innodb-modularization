@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/print/PrintBuffer.h>
+#include <innodb/memory/mem_heap_allocator.h>
 
 #include <stack>
 #include "btr0types.h"

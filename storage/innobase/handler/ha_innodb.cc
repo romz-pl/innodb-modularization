@@ -46,6 +46,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/memory/mem_heap_strdupl.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/hash/HASH_DELETE.h>
+#include <innodb/hash/HASH_INSERT.h>
+#include <innodb/hash/hash_create.h>
+#include <innodb/hash/hash_table_free.h>
 #include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/data_types/data_mysql_default_charset_coll.h>
 #include <innodb/data_types/dtype_is_string_type.h>
@@ -154,7 +161,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lex_string.h"
 #include "lob0lob.h"
 #include "lock0lock.h"
-#include "mem0mem.h"
+
 #include "mtr0mtr.h"
 #include "my_compare.h"
 #include "my_dbug.h"

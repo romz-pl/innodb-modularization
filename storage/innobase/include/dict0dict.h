@@ -35,6 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define dict0dict_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/hash/hash_table_t.h>
+#include <innodb/hash/HASH_GET_NEXT.h>
+#include <innodb/hash/HASH_GET_FIRST.h>
 #include <innodb/record/rec_format_t.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/dict_sys_t_is_reserved.h>
@@ -52,8 +56,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0types.h"
 #include "fsp0fsp.h"
 
-#include "hash0hash.h"
-#include "mem0mem.h"
+
+
 
 #include "row0types.h"
 #include "sql/dd/object_id.h"

@@ -35,11 +35,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/data_types/dtype_t.h>
+#include <innodb/memory/mem_heap_t.h>
 
 
 #include "data0type.h"
 #include "data0types.h"
-#include "mem0mem.h"
+
 #include "trx0types.h"
 
 #include <ostream>

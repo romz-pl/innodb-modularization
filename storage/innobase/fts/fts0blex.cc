@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/error/ut_error.h>
 
 

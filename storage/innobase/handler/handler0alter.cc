@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/memory/mem_heap_strdup_replace.h>
 #include <innodb/data_types/dtype_get_mblen.h>
 #include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/data_types/dtype_is_string_type.h>

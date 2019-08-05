@@ -24,6 +24,7 @@ static char *yytext;
 #include <errno.h>
 #include <stdlib.h>
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/string/ut_strlen.h>
 #include <innodb/allocator/ut_realloc.h>
 
@@ -911,7 +912,7 @@ Created 12/14/1997 Heikki Tuuri
 #include "pars0pars.h"
 #include "pars0grm.h"
 #include "pars0sym.h"
-#include "mem0mem.h"
+
 #include "os0proc.h"
 
 #define malloc(A)	ut_malloc_nokey(A)

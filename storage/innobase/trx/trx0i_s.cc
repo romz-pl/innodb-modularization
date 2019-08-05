@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.
 */
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/time/ut_time_us.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/record/rec_offs_init.h>
@@ -53,10 +54,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "ha0storage.h"
 #include "ha_prototypes.h"
-#include "hash0hash.h"
+
 #include "lock0iter.h"
 #include "lock0lock.h"
-#include "mem0mem.h"
+
 #include "mysql/plugin.h"
 #include "page0page.h"
 #include "rem0rec.h"

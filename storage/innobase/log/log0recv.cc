@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/allocator/ut_realloc.h>
@@ -49,7 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/IORequestWrite.h>
 #include <innodb/io/IORequestLogRead.h>
 #include <innodb/io/IORequestLogWrite.h>
-
+#include <innodb/memory/mem_heap_create_typed.h>
 
 
 #include "ha_prototypes.h"
@@ -76,7 +78,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "ibuf0ibuf.h"
 #include "log0log.h"
-#include "mem0mem.h"
+
 #include "mtr0log.h"
 #include "mtr0mtr.h"
 #include "my_compiler.h"

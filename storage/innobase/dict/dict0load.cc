@@ -31,6 +31,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/24/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/memory/mem_heap_empty.h>
+#include <innodb/string/mem_strdup.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/memory/mem_heap_strdupl.h>
+#include <innodb/allocator/mem_strdupl.h>
 #include <innodb/data_types/data_mysql_default_charset_coll.h>
 #include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/logger/info.h>

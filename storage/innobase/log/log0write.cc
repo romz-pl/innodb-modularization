@@ -46,6 +46,7 @@ the file COPYING.Google.
 
 #include <cstring>
 
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_down.h>
@@ -70,7 +71,7 @@ the file COPYING.Google.
 #include "log0log.h"
 #ifndef UNIV_HOTBACKUP
 #include "log0recv.h"
-#include "mem0mem.h"
+
 #include "mysqld.h" /* server_uuid */
 #include "srv0mon.h"
 #include "srv0srv.h"

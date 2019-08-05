@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2007-03-27 Sunny Bains
  *******************************************************/
 
+#include <innodb/memory/mem_heap_printf.h>
+#include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/string/ut_str3cat.h>
 
 #include <sys/types.h>

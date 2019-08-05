@@ -31,13 +31,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
  **********************************
 ***************************************/
 
+#include <innodb/memory/mem_heap_free.h>
+#include <innodb/memory/mem_heap_zalloc.h>
+#include <innodb/memory/mem_heap_dup.h>
+#include <innodb/memory_check/memory_check.h>
+#include <innodb/memory/mem_heap_t.h>
 #include <innodb/data_types/dtype_set.h>
 #include <innodb/data_types/dtype_get_sql_null_size.h>
 #include <innodb/data_types/flags.h>
 #include <innodb/machine/data.h>
 #include <innodb/random/random.h>
 #include "btr0types.h"
-#include "mem0mem.h"
+
 
 #ifdef UNIV_DEBUG
 /** Dummy variable to catch access to uninitialized fields.  In the

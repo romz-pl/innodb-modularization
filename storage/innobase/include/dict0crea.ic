@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ha_prototypes.h"
 
-#include "mem0mem.h"
+
 
 /** Checks if a table name contains the string "/#sql" which denotes temporary
  tables in MySQL.

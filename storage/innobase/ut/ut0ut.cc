@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/logger/fatal.h>
+
 #include <errno.h>
 #include <time.h>
 #include <string>

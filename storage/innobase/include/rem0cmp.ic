@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  ************************************************************************/
 
 #include <innodb/data_types/dtype_get_charset_coll.h>
+#include <innodb/logger/fatal.h>
 
 #include <mysql_com.h>
 
