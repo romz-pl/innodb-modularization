@@ -98,7 +98,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0log.h"
 #include "log0recv.h"
 
-#include "mtr0mtr.h"
+
 #include "my_compiler.h"
 #include "my_dbug.h"
 #include "my_inttypes.h"

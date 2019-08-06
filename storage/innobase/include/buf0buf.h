@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/sync_rw/rw_lock_type_t.h>
 #include <innodb/hash/hash_lock_s_confirm.h>
 #include <innodb/hash/hash_lock_x_confirm.h>
 #include <innodb/hash/hash_get_lock.h>

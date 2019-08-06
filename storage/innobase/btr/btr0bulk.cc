@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 03/11/2014 Shaohua Wang
  *******************************************************/
 
+#include <innodb/mtr/mtr_set_flush_observer.h>
 #include <innodb/page/cursor_movement.h>
 #include <innodb/buffer/buf_block_buf_fix_inc.h>
 #include <innodb/record/rec_set_heap_no_new.h>

@@ -127,7 +127,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <functional>
 
 struct buf_block_t;
-
+struct mtr_t;
 
 
 #ifdef UNIV_HOTBACKUP

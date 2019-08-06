@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_empty.h>
 #include <innodb/data_types/dtype_get_mbmaxlen.h>
 #include <innodb/data_types/dtype_get_charset_coll.h>

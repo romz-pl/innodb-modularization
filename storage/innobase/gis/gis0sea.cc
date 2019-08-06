@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/mtr/mtr_memo_release.h>
+#include <innodb/mtr/mtr_set_savepoint.h>
+#include <innodb/mtr/mtr_release_block_at_savepoint.h>
+#include <innodb/mtr/mtr_s_lock.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/buffer/buf_pool_is_obsolete.h>
 #include <innodb/record/rec_offs_comp.h>

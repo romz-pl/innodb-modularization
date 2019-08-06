@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/memory/mem_heap_get_size.h>
+#include <innodb/tablespace/mach_read_ulint.h>
+#include <innodb/mtr/mtr_x_lock_space.h>
 
 #include <errno.h>
 #include <my_aes.h>

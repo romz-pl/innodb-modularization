@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/1/2016 Shaohua Wang
  *******************************************************/
 
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_strdupl.h>
 #include <innodb/logger/info.h>
 

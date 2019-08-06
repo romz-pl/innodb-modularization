@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/mtr/mtr_s_lock.h>
+#include <innodb/mtr/mtr_sx_lock.h>
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_offs_init.h>

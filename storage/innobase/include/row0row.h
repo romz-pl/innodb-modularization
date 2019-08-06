@@ -35,10 +35,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/mtr/mtr_t.h>
+
 #include "btr0types.h"
 #include "data0data.h"
 #include "dict0types.h"
-#include "mtr0mtr.h"
+
 #include "que0types.h"
 
 #include "row0types.h"

@@ -54,7 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "ibuf0ibuf.h"
 #include "log0recv.h"
-#include "mtr0mtr.h"
+
 #include "my_dbug.h"
 #include "my_inttypes.h"
 #include "srv0srv.h"

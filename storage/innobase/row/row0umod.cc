@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/mtr/mtr_sx_lock.h>
+#include <innodb/mtr/mtr_s_lock.h>
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/logger/warn.h>
 #include <innodb/memory/mem_heap_empty.h>
 

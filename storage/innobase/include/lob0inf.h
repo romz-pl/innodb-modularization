@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fut0lst.h"
 #include "lob0index.h"
 #include "lob0lob.h"
-#include "mtr0mtr.h"
+
 #include "table.h"
 #include "trx0trx.h"
 

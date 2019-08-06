@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "mtr0mtr.h"
+
 #include "sql/xa.h"
 #include "trx0sys.h"
 #include "trx0types.h"

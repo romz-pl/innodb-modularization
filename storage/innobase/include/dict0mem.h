@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/mtr/mtr_commit.h>
+#include <innodb/mtr/mtr_t.h>
 #include <innodb/hash/hash_node_t.h>
 #include <innodb/data_types/dtype_get_fixed_size_low.h>
 #include <innodb/data_types/dtype_get_min_size_low.h>

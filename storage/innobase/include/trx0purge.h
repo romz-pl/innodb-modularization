@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/UT_NEW_NOKEY.h>
 
 #include "fil0fil.h"
-#include "mtr0mtr.h"
+
 #include "page0page.h"
 #include "que0types.h"
 #include "read0types.h"

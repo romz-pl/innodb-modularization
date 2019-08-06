@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_from_block.h>
 
 #include "buf0buf.h"
-#include "mtr0mtr.h"
+
 #include "srv0srv.h"
 
 #ifndef UNIV_HOTBACKUP

@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtype_form_prtype.h>
 #include <innodb/data_types/dtype_is_string_type.h>
 #include <innodb/tablespace/srv_sys_space.h>
+#include <innodb/mtr/mtr_buf_copy_t.h>
 
 /* Include necessary SQL headers */
 #include <assert.h>

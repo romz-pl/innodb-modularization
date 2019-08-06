@@ -87,7 +87,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include "fut0lst.h"
-#include "mtr0mtr.h"
+
 #include "mysql/components/services/mysql_cond_bits.h"
 #include "mysql/components/services/mysql_mutex_bits.h"
 

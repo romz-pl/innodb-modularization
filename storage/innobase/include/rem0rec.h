@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sstream>
 
 #include "data0data.h"
-#include "mtr0types.h"
+
 #include "rem/rec.h"
 
 #include "trx0types.h"

@@ -11,6 +11,8 @@
 
 #else /* !UNIV_PFS_RWLOCK */
 
+#include <innodb/sync_rw/pfs_rw_lock_sx_lock_func.h>
+
 #define rw_lock_sx_lock_gen(M, P) \
   pfs_rw_lock_sx_lock_func((M), (P), __FILE__, __LINE__)
 

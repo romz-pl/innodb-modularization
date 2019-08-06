@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/mtr/mtr_start.h>
+
 #include "lob0lob.h"
 
 namespace lob {

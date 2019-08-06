@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "data0data.h"
 #include "dict0dict.h"
-#include "mtr0mtr.h"
+
 #include "page0cur.h"
 #ifndef UNIV_HOTBACKUP
 #include "gis0rtree.h"

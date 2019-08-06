@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/mtr/mtr_start_sync.h>
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/memory/mem_heap_create_typed.h>
 #include <innodb/print/ut_print_buf.h>

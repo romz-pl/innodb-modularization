@@ -31,6 +31,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/mtr/mtr_release_block_at_savepoint.h>
+#include <innodb/mtr/mtr_set_savepoint.h>
+#include <innodb/mtr/mtr_sx_lock.h>
+#include <innodb/mtr/mtr_x_lock.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
 #include <innodb/buffer/buf_frame_copy.h>

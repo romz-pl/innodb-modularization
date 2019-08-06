@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "data0types.h"
 #include "dict0types.h"
-#include "mtr0types.h"
+
 #include "que0types.h"
 
 #include "row0types.h"

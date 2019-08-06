@@ -24,6 +24,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+
+#include <innodb/mtr/mtr_start.h>
 #include "lob0del.h"
 #include "lob0first.h"
 #include "lob0index.h"

@@ -37,6 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <vector>
 
+#include <innodb/mtr/mtr_s_lock.h>
+#include <innodb/mtr/mtr_sx_lock.h>
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
@@ -46,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtype_get_mtype.h>
 
 #include "dict0stats.h"
-#include "dyn0buf.h"
+
 #include "ha_prototypes.h"
 #include "lob0lob.h"
 #include "pars0pars.h"

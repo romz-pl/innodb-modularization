@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0types.h"
 #ifndef UNIV_HOTBACKUP
 
-#include "mtr0mtr.h"
+
 
 #include <innodb/lst/lst.h>
 #endif /* !UNIV_HOTBACKUP */

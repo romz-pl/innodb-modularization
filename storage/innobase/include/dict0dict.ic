@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1996 Heikki Tuuri
  ***********************************************************************/
 
+#include <innodb/mtr/mtr_set_log_mode.h>
 #include <innodb/allocator/UT_NEW_NOKEY.h>
 #include <innodb/sync_mutex/mutex_create.h>
 #include <innodb/disk/univ_page_size.h>

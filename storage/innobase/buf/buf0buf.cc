@@ -42,6 +42,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <innodb/sync_rw/rw_lock_sx_lock.h>
+#include <innodb/mtr/mtr_memo_push.h>
+#include <innodb/sync_rw/rw_lock_sx_lock_inline.h>
+#include <innodb/sync_rw/rw_lock_s_lock_inline.h>
+#include <innodb/sync_rw/rw_lock_x_lock_inline.h>
+#include <innodb/buffer/buf_block_unfix.h>
 #include <innodb/hash/hash_unlock_x_all_but.h>
 #include <innodb/hash/hash_lock_s_confirm.h>
 #include <innodb/hash/HASH_SEARCH.h>

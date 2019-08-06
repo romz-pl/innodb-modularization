@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/tablespace/Tablespace.h>
 #include <innodb/tablespace/Datafile.h>
 #include <innodb/io/os_file_status.h>

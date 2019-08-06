@@ -35,9 +35,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/error/dberr_t.h>
+
 #include "data0data.h"
 #include "dict0types.h"
-#include "mtr0mtr.h"
+
 #include "que0types.h"
 #include "row0types.h"
 #include "trx0types.h"

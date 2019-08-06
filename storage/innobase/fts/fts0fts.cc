@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_printf.h>
 #include <innodb/string/mem_strdup.h>
 #include <innodb/allocator/ut_malloc_nokey.h>

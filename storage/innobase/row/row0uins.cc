@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/25/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/mtr/mtr_sx_lock.h>
+#include <innodb/mtr/mtr_s_lock.h>
 #include <innodb/logger/warn.h>
 #include <innodb/memory/mem_heap_empty.h>
 

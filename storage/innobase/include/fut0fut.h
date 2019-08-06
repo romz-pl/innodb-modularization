@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include "fil0fil.h"
-#include "mtr0mtr.h"
+
 
 /** Gets a pointer to a file address and latches the page.
 @param[in]	space		space id

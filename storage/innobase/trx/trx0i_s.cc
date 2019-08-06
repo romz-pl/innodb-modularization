@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.
 */
 
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/time/ut_time_us.h>
 #include <innodb/sync_os/pfs.h>
@@ -341,12 +342,12 @@ static void *table_cache_create_empty_row(
     cache->mem_allocd += got_bytes;
 
 #if 0
-		printf("allocating chunk %d req bytes=%lu, got bytes=%lu,"
-		       " row size=%lu,"
-		       " req rows=%lu, got rows=%lu\n",
-		       i, req_bytes, got_bytes,
-		       table_cache->row_size,
-		       req_rows, got_rows);
+        printf("allocating chunk %d req bytes=%lu, got bytes=%lu,"
+               " row size=%lu,"
+               " req rows=%lu, got rows=%lu\n",
+               i, req_bytes, got_bytes,
+               table_cache->row_size,
+               req_rows, got_rows);
 #endif
 
     chunk->rows_allocd = got_rows;

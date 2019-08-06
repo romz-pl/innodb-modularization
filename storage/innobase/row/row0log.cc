@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2011-05-26 Marko Makela
  *******************************************************/
 
+#include <innodb/mtr/mtr_start.h>
 #include <innodb/io/os_file_write_int_fd.h>
 #include <innodb/io/os_file_read_no_error_handling_int_fd.h>
 #include <innodb/io/IORequest.h>

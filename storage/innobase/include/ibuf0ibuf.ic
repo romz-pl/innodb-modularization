@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 7/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/mtr/mtr_start.h>
+
 
 #include "page0page.h"
 #include "page0zip.h"

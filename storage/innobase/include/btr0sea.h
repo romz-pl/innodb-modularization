@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "dict0dict.h"
 #include "ha0ha.h"
-#include "mtr0mtr.h"
+
 #include "rem0rec.h"
 
 /** Creates and initializes the adaptive search system at a database start.

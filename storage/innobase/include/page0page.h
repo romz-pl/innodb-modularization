@@ -87,7 +87,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "fil0fil.h"
 #include "fsp0fsp.h"
-#include "mtr0mtr.h"
+
 #include "rem0rec.h"
 
 #ifdef UNIV_MATERIALIZE

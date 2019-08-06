@@ -17,6 +17,9 @@
     #ifdef UNIV_DEBUG
         #define rw_lock_sx_unlock_gen(L, P) pfs_rw_lock_sx_unlock_func(P, L)
     #else
+
+        #include <innodb/sync_rw/pfs_rw_lock_sx_unlock_func.h>
+
         #define rw_lock_sx_unlock_gen(L, P) pfs_rw_lock_sx_unlock_func(L)
     #endif
 

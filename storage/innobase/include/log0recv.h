@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define log0recv_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/tablespace/mlog_id_t.h>
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/buffer/buf_flush_t.h>
 #include <innodb/memory/mem_heap_t.h>
@@ -42,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0types.h"
 
 #include "log0types.h"
-#include "mtr0types.h"
+
 
 
 #include <list>

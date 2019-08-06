@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  ***********************************************************************/
 
 #include <innodb/buffer/buf_ptr_get_fsp_addr.h>
+#include <innodb/mtr/mtr_start.h>
 
 #include "fut0lst.h"
 

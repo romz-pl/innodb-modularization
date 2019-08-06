@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/sync_rw/rw_lock_s_lock_inline.h>
+#include <innodb/sync_rw/rw_lock_x_lock_inline.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/string/mem_strdup.h>

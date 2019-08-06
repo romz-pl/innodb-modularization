@@ -29,6 +29,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/mtr/mtr_start.h>
+
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "dict0dict.h"

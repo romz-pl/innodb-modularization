@@ -45,6 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/8/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/mtr/mtr_x_lock_space.h>
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/buffer/buf_pool_stat_t.h>
 #include <innodb/buffer/buf_pool_get_n_pages.h>

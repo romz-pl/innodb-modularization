@@ -162,7 +162,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0lob.h"
 #include "lock0lock.h"
 
-#include "mtr0mtr.h"
+
 #include "my_compare.h"
 #include "my_dbug.h"
 #include "my_double2ulonglong.h"

@@ -34,8 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0lob.h"
 #include <innodb/machine/data.h>
 #include "mtr0log.h"
-#include "mtr0mtr.h"
-#include "mtr0types.h"
+
+
 
 namespace lob {
 

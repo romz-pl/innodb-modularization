@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_create_subdirs_if_needed.h>
 #include <innodb/io/os_file_status.h>
 #include <innodb/io/os_file_create_directory.h>
+#include <innodb/memory/mem_heap_alloc.h>
 
 #include "clone0clone.h"
 

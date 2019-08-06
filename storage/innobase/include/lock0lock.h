@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0types.h"
 
 #include "lock0types.h"
-#include "mtr0types.h"
+
 #include "que0types.h"
 
 #include "srv0srv.h"

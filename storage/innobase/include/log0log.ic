@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/crc32/crc32.h>
 
 #ifdef UNIV_LOG_LSN_DEBUG
-#include "mtr0types.h"
+
 #endif /* UNIV_LOG_LSN_DEBUG */
 
 /** @name Log blocks */

@@ -35,8 +35,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "dyn0buf.h"
-#include "mtr0mtr.h"
+#include <innodb/mtr/mtr_buf_t.h>
+#include <innodb/tablespace/mlog_id_t.h>
+#include <innodb/mtr/mtr_t.h>
+
+
 
 // Forward declaration
 struct dict_index_t;

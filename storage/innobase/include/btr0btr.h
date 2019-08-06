@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "data0data.h"
 #include "dict0dict.h"
 #include "gis0type.h"
-#include "mtr0mtr.h"
+
 #include "page0cur.h"
 
 /** Maximum record size which can be stored on a page, without using the

@@ -30,7 +30,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/26/1995 Heikki Tuuri
  *******************************************************/
 
-#include "mtr0mtr.h"
+#include <innodb/sync_rw/rw_lock_sx_unlock.h>
+#include <innodb/buffer/buf_page_release_latch.h>
+#include <innodb/buffer/buf_block_unfix.h>
+#include <innodb/mtr/mtr_memo_slot_t.h>
+
+
 
 #include "buf0buf.h"
 #include "buf0flu.h"

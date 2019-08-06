@@ -1,171 +1,17 @@
-/*****************************************************************************
-
-Copyright (c) 1995, 2018, Oracle and/or its affiliates. All Rights Reserved.
-Copyright (c) 2012, Facebook Inc.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License, version 2.0, as published by the
-Free Software Foundation.
-
-This program is also distributed with certain software (including but not
-limited to OpenSSL) that is licensed under separate terms, as designated in a
-particular file or component or in included license documentation. The authors
-of MySQL hereby grant you an additional permission to link the program and
-your derivative works with the separately licensed software that they have
-included with MySQL.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License, version 2.0,
-for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-*****************************************************************************/
-
-/** @file include/mtr0mtr.h
- Mini-transaction buffer
-
- Created 11/26/1995 Heikki Tuuri
- *******************************************************/
-
-#ifndef mtr0mtr_h
-#define mtr0mtr_h
+#pragma once
 
 #include <innodb/univ/univ.h>
 
-#include <stddef.h>
+#include <innodb/mtr/mtr_buf_t.h>
+#include <innodb/mtr/mtr_memo_type_t.h>
+#include <innodb/mtr/mtr_log_t.h>
+#include <innodb/mtr/mtr_state_t.h>
+#include <innodb/tablespace/mlog_id_t.h>
 
-
-#include "dyn0buf.h"
-#include "fil0fil.h"
-#include "log0types.h"
-#include "mtr0types.h"
-#include "srv0srv.h"
-#include "trx0types.h"
+#include <innodb/buffer/buf_block_t.h>
 
 class FlushObserver;
-
-/** Start a mini-transaction. */
-#define mtr_start(m) (m)->start()
-
-/** Start a synchronous mini-transaction */
-#define mtr_start_sync(m) (m)->start(true)
-
-/** Start an asynchronous read-only mini-transaction */
-#define mtr_start_ro(m) (m)->start(true, true)
-
-/** Commit a mini-transaction. */
-#define mtr_commit(m) (m)->commit()
-
-/** Set and return a savepoint in mtr.
-@return	savepoint */
-#define mtr_set_savepoint(m) (m)->get_savepoint()
-
-/** Release the (index tree) s-latch stored in an mtr memo after a
-savepoint. */
-#define mtr_release_s_latch_at_savepoint(m, s, l) \
-  (m)->release_s_latch_at_savepoint((s), (l))
-
-/** Get the logging mode of a mini-transaction.
-@return	logging mode: MTR_LOG_NONE, ... */
-#define mtr_get_log_mode(m) (m)->get_log_mode()
-
-/** Change the logging mode of a mini-transaction.
-@return	old mode */
-#define mtr_set_log_mode(m, d) (m)->set_log_mode((d))
-
-/** Get the flush observer of a mini-transaction.
-@return flush observer object */
-#define mtr_get_flush_observer(m) (m)->get_flush_observer()
-
-/** Set the flush observer of a mini-transaction. */
-#define mtr_set_flush_observer(m, d) (m)->set_flush_observer((d))
-
-/** Read 1 - 4 bytes from a file page buffered in the buffer pool.
-@return	value read */
-#define mtr_read_ulint(p, t, m) (m)->read_ulint((p), (t))
-
-/** Release an object in the memo stack.
-@return true if released */
-#define mtr_memo_release(m, o, t) (m)->memo_release((o), (t))
-
-#ifdef UNIV_DEBUG
-
-/** Check if memo contains the given item ignore if table is intrinsic
-@return true if contains or table is intrinsic. */
-#define mtr_is_block_fix(m, o, t, table) \
-  (mtr_memo_contains(m, o, t) || table->is_intrinsic())
-
-/** Check if memo contains the given page ignore if table is intrinsic
-@return true if contains or table is intrinsic. */
-#define mtr_is_page_fix(m, p, t, table) \
-  (mtr_memo_contains_page(m, p, t) || table->is_intrinsic())
-
-/** Check if memo contains the given item.
-@return	true if contains */
-#define mtr_memo_contains(m, o, t) (m)->memo_contains((m)->get_memo(), (o), (t))
-
-/** Check if memo contains the given page.
-@return	true if contains */
-#define mtr_memo_contains_page(m, p, t) \
-  (m)->memo_contains_page_flagged((p), (t))
-#endif /* UNIV_DEBUG */
-
-/** Print info of an mtr handle. */
-#define mtr_print(m) (m)->print()
-
-/** Return the log object of a mini-transaction buffer.
-@return	log */
-#define mtr_get_log(m) (m)->get_log()
-
-/** Push an object to an mtr memo stack. */
-#define mtr_memo_push(m, o, t) (m)->memo_push(o, t)
-
-/** Lock an rw-lock in s-mode. */
-#define mtr_s_lock(l, m) (m)->s_lock((l), __FILE__, __LINE__)
-
-/** Lock an rw-lock in x-mode. */
-#define mtr_x_lock(l, m) (m)->x_lock((l), __FILE__, __LINE__)
-
-/** Lock a tablespace in x-mode. */
-#define mtr_x_lock_space(s, m) (m)->x_lock_space((s), __FILE__, __LINE__)
-
-/** Lock an rw-lock in sx-mode. */
-#define mtr_sx_lock(l, m) (m)->sx_lock((l), __FILE__, __LINE__)
-
-#define mtr_memo_contains_flagged(m, p, l) (m)->memo_contains_flagged((p), (l))
-
-#define mtr_memo_contains_page_flagged(m, p, l) \
-  (m)->memo_contains_page_flagged((p), (l))
-
-#define mtr_release_block_at_savepoint(m, s, b) \
-  (m)->release_block_at_savepoint((s), (b))
-
-#define mtr_block_sx_latch_at_savepoint(m, s, b) \
-  (m)->sx_latch_at_savepoint((s), (b))
-
-#define mtr_block_x_latch_at_savepoint(m, s, b) \
-  (m)->x_latch_at_savepoint((s), (b))
-
-/** Check if a mini-transaction is dirtying a clean page.
-@param b	block being x-fixed
-@return true if the mtr is dirtying a clean page. */
-#define mtr_block_dirtied(b) mtr_t::is_block_dirtied((b))
-
-/** Forward declaration of a tablespace object */
 struct fil_space_t;
-
-/** Mini-transaction memo stack slot. */
-struct mtr_memo_slot_t {
-  /** pointer to the object */
-  void *object;
-
-  /** type of the stored object (MTR_MEMO_S_LOCK, ...) */
-  ulint type;
-};
 
 /** Mini-transaction handle and buffer */
 struct mtr_t {
@@ -253,31 +99,31 @@ struct mtr_t {
   savepoint.
   @param savepoint	value returned by @see set_savepoint.
   @param lock		latch to release */
-  inline void release_s_latch_at_savepoint(ulint savepoint, rw_lock_t *lock);
+  void release_s_latch_at_savepoint(ulint savepoint, rw_lock_t *lock);
 
   /** Release the block in an mtr memo after a savepoint. */
-  inline void release_block_at_savepoint(ulint savepoint, buf_block_t *block);
+  void release_block_at_savepoint(ulint savepoint, buf_block_t *block);
 
   /** SX-latch a not yet latched block after a savepoint. */
-  inline void sx_latch_at_savepoint(ulint savepoint, buf_block_t *block);
+  void sx_latch_at_savepoint(ulint savepoint, buf_block_t *block);
 
   /** X-latch a not yet latched block after a savepoint. */
-  inline void x_latch_at_savepoint(ulint savepoint, buf_block_t *block);
+  void x_latch_at_savepoint(ulint savepoint, buf_block_t *block);
 
   /** Get the logging mode.
   @return	logging mode */
-  inline mtr_log_t get_log_mode() const MY_ATTRIBUTE((warn_unused_result));
+  mtr_log_t get_log_mode() const MY_ATTRIBUTE((warn_unused_result));
 
   /** Change the logging mode.
   @param mode	 logging mode
   @return	old mode */
-  inline mtr_log_t set_log_mode(mtr_log_t mode);
+  mtr_log_t set_log_mode(mtr_log_t mode);
 
   /** Read 1 - 4 bytes from a file page buffered in the buffer pool.
   @param ptr	pointer from where to read
   @param type	MLOG_1BYTE, MLOG_2BYTES, MLOG_4BYTES
   @return	value read */
-  inline uint32_t read_ulint(const byte *ptr, mlog_id_t type) const
+  uint32_t read_ulint(const byte *ptr, mlog_id_t type) const
       MY_ATTRIBUTE((warn_unused_result));
 
   /** Locks a rw-latch in S mode.
@@ -285,21 +131,21 @@ struct mtr_t {
   @param lock	rw-lock
   @param file	file name from where called
   @param line	line number in file */
-  inline void s_lock(rw_lock_t *lock, const char *file, ulint line);
+  void s_lock(rw_lock_t *lock, const char *file, ulint line);
 
   /** Locks a rw-latch in X mode.
   NOTE: use mtr_x_lock().
   @param lock	rw-lock
   @param file	file name from where called
   @param line	line number in file */
-  inline void x_lock(rw_lock_t *lock, const char *file, ulint line);
+  void x_lock(rw_lock_t *lock, const char *file, ulint line);
 
   /** Locks a rw-latch in X mode.
   NOTE: use mtr_sx_lock().
   @param lock	rw-lock
   @param file	file name from where called
   @param line	line number in file */
-  inline void sx_lock(rw_lock_t *lock, const char *file, ulint line);
+  void sx_lock(rw_lock_t *lock, const char *file, ulint line);
 
   /** Acquire a tablespace X-latch.
   NOTE: use mtr_x_lock_space().
@@ -452,7 +298,7 @@ struct mtr_t {
   /** Push an object to an mtr memo stack.
   @param object	object
   @param type	object type: MTR_MEMO_S_LOCK, ... */
-  inline void memo_push(void *object, mtr_memo_type_t type);
+  void memo_push(void *object, mtr_memo_type_t type);
 
   /** Check if this mini-transaction is dirtying a clean page.
   @param block	block being x-fixed
@@ -473,7 +319,3 @@ struct mtr_t {
 
   friend class Command;
 };
-
-#include "mtr0mtr.ic"
-
-#endif /* mtr0mtr_h */
