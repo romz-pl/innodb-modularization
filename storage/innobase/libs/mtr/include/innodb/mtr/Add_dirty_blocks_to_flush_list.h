@@ -5,7 +5,7 @@
 #include <innodb/buffer/buf_block_t.h>
 #include <innodb/mtr/mtr_memo_slot_t.h>
 #include <innodb/mtr/mtr_memo_type_t.h>
-#include <innodb/tablespace/lsn_t.h>
+#include <innodb/log_types/lsn_t.h>
 
 class FlushObserver;
 

@@ -67,7 +67,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0checksum.h"
 #include "fil0fil.h"
-#include "log0types.h"
+
 #include "mysql/psi/mysql_stage.h"
 
 #ifndef UNIV_HOTBACKUP

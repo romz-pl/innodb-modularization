@@ -40,10 +40,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_flush_t.h>
 #include <innodb/memory/mem_heap_t.h>
 #include <innodb/tablespace/recv_recovery_on.h>
+#include <innodb/log_types/log_t.h>
 
 #include "dict0types.h"
 
-#include "log0types.h"
+
 
 
 

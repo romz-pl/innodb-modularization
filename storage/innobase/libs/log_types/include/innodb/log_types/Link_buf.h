@@ -51,7 +51,7 @@ the file COPYING.Google.
 #include <cstdint>
 
 #include <innodb/allocator/UT_NEW_ARRAY_NOKEY.h>
-#include <innodb/counter/counter.h>
+#include <innodb/cpu/flags.h>
 #include <innodb/error/ut_error.h>
 
 /** Concurrent data structure, which allows to track concurrently

@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/io/srv_is_being_started.h>
 
-#include "log0types.h"
+
 #include "os0thread-create.h"
 #ifndef UNIV_HOTBACKUP
 

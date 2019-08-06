@@ -53,6 +53,7 @@ the file COPYING.Google.
 #include <innodb/io/IORequestLogRead.h>
 #include <innodb/io/IORequestLogWrite.h>
 #include <innodb/io/srv_is_being_started.h>
+#include <innodb/log_types/log_header_format_t.h>
 
 
 #include "ha_prototypes.h"

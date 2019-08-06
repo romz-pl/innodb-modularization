@@ -49,14 +49,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/wait/Wait_stats.h>
 #include <innodb/disk/flags.h>
-
+#include <innodb/log_types/log_t.h>
+#include <innodb/log_types/log_checksum_func_t.h>
+#include <innodb/log_types/Log_handle.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #endif /* !UNIV_HOTBACKUP */
 
 #include "log0test.h"
-#include "log0types.h"
+
 
 /** Prefix for name of log file, e.g. "ib_logfile" */
 constexpr const char *const ib_logfile_basename = "ib_logfile";

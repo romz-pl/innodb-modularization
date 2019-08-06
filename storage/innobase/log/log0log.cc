@@ -59,8 +59,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_down.h>
+#include <innodb/log_types/log_checksum_func_t.h>
+#include <innodb/log_types/LSN_PF.h>
+#include <innodb/log_types/log_header_format_t.h>
 
-#include "log0types.h"
+
 
 /** Pointer to the log checksum calculation function. */
 log_checksum_func_t log_checksum_algorithm_ptr;

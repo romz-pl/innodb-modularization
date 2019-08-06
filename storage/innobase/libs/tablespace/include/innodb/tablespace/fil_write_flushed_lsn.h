@@ -5,7 +5,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/tablespace/lsn_t.h>
+#include <innodb/log_types/lsn_t.h>
 #include <innodb/error/dberr_t.h>
 
 /** Write the flushed LSN to the page header of the first page in the

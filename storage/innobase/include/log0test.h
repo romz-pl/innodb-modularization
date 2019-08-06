@@ -44,8 +44,9 @@ the file COPYING.Google.
 #include <innodb/disk/page_no_t.h>
 
 #include <map>
+#include <mutex>
 
-#include "log0types.h"
+
 
 #ifndef UNIV_HOTBACKUP
 

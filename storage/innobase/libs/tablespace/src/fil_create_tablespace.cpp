@@ -34,7 +34,7 @@
 #include <innodb/tablespace/fil_system.h>
 
 
-#include <innodb/tablespace/lsn_t.h>
+#include <innodb/log_types/lsn_t.h>
 
 struct buf_block_t;
 void buf_flush_init_for_writing(const buf_block_t *block, byte *page,

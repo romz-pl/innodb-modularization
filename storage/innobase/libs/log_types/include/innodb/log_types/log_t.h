@@ -1,138 +1,17 @@
-/*****************************************************************************
-
-Copyright (c) 2013, 2019, Oracle and/or its affiliates. All rights reserved.
-
-Portions of this file contain modifications contributed and copyrighted by
-Google, Inc. Those modifications are gratefully acknowledged and are described
-briefly in the InnoDB documentation. The contributions by Google are
-incorporated with their permission, and subject to the conditions contained in
-the file COPYING.Google.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License, version 2.0, as published by the
-Free Software Foundation.
-
-This program is also distributed with certain software (including but not
-limited to OpenSSL) that is licensed under separate terms, as designated in a
-particular file or component or in included license documentation. The authors
-of MySQL hereby grant you an additional permission to link the program and
-your derivative works with the separately licensed software that they have
-included with MySQL.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License, version 2.0,
-for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-*****************************************************************************/
-
-/**************************************************/ /**
- @file include/log0types.h
-
- Redo log types
-
- Created 2013-03-15 Sunny Bains
- *******************************************************/
-
-#ifndef log0types_h
-#define log0types_h
+#pragma once
 
 #include <innodb/univ/univ.h>
 
 #include <innodb/allocator/aligned_array_pointer.h>
-#include <innodb/sync_event/os_event_t.h>
-#include <innodb/sync_mutex/ib_mutex_t.h>
 #include <innodb/disk/flags.h>
-
-
-#include <atomic>
-#include <chrono>
-#include <condition_variable>
-#include <memory>
-#include <mutex>
-#include <string>
-
-
+#include <innodb/log_types/Link_buf.h>
+#include <innodb/log_types/Log_clock_point.h>
+#include <innodb/log_types/atomic_lsn_t.h>
+#include <innodb/log_types/atomic_sn_t.h>
+#include <innodb/log_types/checkpoint_no_t.h>
+#include <innodb/log_types/log_state_t.h>
 #include <innodb/sync_rw/Sharded_rw_lock.h>
 
-#include "ut0link_buf.h"
-
-#include <innodb/tablespace/lsn_t.h>
-
-
-/** Print format for lsn_t values, used in functions like printf. */
-#define LSN_PF UINT64PF
-
-/** Alias for atomic based on lsn_t. */
-using atomic_lsn_t = std::atomic<lsn_t>;
-
-/** Type used for sn values, which enumerate bytes of data stored in the log.
-Note that these values skip bytes of headers and footers of log blocks. */
-typedef uint64_t sn_t;
-
-/** Alias for atomic based on sn_t. */
-using atomic_sn_t = std::atomic<sn_t>;
-
-/** Type used for checkpoint numbers (consecutive checkpoints receive
-a number which is increased by one). */
-typedef uint64_t checkpoint_no_t;
-
-/** Type used for counters in log_t: flushes_requested and flushes_expected.
-They represent number of requests to flush the redo log to disk. */
-typedef std::atomic<int64_t> log_flushes_t;
-
-/** Function used to calculate checksums of log blocks. */
-typedef std::atomic<uint32_t (*)(const byte *log_block)> log_checksum_func_t;
-
-/** Clock used to measure time spent in redo log (e.g. when flushing). */
-using Log_clock = std::chrono::high_resolution_clock;
-
-/** Time point defined by the Log_clock. */
-using Log_clock_point = std::chrono::time_point<Log_clock>;
-
-/** Supported redo log formats. Stored in LOG_HEADER_FORMAT. */
-enum log_header_format_t {
-  /** The MySQL 5.7.9 redo log format identifier. We can support recovery
-  from this format if the redo log is clean (logically empty). */
-  LOG_HEADER_FORMAT_5_7_9 = 1,
-
-  /** Remove MLOG_FILE_NAME and MLOG_CHECKPOINT, introduce MLOG_FILE_OPEN
-  redo log record. */
-  LOG_HEADER_FORMAT_8_0_1 = 2,
-
-  /** Allow checkpoint_lsn to point any data byte within redo log (before
-  it had to point the beginning of a group of log records). */
-  LOG_HEADER_FORMAT_8_0_3 = 3,
-
-  /** The redo log format identifier
-  corresponding to the current format version. */
-  LOG_HEADER_FORMAT_CURRENT = LOG_HEADER_FORMAT_8_0_3
-};
-
-/** The state of a log group */
-enum class log_state_t {
-  /** No corruption detected */
-  OK,
-  /** Corrupted */
-  CORRUPTED
-};
-
-/** The recovery implementation. */
-struct redo_recover_t;
-
-typedef size_t log_lock_no_t;
-
-struct Log_handle {
-  log_lock_no_t lock_no;
-
-  lsn_t start_lsn;
-
-  lsn_t end_lsn;
-};
 
 /** Redo log - single data structure with state of the redo log system.
 In future, one could consider splitting this to multiple data structures. */
@@ -625,5 +504,3 @@ struct alignas(INNOBASE_CACHE_LINE_SIZE) log_t {
 #endif /* !UNIV_HOTBACKUP */
        /** @} */
 };
-
-#endif /* !log0types_h */

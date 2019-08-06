@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/tablespace/encryption_op_type.h>
-#include <innodb/tablespace/lsn_t.h>
+#include <innodb/log_types/lsn_t.h>
 
 #include <innodb/disk/page_no_t.h>
 #include <innodb/tablespace/device_t.h>

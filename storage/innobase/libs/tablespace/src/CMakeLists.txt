@@ -145,7 +145,6 @@ add_library( ${LIB_NAME} STATIC
     fsp_is_undo_tablespace.cpp
     fsp_reserve_t.cpp
     fsp_skip_sanity_check.cpp
-    lsn_t.cpp
     mach_read_ulint.cpp
     mlog_id_t.cpp
     os_file_read_first_page.cpp
@@ -192,9 +191,9 @@ target_link_libraries(
     enum
     io
     ioasync
+    log_types
     page
     string
-    sync_rw
     PRIVATE
 )
 
