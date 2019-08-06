@@ -58,7 +58,7 @@ void buf_flush_insert_sorted_into_flush_list(
 /** This function should be called at a mini-transaction commit, if a page was
  modified in it. Puts the block to the list of modified blocks, if it is not
  already in it. */
-UNIV_INLINE
+inline
 void buf_flush_note_modification(
     buf_block_t *block,      /*!< in: block which is modified */
     lsn_t start_lsn,         /*!< in: start lsn of the mtr that

@@ -1,7 +1,7 @@
-set( LIB_NAME counter )
+set( LIB_NAME cpu )
 
 add_library( ${LIB_NAME} STATIC
-    counter.cpp
+    flags.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -15,8 +15,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    cpu
-    thread
+    univ
     PRIVATE
 )
 

@@ -57,7 +57,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <string>
 
 
-#include "sync0sharded_rw.h"
+#include <innodb/sync_rw/Sharded_rw_lock.h>
+
 #include "ut0link_buf.h"
 
 #include <innodb/tablespace/lsn_t.h>

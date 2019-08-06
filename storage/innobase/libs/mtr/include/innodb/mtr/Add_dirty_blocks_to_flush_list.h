@@ -8,7 +8,7 @@
 #include <innodb/tablespace/lsn_t.h>
 
 class FlushObserver;
-UNIV_INLINE
+
 void buf_flush_note_modification(buf_block_t *block, lsn_t start_lsn,
                                  lsn_t end_lsn, FlushObserver *observer);
 

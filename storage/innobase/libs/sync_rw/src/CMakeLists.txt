@@ -90,6 +90,7 @@ add_library( ${LIB_NAME} STATIC
     sync_check_iterate.cpp
     sync_check_lock.cpp
     sync_print_wait_info.cpp
+    Sharded_rw_lock.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

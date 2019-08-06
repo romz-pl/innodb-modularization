@@ -155,7 +155,7 @@ already in it.
 @param[in]	start_lsn	start lsn of the first mtr in a set of mtr's
 @param[in]	end_lsn		end lsn of the last mtr in the set of mtr's
 @param[in]	observer	flush observer */
-UNIV_INLINE
+inline
 void buf_flush_note_modification(buf_block_t *block, lsn_t start_lsn,
                                  lsn_t end_lsn, FlushObserver *observer);
 

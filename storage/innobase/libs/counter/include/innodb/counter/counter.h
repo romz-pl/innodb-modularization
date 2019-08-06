@@ -35,23 +35,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include <innodb/univ/univ.h>
+
 #include <innodb/thread/os_thread_get_curr_id.h>
+#include <innodb/error/ut_error.h>
+#include <innodb/cpu/flags.h>
 
 #include <my_rdtsc.h>
-
-
-
-#include <innodb/error/ut_error.h>
-
 #include <array>
 #include <atomic>
 
-/** CPU cache line size */
-#ifdef __powerpc__
-#define INNOBASE_CACHE_LINE_SIZE 128
-#else
-#define INNOBASE_CACHE_LINE_SIZE 64
-#endif /* __powerpc__ */
+
 
 /** Default number of slots to use in ib_counter_t */
 #define IB_N_SLOTS 64

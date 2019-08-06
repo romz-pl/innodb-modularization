@@ -9,6 +9,7 @@ add_subdirectory( buffer )
 add_subdirectory( compiler_hints )
 add_subdirectory( crc32 )
 add_subdirectory( counter )
+add_subdirectory( cpu )
 
 add_subdirectory( data_types )
 add_subdirectory( dict )
