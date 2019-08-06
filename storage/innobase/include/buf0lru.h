@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define buf0lru_h
 
 #include <innodb/univ/univ.h>
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/tablespace/buf_remove_t.h>
 
 

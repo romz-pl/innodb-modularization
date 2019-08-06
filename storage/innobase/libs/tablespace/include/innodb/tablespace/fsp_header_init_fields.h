@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/disk/page_t.h>
-#include <innodb/tablespace/space_id_t.h>
+
 
 /** Writes the space id and flags to a tablespace header.  The flags contain
  row type, physical/compressed page size, and logical/uncompressed page

@@ -10,7 +10,7 @@
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fil_load_status.h>
 #include <innodb/tablespace/fil_space_t.h>
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/tablespace/consts.h>
 
 

@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/mtr/mtr_get_log_mode.h>
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/machine/data.h>
 #include <innodb/align/ut_align_down.h>
 

@@ -1,4 +1,4 @@
-#include <innodb/tablespace/page_id_t.h>
+#include <innodb/page/page_id_t.h>
 
 #include <ostream>
 

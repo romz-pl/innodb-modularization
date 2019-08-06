@@ -60,7 +60,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/fsp_flags_is_compressed.h>
 #include <innodb/tablespace/fsp_flags_are_equal.h>
-#include <innodb/tablespace/page_size_to_ssize.h>
+#include <innodb/page/page_size_to_ssize.h>
 #include <innodb/tablespace/fsp_flags_is_valid.h>
 #include <innodb/tablespace/fsp_flags_set_zip_size.h>
 #include <innodb/tablespace/fsp_flags_set_page_size.h>

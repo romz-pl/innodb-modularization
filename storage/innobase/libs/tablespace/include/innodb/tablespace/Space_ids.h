@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/allocator/ut_allocator.h>
 
 #include <vector>

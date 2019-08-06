@@ -11,7 +11,7 @@
 #include <innodb/tablespace/encryption_op_type.h>
 #include <innodb/tablespace/fil_node_t.h>
 #include <innodb/tablespace/fil_type_t.h>
-#include <innodb/tablespace/space_id_t.h>
+
 
 #include <vector>
 

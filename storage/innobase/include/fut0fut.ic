@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/13/1995 Heikki Tuuri
  ***********************************************************************/
 
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/buffer/buf_block_get_frame.h>
 
 #include "buf0buf.h"

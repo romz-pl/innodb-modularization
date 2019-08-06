@@ -6,7 +6,7 @@
 #include <innodb/buffer/buf_page_state.h>
 #include <innodb/tablespace/lsn_t.h>
 #include <innodb/buffer/macros.h>
-#include <innodb/tablespace/page_id_t.h>
+#include <innodb/page/page_id_t.h>
 #include <innodb/lst/lst.h>
 #include <innodb/disk/page_size_t.h>
 #include <innodb/page/page_zip_des_t.h>

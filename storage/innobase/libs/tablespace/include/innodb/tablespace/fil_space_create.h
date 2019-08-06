@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/tablespace/fil_type_t.h>
 
 struct fil_space_t;

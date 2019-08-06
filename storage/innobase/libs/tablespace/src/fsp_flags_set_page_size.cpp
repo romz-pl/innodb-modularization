@@ -1,7 +1,7 @@
 #include <innodb/tablespace/fsp_flags_set_page_size.h>
 
 #include <innodb/disk/page_size_t.h>
-#include <innodb/tablespace/page_size_to_ssize.h>
+#include <innodb/page/page_size_to_ssize.h>
 #include <innodb/tablespace/fsp_flags_is_valid.h>
 
 /** Add the page size to the tablespace flags.

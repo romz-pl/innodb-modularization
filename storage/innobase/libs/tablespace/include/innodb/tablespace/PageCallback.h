@@ -6,7 +6,7 @@
 #include <innodb/io/os_offset_t.h>
 #include <innodb/io/pfs_os_file_t.h>
 #include <innodb/disk/page_size_t.h>
-#include <innodb/tablespace/space_id_t.h>
+
 
 struct buf_block_t;
 typedef byte buf_frame_t;

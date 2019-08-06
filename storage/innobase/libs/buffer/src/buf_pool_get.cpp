@@ -3,7 +3,7 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buffer/buf_pool_t.h>
-#include <innodb/tablespace/page_id_t.h>
+#include <innodb/page/page_id_t.h>
 #include <innodb/buffer/buf_pool_ptr.h>
 
 /** Requested number of buffer pool instances */

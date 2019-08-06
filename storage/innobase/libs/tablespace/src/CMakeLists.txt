@@ -151,8 +151,6 @@ add_library( ${LIB_NAME} STATIC
     os_file_read_first_page.cpp
     os_file_read_first_page_func.cpp
     os_file_read_first_page_pfs.cpp
-    page_id_t.cpp
-    page_size_to_ssize.cpp
     pfs_os_file_read_first_page_func.cpp
     recv_recovery_on.cpp
     space_id_t.cpp

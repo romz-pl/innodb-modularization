@@ -74,7 +74,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_offset_t.h>
 #include <innodb/tablespace/fil_type_t.h>
 #include <innodb/tablespace/Fil_state.h>
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/tablespace/fil_node_t.h>
 #include <innodb/tablespace/encryption_op_type.h>
 #include <innodb/tablespace/fil_space_t.h>

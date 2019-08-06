@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/error/dberr_t.h>
-#include <innodb/tablespace/space_id_t.h>
+
 
 /** Discards a single-table tablespace. The tablespace must be cached in the
 memory cache. Discarding is like deleting a tablespace, but

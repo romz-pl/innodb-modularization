@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/error/dberr_t.h>
 
 struct trx_t;

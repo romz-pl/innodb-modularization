@@ -2,8 +2,8 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/space_id_t.h>
-#include <innodb/tablespace/page_id_t.h>
+
+#include <innodb/page/page_id_t.h>
 #include <innodb/error/dberr_t.h>
 
 class IORequest;

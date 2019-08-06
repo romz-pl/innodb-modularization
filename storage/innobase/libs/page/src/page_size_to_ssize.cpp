@@ -1,4 +1,4 @@
-#include <innodb/tablespace/page_size_to_ssize.h>
+#include <innodb/page/page_size_to_ssize.h>
 
 /** Convert a page size, which is a power of 2, to an ssize, which is
 the number of bit shifts from 512 to make that page size.

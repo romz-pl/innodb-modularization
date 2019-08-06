@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/disk/page_no_t.h>
 
 bool fil_replace_tablespace(space_id_t old_space_id, space_id_t new_space_id,

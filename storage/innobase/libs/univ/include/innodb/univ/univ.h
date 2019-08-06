@@ -440,6 +440,13 @@ typedef ib_uint64_t ib_id_t;
 typedef ib_id_t table_id_t;
 
 
+/** Tablespace identifier */
+typedef uint32_t space_id_t;
+
+#include <limits>
+
+/** Unknown space id */
+constexpr space_id_t SPACE_UNKNOWN = std::numeric_limits<space_id_t>::max();
 
 #define SPACE_ID_PF UINT32PF
 #define SPACE_ID_PFS UINT32PFS

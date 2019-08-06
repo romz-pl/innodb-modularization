@@ -9,9 +9,11 @@ add_library( ${LIB_NAME} STATIC
     page_align.cpp
     page_cur_mode_t.cpp
     page_dir_calc_reserved_space.cpp
+    page_dir_find_owner_slot.cpp
     page_dir_get_n_heap.cpp
     page_dir_get_n_slots.cpp
     page_dir_get_nth_slot.cpp
+    page_dir_slot_check.cpp
     page_dir_slot_get_n_owned.cpp
     page_dir_slot_get_rec.cpp
     page_dir_slot_set_rec.cpp
@@ -30,6 +32,7 @@ add_library( ${LIB_NAME} STATIC
     page_has_garbage.cpp
     page_header_get_field.cpp
     page_header_get_offs.cpp
+    page_id_t.cpp
     page_is_comp.cpp
     page_is_empty.cpp
     page_is_leaf.cpp
@@ -45,41 +48,40 @@ add_library( ${LIB_NAME} STATIC
     page_rec_is_supremum_low.cpp
     page_rec_is_user_rec.cpp
     page_rec_is_user_rec_low.cpp
+    page_size_to_ssize.cpp
     page_size_validate.cpp
+    page_zip_available.cpp
     page_zip_des_init.cpp
     page_zip_des_t.cpp
+    page_zip_dir_add_slot.cpp
     page_zip_dir_elems.cpp
+    page_zip_dir_encode.cpp
+    page_zip_dir_find.cpp
+    page_zip_dir_find_free.cpp
+    page_zip_dir_find_low.cpp
     page_zip_dir_get.cpp
     page_zip_dir_size.cpp
     page_zip_dir_start.cpp
     page_zip_dir_start_low.cpp
     page_zip_dir_start_offs.cpp
+    page_zip_dir_user_size.cpp
     page_zip_empty_size.cpp
+    page_zip_fixed_field_encode.cpp
     page_zip_get_size.cpp
+    page_zip_get_trailer_len.cpp
     page_zip_level.cpp
     page_zip_log_pages.cpp
+    page_zip_max_ins_size.cpp
+    page_zip_rec_needs_ext.cpp
+    page_zip_rec_set_deleted.cpp
+    page_zip_rec_set_owned.cpp
     page_zip_set_size.cpp
     page_zip_simple_validate.cpp
     page_zip_stat.cpp
     page_zip_stat_t.cpp
     page_zip_t.cpp
-    supremum_extra_data.cpp
-    page_zip_get_trailer_len.cpp
-    page_zip_rec_needs_ext.cpp
-    page_zip_max_ins_size.cpp
-    page_zip_available.cpp
-    page_zip_dir_find_low.cpp
-    page_zip_dir_user_size.cpp
-    page_zip_dir_find_free.cpp
-    page_zip_dir_find.cpp
-    page_zip_fixed_field_encode.cpp
-    page_zip_dir_encode.cpp
-    page_dir_find_owner_slot.cpp
-    page_dir_slot_check.cpp
-    page_zip_rec_set_deleted.cpp
     page_zip_validate.cpp
-    page_zip_rec_set_owned.cpp
-    page_zip_dir_add_slot.cpp
+    supremum_extra_data.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

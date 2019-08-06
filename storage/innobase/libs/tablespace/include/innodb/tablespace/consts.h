@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
 #include "sql/dd/object_id.h"
 #include <innodb/disk/page_no_t.h>

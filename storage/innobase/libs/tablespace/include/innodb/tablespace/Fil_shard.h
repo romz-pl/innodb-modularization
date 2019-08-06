@@ -18,7 +18,7 @@
 #include <innodb/tablespace/fil_load_status.h>
 #include <innodb/tablespace/fil_node_t.h>
 #include <innodb/tablespace/fil_space_t.h>
-#include <innodb/tablespace/page_id_t.h>
+#include <innodb/page/page_id_t.h>
 
 
 #include <unordered_map>

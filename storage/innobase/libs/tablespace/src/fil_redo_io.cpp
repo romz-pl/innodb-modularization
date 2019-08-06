@@ -1,7 +1,7 @@
 #include <innodb/tablespace/fil_redo_io.h>
 
 #include <innodb/io/IORequest.h>
-#include <innodb/tablespace/page_id_t.h>
+#include <innodb/page/page_id_t.h>
 #include <innodb/tablespace/fil_system.h>
 
 /** Read or write redo log data (synchronous buffered IO).

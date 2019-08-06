@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/allocator/ut_allocator.h>
-#include <innodb/tablespace/space_id_t.h>
+
 #include <innodb/io/Fil_path.h>
 
 #include <string>
