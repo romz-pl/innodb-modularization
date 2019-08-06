@@ -104,6 +104,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    counter
     formatting
     lst
     sync_mutex

@@ -49,7 +49,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     memory
-    random
     sync_rw
     PRIVATE
 )

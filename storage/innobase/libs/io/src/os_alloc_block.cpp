@@ -1,9 +1,11 @@
 #include <innodb/io/os_alloc_block.h>
 
+#include <innodb/allocator/ut_malloc_nokey.h>
+#include <innodb/assert/assert.h>
 #include <innodb/io/block_cache.h>
 #include <innodb/thread/os_thread_yield.h>
-#include <innodb/assert/assert.h>
-#include <innodb/allocator/ut_malloc_nokey.h>
+
+#include <my_rdtsc.h>
 
 /** Allocate a page for sync IO
 @return pointer to page */

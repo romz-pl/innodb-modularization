@@ -1,7 +1,7 @@
 #pragma once
 
 #include <innodb/allocator/aligned_memory.h>
-#include <innodb/counter/counter.h>
+#include <innodb/cpu/flags.h>
 
 /** Manages an object that is aligned to specified number of bytes.
 @tparam	T_Type		type of the object that is going to be managed

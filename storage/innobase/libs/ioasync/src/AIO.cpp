@@ -4,11 +4,14 @@
 #include <innodb/allocator/ut_free.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/allocator/ut_zalloc_nokey.h>
+#include <innodb/disk/flags.h>
+#include <innodb/error/ut_error.h>
 #include <innodb/formatting/formatting.h>
 #include <innodb/io/os_file_compress_page.h>
 #include <innodb/io/os_file_encrypt_log.h>
 #include <innodb/io/os_file_encrypt_page.h>
 #include <innodb/io/os_free_block.h>
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/io/srv_use_native_aio.h>
 #include <innodb/ioasync/SRV_MAX_N_IO_THREADS.h>
 #include <innodb/ioasync/os_aio_n_segments.h>
@@ -20,7 +23,6 @@
 #include <innodb/ioasync/srv_reset_io_thread_op_info.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
-#include <innodb/disk/flags.h>
 #include <innodb/sync_event/os_event_create.h>
 #include <innodb/sync_event/os_event_destroy.h>
 #include <innodb/sync_event/os_event_reset.h>
@@ -28,7 +30,6 @@
 #include <innodb/sync_mutex/mutex_create.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/time/ut_time.h>
-#include <innodb/io/srv_read_only_mode.h>
 
 /** time to sleep, in microseconds if io_setup() returns EAGAIN. */
 static const ulint OS_AIO_IO_SETUP_RETRY_SLEEP = 500000UL;

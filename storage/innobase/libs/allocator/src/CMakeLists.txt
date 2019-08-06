@@ -48,8 +48,9 @@ target_link_libraries(
     PUBLIC
     align
     atomic
-    counter
+    cpu
     memory_check
+    thread
     PRIVATE
 )
 

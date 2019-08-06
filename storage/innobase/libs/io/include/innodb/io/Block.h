@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/counter/counter.h>
+#include <innodb/cpu/flags.h>
 #include <innodb/atomic/atomic.h>
 
 /** Blocks for doing IO, used in the transparent compression

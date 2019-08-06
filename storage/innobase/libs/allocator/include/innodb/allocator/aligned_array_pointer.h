@@ -1,7 +1,7 @@
 #pragma once
 
 #include <innodb/allocator/aligned_memory.h>
-#include <innodb/counter/counter.h>
+#include <innodb/cpu/flags.h>
 
 /** Manages an array of objects. The first element is aligned to specified
 number of bytes.
