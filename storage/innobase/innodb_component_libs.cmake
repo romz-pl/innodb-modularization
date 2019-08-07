@@ -46,6 +46,8 @@ SET( INNODB_COMPONENT_LIBS
     #ioasync
 
     # L
+    log_redo
+    #log_types
     #logger
     #lst
 

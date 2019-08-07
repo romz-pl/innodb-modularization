@@ -151,7 +151,6 @@ add_library( ${LIB_NAME} STATIC
     os_file_read_first_page_func.cpp
     os_file_read_first_page_pfs.cpp
     pfs_os_file_read_first_page_func.cpp
-    recv_recovery_on.cpp
     space_id_t.cpp
     srv_start_raw_disk_in_use.cpp
     srv_sys_space.cpp
@@ -191,7 +190,7 @@ target_link_libraries(
     enum
     io
     ioasync
-    log_types
+    log_redo
     page
     string
     PRIVATE

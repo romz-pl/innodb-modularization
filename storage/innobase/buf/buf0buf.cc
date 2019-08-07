@@ -118,6 +118,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_set_size.h>
 #include <innodb/page/page_zip_des_init.h>
 #include <innodb/page/page_zip_get_size.h>
+#include <innodb/log_redo/recv_recovery_is_on.h>
 
 #include "buf0rea.h"
 #include "btr0btr.h"

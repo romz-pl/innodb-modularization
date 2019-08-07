@@ -64,6 +64,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/srv_buf_pool_chunk_unit.h>
 #include <innodb/buffer/srv_buf_pool_instances_default.h>
 #include <innodb/buffer/srv_buf_pool_dump_pct.h>
+#include <innodb/log_redo/srv_log_write_ahead_size.h>
+#include <innodb/log_redo/srv_log_flush_events.h>
+#include <innodb/log_redo/srv_log_buffer_size.h>
+#include <innodb/log_redo/srv_log_write_events.h>
+#include <innodb/log_redo/srv_log_recent_written_size.h>
+#include <innodb/log_redo/srv_log_recent_closed_size.h>
 
 #include "buf0checksum.h"
 #include "fil0fil.h"
@@ -328,34 +334,16 @@ extern ulonglong srv_log_file_size;
 /** The value of the startup parameter innodb_log_file_size. */
 extern ulonglong srv_log_file_size_requested;
 
-/** Space for log buffer, expressed in bytes. Note, that log buffer
-will use only the largest power of two, which is not greater than
-the assigned space. */
-extern ulong srv_log_buffer_size;
 
 /** When log writer follows links in the log recent written buffer,
 it stops when it has reached at least that many bytes to write,
 limiting how many bytes can be written in single call. */
 extern ulong srv_log_write_max_size;
 
-/** Size of block, used for writing ahead to avoid read-on-write. */
-extern ulong srv_log_write_ahead_size;
 
-/** Number of events used for notifications about redo write. */
-extern ulong srv_log_write_events;
 
-/** Number of events used for notifications about redo flush. */
-extern ulong srv_log_flush_events;
 
-/** Number of slots in a small buffer, which is used to allow concurrent
-writes to log buffer. The slots are addressed by LSN values modulo number
-of the slots. */
-extern ulong srv_log_recent_written_size;
 
-/** Number of slots in a small buffer, which is used to break requirement
-for total order of dirty pages, when they are added to flush lists.
-The slots are addressed by LSN values modulo number of the slots. */
-extern ulong srv_log_recent_closed_size;
 
 /** Minimum absolute value of cpu time for which spin-delay is used. */
 extern uint srv_log_spin_cpu_abs_lwm;

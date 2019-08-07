@@ -1,0 +1,82 @@
+set( LIB_NAME log_redo )
+
+add_library( ${LIB_NAME} STATIC
+    flags.cpp
+    log_allocate_buffer.cpp
+    log_allocate_checkpoint_buffer.cpp
+    log_allocate_file_header_buffers.cpp
+    log_allocate_flush_events.cpp
+    log_allocate_recent_closed.cpp
+    log_allocate_recent_written.cpp
+    log_allocate_write_ahead_buffer.cpp
+    log_allocate_write_events.cpp
+    log_block_calc_checksum.cpp
+    log_block_calc_checksum_crc32.cpp
+    log_block_calc_checksum_none.cpp
+    log_block_convert_lsn_to_no.cpp
+    log_block_get_checkpoint_no.cpp
+    log_block_get_checksum.cpp
+    log_block_get_data_len.cpp
+    log_block_get_first_rec_group.cpp
+    log_block_get_flush_bit.cpp
+    log_block_get_hdr_no.cpp
+    log_block_set_checkpoint_no.cpp
+    log_block_set_checksum.cpp
+    log_block_set_data_len.cpp
+    log_block_set_first_rec_group.cpp
+    log_block_set_flush_bit.cpp
+    log_block_set_hdr_no.cpp
+    log_block_store_checksum.cpp
+    log_calc_buf_size.cpp
+    log_checksum_algorithm_ptr.cpp
+    log_deallocate_buffer.cpp
+    log_deallocate_checkpoint_buffer.cpp
+    log_deallocate_file_header_buffers.cpp
+    log_deallocate_flush_events.cpp
+    log_deallocate_recent_closed.cpp
+    log_deallocate_recent_written.cpp
+    log_deallocate_write_ahead_buffer.cpp
+    log_deallocate_write_events.cpp
+    log_sys.cpp
+    log_translate_lsn_to_sn.cpp
+    srv_log_buffer_size.cpp
+    srv_log_flush_events.cpp
+    srv_log_recent_closed_size.cpp
+    srv_log_recent_written_size.cpp
+    srv_log_write_ahead_size.cpp
+    srv_log_write_events.cpp
+    log_block_get_encrypt_bit.cpp
+    log_block_set_encrypt_bit.cpp
+    log_get_max_modified_age_async.cpp
+    log_needs_free_check.cpp
+    log_free_check.cpp
+    log_translate_sn_to_lsn.cpp
+    log_lsn_validate.cpp
+    log_get_lsn.cpp
+    log_get_checkpoint_lsn.cpp
+    log_get_checkpoint_age.cpp
+    log_buffer_flush_to_disk.cpp
+    log_buffer_ready_for_write_lsn.cpp
+    log_buffer_dirty_pages_added_up_to_lsn.cpp
+    log_buffer_flush_order_lag.cpp
+    log_write_to_file_requests_are_frequent.cpp
+    recv_recovery_on.cpp
+    recv_recovery_is_on.cpp
+)
+
+target_compile_options( ${LIB_NAME} PRIVATE  )
+
+target_include_directories(
+    ${LIB_NAME}
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include
+)
+
+target_link_libraries(
+    ${LIB_NAME}
+    PUBLIC
+    crc32
+    log_types
+    PRIVATE
+)
+

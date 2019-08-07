@@ -59,6 +59,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_n_file_reads.h>
 #include <innodb/io/os_n_file_writes.h>
 #include <innodb/io/os_file_set_eof.h>
+#include <innodb/log_redo/srv_log_buffer_size.h>
+#include <innodb/log_redo/srv_log_write_events.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <mysqld.h>
@@ -250,13 +252,7 @@ ulonglong srv_log_file_size;
 /** The value of the startup parameter innodb_log_file_size. */
 ulonglong srv_log_file_size_requested;
 
-/** Space for log buffer, expressed in bytes. Note, that log buffer
-will use only the largest power of two, which is not greater than
-the assigned space. */
-ulong srv_log_buffer_size;
 
-/** Size of block, used for writing ahead to avoid read-on-write. */
-ulong srv_log_write_ahead_size;
 
 /** Minimum absolute value of cpu time for which spin-delay is used. */
 uint srv_log_spin_cpu_abs_lwm;
@@ -276,21 +272,9 @@ it stops when it has reached at least that many bytes to write,
 limiting how many bytes can be written in single call. */
 ulong srv_log_write_max_size = INNODB_LOG_WRITE_MAX_SIZE_DEFAULT;
 
-/** Number of events used for notifications about redo write. */
-ulong srv_log_write_events = INNODB_LOG_EVENTS_DEFAULT;
 
-/** Number of events used for notifications about redo flush. */
-ulong srv_log_flush_events = INNODB_LOG_EVENTS_DEFAULT;
 
-/** Number of slots in a small buffer, which is used to allow concurrent
-writes to log buffer. The slots are addressed by LSN values modulo number
-of the slots. */
-ulong srv_log_recent_written_size = INNODB_LOG_RECENT_WRITTEN_SIZE_DEFAULT;
 
-/** Number of slots in a small buffer, which is used to break requirement
-for total order of dirty pages, when they are added to flush lists.
-The slots are addressed by LSN values modulo number of the slots. */
-ulong srv_log_recent_closed_size = INNODB_LOG_RECENT_CLOSED_SIZE_DEFAULT;
 
 /** Number of spin iterations, when spinning and waiting for log buffer
 written up to given LSN, before we fallback to loop with sleeps.

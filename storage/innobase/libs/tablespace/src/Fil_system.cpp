@@ -1,6 +1,6 @@
 #include <innodb/tablespace/Fil_system.h>
 
-#include <innodb/tablespace/recv_recovery_on.h>
+#include <innodb/log_redo/recv_recovery_on.h>
 #include <innodb/tablespace/Datafile.h>
 #include <innodb/tablespace/fsp_is_ibd_tablespace.h>
 #include <innodb/machine/data.h>

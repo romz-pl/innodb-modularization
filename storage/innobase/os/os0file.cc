@@ -61,6 +61,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/ioasync/os_aio_recommend_sleep_for_read_threads.h>
 #include <innodb/io/os_alloc_block.h>
 #include <innodb/io/os_free_block.h>
+#include <innodb/log_redo/recv_recovery_is_on.h>
 
 #include "my_compiler.h"
 #include "my_dbug.h"

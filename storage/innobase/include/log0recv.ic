@@ -32,4 +32,4 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/recv_recovery_on.h>
+#include <innodb/log_redo/recv_recovery_on.h>

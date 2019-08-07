@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/buffer/buf_flush_t.h>
 #include <innodb/memory/mem_heap_t.h>
-#include <innodb/tablespace/recv_recovery_on.h>
+#include <innodb/log_redo/recv_recovery_on.h>
 #include <innodb/log_types/log_t.h>
 
 #include "dict0types.h"
@@ -559,7 +559,7 @@ struct recv_sys_t {
 /** The recovery system */
 extern recv_sys_t *recv_sys;
 
-#include <innodb/tablespace/recv_recovery_on.h>
+#include <innodb/log_redo/recv_recovery_on.h>
 
 /** If the following is TRUE, the buffer pool file pages must be invalidated
 after recovery and no ibuf operations are allowed; this becomes TRUE if

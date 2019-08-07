@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_offsets_print.h>
+#include <innodb/log_redo/recv_recovery_is_on.h>
 
 #include <mysql/service_thd_engine_lock.h>
 #include <sys/types.h>

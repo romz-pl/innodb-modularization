@@ -1006,14 +1006,7 @@ void log_buffer_set_first_record_group(log_t &log, const Log_handle &handle,
                                 rec_group_end_lsn % OS_FILE_LOG_BLOCK_SIZE);
 }
 
-void log_buffer_flush_to_disk(log_t &log, bool sync) {
-  ut_a(!srv_read_only_mode);
-  ut_a(!recv_recovery_is_on());
 
-  const lsn_t lsn = log_get_lsn(log);
-
-  log_write_up_to(log, lsn, sync);
-}
 
 void log_buffer_get_last_block(log_t &log, lsn_t &last_lsn, byte *last_block,
                                uint32_t &block_len) {

@@ -1,0 +1,8 @@
+#include <innodb/log_redo/log_block_set_checkpoint_no.h>
+
+#include <innodb/log_redo/flags.h>
+#include <innodb/machine/data.h>
+
+void log_block_set_checkpoint_no(byte *log_block, uint64_t no) {
+  mach_write_to_4(log_block + LOG_BLOCK_CHECKPOINT_NO, (uint32_t)no);
+}

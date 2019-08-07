@@ -69,6 +69,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_n_file_reads.h>
 #include <innodb/io/os_n_file_writes.h>
 #include <innodb/page/page_zip_set_size.h>
+#include <innodb/log_redo/recv_recovery_is_on.h>
 
 #include "buf0lru.h"
 

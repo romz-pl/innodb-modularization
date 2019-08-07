@@ -52,321 +52,56 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/log_checksum_func_t.h>
 #include <innodb/log_types/Log_handle.h>
-
-#ifndef UNIV_HOTBACKUP
-
-#endif /* !UNIV_HOTBACKUP */
+#include <innodb/log_redo/flags.h>
+#include <innodb/log_redo/log_sys.h>
+#include <innodb/log_redo/log_checksum_algorithm_ptr.h>
+#include <innodb/log_redo/log_allocate_buffer.h>
+#include <innodb/log_redo/log_allocate_write_ahead_buffer.h>
+#include <innodb/log_redo/log_allocate_checkpoint_buffer.h>
+#include <innodb/log_redo/log_deallocate_checkpoint_buffer.h>
+#include <innodb/log_redo/log_deallocate_flush_events.h>
+#include <innodb/log_redo/log_allocate_flush_events.h>
+#include <innodb/log_redo/log_deallocate_write_ahead_buffer.h>
+#include <innodb/log_redo/log_deallocate_buffer.h>
+#include <innodb/log_redo/log_translate_lsn_to_sn.h>
+#include <innodb/log_redo/log_block_get_flush_bit.h>
+#include <innodb/log_redo/log_block_set_flush_bit.h>
+#include <innodb/log_redo/log_block_get_hdr_no.h>
+#include <innodb/log_redo/log_block_set_hdr_no.h>
+#include <innodb/log_redo/log_block_get_data_len.h>
+#include <innodb/log_redo/log_block_set_data_len.h>
+#include <innodb/log_redo/log_block_get_first_rec_group.h>
+#include <innodb/log_redo/log_block_set_first_rec_group.h>
+#include <innodb/log_redo/log_block_get_checkpoint_no.h>
+#include <innodb/log_redo/log_block_set_checkpoint_no.h>
+#include <innodb/log_redo/log_block_convert_lsn_to_no.h>
+#include <innodb/log_redo/log_block_calc_checksum.h>
+#include <innodb/log_redo/log_block_calc_checksum_crc32.h>
+#include <innodb/log_redo/log_block_calc_checksum_none.h>
+#include <innodb/log_redo/log_block_get_checksum.h>
+#include <innodb/log_redo/log_block_set_checksum.h>
+#include <innodb/log_redo/log_block_store_checksum.h>
+#include <innodb/log_redo/log_block_get_encrypt_bit.h>
+#include <innodb/log_redo/log_block_set_encrypt_bit.h>
+#include <innodb/log_redo/log_get_max_modified_age_async.h>
+#include <innodb/log_redo/log_needs_free_check.h>
+#include <innodb/log_redo/log_free_check.h>
+#include <innodb/log_redo/log_translate_sn_to_lsn.h>
+#include <innodb/log_redo/log_lsn_validate.h>
+#include <innodb/log_redo/log_get_lsn.h>
+#include <innodb/log_redo/log_get_checkpoint_lsn.h>
+#include <innodb/log_redo/log_get_checkpoint_age.h>
+#include <innodb/log_redo/log_buffer_flush_to_disk.h>
+#include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
+#include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
+#include <innodb/log_redo/log_buffer_flush_order_lag.h>
+#include <innodb/log_redo/log_write_to_file_requests_are_frequent.h>
 
 #include "log0test.h"
 
 
-/** Prefix for name of log file, e.g. "ib_logfile" */
-constexpr const char *const ib_logfile_basename = "ib_logfile";
 
-/* base name length(10) + length for decimal digits(22) */
-constexpr uint32_t MAX_LOG_FILE_NAME = 32;
 
-/** Magic value to use instead of log checksums when they are disabled. */
-constexpr uint32_t LOG_NO_CHECKSUM_MAGIC = 0xDEADBEEFUL;
-
-/** Absolute margin for the free space in the log, before a new query step
-which modifies the database, is started. Expressed in number of pages. */
-constexpr uint32_t LOG_CHECKPOINT_EXTRA_FREE = 8;
-
-/** Per thread margin for the free space in the log, before a new query step
-which modifies the database, is started. It's multiplied by maximum number
-of threads, that can concurrently enter mini transactions. Expressed in
-number of pages. */
-constexpr uint32_t LOG_CHECKPOINT_FREE_PER_THREAD = 4;
-
-/** Controls asynchronous making of a new checkpoint.
-Should be bigger than LOG_POOL_PREFLUSH_RATIO_SYNC. */
-constexpr uint32_t LOG_POOL_CHECKPOINT_RATIO_ASYNC = 32;
-
-/** Controls synchronous preflushing of modified buffer pages. */
-constexpr uint32_t LOG_POOL_PREFLUSH_RATIO_SYNC = 16;
-
-/** Controls asynchronous preflushing of modified buffer pages.
-Should be less than the LOG_POOL_PREFLUSH_RATIO_SYNC. */
-constexpr uint32_t LOG_POOL_PREFLUSH_RATIO_ASYNC = 8;
-
-/** The counting of lsn's starts from this value: this must be non-zero. */
-constexpr lsn_t LOG_START_LSN = 16 * OS_FILE_LOG_BLOCK_SIZE;
-
-/* Offsets used in a log block header. */
-
-/** Block number which must be > 0 and is allowed to wrap around at 1G.
-The highest bit is set to 1, if this is the first block in a call to
-fil_io (for possibly many consecutive blocks). */
-constexpr uint32_t LOG_BLOCK_HDR_NO = 0;
-
-/** Mask used to get the highest bit in the hdr_no field. */
-constexpr uint32_t LOG_BLOCK_FLUSH_BIT_MASK = 0x80000000UL;
-
-/** Maximum allowed block's number (stored in hdr_no). */
-constexpr uint32_t LOG_BLOCK_MAX_NO = 0x3FFFFFFFUL + 1;
-
-/** Number of bytes written to this block (also header bytes). */
-constexpr uint32_t LOG_BLOCK_HDR_DATA_LEN = 4;
-
-/** Mask used to get the highest bit in the data len field,
-this bit is to indicate if this block is encrypted or not. */
-constexpr uint32_t LOG_BLOCK_ENCRYPT_BIT_MASK = 0x8000UL;
-
-/** Offset of the first start of mtr log record group in this log block.
-0 if none. If the value is the same as LOG_BLOCK_HDR_DATA_LEN, it means
-that the first rec group has not yet been concatenated to this log block,
-but if it will, it will start at this offset.
-
-An archive recovery can start parsing the log records starting from this
-offset in this log block, if value is not 0. */
-constexpr uint32_t LOG_BLOCK_FIRST_REC_GROUP = 6;
-
-/** 4 lower bytes of the value of log_sys->next_checkpoint_no when the log
-block was last written to: if the block has not yet been written full,
-this value is only updated before a log buffer flush. */
-constexpr uint32_t LOG_BLOCK_CHECKPOINT_NO = 8;
-
-/** Size of the log block's header in bytes. */
-constexpr uint32_t LOG_BLOCK_HDR_SIZE = 12;
-
-/* Offsets used in a log block's footer (refer to the end of the block). */
-
-/** 4 byte checksum of the log block contents. In InnoDB versions < 3.23.52
-this did not contain the checksum, but the same value as .._HDR_NO. */
-constexpr uint32_t LOG_BLOCK_CHECKSUM = 4;
-
-/** Size of the log block footer (trailer) in bytes. */
-constexpr uint32_t LOG_BLOCK_TRL_SIZE = 4;
-
-static_assert(LOG_BLOCK_HDR_SIZE + LOG_BLOCK_TRL_SIZE < OS_FILE_LOG_BLOCK_SIZE,
-              "Header + footer cannot be larger than the whole log block.");
-
-/** Size of log block's data fragment (where actual data is stored). */
-constexpr uint32_t LOG_BLOCK_DATA_SIZE =
-    OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_HDR_SIZE - LOG_BLOCK_TRL_SIZE;
-
-/** Ensure, that 64 bits are enough to represent lsn values, when 63 bits
-are used to represent sn values. It is enough to ensure that lsn < 2*sn,
-and that is guaranteed if the overhead enumerated in lsn sequence is not
-bigger than number of actual data bytes. */
-static_assert(LOG_BLOCK_HDR_SIZE + LOG_BLOCK_TRL_SIZE < LOG_BLOCK_DATA_SIZE,
-              "Overhead in LSN sequence cannot be bigger than actual data.");
-
-/** Maximum possible sn value. */
-constexpr sn_t SN_MAX = (1ULL << 62) - 1;
-
-/** Maximum possible lsn value is slightly higher than the maximum sn value,
-because lsn sequence enumerates also bytes used for headers and footers of
-all log blocks. However, still 64-bits are enough to represent the maximum
-lsn value, because only 63 bits are used to represent sn value. */
-constexpr lsn_t LSN_MAX = (1ULL << 63) - 1;
-
-/* Offsets inside the checkpoint pages (redo log format version 1). */
-
-/** Checkpoint number. It's incremented by one for each consecutive checkpoint.
-During recovery, all headers are scanned, and one with the maximum checkpoint
-number is used for the recovery (checkpoint_lsn from the header is used). */
-constexpr uint32_t LOG_CHECKPOINT_NO = 0;
-
-/** Checkpoint lsn. Recovery starts from this lsn and searches for the first
-log record group that starts since then. In InnoDB < 8.0, it was exact value
-at which the first log record group started. Because of the relaxed order in
-flush lists, checkpoint lsn values are not precise anymore (the maximum delay
-related to the relaxed order in flush lists, is subtracted from oldest_lsn,
-when writing a checkpoint). */
-constexpr uint32_t LOG_CHECKPOINT_LSN = 8;
-
-/** Offset within the log files, which corresponds to checkpoint lsn.
-Used for calibration of lsn and offset calculations. */
-constexpr uint32_t LOG_CHECKPOINT_OFFSET = 16;
-
-/** Size of the log buffer, when the checkpoint write was started.
-It seems to be write-only field in InnoDB. Not used by recovery.
-
-@note
-Note that when the log buffer is being resized, all the log background threads
-are stopped, so there no is concurrent checkpoint write (the log_checkpointer
-thread is stopped). */
-constexpr uint32_t LOG_CHECKPOINT_LOG_BUF_SIZE = 24;
-
-/** Offsets used in a log file header */
-
-/** Log file header format identifier (32-bit unsigned big-endian integer).
-This used to be called LOG_GROUP_ID and always written as 0,
-because InnoDB never supported more than one copy of the redo log. */
-constexpr uint32_t LOG_HEADER_FORMAT = 0;
-
-/** 4 unused (zero-initialized) bytes. */
-constexpr uint32_t LOG_HEADER_PAD1 = 4;
-
-/** LSN of the start of data in this log file (with format version 1 and 2). */
-constexpr uint32_t LOG_HEADER_START_LSN = 8;
-
-/** A null-terminated string which will contain either the string 'MEB'
-and the MySQL version if the log file was created by mysqlbackup,
-or 'MySQL' and the MySQL version that created the redo log file. */
-constexpr uint32_t LOG_HEADER_CREATOR = 16;
-
-/** End of the log file creator field. */
-constexpr uint32_t LOG_HEADER_CREATOR_END = LOG_HEADER_CREATOR + 32;
-
-/** Contents of the LOG_HEADER_CREATOR field */
-#define LOG_HEADER_CREATOR_CURRENT "MySQL " INNODB_VERSION_STR
-
-/** Header is created during DB clone */
-#define LOG_HEADER_CREATOR_CLONE "MySQL Clone"
-
-/** First checkpoint field in the log header. We write alternately to
-the checkpoint fields when we make new checkpoints. This field is only
-defined in the first log file. */
-constexpr uint32_t LOG_CHECKPOINT_1 = OS_FILE_LOG_BLOCK_SIZE;
-
-/** Second checkpoint field in the header of the first log file. */
-constexpr uint32_t LOG_CHECKPOINT_2 = 3 * OS_FILE_LOG_BLOCK_SIZE;
-
-
-/** Constants related to server variables (default, min and max values). */
-
-/** Default value of innodb_log_write_max_size (in bytes). */
-constexpr ulint INNODB_LOG_WRITE_MAX_SIZE_DEFAULT = 4096;
-
-/** Default value of innodb_log_checkpointer_every (in milliseconds). */
-constexpr ulong INNODB_LOG_CHECKPOINT_EVERY_DEFAULT = 1000;  // 1000ms = 1s
-
-/** Default value of innodb_log_writer_spin_delay (in spin rounds).
-We measured that 1000 spin round takes 4us. We decided to select 1ms
-as the maximum time for busy waiting. Therefore it corresponds to 250k
-spin rounds. Note that first wait on event takes 50us-100us (even if 10us
-is passed), so it is 5%-10% of the total time that we have already spent
-on busy waiting, when we fall back to wait on event. */
-constexpr ulong INNODB_LOG_WRITER_SPIN_DELAY_DEFAULT = 250000;
-
-/** Default value of innodb_log_writer_timeout (in microseconds).
-Note that it will anyway take at least 50us. */
-constexpr ulong INNODB_LOG_WRITER_TIMEOUT_DEFAULT = 10;
-
-/** Default value of innodb_log_spin_cpu_abs_lwm.
-Expressed in percent (80 stands for 80%) of a single CPU core. */
-constexpr ulong INNODB_LOG_SPIN_CPU_ABS_LWM_DEFAULT = 80;
-
-/** Default value of innodb_log_spin_cpu_pct_hwm.
-Expressed in percent (50 stands for 50%) of all CPU cores. */
-constexpr uint INNODB_LOG_SPIN_CPU_PCT_HWM_DEFAULT = 50;
-
-/** Default value of innodb_log_wait_for_write_spin_delay (in spin rounds).
-Read about INNODB_LOG_WRITER_SPIN_DELAY_DEFAULT.
-Number of spin rounds is calculated according to current usage of CPU cores.
-If the usage is smaller than lwm percents of single core, then max rounds = 0.
-If the usage is smaller than 50% of hwm percents of all cores, then max rounds
-is decreasing linearly from 10x innodb_log_writer_spin_delay to 1x (for 50%).
-Then in range from 50% of hwm to 100% of hwm, the max rounds stays equal to
-the innodb_log_writer_spin_delay, because it doesn't make sense to use too
-short waits. Hence this is minimum value for the max rounds when non-zero
-value is being used. */
-constexpr ulong INNODB_LOG_WAIT_FOR_WRITE_SPIN_DELAY_DEFAULT = 25000;
-
-/** Default value of innodb_log_wait_for_write_timeout (in microseconds). */
-constexpr ulong INNODB_LOG_WAIT_FOR_WRITE_TIMEOUT_DEFAULT = 1000;
-
-/** Default value of innodb_log_wait_for_flush_spin_delay (in spin rounds).
-Read about INNODB_LOG_WAIT_FOR_WRITE_SPIN_DELAY_DEFAULT. The same mechanism
-applies here (to compute max rounds). */
-constexpr ulong INNODB_LOG_WAIT_FOR_FLUSH_SPIN_DELAY_DEFAULT = 25000;
-
-/** Default value of innodb_log_wait_for_flush_spin_hwm (in microseconds). */
-constexpr ulong INNODB_LOG_WAIT_FOR_FLUSH_SPIN_HWM_DEFAULT = 400;
-
-/** Default value of innodb_log_wait_for_flush_timeout (in microseconds). */
-constexpr ulong INNODB_LOG_WAIT_FOR_FLUSH_TIMEOUT_DEFAULT = 1000;
-
-/** Default value of innodb_log_flusher_spin_delay (in spin rounds).
-Read about INNODB_LOG_WRITER_SPIN_DELAY_DEFAULT. */
-constexpr ulong INNODB_LOG_FLUSHER_SPIN_DELAY_DEFAULT = 250000;
-
-/** Default value of innodb_log_flusher_timeout (in microseconds).
-Note that it will anyway take at least 50us. */
-constexpr ulong INNODB_LOG_FLUSHER_TIMEOUT_DEFAULT = 10;
-
-/** Default value of innodb_log_write_notifier_spin_delay (in spin rounds). */
-constexpr ulong INNODB_LOG_WRITE_NOTIFIER_SPIN_DELAY_DEFAULT = 0;
-
-/** Default value of innodb_log_write_notifier_timeout (in microseconds). */
-constexpr ulong INNODB_LOG_WRITE_NOTIFIER_TIMEOUT_DEFAULT = 10;
-
-/** Default value of innodb_log_flush_notifier_spin_delay (in spin rounds). */
-constexpr ulong INNODB_LOG_FLUSH_NOTIFIER_SPIN_DELAY_DEFAULT = 0;
-
-/** Default value of innodb_log_flush_notifier_timeout (in microseconds). */
-constexpr ulong INNODB_LOG_FLUSH_NOTIFIER_TIMEOUT_DEFAULT = 10;
-
-/** Default value of innodb_log_closer_spin_delay (in spin rounds). */
-constexpr ulong INNODB_LOG_CLOSER_SPIN_DELAY_DEFAULT = 0;
-
-/** Default value of innodb_log_closer_timeout (in microseconds). */
-constexpr ulong INNODB_LOG_CLOSER_TIMEOUT_DEFAULT = 1000;
-
-/** Default value of innodb_log_buffer_size (in bytes). */
-constexpr ulong INNODB_LOG_BUFFER_SIZE_DEFAULT = 16 * 1024 * 1024UL;
-
-/** Minimum allowed value of innodb_log_buffer_size. */
-constexpr ulong INNODB_LOG_BUFFER_SIZE_MIN = 256 * 1024UL;
-
-/** Maximum allowed value of innodb_log_buffer_size. */
-constexpr ulong INNODB_LOG_BUFFER_SIZE_MAX = ULONG_MAX;
-
-/** Default value of innodb_log_recent_written_size (in bytes). */
-constexpr ulong INNODB_LOG_RECENT_WRITTEN_SIZE_DEFAULT = 1024 * 1024;
-
-/** Minimum allowed value of innodb_log_recent_written_size. */
-constexpr ulong INNODB_LOG_RECENT_WRITTEN_SIZE_MIN = OS_FILE_LOG_BLOCK_SIZE;
-
-/** Maximum allowed value of innodb_log_recent_written_size. */
-constexpr ulong INNODB_LOG_RECENT_WRITTEN_SIZE_MAX = 1024 * 1024 * 1024UL;
-
-/** Default value of innodb_log_recent_closed_size (in bytes). */
-constexpr ulong INNODB_LOG_RECENT_CLOSED_SIZE_DEFAULT = 2 * 1024 * 1024;
-
-/** Minimum allowed value of innodb_log_recent_closed_size. */
-constexpr ulong INNODB_LOG_RECENT_CLOSED_SIZE_MIN = OS_FILE_LOG_BLOCK_SIZE;
-
-/** Maximum allowed value of innodb_log_recent_closed_size. */
-constexpr ulong INNODB_LOG_RECENT_CLOSED_SIZE_MAX = 1024 * 1024 * 1024UL;
-
-/** Default value of innodb_log_events (number of events). */
-constexpr ulong INNODB_LOG_EVENTS_DEFAULT = 2048;
-
-/** Minimum allowed value of innodb_log_events. */
-constexpr ulong INNODB_LOG_EVENTS_MIN = 1;
-
-/** Maximum allowed value of innodb_log_events. */
-constexpr ulong INNODB_LOG_EVENTS_MAX = 1024 * 1024 * 1024UL;
-
-/** Default value of innodb_log_write_ahead_size (in bytes). */
-constexpr ulong INNODB_LOG_WRITE_AHEAD_SIZE_DEFAULT = 8192;
-
-/** Minimum allowed value of innodb_log_write_ahead_size. */
-constexpr ulong INNODB_LOG_WRITE_AHEAD_SIZE_MIN = OS_FILE_LOG_BLOCK_SIZE;
-
-/** Maximum allowed value of innodb_log_write_ahead_size. */
-constexpr ulint INNODB_LOG_WRITE_AHEAD_SIZE_MAX =
-    UNIV_PAGE_SIZE_DEF;  // 16kB...
-
-/** Value to which MLOG_TEST records should sum up within a group. */
-constexpr int64_t MLOG_TEST_VALUE = 10000;
-
-/** Maximum size of single MLOG_TEST record (in bytes). */
-constexpr uint32_t MLOG_TEST_MAX_REC_LEN = 100;
-
-/** Maximum number of MLOG_TEST records in single group of log records. */
-constexpr uint32_t MLOG_TEST_GROUP_MAX_REC_N = 100;
-
-/** Redo log system (singleton). */
-extern log_t *log_sys;
-
-/** Pointer to the log checksum calculation function. Changes are protected
-by log_mutex_enter_all, which also stops the log background threads. */
-extern log_checksum_func_t log_checksum_algorithm_ptr;
 
 #ifndef UNIV_HOTBACKUP
 /** Represents currently running test of redo log, nullptr otherwise. */
@@ -375,198 +110,15 @@ extern std::unique_ptr<Log_test> log_test;
 
 /* Declaration of inline functions (definition is available in log0log.ic). */
 
-/** Gets a log block flush bit. The flush bit is set, if and only if,
-the block was the first block written in a call to fil_io().
 
-During recovery, when encountered the flush bit, recovery code can be
-pretty sure, that all previous blocks belong to a completed fil_io(),
-because the block with flush bit belongs to the next call to fil_io(),
-which could only be started after the previous one has been finished.
 
-@param[in]	log_block	log block
-@return true if this block was the first to be written in fil_io(). */
-inline bool log_block_get_flush_bit(const byte *log_block);
 
-/** Sets the log block flush bit.
-@param[in,out]	log_block	log block (must have hdr_no != 0)
-@param[in]	value		value to set */
-inline void log_block_set_flush_bit(byte *log_block, bool value);
 
-/** Gets a log block number stored in the header. The number corresponds
-to lsn range for data stored in the block.
 
-During recovery, when a next block is being parsed, a next range of lsn
-values is expected to be read. This corresponds to a log block number
-increased by one. However, if a smaller number is read from the header,
-it is then considered the end of the redo log and recovery is finished.
-In such case, the next block is most likely an empty block or a block
-from the past, because the redo log is written in circular manner.
-
-@param[in]	log_block	log block (may be invalid or empty block)
-@return log block number stored in the block header */
-inline uint32_t log_block_get_hdr_no(const byte *log_block);
-
-/** Sets the log block number stored in the header.
-NOTE that this must be set before the flush bit!
-
-@param[in,out]	log_block	log block
-@param[in]	n		log block number: must be in (0, 1G] */
-inline void log_block_set_hdr_no(byte *log_block, uint32_t n);
-
-/** Gets a log block data length.
-@param[in]	log_block	log block
-@return log block data length measured as a byte offset from the block start */
-inline uint32_t log_block_get_data_len(const byte *log_block);
-
-/** Sets the log block data length.
-@param[in,out]	log_block	log block
-@param[in]	len		data length (@see log_block_get_data_len) */
-inline void log_block_set_data_len(byte *log_block, ulint len);
-
-/** Gets an offset to the beginning of the first group of log records
-in a given log block.
-@param[in]	log_block	log block
-@return first mtr log record group byte offset from the block start,
-0 if none. */
-inline uint32_t log_block_get_first_rec_group(const byte *log_block);
-
-/** Sets an offset to the beginning of the first group of log records
-in a given log block.
-@param[in,out]	log_block	log block
-@param[in]	offset		offset, 0 if none */
-inline void log_block_set_first_rec_group(byte *log_block, uint32_t offset);
-
-/** Gets a log block checkpoint number field (4 lowest bytes).
-@param[in]	log_block	log block
-@return checkpoint no (4 lowest bytes) */
-inline uint32_t log_block_get_checkpoint_no(const byte *log_block);
-
-/** Sets a log block checkpoint number field (4 lowest bytes).
-@param[in,out]	log_block	log block
-@param[in]	no		checkpoint no */
-inline void log_block_set_checkpoint_no(byte *log_block, uint64_t no);
-
-/** Converts a lsn to a log block number. Consecutive log blocks have
-consecutive numbers (unless the sequence wraps). It is guaranteed that
-the calculated number is greater than zero.
-
-@param[in]	lsn	lsn of a byte within the block
-@return log block number, it is > 0 and <= 1G */
-inline uint32_t log_block_convert_lsn_to_no(lsn_t lsn);
-
-/** Calculates the checksum for a log block.
-@param[in]	log_block	log block
-@return checksum */
-inline uint32_t log_block_calc_checksum(const byte *log_block);
-
-/** Calculates the checksum for a log block using the MySQL 5.7 algorithm.
-@param[in]	log_block	log block
-@return checksum */
-inline uint32_t log_block_calc_checksum_crc32(const byte *log_block);
-
-/** Calculates the checksum for a log block using the "no-op" algorithm.
-@param[in]     log_block   log block
-@return        checksum */
-inline uint32_t log_block_calc_checksum_none(const byte *log_block);
-
-/** Gets value of a log block checksum field.
-@param[in]	log_block	log block
-@return checksum */
-inline uint32_t log_block_get_checksum(const byte *log_block);
-
-/** Sets value of a log block checksum field.
-@param[in,out]	log_block	log block
-@param[in]	checksum	checksum */
-inline void log_block_set_checksum(byte *log_block, uint32_t checksum);
-
-/** Stores a 4-byte checksum to the trailer checksum field of a log block.
-This is used before writing the log block to disk. The checksum in a log
-block is used in recovery to check the consistency of the log block.
-@param[in]	log_block	 log block (completely filled in!) */
-inline void log_block_store_checksum(byte *log_block);
-
-/** Gets the current lsn value. This value points to the first non
-reserved data byte in the redo log. When next user thread reserves
-space in the redo log, it starts at this lsn.
-
-If the last reservation finished exactly before footer of log block,
-this value points to the first byte after header of the next block.
-
-NOTE that it is possible that the current lsn value does not fit
-free space in the log files or in the log buffer. In such case,
-user threads need to wait until the space becomes available.
-
-@return current lsn */
-inline lsn_t log_get_lsn(const log_t &log);
-
-/** Gets the last checkpoint lsn stored and flushed to disk.
-@return last checkpoint lsn */
-inline lsn_t log_get_checkpoint_lsn(const log_t &log);
 
 #ifndef UNIV_HOTBACKUP
 
-/** When the oldest dirty page age exceeds this value, we start
-an asynchronous preflush of dirty pages. This function does not
-have side-effects, it only reads and returns the limit value.
-@return age of dirty page at which async. preflush is started */
-inline lsn_t log_get_max_modified_age_async();
 
-/** @return true iff log_free_check should be executed. */
-inline bool log_needs_free_check();
-
-/** Any database operation should call this when it has modified more than
-about 4 pages. NOTE that this function may only be called when the thread
-owns no synchronization objects except the dictionary mutex.
-
-Checks if current log.sn exceeds log.sn_limit_for_start, in which case waits.
-This is supposed to guarantee that we would not run out of space in the log
-files when holding latches of some dirty pages (which could end up in
-a deadlock, because flush of the latched dirty pages could be required
-to reclaim the space and it is impossible to flush latched pages). */
-inline void log_free_check();
-
-/** Calculates lsn value for given sn value. Sequence of sn values
-enumerate all data bytes in the redo log. Sequence of lsn values
-enumerate all data bytes and bytes used for headers and footers
-of all log blocks in the redo log. For every LOG_BLOCK_DATA_SIZE
-bytes of data we have OS_FILE_LOG_BLOCK_SIZE bytes in the redo log.
-NOTE that LOG_BLOCK_DATA_SIZE + LOG_BLOCK_HDR_SIZE + LOG_BLOCK_TRL_SIZE
-== OS_FILE_LOG_BLOCK_SIZE. The calculated lsn value will always point
-to some data byte (will be % OS_FILE_LOG_BLOCK_SIZE >= LOG_BLOCK_HDR_SIZE,
-and < OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_TRL_SIZE).
-
-@param[in]	sn	sn value
-@return lsn value for the provided sn value */
-constexpr inline lsn_t log_translate_sn_to_lsn(lsn_t sn);
-
-/** Calculates sn value for given lsn value.
-@see log_translate_sn_to_lsn
-@param[in]	lsn	lsn value
-@return sn value for the provided lsn value */
-inline lsn_t log_translate_lsn_to_sn(lsn_t lsn);
-
-#endif /* !UNIV_HOTBACKUP */
-
-/** Validates a given lsn value. Checks if the lsn value points to data
-bytes inside log block (not to some bytes in header/footer). It is used
-by assertions.
-@return true if lsn points to data bytes within log block */
-inline bool log_lsn_validate(lsn_t lsn);
-
-#ifndef UNIV_HOTBACKUP
-
-/** Calculates age of current checkpoint as number of bytes since
-last checkpoint. This includes bytes for headers and footers of
-all log blocks. The calculation is based on the latest written
-checkpoint lsn, and the current lsn, which points to the first
-non reserved data byte. Note that the current lsn could not fit
-the free space in the log files. This means that the checkpoint
-age could potentially be larger than capacity of the log files.
-However we do the best effort to avoid such situations, and if
-they happen, user threads wait until the space is reclaimed.
-@param[in]	log	redo log
-@return checkpoint age as number of bytes */
-inline lsn_t log_get_checkpoint_age(const log_t &log);
 
 /* Declaration of log_buffer functions (definition in log0buf.cc). */
 
@@ -660,24 +212,14 @@ For detailed explanation - @see log0write.cc.
 @param[in]	handle		handle for the reservation of space */
 void log_buffer_close(log_t &log, const Log_handle &handle);
 
-/** Write to the log file up to the last log entry.
-@param[in,out]	log	redo log
-@param[in]	sync	whether we want the written log
-also to be flushed to disk. */
-void log_buffer_flush_to_disk(log_t &log, bool sync = true);
 
-/** Requests flush of the log buffer.
-@param[in]	sync	true: wait until the flush is done */
-inline void log_buffer_flush_to_disk(bool sync = true);
 
-/** @return lsn up to which all writes to log buffer have been finished */
-inline lsn_t log_buffer_ready_for_write_lsn(const log_t &log);
 
-/** @return lsn up to which all dirty pages have been added to flush list */
-inline lsn_t log_buffer_dirty_pages_added_up_to_lsn(const log_t &log);
 
-/** @return capacity of the recent_closed, or 0 if !log_use_threads() */
-inline lsn_t log_buffer_flush_order_lag(const log_t &log);
+
+
+
+
 
 /** Get last redo block from redo buffer and end LSN. Note that it takes
 x-lock on the log buffer for a short period. Out values are always set,

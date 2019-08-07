@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/mtr/Debug_check.h>
 #include <innodb/mtr/Add_dirty_blocks_to_flush_list.h>
 #include <innodb/mtr/Command.h>
-
+#include <innodb/log_redo/recv_recovery_is_on.h>
 
 #include "buf0buf.h"
 #include "buf0flu.h"
