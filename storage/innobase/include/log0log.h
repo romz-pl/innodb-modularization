@@ -46,7 +46,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-
+#include <innodb/log_redo/log_buffer_x_lock_exit.h>
+#include <innodb/log_redo/log_buffer_x_lock_enter.h>
 #include <innodb/wait/Wait_stats.h>
 #include <innodb/disk/flags.h>
 #include <innodb/log_types/log_t.h>
@@ -96,24 +97,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
 #include <innodb/log_redo/log_buffer_flush_order_lag.h>
 #include <innodb/log_redo/log_write_to_file_requests_are_frequent.h>
-
-#include "log0test.h"
-
-
-
-
-
-#ifndef UNIV_HOTBACKUP
-/** Represents currently running test of redo log, nullptr otherwise. */
-extern std::unique_ptr<Log_test> log_test;
-#endif /* !UNIV_HOTBACKUP */
-
-/* Declaration of inline functions (definition is available in log0log.ic). */
-
-
-
-
-
+#include <innodb/log_redo/log_buffer_s_lock_enter.h>
+#include <innodb/log_redo/log_buffer_s_lock_exit.h>
+#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_redo/Log_test.h>
+#include <innodb/log_redo/log_test.h>
 
 
 #ifndef UNIV_HOTBACKUP
@@ -408,23 +396,13 @@ initialized to correspond to some lsn, for instance, a checkpoint lsn.
 @param[in]	lsn	log sequence number to set files_start_lsn at */
 void log_files_update_offsets(log_t &log, lsn_t lsn);
 
-/** Acquires the log buffer s-lock.
-@param[in,out]	log	redo log
-@return lock no, must be passed to s_lock_exit() */
-size_t log_buffer_s_lock_enter(log_t &log);
 
-/** Releases the log buffer s-lock.
-@param[in,out]	log	redo log
-@param[in]	lock_no	lock no received from s_lock_enter() */
-void log_buffer_s_lock_exit(log_t &log, size_t lock_no);
 
-/** Acquires the log buffer x-lock.
-@param[in,out]	log	redo log */
-void log_buffer_x_lock_enter(log_t &log);
 
-/** Releases the log buffer x-lock.
-@param[in,out]	log	redo log */
-void log_buffer_x_lock_exit(log_t &log);
+
+
+
+
 #endif /* !UNIV_HOTBACKUP */
 
 /** Calculates offset within log files, excluding headers of log files.
@@ -654,14 +632,6 @@ void log_checkpointer(log_t *log_ptr);
   (mutex_own(&((log).write_notifier_mutex)) || \
    !(log).write_notifier_thread_alive.load())
 
-#define LOG_SYNC_POINT(a)                \
-  do {                                   \
-    DEBUG_SYNC_C(a);                     \
-    DBUG_EXECUTE_IF(a, DBUG_SUICIDE();); \
-    if (log_test != nullptr) {           \
-      log_test->sync_point(a);           \
-    }                                    \
-  } while (0)
 
 /** Lock redo log. Both current lsn and checkpoint lsn will not change
 until the redo log is unlocked.

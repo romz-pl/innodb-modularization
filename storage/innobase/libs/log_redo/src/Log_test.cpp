@@ -38,9 +38,20 @@ the file COPYING.Google.
 
  *******************************************************/
 
+
+
+#include <innodb/log_redo/Log_test.h>
+
 #ifndef UNIV_HOTBACKUP
 
-#include "log0log.h"
+#include <innodb/assert/assert.h>
+#include <innodb/log_redo/flags.h>
+#include <innodb/log_redo/log_lsn_validate.h>
+#include <innodb/log_redo/mlog_id_t.h>
+#include <innodb/machine/data.h>
+#include <innodb/random/random.h>
+
+#include <cstring>
 
 /** Maximum size of payload put inside each MLOG_TEST record. */
 static constexpr size_t MLOG_TEST_PAYLOAD_MAX_LEN = 50;
@@ -48,8 +59,6 @@ static constexpr size_t MLOG_TEST_PAYLOAD_MAX_LEN = 50;
 /** Space id used for pages modified during tests of redo log. */
 static constexpr size_t MLOG_TEST_PAGE_SPACE_ID = 1;
 
-/** Represents currently running test of redo log, nullptr otherwise. */
-std::unique_ptr<Log_test> log_test;
 
 lsn_t Log_test::oldest_modification_approx() const {
   std::lock_guard<std::mutex> lock{m_mutex};
@@ -98,20 +107,20 @@ void Log_test::purge(lsn_t max_dirty_page_age) {
     /* Fragment below would make it more similar to real env.
     However there is some issue now. */
 #if 0
-		/* We need to avoid deadlock when resizing log
-		buffer in background ... (because of m_mutex). */
-		if (page.newest_modification > log_sys->write_lsn.load()) {
+        /* We need to avoid deadlock when resizing log
+        buffer in background ... (because of m_mutex). */
+        if (page.newest_modification > log_sys->write_lsn.load()) {
 
-			lock.unlock();
+            lock.unlock();
 
-			log_write_up_to(
-				*log_sys,
-				page.newest_modification,
-				true);
+            log_write_up_to(
+                *log_sys,
+                page.newest_modification,
+                true);
 
-			lock.lock();
-			continue;
-		}
+            lock.lock();
+            continue;
+        }
 #endif
 
     m_written[page.key] = page;

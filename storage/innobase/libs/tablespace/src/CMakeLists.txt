@@ -146,7 +146,6 @@ add_library( ${LIB_NAME} STATIC
     fsp_reserve_t.cpp
     fsp_skip_sanity_check.cpp
     mach_read_ulint.cpp
-    mlog_id_t.cpp
     os_file_read_first_page.cpp
     os_file_read_first_page_func.cpp
     os_file_read_first_page_pfs.cpp

@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/mlog_id_t.h>
+#include <innodb/log_redo/mlog_id_t.h>
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/buffer/buf_flush_t.h>
 #include <innodb/memory/mem_heap_t.h>

@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/mtr/mtr_buf_t.h>
-#include <innodb/tablespace/mlog_id_t.h>
+#include <innodb/log_redo/mlog_id_t.h>
 #include <innodb/mtr/mtr_t.h>
 
 
