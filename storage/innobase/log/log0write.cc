@@ -1104,70 +1104,14 @@ struct Log_write_to_file_requests_monitor {
 #define log_writer_mutex_own(log) true
 #endif /* !UNIV_HOTBACKUP */
 
-uint64_t log_files_size_offset(const log_t &log, uint64_t offset) {
-  ut_ad(log_writer_mutex_own(log));
 
-  return (offset - LOG_FILE_HDR_SIZE * (1 + offset / log.file_size));
-}
 
-uint64_t log_files_real_offset(const log_t &log, uint64_t offset) {
-  ut_ad(log_writer_mutex_own(log));
 
-  return (offset + LOG_FILE_HDR_SIZE *
-                       (1 + offset / (log.file_size - LOG_FILE_HDR_SIZE)));
-}
 
-uint64_t log_files_real_offset_for_lsn(const log_t &log, lsn_t lsn) {
-  uint64_t size_offset;
-  uint64_t size_capacity;
-  uint64_t delta;
 
-  ut_ad(log_writer_mutex_own(log));
-
-  size_capacity = log.n_files * (log.file_size - LOG_FILE_HDR_SIZE);
-
-  if (lsn >= log.current_file_lsn) {
-    delta = lsn - log.current_file_lsn;
-
-    delta = delta % size_capacity;
-
-  } else {
-    /* Special case because lsn and offset are unsigned. */
-
-    delta = log.current_file_lsn - lsn;
-
-    delta = size_capacity - delta % size_capacity;
-  }
-
-  size_offset = log_files_size_offset(log, log.current_file_real_offset);
-
-  size_offset = (size_offset + delta) % size_capacity;
-
-  return (log_files_real_offset(log, size_offset));
-}
 #ifndef UNIV_HOTBACKUP
 
-void log_files_update_offsets(log_t &log, lsn_t lsn) {
-  ut_ad(log_writer_mutex_own(log));
-  ut_a(log.file_size > 0);
-  ut_a(log.n_files > 0);
 
-  lsn = ut_uint64_align_down(lsn, OS_FILE_LOG_BLOCK_SIZE);
-
-  log.current_file_real_offset = log_files_real_offset_for_lsn(log, lsn);
-
-  /* Real offsets never enter headers of files when calculated
-  for some LSN / size offset. */
-  ut_a(log.current_file_real_offset % log.file_size >= LOG_FILE_HDR_SIZE);
-
-  log.current_file_lsn = lsn;
-
-  log.current_file_end_offset = log.current_file_real_offset -
-                                log.current_file_real_offset % log.file_size +
-                                log.file_size;
-
-  ut_a(log.current_file_end_offset % log.file_size == 0);
-}
 
 namespace Log_files_write_impl {
 

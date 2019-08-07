@@ -54,6 +54,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_allocate_file_header_buffers.h>
 #include <innodb/log_redo/log_deallocate_file_header_buffers.h>
 #include <innodb/log_redo/log_calc_buf_size.h>
+#include <innodb/log_redo/log_sys_object.h>
+#include <innodb/log_redo/pfs.h>
 
 #ifndef UNIV_HOTBACKUP
 
@@ -64,55 +66,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "os0thread-create.h"
 #include "trx0sys.h"
-
-
-/** Redo log system. Singleton used to populate global pointer. */
-aligned_pointer<log_t> *log_sys_object;
-
-
-#ifdef UNIV_PFS_THREAD
-
-/** PFS key for the log writer thread. */
-mysql_pfs_key_t log_writer_thread_key;
-
-/** PFS key for the log closer thread. */
-mysql_pfs_key_t log_closer_thread_key;
-
-/** PFS key for the log checkpointer thread. */
-mysql_pfs_key_t log_checkpointer_thread_key;
-
-/** PFS key for the log flusher thread. */
-mysql_pfs_key_t log_flusher_thread_key;
-
-/** PFS key for the log flush notifier thread. */
-mysql_pfs_key_t log_flush_notifier_thread_key;
-
-/** PFS key for the log write notifier thread. */
-mysql_pfs_key_t log_write_notifier_thread_key;
-
-#endif /* UNIV_PFS_THREAD */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**************************************************/ /**
@@ -324,41 +277,15 @@ void log_sys_close() {
 
 /* @{ */
 
-void log_writer_thread_active_validate(const log_t &log) {
-  ut_a(log.writer_thread_alive.load());
-}
 
-void log_closer_thread_active_validate(const log_t &log) {
-  ut_a(log.closer_thread_alive.load());
-}
 
-void log_background_write_threads_active_validate(const log_t &log) {
-  ut_ad(!log.disable_redo_writes);
 
-  ut_a(log.writer_thread_alive.load());
 
-  ut_a(log.flusher_thread_alive.load());
-}
 
-void log_background_threads_active_validate(const log_t &log) {
-  log_background_write_threads_active_validate(log);
 
-  ut_a(log.write_notifier_thread_alive.load());
-  ut_a(log.flush_notifier_thread_alive.load());
 
-  ut_a(log.closer_thread_alive.load());
 
-  ut_a(log.checkpointer_thread_alive.load());
-}
 
-void log_background_threads_inactive_validate(const log_t &log) {
-  ut_a(!log.checkpointer_thread_alive.load());
-  ut_a(!log.closer_thread_alive.load());
-  ut_a(!log.write_notifier_thread_alive.load());
-  ut_a(!log.flush_notifier_thread_alive.load());
-  ut_a(!log.writer_thread_alive.load());
-  ut_a(!log.flusher_thread_alive.load());
-}
 
 void log_start_background_threads(log_t &log) {
   ib::info(ER_IB_MSG_1258) << "Log background threads are being started...";

@@ -46,6 +46,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_redo/log_writer_thread_active_validate.h>
+#include <innodb/log_redo/log_closer_thread_active_validate.h>
+#include <innodb/log_redo/log_background_write_threads_active_validate.h>
+#include <innodb/log_redo/log_background_threads_active_validate.h>
+#include <innodb/log_redo/log_background_threads_inactive_validate.h>
+#include <innodb/log_redo/log_files_update_offsets.h>
+#include <innodb/log_redo/log_files_real_offset_for_lsn.h>
+#include <innodb/log_redo/log_files_real_offset.h>
+#include <innodb/log_redo/log_files_size_offset.h>
 #include <innodb/log_redo/meb_log_print_file_hdr.h>
 #include <innodb/log_redo/log_buffer_x_lock_exit.h>
 #include <innodb/log_redo/log_buffer_x_lock_enter.h>
@@ -421,12 +430,7 @@ previous checkpoint info and recovery would work.
 @param[in]	next_checkpoint_lsn	writes checkpoint at this lsn */
 void log_files_write_checkpoint(log_t &log, lsn_t next_checkpoint_lsn);
 
-/** Updates current_file_lsn and current_file_real_offset to correspond
-to a given lsn. For this function to work, the values must already be
-initialized to correspond to some lsn, for instance, a checkpoint lsn.
-@param[in,out]	log	redo log
-@param[in]	lsn	log sequence number to set files_start_lsn at */
-void log_files_update_offsets(log_t &log, lsn_t lsn);
+
 
 
 
@@ -437,24 +441,11 @@ void log_files_update_offsets(log_t &log, lsn_t lsn);
 
 #endif /* !UNIV_HOTBACKUP */
 
-/** Calculates offset within log files, excluding headers of log files.
-@param[in]	log		redo log
-@param[in]	offset		real offset (including log file headers)
-@return	size offset excluding log file headers (<= offset) */
-uint64_t log_files_size_offset(const log_t &log, uint64_t offset);
 
-/** Calculates offset within log files, including headers of log files.
-@param[in]	log		redo log
-@param[in]	offset		size offset (excluding log file headers)
-@return real offset including log file headers (>= offset) */
-uint64_t log_files_real_offset(const log_t &log, uint64_t offset);
 
-/** Calculates offset within log files, including headers of log files,
-for the provided lsn value.
-@param[in]	log	redo log
-@param[in]	lsn	log sequence number
-@return real offset within the log files */
-uint64_t log_files_real_offset_for_lsn(const log_t &log, lsn_t lsn);
+
+
+
 #ifndef UNIV_HOTBACKUP
 
 /** Changes size of the log buffer. This is a thread-safe version.
@@ -532,30 +523,11 @@ checkpoint_lsn and current lsn.
 void log_start(log_t &log, checkpoint_no_t checkpoint_no, lsn_t checkpoint_lsn,
                lsn_t start_lsn);
 
-/** Validates that the log writer thread is active.
-Used only to assert, that the state is correct.
-@param[in]	log	redo log */
-void log_writer_thread_active_validate(const log_t &log);
 
-/** Validates that the log closer thread is active.
-Used only to assert, that the state is correct.
-@param[in]	log	redo log */
-void log_closer_thread_active_validate(const log_t &log);
 
-/** Validates that the log writer, flusher threads are active.
-Used only to assert, that the state is correct.
-@param[in]	log	redo log */
-void log_background_write_threads_active_validate(const log_t &log);
 
-/** Validates that all the log background threads are active.
-Used only to assert, that the state is correct.
-@param[in]	log	redo log */
-void log_background_threads_active_validate(const log_t &log);
 
-/** Validates that all the log background threads are inactive.
-Used only to assert, that the state is correct.
-@param[in]	log	redo log */
-void log_background_threads_inactive_validate(const log_t &log);
+
 
 /** Starts all the log background threads. This can be called only,
 when the threads are inactive. This should never be called concurrently.

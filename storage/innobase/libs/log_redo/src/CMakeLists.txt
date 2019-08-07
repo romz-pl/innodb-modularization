@@ -92,6 +92,17 @@ add_library( ${LIB_NAME} STATIC
     log_write_notifier_mutex_enter.cpp
     log_write_notifier_mutex_exit.cpp
     log_write_notifier_mutex_own.cpp
+    log_files_size_offset.cpp
+    log_files_real_offset.cpp
+    log_files_real_offset_for_lsn.cpp
+    log_files_update_offsets.cpp
+    log_writer_thread_active_validate.cpp
+    log_closer_thread_active_validate.cpp
+    log_background_write_threads_active_validate.cpp
+    log_background_threads_active_validate.cpp
+    log_background_threads_inactive_validate.cpp
+    log_sys_object.cpp
+    pfs.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
