@@ -63,11 +63,7 @@ ulong srv_adaptive_max_sleep_delay = 150000;
 
 ulong srv_thread_sleep_delay = 10000;
 
-/** The following controls how many threads we let inside InnoDB concurrently:
-threads waiting for locks are not counted into the number because otherwise
-we could get a deadlock. Value of 0 will disable the concurrency check. */
 
-ulong srv_thread_concurrency = 0;
 
 /** Variables tracking the active and waiting threads. */
 struct srv_conc_t {

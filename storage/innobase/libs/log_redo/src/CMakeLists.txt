@@ -103,6 +103,19 @@ add_library( ${LIB_NAME} STATIC
     log_background_threads_inactive_validate.cpp
     log_sys_object.cpp
     pfs.cpp
+    log_calc_concurrency_margin.cpp
+    srv_thread_concurrency.cpp
+    log_calc_max_ages.cpp
+    log_sys_init.cpp
+    log_free_check_margin.cpp
+    log_start.cpp
+    log_update_limits.cpp
+    log_sys_close.cpp
+    log_print.cpp
+    log_refresh_stats.cpp
+    log_position_lock.cpp
+    log_position_unlock.cpp
+    log_position_collect_lsn_info.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -118,6 +131,7 @@ target_link_libraries(
     PUBLIC
     crc32
     log_types
+    monitor
     PRIVATE
 )
 

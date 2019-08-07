@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/log_redo/log_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/io/IORequest.h>
 #include <innodb/io/os_file_get_last_error.h>

@@ -53,6 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/IORequestLogWrite.h>
 #include <innodb/memory/mem_heap_create_typed.h>
 #include <innodb/log_types/log_header_format_t.h>
+#include <innodb/log_redo/log_start.h>
 
 
 #include "ha_prototypes.h"

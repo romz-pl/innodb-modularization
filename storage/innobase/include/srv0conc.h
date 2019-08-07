@@ -49,17 +49,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_redo/srv_thread_concurrency.h>
+
 /** We are prepared for a situation that we have this many threads waiting for
 a semaphore inside InnoDB. innobase_start_or_create_for_mysql() sets the
 value. */
 
 extern ulint srv_max_n_threads;
 
-/** The following controls how many threads we let inside InnoDB concurrently:
-threads waiting for locks are not counted into the number because otherwise
-we could get a deadlock. Value of 0 will disable the concurrency check. */
-
-extern ulong srv_thread_concurrency;
 
 struct row_prebuilt_t;
 /** Puts an OS thread to wait if there are too many concurrent threads

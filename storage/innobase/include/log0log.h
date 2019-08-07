@@ -46,6 +46,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_redo/log_update_limits.h>
+#include <innodb/log_redo/log_position_collect_lsn_info.h>
+#include <innodb/log_redo/log_position_unlock.h>
+#include <innodb/log_redo/log_position_lock.h>
+#include <innodb/log_redo/log_refresh_stats.h>
+#include <innodb/log_redo/log_print.h>
+#include <innodb/log_redo/log_sys_close.h>
+#include <innodb/log_redo/log_free_check_margin.h>
+#include <innodb/log_redo/log_sys_init.h>
+#include <innodb/log_redo/log_calc_max_ages.h>
+#include <innodb/log_redo/log_calc_concurrency_margin.h>
 #include <innodb/log_redo/log_writer_thread_active_validate.h>
 #include <innodb/log_redo/log_closer_thread_active_validate.h>
 #include <innodb/log_redo/log_background_write_threads_active_validate.h>
@@ -318,10 +329,7 @@ at the provided sn, in both the log buffer and in the log files.
 @param[in]	end_sn    end of the range of sn values */
 void log_wait_for_space(log_t &log, sn_t end_sn);
 
-/** Calculates margin which has to be used in log_free_check() call,
-when checking if user thread should wait for more space in redo log.
-@return size of the margin to use */
-sn_t log_free_check_margin(const log_t &log);
+
 
 /** Waits until there is free space in log files which includes
 concurrency margin required for all threads. You should rather
@@ -331,19 +339,7 @@ use log_free_check().
 @param[in]	sn    sn for which there should be concurrency margin */
 void log_free_check_wait(log_t &log, sn_t sn);
 
-/** Updates sn limit values up to which user threads may consider the
-reserved space as available both in the log buffer and in the log files.
-Both limits - for the start and for the end of reservation, are updated.
-Limit for the end is the only one, which truly guarantees that there is
-space for the whole reservation. Limit for the start is used to check
-free space when being outside mtr (without latches), in which case it
-is unknown how much we will need to reserve and write, so current sn
-is then compared to the limit. This is called whenever these limits
-may change - when write_lsn or last_checkpoint_lsn are advanced,
-when the log buffer is resized or margins are changed (e.g. because
-of changed concurrency limit).
-@param[in,out]	log	redo log */
-void log_update_limits(log_t &log);
+
 
 /** Waits until the redo log is written up to a provided lsn.
 @param[in]  log             redo log
@@ -473,15 +469,9 @@ void log_write_ahead_resize(log_t &log, size_t new_size);
 /** Increase concurrency_margin used inside log_free_check() calls. */
 void log_increase_concurrency_margin(log_t &log);
 
-/** Prints information about important lsn values used in the redo log,
-and some statistics about speed of writing and flushing of data.
-@param[in]	log	redo log for which print information
-@param[out]	file	file where to print */
-void log_print(const log_t &log, FILE *file);
 
-/** Refreshes the statistics used to print per-second averages in log_print().
-@param[in,out]	log	redo log */
-void log_refresh_stats(log_t &log);
+
+
 
 /** Creates the first checkpoint ever in the log files. Used during
 initialization of new log files. Flushes:
@@ -491,37 +481,9 @@ initialization of new log files. Flushes:
 @param[in]	lsn	the first checkpoint lsn */
 void log_create_first_checkpoint(log_t &log, lsn_t lsn);
 
-/** Calculates limits for maximum age of checkpoint and maximum age of
-the oldest page. Uses current value of srv_thread_concurrency.
-@param[in,out]	log	redo log
-@retval true if success
-@retval false if the redo log is too small to accommodate the number of
-OS threads in the database server */
-bool log_calc_max_ages(log_t &log);
 
-/** Initializes the log system. Note that the log system is not ready
-for user writes after this call is finished. It should be followed by
-a call to log_start. Also, log background threads need to be started
-manually using log_start_background_threads afterwards.
 
-Hence the proper order of calls looks like this:
-        - log_sys_init(),
-        - log_start(),
-        - log_start_background_threads().
 
-@param[in]	n_files		number of log files
-@param[in]	file_size	size of each log file in bytes
-@param[in]	space_id	space id of the file space with log files */
-bool log_sys_init(uint32_t n_files, uint64_t file_size, space_id_t space_id);
-
-/** Starts the initialized redo log system using a provided
-checkpoint_lsn and current lsn.
-@param[in,out]	log		redo log
-@param[in]	checkpoint_no	checkpoint no (sequential number)
-@param[in]	checkpoint_lsn	checkpoint lsn
-@param[in]	start_lsn	current lsn to start at */
-void log_start(log_t &log, checkpoint_no_t checkpoint_no, lsn_t checkpoint_lsn,
-               lsn_t start_lsn);
 
 
 
@@ -545,8 +507,7 @@ void log_stop_background_threads(log_t &log);
 /** @return true iff log threads are started */
 bool log_threads_active(const log_t &log);
 
-/** Free the log system data structures. Deallocate all the related memory. */
-void log_sys_close();
+
 
 /** The log writer thread co-routine.
 @see @ref sect_redo_log_writer
@@ -586,21 +547,6 @@ void log_checkpointer(log_t *log_ptr);
 
 
 
-/** Lock redo log. Both current lsn and checkpoint lsn will not change
-until the redo log is unlocked.
-@param[in,out]	log	redo log to lock */
-void log_position_lock(log_t &log);
-
-/** Unlock the locked redo log.
-@param[in,out]	log	redo log to unlock */
-void log_position_unlock(log_t &log);
-
-/** Collect coordinates in the locked redo log.
-@param[in]	log		locked redo log
-@param[out]	current_lsn	stores current lsn there
-@param[out]	checkpoint_lsn	stores checkpoint lsn there */
-void log_position_collect_lsn_info(const log_t &log, lsn_t *current_lsn,
-                                   lsn_t *checkpoint_lsn);
 
 #else /* !UNIV_HOTBACKUP */
 

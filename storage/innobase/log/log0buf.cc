@@ -196,13 +196,7 @@ static void log_wait_for_space_after_reserving(log_t &log,
   log_wait_for_space_in_log_buf(log, end_sn);
 }
 
-sn_t log_free_check_margin(const log_t &log) {
-  sn_t margins = log.concurrency_margin.load();
 
-  margins += log.dict_persist_margin.load();
-
-  return (margins);
-}
 
 void log_free_check_wait(log_t &log, sn_t sn) {
   auto stop_condition = [&log, sn](bool) {

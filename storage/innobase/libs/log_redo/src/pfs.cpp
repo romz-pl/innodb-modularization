@@ -22,4 +22,14 @@ mysql_pfs_key_t log_flush_notifier_thread_key;
 /** PFS key for the log write notifier thread. */
 mysql_pfs_key_t log_write_notifier_thread_key;
 
+mysql_pfs_key_t log_checkpointer_mutex_key;
+mysql_pfs_key_t log_closer_mutex_key;
+mysql_pfs_key_t log_writer_mutex_key;
+mysql_pfs_key_t log_flusher_mutex_key;
+mysql_pfs_key_t log_write_notifier_mutex_key;
+mysql_pfs_key_t log_flush_notifier_mutex_key;
+mysql_pfs_key_t log_cmdq_mutex_key;
+mysql_pfs_key_t log_sn_lock_key;
+mysql_pfs_key_t log_sys_arch_mutex_key;
+
 #endif /* UNIV_PFS_THREAD */

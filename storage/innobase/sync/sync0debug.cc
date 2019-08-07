@@ -45,6 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_list.h>
 #include <innodb/sync_array/sync_array_init.h>
 #include <innodb/sync_array/sync_array_close.h>
+#include <innodb/log_redo/pfs.h>
 
 #include "sync0debug.h"
 
