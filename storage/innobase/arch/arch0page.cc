@@ -47,6 +47,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_status.h>
 #include <innodb/io/os_file_create_t.h>
 #include <innodb/io/IORequest.h>
+#include <innodb/monitor/monitor_id_t.h>
 
 #include "arch0page.h"
 #include "arch0recv.h"

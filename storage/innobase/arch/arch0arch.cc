@@ -46,9 +46,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_create_directory.h>
 #include <innodb/io/os_file_create_t.h>
 #include <innodb/io/IORequest.h>
+#include <innodb/formatting/formatting.h>
 
 #include "arch0arch.h"
 #include "os0thread-create.h"
+#include "srv0srv.h"
 
 /** Log Archiver system global */
 Arch_Log_Sys *arch_log_sys = nullptr;

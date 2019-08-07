@@ -46,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_redo/meb_log_print_file_hdr.h>
 #include <innodb/log_redo/log_buffer_x_lock_exit.h>
 #include <innodb/log_redo/log_buffer_x_lock_enter.h>
 #include <innodb/wait/Wait_stats.h>
@@ -102,6 +103,37 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/Log_test.h>
 #include <innodb/log_redo/log_test.h>
+#include <innodb/log_redo/log_buffer_x_lock_own.h>
+#include <innodb/log_redo/log_checkpointer_mutex_enter.h>
+#include <innodb/log_redo/log_checkpointer_mutex_exit.h>
+#include <innodb/log_redo/log_checkpointer_mutex_own.h>
+#include <innodb/log_redo/log_closer_mutex_enter.h>
+#include <innodb/log_redo/log_closer_mutex_exit.h>
+#include <innodb/log_redo/log_closer_mutex_own.h>
+#include <innodb/log_redo/log_flusher_mutex_enter.h>
+#include <innodb/log_redo/log_flusher_mutex_enter_nowait.h>
+#include <innodb/log_redo/log_flusher_mutex_exit.h>
+#include <innodb/log_redo/log_flusher_mutex_own.h>
+#include <innodb/log_redo/log_flush_notifier_mutex_enter.h>
+#include <innodb/log_redo/log_flush_notifier_mutex_exit.h>
+#include <innodb/log_redo/log_flush_notifier_mutex_own.h>
+#include <innodb/log_redo/log_writer_mutex_enter.h>
+#include <innodb/log_redo/log_writer_mutex_enter_nowait.h>
+#include <innodb/log_redo/log_writer_mutex_exit.h>
+#include <innodb/log_redo/log_writer_mutex_own.h>
+#include <innodb/log_redo/log_write_notifier_mutex_enter.h>
+#include <innodb/log_redo/log_write_notifier_mutex_exit.h>
+#include <innodb/log_redo/log_write_notifier_mutex_own.h>
+
+
+
+#include <innodb/machine/data.h>
+#include "srv0mon.h"
+#include "srv0srv.h"
+#include <innodb/crc32/crc32.h>
+
+
+
 
 
 #ifndef UNIV_HOTBACKUP
@@ -574,63 +606,12 @@ void log_closer(log_t *log_ptr);
 @param[in,out]	log_ptr		pointer to redo log */
 void log_checkpointer(log_t *log_ptr);
 
-#define log_buffer_x_lock_own(log) log.sn_lock.x_own()
 
-#define log_checkpointer_mutex_enter(log) \
-  mutex_enter(&((log).checkpointer_mutex))
 
-#define log_checkpointer_mutex_exit(log) mutex_exit(&((log).checkpointer_mutex))
 
-#define log_checkpointer_mutex_own(log)      \
-  (mutex_own(&((log).checkpointer_mutex)) || \
-   !(log).checkpointer_thread_alive.load())
 
-#define log_closer_mutex_enter(log) mutex_enter(&((log).closer_mutex))
 
-#define log_closer_mutex_exit(log) mutex_exit(&((log).closer_mutex))
 
-#define log_closer_mutex_own(log) \
-  (mutex_own(&((log).closer_mutex)) || !(log).closer_thread_alive.load())
-
-#define log_flusher_mutex_enter(log) mutex_enter(&((log).flusher_mutex))
-
-#define log_flusher_mutex_enter_nowait(log) \
-  mutex_enter_nowait(&((log).flusher_mutex))
-
-#define log_flusher_mutex_exit(log) mutex_exit(&((log).flusher_mutex))
-
-#define log_flusher_mutex_own(log) \
-  (mutex_own(&((log).flusher_mutex)) || !(log).flusher_thread_alive.load())
-
-#define log_flush_notifier_mutex_enter(log) \
-  mutex_enter(&((log).flush_notifier_mutex))
-
-#define log_flush_notifier_mutex_exit(log) \
-  mutex_exit(&((log).flush_notifier_mutex))
-
-#define log_flush_notifier_mutex_own(log)      \
-  (mutex_own(&((log).flush_notifier_mutex)) || \
-   !(log).flush_notifier_thread_alive.load())
-
-#define log_writer_mutex_enter(log) mutex_enter(&((log).writer_mutex))
-
-#define log_writer_mutex_enter_nowait(log) \
-  mutex_enter_nowait(&((log).writer_mutex))
-
-#define log_writer_mutex_exit(log) mutex_exit(&((log).writer_mutex))
-
-#define log_writer_mutex_own(log) \
-  (mutex_own(&((log).writer_mutex)) || !(log).writer_thread_alive.load())
-
-#define log_write_notifier_mutex_enter(log) \
-  mutex_enter(&((log).write_notifier_mutex))
-
-#define log_write_notifier_mutex_exit(log) \
-  mutex_exit(&((log).write_notifier_mutex))
-
-#define log_write_notifier_mutex_own(log)      \
-  (mutex_own(&((log).write_notifier_mutex)) || \
-   !(log).write_notifier_thread_alive.load())
 
 
 /** Lock redo log. Both current lsn and checkpoint lsn will not change
@@ -661,6 +642,6 @@ void meb_log_print_file_hdr(byte *block);
 
 #endif /* !UNIV_HOTBACKUP */
 
-#include "log0log.ic"
+
 
 #endif /* !log0log_h */

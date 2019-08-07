@@ -40,11 +40,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_flush.h>
 #include <innodb/io/os_file_close.h>
 #include <innodb/io/os_file_get_size.h>
+#include <innodb/error/dberr_t.h>
 
 #include <mysql/components/services/page_track_service.h>
 #include "log0log.h"
 
 #include <list>
+#include <deque>
 
 class buf_page_t;
 

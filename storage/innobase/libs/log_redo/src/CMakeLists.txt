@@ -70,6 +70,28 @@ add_library( ${LIB_NAME} STATIC
     srv_log_write_events.cpp
     log_buffer_x_lock_enter.cpp
     log_buffer_x_lock_exit.cpp
+    log_buffer_x_lock_own.cpp
+    meb_log_print_file_hdr.cpp
+    log_checkpointer_mutex_enter.cpp
+    log_checkpointer_mutex_exit.cpp
+    log_checkpointer_mutex_own.cpp
+    log_closer_mutex_enter.cpp
+    log_closer_mutex_exit.cpp
+    log_closer_mutex_own.cpp
+    log_flusher_mutex_enter.cpp
+    log_flusher_mutex_enter_nowait.cpp
+    log_flusher_mutex_exit.cpp
+    log_flusher_mutex_own.cpp
+    log_flush_notifier_mutex_enter.cpp
+    log_flush_notifier_mutex_exit.cpp
+    log_flush_notifier_mutex_own.cpp
+    log_writer_mutex_enter.cpp
+    log_writer_mutex_enter_nowait.cpp
+    log_writer_mutex_exit.cpp
+    log_writer_mutex_own.cpp
+    log_write_notifier_mutex_enter.cpp
+    log_write_notifier_mutex_exit.cpp
+    log_write_notifier_mutex_own.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
