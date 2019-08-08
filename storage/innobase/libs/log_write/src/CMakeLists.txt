@@ -15,6 +15,13 @@ add_library( ${LIB_NAME} STATIC
     current_file_has_space.cpp
     start_next_file.cpp
     write_ahead_enough.cpp
+    current_write_ahead_enough.cpp
+    compute_next_write_ahead_end.cpp
+    compute_how_much_to_write.cpp
+    prepare_full_blocks.cpp
+    write_blocks.cpp
+    compute_write_event_slot.cpp
+    notify_about_advanced_write_lsn.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
