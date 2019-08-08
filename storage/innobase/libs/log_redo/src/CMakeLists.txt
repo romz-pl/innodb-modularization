@@ -121,6 +121,17 @@ add_library( ${LIB_NAME} STATIC
     log_stop_background_threads.cpp
     log_files_header_fill.cpp
     log_files_header_flush.cpp
+    log_advance_dirty_pages_added_up_to_lsn.cpp
+    srv_log_write_max_size.cpp
+    log_advance_ready_for_write_lsn.cpp
+    log_buffer_get_last_block.cpp
+    log_buffer_set_first_record_group.cpp
+    log_buffer_close.cpp
+    log_wait_for_space_in_log_recent_closed.cpp
+    log_buffer_write_completed.cpp
+    log_buffer_write.cpp
+    srv_stats_t.cpp
+    srv_stats.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

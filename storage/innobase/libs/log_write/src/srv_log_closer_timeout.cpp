@@ -1,0 +1,6 @@
+#include <innodb/log_write/srv_log_closer_timeout.h>
+
+#include <innodb/log_redo/flags.h>
+
+/** Initial sleep used in log closer after spin delay is finished. */
+ulong srv_log_closer_timeout = INNODB_LOG_CLOSER_TIMEOUT_DEFAULT;

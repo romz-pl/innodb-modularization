@@ -7,6 +7,7 @@
 #include <innodb/log_write/srv_cpu_usage.h>
 #include <innodb/log_write/srv_log_spin_cpu_abs_lwm.h>
 #include <innodb/wait/Wait_stats.h>
+#include <innodb/sync_event/os_event_wait_for.h>
 
 /** Small utility which is used inside log threads when they have to
 wait for next interesting event to happen. For performance reasons,

@@ -34,6 +34,23 @@ add_library( ${LIB_NAME} STATIC
     srv_flush_log_at_trx_commit.cpp
     Log_thread_waiting.cpp
     Log_write_to_file_requests_monitor.cpp
+    log_read_encryption.cpp
+    log_file_header_fill_encryption.cpp
+    log_write_encryption.cpp
+    log_rotate_encryption.cpp
+    redo_rotate_default_master_key.cpp
+    log_closer.cpp
+    srv_log_closer_spin_delay.cpp
+    srv_log_closer_timeout.cpp
+    log_wait_for_space_in_log_buf.cpp
+    log_wait_for_space_after_reserving.cpp
+    log_buffer_reserve.cpp
+    log_flush_notifier.cpp
+    srv_log_flush_notifier_spin_delay.cpp
+    srv_log_flush_notifier_timeout.cpp
+    srv_log_write_notifier_spin_delay.cpp
+    srv_log_write_notifier_timeout.cpp
+    log_write_notifier.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

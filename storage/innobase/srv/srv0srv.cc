@@ -256,10 +256,6 @@ ulonglong srv_log_file_size_requested;
 
 /* EXPERIMENTAL sys vars below - we need defaults set explicitly here. */
 
-/** When log writer follows links in the log recent written buffer,
-it stops when it has reached at least that many bytes to write,
-limiting how many bytes can be written in single call. */
-ulong srv_log_write_max_size = INNODB_LOG_WRITE_MAX_SIZE_DEFAULT;
 
 
 
@@ -289,30 +285,15 @@ ulong srv_log_flusher_spin_delay = INNODB_LOG_FLUSHER_SPIN_DELAY_DEFAULT;
 /** Initial timeout used to wait on flusher_event. */
 ulong srv_log_flusher_timeout = INNODB_LOG_FLUSHER_TIMEOUT_DEFAULT;
 
-/** Number of spin iterations, for which log write notifier thread is waiting
-for advanced flushed_to_disk_lsn without sleeping. */
-ulong srv_log_write_notifier_spin_delay =
-    INNODB_LOG_WRITE_NOTIFIER_SPIN_DELAY_DEFAULT;
 
-/** Initial timeout used to wait on write_notifier_event. */
-ulong srv_log_write_notifier_timeout =
-    INNODB_LOG_WRITE_NOTIFIER_TIMEOUT_DEFAULT;
 
-/** Number of spin iterations, for which log flush notifier thread is waiting
-for advanced flushed_to_disk_lsn without sleeping. */
-ulong srv_log_flush_notifier_spin_delay =
-    INNODB_LOG_FLUSH_NOTIFIER_SPIN_DELAY_DEFAULT;
 
-/** Initial timeout used to wait on flush_notifier_event. */
-ulong srv_log_flush_notifier_timeout =
-    INNODB_LOG_FLUSH_NOTIFIER_TIMEOUT_DEFAULT;
 
-/** Number of spin iterations, for which log closerr thread is waiting
-for a reachable untraversed link in recent_closed. */
-ulong srv_log_closer_spin_delay = INNODB_LOG_CLOSER_SPIN_DELAY_DEFAULT;
 
-/** Initial sleep used in log closer after spin delay is finished. */
-ulong srv_log_closer_timeout = INNODB_LOG_CLOSER_TIMEOUT_DEFAULT;
+
+
+
+
 
 /* End of EXPERIMENTAL sys vars */
 
@@ -419,9 +400,7 @@ NULL value when collecting statistics. By default, it is set to
 SRV_STATS_NULLS_EQUAL(0), ie. all NULL value are treated equal */
 ulong srv_innodb_stats_method = SRV_STATS_NULLS_EQUAL;
 
-#ifndef UNIV_HOTBACKUP
-srv_stats_t srv_stats;
-#endif /* !UNIV_HOTBACKUP */
+
 
 /* structure to pass status variables to MySQL */
 export_var_t export_vars;

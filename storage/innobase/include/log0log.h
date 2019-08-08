@@ -46,6 +46,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_redo/log_buffer_set_first_record_group.h>
+#include <innodb/log_redo/log_buffer_get_last_block.h>
+#include <innodb/log_redo/log_advance_ready_for_write_lsn.h>
+#include <innodb/log_write/redo_rotate_default_master_key.h>
+#include <innodb/log_write/log_rotate_encryption.h>
+#include <innodb/log_write/log_write_encryption.h>
 #include <innodb/log_redo/log_files_header_fill.h>
 #include <innodb/log_redo/log_threads_active.h>
 #include <innodb/log_redo/log_buffer_resize_low.h>
@@ -129,8 +135,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_test.h>
 #include <innodb/log_write/log_write_up_to.h>
 #include <innodb/log_write/Log_write_to_file_requests_monitor.h>
-
-
+#include <innodb/log_write/log_read_encryption.h>
+#include <innodb/log_redo/log_advance_dirty_pages_added_up_to_lsn.h>
+#include <innodb/log_redo/log_buffer_close.h>
+#include <innodb/log_redo/log_wait_for_space_in_log_recent_closed.h>
+#include <innodb/log_redo/log_buffer_write_completed.h>
+#include <innodb/log_redo/log_buffer_write.h>
+#include <innodb/log_write/log_wait_for_space_in_log_buf.h>
+#include <innodb/log_write/log_wait_for_space_after_reserving.h>
+#include <innodb/log_write/log_buffer_reserve.h>
+#include <innodb/log_write/log_flush_notifier.h>
+#include <innodb/log_write/Log_thread_waiting.h>
 
 #include <innodb/machine/data.h>
 #include "srv0mon.h"
@@ -147,95 +162,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 /* Declaration of log_buffer functions (definition in log0buf.cc). */
 
-/** Reserves space in the redo log for following write operations.
-Space is reserved for a given number of data bytes. Additionally
-bytes for required headers and footers of log blocks are reserved.
-
-After the space is reserved, range of lsn values from a start_lsn
-to an end_lsn is assigned. The log writer thread cannot proceed
-further than to the start_lsn, until a link start_lsn -> end_lsn
-has been added to the log recent written buffer.
-
-NOTE that the link is added after data is written to the reserved
-space in the log buffer. It is very critical to do all these steps
-as fast as possible, because very likely the log writer thread is
-waiting for the link.
-
-@see @ref sect_redo_log_buf_reserve
-@param[in,out]	log	redo log
-@param[in]	len	number of data bytes to reserve for write
-@return handle that represents the reservation */
-Log_handle log_buffer_reserve(log_t &log, size_t len);
-
-/** Writes data to the log buffer. The space in the redo log has to be
-reserved before calling to this function and lsn pointing to inside the
-reserved range of lsn values has to be provided.
-
-The write does not have to cover the whole reserved space, but may not
-overflow it. If it does not cover, then returned value should be used
-to start the next write operation. Note that finally we must use exactly
-all the reserved space.
-
-@see @ref sect_redo_log_buf_write
-@param[in,out]	log		redo log
-@param[in]	handle		handle for the reservation of space
-@param[in]	str		memory to write data from
-@param[in]	str_len		number of bytes to write
-@param[in]	start_lsn	lsn to start writing at (the reserved space)
-
-@return end_lsn after writing the data (in the reserved space), could be
-used to start the next write operation if there is still free space in
-the reserved space */
-lsn_t log_buffer_write(log_t &log, const Log_handle &handle, const byte *str,
-                       size_t str_len, lsn_t start_lsn);
-
-/** Adds a link start_lsn -> end_lsn to the log recent written buffer.
-
-This function must be called after the data has been written to the
-fragment of log buffer represented by range [start_lsn, end_lsn).
-After the link is added, the log writer may write the data to disk.
-
-NOTE that still dirty pages for the [start_lsn, end_lsn) are not added
-to flush lists when this function is called.
-
-@see @ref sect_redo_log_buf_add_links_to_recent_written
-@param[in,out]	log		redo log
-@param[in]	handle		handle for the reservation of space
-@param[in]	start_lsn	start_lsn of the link to add
-@param[in]	end_lsn		end_lsn of the link to add */
-void log_buffer_write_completed(log_t &log, const Log_handle &handle,
-                                lsn_t start_lsn, lsn_t end_lsn);
-
-/** Modifies header of log block in the log buffer, which contains
-a given lsn value, and sets offset to the first group of log records
-within the block.
-
-This is used by mtr after writing a log record group which ends at
-lsn belonging to different log block than lsn at which the group was
-started. When write was finished at the last data byte of log block,
-it is considered ended in the next log block, because the next data
-byte belongs to that block.
-
-During recovery, when recovery is started in the middle of some group
-of log records, it first looks for the beginning of the next group.
-
-@param[in,out]	log			redo log
-@param[in]	handle			handle for the reservation of space
-@param[in]	rec_group_end_lsn	lsn at which the first log record
-group starts within the block containing this lsn value */
-void log_buffer_set_first_record_group(log_t &log, const Log_handle &handle,
-                                       lsn_t rec_group_end_lsn);
-
-/** Adds a link start_lsn -> end_lsn to the log recent closed buffer.
-
-This is called after all dirty pages related to [start_lsn, end_lsn)
-have been added to corresponding flush lists.
-For detailed explanation - @see log0write.cc.
-
-@see @ref sect_redo_log_add_link_to_recent_closed
-@param[in,out]	log		redo log
-@param[in]	handle		handle for the reservation of space */
-void log_buffer_close(log_t &log, const Log_handle &handle);
 
 
 
@@ -246,27 +172,11 @@ void log_buffer_close(log_t &log, const Log_handle &handle);
 
 
 
-/** Get last redo block from redo buffer and end LSN. Note that it takes
-x-lock on the log buffer for a short period. Out values are always set,
-even when provided last_block is nullptr.
-@param[in,out]	log		redo log
-@param[out]	last_lsn	end lsn of last mtr
-@param[out]	last_block	last redo block
-@param[in,out]	block_len	length in bytes */
-void log_buffer_get_last_block(log_t &log, lsn_t &last_lsn, byte *last_block,
-                               uint32_t &block_len);
 
-/** Advances log.buf_ready_for_write_lsn using links in the recent written
-buffer. It's used by the log writer thread only.
-@param[in]	log	redo log
-@return true if and only if the lsn has been advanced */
-bool log_advance_ready_for_write_lsn(log_t &log);
 
-/** Advances log.buf_dirty_pages_added_up_to_lsn using links in the recent
-closed buffer. It's used by the log closer thread only.
-@param[in]	log	redo log
-@return true if and only if the lsn has been advanced */
-bool log_advance_dirty_pages_added_up_to_lsn(log_t &log);
+
+
+
 
 /** Validates that all slots in log recent written buffer for lsn values
 in range between begin and end, are empty. Used during tests, crashes the
@@ -287,26 +197,9 @@ void log_recent_closed_empty_validate(const log_t &log, lsn_t begin, lsn_t end);
 
 /* Declaration of remaining functions. */
 
-/** Waits until there is free space in the log recent closed buffer
-for any links start_lsn -> end_lsn, which start at provided start_lsn.
-It does not add any link.
 
-This is called just before dirty pages for [start_lsn, end_lsn)
-are added to flush lists. That's because we need to guarantee,
-that the delay until dirty page is added to flush list is limited.
-For detailed explanation - @see log0write.cc.
 
-@see @ref sect_redo_log_add_dirty_pages
-@param[in,out]	log   redo log
-@param[in]      lsn   lsn on which we wait (for any link: lsn -> x) */
-void log_wait_for_space_in_log_recent_closed(log_t &log, lsn_t lsn);
 
-/** Waits until there is free space in the log buffer. The free space has to be
-available for range of sn values ending at the provided sn.
-@see @ref sect_redo_log_waiting_for_writer
-@param[in]     log     redo log
-@param[in]     end_sn  end of the range of sn values */
-void log_wait_for_space_in_log_buf(log_t &log, sn_t end_sn);
 
 /** Waits until there is free space for range of sn values ending
 at the provided sn, in both the log buffer and in the log files.
@@ -328,27 +221,13 @@ void log_free_check_wait(log_t &log, sn_t sn);
 
 
 
-/* Read the first log file header to get the encryption
-information if it exist.
-@return true if success */
-bool log_read_encryption();
 
-/** Write the encryption info into the log file header(the 3rd block).
-It just need to flush the file header block with current master key.
-@param[in]	key	encryption key
-@param[in]	iv	encryption iv
-@param[in]	is_boot	if it is for bootstrap
-@return true if success. */
-bool log_write_encryption(byte *key, byte *iv, bool is_boot);
 
-/** Rotate the redo log encryption
-It will re-encrypt the redo log encryption metadata and write it to
-redo log file header.
-@return true if success. */
-bool log_rotate_encryption();
 
-/** Rotate default master key for redo log encryption. */
-void redo_rotate_default_master_key();
+
+
+
+
 
 /** Requests a sharp checkpoint write for provided or greater lsn.
 @param[in,out]	log	redo log
@@ -462,20 +341,11 @@ void log_writer(log_t *log_ptr);
 @param[in,out]	log_ptr		pointer to redo log */
 void log_flusher(log_t *log_ptr);
 
-/** The log flush notifier thread co-routine.
-@see @ref sect_redo_log_flush_notifier
-@param[in,out]	log_ptr		pointer to redo log */
-void log_flush_notifier(log_t *log_ptr);
 
-/** The log write notifier thread co-routine.
-@see @ref sect_redo_log_write_notifier
-@param[in,out]	log_ptr		pointer to redo log */
-void log_write_notifier(log_t *log_ptr);
 
-/** The log closer thread co-routine.
-@see @ref sect_redo_log_closer
-@param[in,out]	log_ptr		pointer to redo log */
-void log_closer(log_t *log_ptr);
+
+
+
 
 /** The log checkpointer thread co-routine.
 @see @ref sect_redo_log_checkpointer
