@@ -46,6 +46,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_redo/log_files_header_fill.h>
+#include <innodb/log_redo/log_threads_active.h>
+#include <innodb/log_redo/log_buffer_resize_low.h>
+#include <innodb/log_redo/log_write_ahead_resize.h>
 #include <innodb/log_redo/log_update_limits.h>
 #include <innodb/log_redo/log_position_collect_lsn_info.h>
 #include <innodb/log_redo/log_position_unlock.h>
@@ -123,27 +127,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/Log_test.h>
 #include <innodb/log_redo/log_test.h>
-#include <innodb/log_redo/log_buffer_x_lock_own.h>
-#include <innodb/log_redo/log_checkpointer_mutex_enter.h>
-#include <innodb/log_redo/log_checkpointer_mutex_exit.h>
-#include <innodb/log_redo/log_checkpointer_mutex_own.h>
-#include <innodb/log_redo/log_closer_mutex_enter.h>
-#include <innodb/log_redo/log_closer_mutex_exit.h>
-#include <innodb/log_redo/log_closer_mutex_own.h>
-#include <innodb/log_redo/log_flusher_mutex_enter.h>
-#include <innodb/log_redo/log_flusher_mutex_enter_nowait.h>
-#include <innodb/log_redo/log_flusher_mutex_exit.h>
-#include <innodb/log_redo/log_flusher_mutex_own.h>
-#include <innodb/log_redo/log_flush_notifier_mutex_enter.h>
-#include <innodb/log_redo/log_flush_notifier_mutex_exit.h>
-#include <innodb/log_redo/log_flush_notifier_mutex_own.h>
-#include <innodb/log_redo/log_writer_mutex_enter.h>
-#include <innodb/log_redo/log_writer_mutex_enter_nowait.h>
-#include <innodb/log_redo/log_writer_mutex_exit.h>
-#include <innodb/log_redo/log_writer_mutex_own.h>
-#include <innodb/log_redo/log_write_notifier_mutex_enter.h>
-#include <innodb/log_redo/log_write_notifier_mutex_exit.h>
-#include <innodb/log_redo/log_write_notifier_mutex_own.h>
 
 
 
@@ -400,17 +383,7 @@ bool log_make_latest_checkpoint();
 @param[in]	header	0 or LOG_CHECKPOINT_1 or LOG_CHECKPOINT2 */
 void log_files_header_read(log_t &log, uint32_t header);
 
-/** Fill redo log header.
-@param[out]	buf		filled buffer
-@param[in]	start_lsn	log start LSN
-@param[in]	creator		creator of the header */
-void log_files_header_fill(byte *buf, lsn_t start_lsn, const char *creator);
 
-/** Writes a log file header to the log file space.
-@param[in]	log		redo log
-@param[in]	nth_file	header for the nth file in the log files
-@param[in]	start_lsn	log file data starts at this lsn */
-void log_files_header_flush(log_t &log, uint32_t nth_file, lsn_t start_lsn);
 
 /** Changes format of redo files to previous format version.
 
@@ -444,27 +417,8 @@ void log_files_write_checkpoint(log_t &log, lsn_t next_checkpoint_lsn);
 
 #ifndef UNIV_HOTBACKUP
 
-/** Changes size of the log buffer. This is a thread-safe version.
-It is used by SET GLOBAL innodb_log_buffer_size = X.
-@param[in,out]	log		redo log
-@param[in]	new_size	requested new size
-@return true iff succeeded in resize */
-bool log_buffer_resize(log_t &log, size_t new_size);
 
-/** Changes size of the log buffer. This is a non-thread-safe version
-which might be invoked only when there are no concurrent possible writes
-to the log buffer. It is used in log_buffer_reserve() when a requested
-size to reserve is larger than size of the log buffer.
-@param[in,out]	log		redo log
-@param[in]	new_size	requested new size
-@param[in]	end_lsn		maximum lsn written to log buffer
-@return true iff succeeded in resize */
-bool log_buffer_resize_low(log_t &log, size_t new_size, lsn_t end_lsn);
 
-/** Resizes the write ahead buffer in the redo log.
-@param[in,out]	log		redo log
-@param[in]	new_size	new size (in bytes) */
-void log_write_ahead_resize(log_t &log, size_t new_size);
 
 /** Increase concurrency_margin used inside log_free_check() calls. */
 void log_increase_concurrency_margin(log_t &log);
@@ -497,15 +451,7 @@ This may not be called during read-only mode.
 @param[in,out]	log	redo log */
 void log_start_background_threads(log_t &log);
 
-/** Stops all the log background threads. This can be called only,
-when the threads are active. This should never be called concurrently.
-This may not be called in read-only mode. Note that is is impossible
-to start log background threads in such case.
-@param[in,out]	log	redo log */
-void log_stop_background_threads(log_t &log);
 
-/** @return true iff log threads are started */
-bool log_threads_active(const log_t &log);
 
 
 

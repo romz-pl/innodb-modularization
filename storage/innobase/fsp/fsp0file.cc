@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_get_size.h>
 #include <innodb/io/os_file_get_last_error.h>
 #include <innodb/io/IORequest.h>
-#include <innodb/log_redo/recv_recovery_is_on.h>
+#include <innodb/log_types/recv_recovery_is_on.h>
 
 #include "ha_prototypes.h"
 #include "dict0dd.h"

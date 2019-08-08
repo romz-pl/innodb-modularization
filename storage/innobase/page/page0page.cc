@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_validate.h>
 #include <innodb/record/rec_get_node_ptr_flag.h>
 #include <innodb/record/rec_get_start.h>
-#include <innodb/log_redo/recv_recovery_is_on.h>
+#include <innodb/log_types/recv_recovery_is_on.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

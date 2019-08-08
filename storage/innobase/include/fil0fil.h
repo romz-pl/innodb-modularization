@@ -109,7 +109,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/disk/fil_page_get_type.h>
 #include <innodb/tablespace/general_space_name.h>
 #include <innodb/tablespace/undo_space_name.h>
-#include <innodb/log_redo/recv_recovery_on.h>
+#include <innodb/log_types/recv_recovery_on.h>
 
 #include "dict0types.h"
 #include <innodb/disk/flags.h>

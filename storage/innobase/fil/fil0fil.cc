@@ -89,7 +89,7 @@ The tablespace memory cache */
 #include <innodb/io/os_file_get_last_error.h>
 #include <innodb/page/page_zip_set_size.h>
 #include <innodb/page/page_zip_des_init.h>
-#include <innodb/log_redo/recv_recovery_is_on.h>
+#include <innodb/log_types/recv_recovery_is_on.h>
 
 #include "btr0btr.h"
 #include "buf0buf.h"

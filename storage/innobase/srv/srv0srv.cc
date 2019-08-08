@@ -131,8 +131,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** Structure with state of srv background threads. */
 Srv_threads srv_threads;
 
-/** Structure with cpu usage information. */
-Srv_cpu_usage srv_cpu_usage;
 #endif /* UNIV_HOTBACKUP */
 
 #ifdef INNODB_DD_TABLE
@@ -253,13 +251,6 @@ ulonglong srv_log_file_size;
 ulonglong srv_log_file_size_requested;
 
 
-
-/** Minimum absolute value of cpu time for which spin-delay is used. */
-uint srv_log_spin_cpu_abs_lwm;
-
-/** Maximum percentage of cpu time for which spin-delay is used. */
-uint srv_log_spin_cpu_pct_hwm;
-
 /** Maximum value of average log flush time for which spin-delay is used.
 When flushing takes longer, user threads no longer spin when waiting for
 flushed redo. Expressed in microseconds. */
@@ -276,15 +267,7 @@ ulong srv_log_write_max_size = INNODB_LOG_WRITE_MAX_SIZE_DEFAULT;
 
 
 
-/** Number of spin iterations, when spinning and waiting for log buffer
-written up to given LSN, before we fallback to loop with sleeps.
-This is not used when user thread has to wait for log flushed to disk. */
-ulong srv_log_wait_for_write_spin_delay =
-    INNODB_LOG_WAIT_FOR_WRITE_SPIN_DELAY_DEFAULT;
 
-/** Timeout used when waiting for redo write (microseconds). */
-ulong srv_log_wait_for_write_timeout =
-    INNODB_LOG_WAIT_FOR_WRITE_TIMEOUT_DEFAULT;
 
 /** Number of spin iterations, when spinning and waiting for log flushed. */
 ulong srv_log_wait_for_flush_spin_delay =

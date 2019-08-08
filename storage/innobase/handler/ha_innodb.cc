@@ -46,6 +46,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/log_write/srv_log_spin_cpu_pct_hwm.h>
+#include <innodb/log_redo/log_checkpointer_mutex_exit.h>
+#include <innodb/log_redo/log_writer_mutex_exit.h>
+#include <innodb/log_redo/log_writer_mutex_enter.h>
+#include <innodb/log_redo/log_checkpointer_mutex_enter.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/memory/mem_heap_strdupl.h>
 #include <innodb/memory/mem_heap_empty.h>
@@ -70,6 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_is_o_direct_supported.h>
 #include <innodb/io/os_file_set_umask.h>
 #include <innodb/log_redo/pfs.h>
+#include <innodb/log_redo/log_buffer_resize.h>
 
 #include <auto_thd.h>
 #include <errno.h>

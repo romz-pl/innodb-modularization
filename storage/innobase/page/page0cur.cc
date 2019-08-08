@@ -51,7 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_make_valid.h>
 #include <innodb/record/rec_offs_data_size.h>
 #include <innodb/record/rec_get_end.h>
-#include <innodb/log_redo/recv_recovery_is_on.h>
+#include <innodb/log_types/recv_recovery_is_on.h>
 
 #include "page0cur.h"
 

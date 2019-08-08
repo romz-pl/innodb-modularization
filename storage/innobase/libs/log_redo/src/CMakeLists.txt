@@ -59,9 +59,6 @@ add_library( ${LIB_NAME} STATIC
     log_translate_lsn_to_sn.cpp
     log_translate_sn_to_lsn.cpp
     log_write_to_file_requests_are_frequent.cpp
-    mlog_id_t.cpp
-    recv_recovery_is_on.cpp
-    recv_recovery_on.cpp
     srv_log_buffer_size.cpp
     srv_log_flush_events.cpp
     srv_log_recent_closed_size.cpp
@@ -116,6 +113,14 @@ add_library( ${LIB_NAME} STATIC
     log_position_lock.cpp
     log_position_unlock.cpp
     log_position_collect_lsn_info.cpp
+    log_calc_buf_size.cpp
+    log_write_ahead_resize.cpp
+    log_buffer_resize.cpp
+    log_buffer_resize_low.cpp
+    log_threads_active.cpp
+    log_stop_background_threads.cpp
+    log_files_header_fill.cpp
+    log_files_header_flush.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -130,8 +135,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     crc32
-    log_types
-    monitor
+    tablespace
     PRIVATE
 )
 

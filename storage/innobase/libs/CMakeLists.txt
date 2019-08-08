@@ -27,6 +27,7 @@ add_subdirectory( ioasync )
 
 add_subdirectory( log_redo )
 add_subdirectory( log_types )
+add_subdirectory( log_write )
 add_subdirectory( logger )
 add_subdirectory( lst )
 

@@ -1,6 +1,6 @@
-#include <innodb/log_redo/recv_recovery_is_on.h>
+#include <innodb/log_types/recv_recovery_is_on.h>
 
-#include <innodb/log_redo/recv_recovery_on.h>
+#include <innodb/log_types/recv_recovery_on.h>
 
 /** Returns true if recovery is currently running.
 @return recv_recovery_on */

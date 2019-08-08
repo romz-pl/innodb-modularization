@@ -44,6 +44,10 @@ the file COPYING.Google.
 
  *******************************************************/
 
+#include <innodb/log_redo/log_checkpointer_mutex_exit.h>
+#include <innodb/log_redo/log_checkpointer_mutex_enter.h>
+#include <innodb/log_redo/log_writer_mutex_enter.h>
+#include <innodb/log_redo/log_writer_mutex_exit.h>
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/wait/ut_wait_for.h>
@@ -54,7 +58,8 @@ the file COPYING.Google.
 #include <innodb/io/IORequestLogWrite.h>
 #include <innodb/io/srv_is_being_started.h>
 #include <innodb/log_types/log_header_format_t.h>
-#include <innodb/log_redo/recv_recovery_is_on.h>
+#include <innodb/log_types/recv_recovery_is_on.h>
+#include <innodb/log_redo/log_files_header_flush.h>
 
 #include "ha_prototypes.h"
 
@@ -272,46 +277,7 @@ static void log_update_available_for_checkpoint_lsn(log_t &log) {
 
 /* @{ */
 
-void log_files_header_fill(byte *buf, lsn_t start_lsn, const char *creator) {
-  memset(buf, 0, OS_FILE_LOG_BLOCK_SIZE);
 
-  mach_write_to_4(buf + LOG_HEADER_FORMAT, LOG_HEADER_FORMAT_CURRENT);
-  mach_write_to_8(buf + LOG_HEADER_START_LSN, start_lsn);
-
-  strncpy(reinterpret_cast<char *>(buf) + LOG_HEADER_CREATOR, creator,
-          LOG_HEADER_CREATOR_END - LOG_HEADER_CREATOR);
-
-  ut_ad(LOG_HEADER_CREATOR_END - LOG_HEADER_CREATOR >= strlen(creator));
-
-  log_block_set_checksum(buf, log_block_calc_checksum_crc32(buf));
-}
-
-void log_files_header_flush(log_t &log, uint32_t nth_file, lsn_t start_lsn) {
-  ut_ad(log_writer_mutex_own(log));
-
-  MONITOR_INC(MONITOR_LOG_NEXT_FILE);
-
-  ut_a(nth_file < log.n_files);
-
-  byte *buf = log.file_header_bufs[nth_file];
-
-  log_files_header_fill(buf, start_lsn, LOG_HEADER_CREATOR_CURRENT);
-
-  DBUG_PRINT("ib_log", ("write " LSN_PF " file " ULINTPF " header", start_lsn,
-                        ulint(nth_file)));
-
-  const auto dest_offset = nth_file * uint64_t{log.file_size};
-
-  const auto page_no =
-      static_cast<page_no_t>(dest_offset / univ_page_size.physical());
-
-  auto err = fil_redo_io(
-      IORequestLogWrite, page_id_t{log.files_space_id, page_no}, univ_page_size,
-      static_cast<ulint>(dest_offset % univ_page_size.physical()),
-      OS_FILE_LOG_BLOCK_SIZE, buf);
-
-  ut_a(err == DB_SUCCESS);
-}
 
 void log_files_header_read(log_t &log, uint32_t header) {
   ut_a(srv_is_being_started);

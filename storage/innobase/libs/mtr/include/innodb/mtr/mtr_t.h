@@ -6,7 +6,7 @@
 #include <innodb/mtr/mtr_memo_type_t.h>
 #include <innodb/mtr/mtr_log_t.h>
 #include <innodb/mtr/mtr_state_t.h>
-#include <innodb/log_redo/mlog_id_t.h>
+#include <innodb/log_types/mlog_id_t.h>
 
 #include <innodb/buffer/buf_block_t.h>
 

@@ -1,6 +1,6 @@
 #include <innodb/mtr/Command.h>
 
-#include <innodb/log_redo/recv_recovery_on.h>
+#include <innodb/log_types/recv_recovery_on.h>
 #include <innodb/mtr/Release_all.h>
 #include <innodb/mtr/Iterate.h>
 #include <innodb/mtr/Add_dirty_blocks_to_flush_list.h>

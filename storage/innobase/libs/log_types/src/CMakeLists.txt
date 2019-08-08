@@ -17,6 +17,9 @@ add_library( ${LIB_NAME} STATIC
     log_t.cpp
     Link_buf.cpp
     LSN_PF.cpp
+    mlog_id_t.cpp
+    recv_recovery_is_on.cpp
+    recv_recovery_on.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

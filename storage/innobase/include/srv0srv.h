@@ -49,6 +49,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define srv0srv_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/log_write/srv_log_spin_cpu_abs_lwm.h>
+#include <innodb/log_write/srv_cpu_usage.h>
+#include <innodb/log_write/Srv_cpu_usage.h>
 #include <innodb/time/ib_time_t.h>
 #include <innodb/io/os_file_stat_t.h>
 #include <innodb/ioasync/srv_reset_io_thread_op_info.h>
@@ -185,19 +189,11 @@ struct Srv_threads {
   bool m_ts_alter_encrypt_thread_active;
 };
 
-struct Srv_cpu_usage {
-  int n_cpu;
-  double utime_abs;
-  double stime_abs;
-  double utime_pct;
-  double stime_pct;
-};
+
 
 /** Structure with state of srv background threads. */
 extern Srv_threads srv_threads;
 
-/** Structure with cpu usage information. */
-extern Srv_cpu_usage srv_cpu_usage;
 
 extern Log_DDL *log_ddl;
 
@@ -345,19 +341,9 @@ extern ulong srv_log_write_max_size;
 
 
 
-/** Minimum absolute value of cpu time for which spin-delay is used. */
-extern uint srv_log_spin_cpu_abs_lwm;
 
-/** Maximum percentage of cpu time for which spin-delay is used. */
-extern uint srv_log_spin_cpu_pct_hwm;
 
-/** Number of spin iterations, when spinning and waiting for log buffer
-written up to given LSN, before we fallback to loop with sleeps.
-This is not used when user thread has to wait for log flushed to disk. */
-extern ulong srv_log_wait_for_write_spin_delay;
 
-/** Timeout used when waiting for redo write (microseconds). */
-extern ulong srv_log_wait_for_write_timeout;
 
 /** Number of spin iterations, when spinning and waiting for log flushed. */
 extern ulong srv_log_wait_for_flush_spin_delay;

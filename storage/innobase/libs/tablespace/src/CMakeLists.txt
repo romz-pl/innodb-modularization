@@ -189,7 +189,7 @@ target_link_libraries(
     enum
     io
     ioasync
-    log_redo
+    log_types
     page
     string
     PRIVATE

@@ -1,7 +1,7 @@
 #include <innodb/log_redo/log_buffer_flush_to_disk.h>
 
 #include <innodb/log_redo/log_get_lsn.h>
-#include <innodb/log_redo/recv_recovery_is_on.h>
+#include <innodb/log_types/recv_recovery_is_on.h>
 
 
 extern bool srv_read_only_mode;

@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <time.h>
 
+#include <innodb/monitor/MONITOR_INC_WAIT_STATS_EX.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>
 #include <innodb/sync_event/os_event_reset.h>

@@ -86,7 +86,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include <innodb/monitor/MONITOR_SAVE_START.h>
 #include <innodb/monitor/MONITOR_SAVE_LAST.h>
 #include <innodb/monitor/MONITOR_SET_DIFF.h>
-
+#include <innodb/monitor/MONITOR_INC_WAIT_STATS.h>
+#include <innodb/monitor/MONITOR_INC_WAIT_STATS_EX.h>
 
 
 
@@ -157,16 +158,6 @@ void srv_mon_default_on(void);
 #define MONITOR_DEC(x) ((void)0)
 #endif /* !UNIV_HOTBACKUP */
 
-#define MONITOR_INC_WAIT_STATS_EX(monitor_prefix, monitor_sufix, wait_stats) \
-  if ((wait_stats).wait_loops == 0) {                                        \
-    MONITOR_INC(monitor_prefix##NO_WAITS##monitor_sufix);                    \
-  } else {                                                                   \
-    MONITOR_INC(monitor_prefix##WAITS##monitor_sufix);                       \
-    MONITOR_INC_VALUE(monitor_prefix##WAIT_LOOPS##monitor_sufix,             \
-                      (wait_stats).wait_loops);                              \
-  }
 
-#define MONITOR_INC_WAIT_STATS(monitor_prefix, wait_stats) \
-  MONITOR_INC_WAIT_STATS_EX(monitor_prefix, , wait_stats);
 
 #endif

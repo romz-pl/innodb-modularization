@@ -4,7 +4,7 @@
 #include <innodb/assert/assert.h>
 #include <innodb/machine/data.h>
 #include <innodb/tablespace/consts.h>
-#include <innodb/log_redo/mlog_id_t.h>
+#include <innodb/log_types/mlog_id_t.h>
 #include <innodb/tablespace/mach_read_ulint.h>
 
 

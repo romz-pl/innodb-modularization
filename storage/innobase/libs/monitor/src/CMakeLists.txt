@@ -48,6 +48,8 @@ add_library( ${LIB_NAME} STATIC
     monitor_set_tbl.cpp
     monitor_type_t.cpp
     monitor_value_t.cpp
+    MONITOR_INC_WAIT_STATS.cpp
+    MONITOR_INC_WAIT_STATS_EX.cpp
 )
 target_compile_options( ${LIB_NAME} PRIVATE  )
 

@@ -21,12 +21,12 @@ SET( INNODB_COMPONENT_LIBS
 
     # B
     #bit
-    buffer
+    #buffer
 
     # C
     #compiler_hints
     #counter
-    crc32
+    #crc32
 
     # D
     data_types
@@ -46,8 +46,9 @@ SET( INNODB_COMPONENT_LIBS
     #ioasync
 
     # L
-    log_redo
+    #log_redo
     #log_types
+    log_write
     #logger
     #lst
 

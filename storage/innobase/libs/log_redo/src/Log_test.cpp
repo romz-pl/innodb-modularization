@@ -47,7 +47,7 @@ the file COPYING.Google.
 #include <innodb/assert/assert.h>
 #include <innodb/log_redo/flags.h>
 #include <innodb/log_redo/log_lsn_validate.h>
-#include <innodb/log_redo/mlog_id_t.h>
+#include <innodb/log_types/mlog_id_t.h>
 #include <innodb/machine/data.h>
 #include <innodb/random/random.h>
 

@@ -51,7 +51,7 @@
 #include <innodb/tablespace/srv_start_raw_disk_in_use.h>
 #include <innodb/time/ib_time_t.h>
 #include <innodb/time/ut_time.h>
-#include <innodb/log_redo/recv_recovery_on.h>
+#include <innodb/log_types/recv_recovery_on.h>
 #include <innodb/tablespace/fil_write_zeros.h>
 #include <innodb/io/os_has_said_disk_full.h>
 #include <innodb/io/IORequestWrite.h>
