@@ -127,6 +127,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/Log_test.h>
 #include <innodb/log_redo/log_test.h>
+#include <innodb/log_write/log_write_up_to.h>
+#include <innodb/log_write/Log_write_to_file_requests_monitor.h>
 
 
 
@@ -324,12 +326,7 @@ void log_free_check_wait(log_t &log, sn_t sn);
 
 
 
-/** Waits until the redo log is written up to a provided lsn.
-@param[in]  log             redo log
-@param[in]  lsn             lsn to wait for
-@param[in]  flush_to_disk   true: wait until it is flushed
-@return statistics about waiting inside */
-Wait_stats log_write_up_to(log_t &log, lsn_t lsn, bool flush_to_disk);
+
 
 /* Read the first log file header to get the encryption
 information if it exist.

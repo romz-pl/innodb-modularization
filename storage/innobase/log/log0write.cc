@@ -69,6 +69,25 @@ the file COPYING.Google.
 #include <innodb/io/IORequestLogRead.h>
 #include <innodb/io/IORequestLogWrite.h>
 #include <innodb/log_redo/log_files_header_flush.h>
+#include <innodb/log_write/validate_buffer.h>
+#include <innodb/log_write/validate_start_lsn.h>
+#include <innodb/log_write/compute_real_offset.h>
+#include <innodb/log_write/current_file_has_space.h>
+#include <innodb/log_write/start_next_file.h>
+#include <innodb/log_write/write_ahead_enough.h>
+#include <innodb/log_write/current_write_ahead_enough.h>
+#include <innodb/log_write/compute_next_write_ahead_end.h>
+#include <innodb/log_write/compute_how_much_to_write.h>
+#include <innodb/log_write/prepare_full_blocks.h>
+#include <innodb/log_write/write_blocks.h>
+#include <innodb/log_write/compute_write_event_slot.h>
+#include <innodb/log_write/copy_to_write_ahead_buffer.h>
+#include <innodb/log_write/prepare_for_write_ahead.h>
+#include <innodb/log_write/update_current_write_ahead.h>
+#include <innodb/log_write/log_wait_for_flush.h>
+#include <innodb/log_write/Log_thread_waiting.h>
+#include <innodb/log_write/Log_write_to_file_requests_monitor.h>
+
 
 #include "ha_prototypes.h"
 
@@ -146,277 +165,6 @@ static void log_flush_low(log_t &log);
 static bool log_file_header_fill_encryption(byte *buf, byte *key, byte *iv,
                                             bool is_boot);
 
-/**************************************************/ /**
-
- @name Waiting for redo log written or flushed up to lsn
-
- *******************************************************/
-
-/* @{ */
-
-
-
-/** Waits until redo log is flushed up to provided lsn (or greater).
-@param[in]	log	redo log
-@param[in]	lsn	wait until log.flushed_to_disk_lsn >= lsn
-@return		statistics related to waiting inside */
-static Wait_stats log_wait_for_flush(const log_t &log, lsn_t lsn) {
-  if (log.write_lsn.load(std::memory_order_relaxed) < lsn) {
-    os_event_set(log.writer_event);
-  }
-  os_event_set(log.flusher_event);
-
-  uint64_t max_spins = log_max_spins_when_waiting_in_user_thread(
-      srv_log_wait_for_flush_spin_delay);
-
-  if (log.flush_avg_time >= srv_log_wait_for_flush_spin_hwm) {
-    max_spins = 0;
-  }
-
-  auto stop_condition = [&log, lsn](bool wait) {
-    LOG_SYNC_POINT("log_wait_for_flush_before_flushed_to_disk_lsn");
-
-    if (log.flushed_to_disk_lsn.load() >= lsn) {
-      return (true);
-    }
-
-    if (wait) {
-      if (log.write_lsn.load(std::memory_order_relaxed) < lsn) {
-        os_event_set(log.writer_event);
-      }
-
-      os_event_set(log.flusher_event);
-    }
-
-    LOG_SYNC_POINT("log_wait_for_flush_before_wait");
-    return (false);
-  };
-
-  size_t slot =
-      (lsn - 1) / OS_FILE_LOG_BLOCK_SIZE & (log.flush_events_size - 1);
-
-  const auto wait_stats =
-      os_event_wait_for(log.flush_events[slot], max_spins,
-                        srv_log_wait_for_flush_timeout, stop_condition);
-
-  MONITOR_INC_WAIT_STATS(MONITOR_LOG_ON_FLUSH_, wait_stats);
-
-  return (wait_stats);
-}
-
-Wait_stats log_write_up_to(log_t &log, lsn_t end_lsn, bool flush_to_disk) {
-  ut_a(!srv_read_only_mode);
-
-  /* If we were updating log.flushed_to_disk_lsn while parsing redo log
-  during recovery, we would have valid value here and we would not need
-  to explicitly exit because of the recovery. However we do not update
-  the log.flushed_to_disk during recovery (it is zero).
-
-  On the other hand, when we apply log records during recovery, we modify
-  pages and update their oldest/newest_modification. The modified pages
-  become dirty. When size of the buffer pool is too small, some pages
-  have to be flushed from LRU, to reclaim a free page for a next read.
-
-  When flushing such dirty pages, we notice that newest_modification != 0,
-  so the redo log has to be flushed up to the newest_modification, before
-  flushing the page. In such case we end up here during recovery.
-
-  Note that redo log is actually flushed, because changes to the page
-  are caused by applying the redo. */
-
-  if (recv_no_ibuf_operations) {
-    /* Recovery is running and no operations on the log files are
-    allowed yet, which is implicitly deduced from the fact, that
-    still ibuf merges are disallowed. */
-    return (Wait_stats{0});
-  }
-
-  /* We do not need to have exact numbers and we do not care if we
-  lost some increments for heavy workload. The value only has usage
-  when it is low workload and we need to discover that we request
-  redo write or flush only from time to time. In such case we prefer
-  to avoid spinning in log threads to save on CPU power usage. */
-  log.write_to_file_requests_total.store(
-      log.write_to_file_requests_total.load(std::memory_order_relaxed) + 1,
-      std::memory_order_relaxed);
-
-  ut_a(end_lsn != LSN_MAX);
-
-  ut_a(end_lsn % OS_FILE_LOG_BLOCK_SIZE == 0 ||
-       end_lsn % OS_FILE_LOG_BLOCK_SIZE >= LOG_BLOCK_HDR_SIZE);
-
-  ut_a(end_lsn % OS_FILE_LOG_BLOCK_SIZE <=
-       OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_TRL_SIZE);
-
-  ut_ad(end_lsn <= log_get_lsn(log));
-
-  if (flush_to_disk) {
-    if (log.flushed_to_disk_lsn.load() >= end_lsn) {
-      return (Wait_stats{0});
-    }
-
-    Wait_stats wait_stats{0};
-
-    if (srv_flush_log_at_trx_commit != 1) {
-      /* We need redo flushed, but because trx != 1, we have
-      disabled notifications sent from log_writer to log_flusher.
-
-      The log_flusher might be sleeping for 1 second, and we need
-      quick response here. Log_writer avoids waking up log_flusher,
-      so we must do it ourselves here.
-
-      However, before we wake up log_flusher, we must ensure that
-      log.write_lsn >= lsn. Otherwise log_flusher could flush some
-      data which was ready for lsn values smaller than end_lsn and
-      return to sleeping for next 1 second. */
-
-      if (log.write_lsn.load() < end_lsn) {
-        wait_stats = log_wait_for_write(log, end_lsn);
-      }
-    }
-
-    /* Wait until log gets flushed up to end_lsn. */
-    return (wait_stats + log_wait_for_flush(log, end_lsn));
-
-  } else {
-    if (log.write_lsn.load() >= end_lsn) {
-      return (Wait_stats{0});
-    }
-
-    /* Wait until log gets written up to end_lsn. */
-    return (log_wait_for_write(log, end_lsn));
-  }
-}
-
-/* @} */
-
-/**************************************************/ /**
-
- @name Log threads waiting strategy
-
- *******************************************************/
-
-/* @{ */
-
-/** Small utility which is used inside log threads when they have to
-wait for next interesting event to happen. For performance reasons,
-it might make sense to use spin-delay in front of the wait on event
-in such cases. The strategy is first to spin and then to fallback to
-the wait on event. However, for idle servers or work-loads which do
-not need redo being flushed as often, we prefer to avoid spinning.
-This utility solves such problems and provides waiting mechanism. */
-struct Log_thread_waiting {
-  Log_thread_waiting(const log_t &log, os_event_t event, uint64_t spin_delay,
-                     uint64_t min_timeout)
-      : m_log(log),
-        m_event{event},
-        m_spin_delay{static_cast<uint32_t>(std::min(
-            uint64_t(std::numeric_limits<uint32_t>::max()), spin_delay))},
-        m_min_timeout{static_cast<uint32_t>(
-            /* No more than 1s */
-            std::min(uint64_t{1000 * 1000}, min_timeout))} {}
-
-  template <typename Stop_condition>
-  inline Wait_stats wait(Stop_condition stop_condition) {
-    auto spin_delay = m_spin_delay;
-    auto min_timeout = m_min_timeout;
-
-    /** We might read older value, it just decides on spinning.
-    Correctness does not depend on this. Only local performance
-    might depend on this but it's anyway heuristic and depends
-    on average which by definition has lag. No reason to make
-    extra barriers here. */
-
-    const auto req_interval =
-        m_log.write_to_file_requests_interval.load(std::memory_order_relaxed);
-
-    if (srv_cpu_usage.utime_abs < srv_log_spin_cpu_abs_lwm ||
-        !log_write_to_file_requests_are_frequent(req_interval)) {
-      /* Either:
-      1. CPU usage is very low on the server, which means the server
-         is most likely idle or almost idle.
-      2. Request to write/flush redo to disk comes only once per 1ms
-         in average or even less often.
-      In both cases we prefer not to spend on CPU power, because there
-      is no real gain from spinning in log threads then. */
-
-      spin_delay = 0;
-      min_timeout =
-          static_cast<uint32_t>(req_interval < 1000 ? req_interval : 1000);
-    }
-
-    const auto wait_stats =
-        os_event_wait_for(m_event, spin_delay, min_timeout, stop_condition);
-
-    return (wait_stats);
-  }
-
- private:
-  const log_t &m_log;
-  os_event_t m_event;
-  const uint32_t m_spin_delay;
-  const uint32_t m_min_timeout;
-};
-
-struct Log_write_to_file_requests_monitor {
-  explicit Log_write_to_file_requests_monitor(log_t &log)
-      : m_log(log), m_last_requests_value{0}, m_request_interval{0} {
-    m_last_requests_time = Log_clock::now();
-  }
-
-  void update() {
-    const auto requests_value =
-        m_log.write_to_file_requests_total.load(std::memory_order_relaxed);
-
-    const auto current_time = Log_clock::now();
-    if (current_time < m_last_requests_time) {
-      m_last_requests_time = current_time;
-      return;
-    }
-
-    const auto delta_time = current_time - m_last_requests_time;
-    const auto delta_time_us =
-        std::chrono::duration_cast<std::chrono::microseconds>(delta_time)
-            .count();
-
-    if (requests_value > m_last_requests_value) {
-      const auto delta_requests = requests_value - m_last_requests_value;
-      const auto request_interval = delta_time_us / delta_requests;
-      m_request_interval = (m_request_interval * 63 + request_interval) / 64;
-
-    } else if (delta_time_us > 100 * 1000) {
-      /* Last call to log_write_up_to() was longer than 100ms ago,
-      so consider this as maximum time between calls we can expect.
-      Tracking higher values does not make sense, because it is for
-      sure already higher than any reasonable threshold which can be
-      used to differ different activity modes. */
-
-      m_request_interval = 100 * 1000; /* 100ms */
-
-    } else {
-      /* No progress in number of requests and still no more than
-      1second since last progress. Postpone any decision. */
-      return;
-    }
-
-    m_log.write_to_file_requests_interval.store(m_request_interval,
-                                                std::memory_order_relaxed);
-
-    MONITOR_SET(MONITOR_LOG_WRITE_TO_FILE_REQUESTS_INTERVAL,
-                m_request_interval);
-
-    m_last_requests_time = current_time;
-    m_last_requests_value = requests_value;
-  }
-
- private:
-  log_t &m_log;
-  uint64_t m_last_requests_value;
-  Log_clock_point m_last_requests_time;
-  uint64_t m_request_interval;
-};
-
-/* @} */
 
 /**************************************************/ /**
 
@@ -437,18 +185,7 @@ struct Log_write_to_file_requests_monitor {
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/log_write/validate_buffer.h>
-#include <innodb/log_write/validate_start_lsn.h>
-#include <innodb/log_write/compute_real_offset.h>
-#include <innodb/log_write/current_file_has_space.h>
-#include <innodb/log_write/start_next_file.h>
-#include <innodb/log_write/write_ahead_enough.h>
-#include <innodb/log_write/current_write_ahead_enough.h>
-#include <innodb/log_write/compute_next_write_ahead_end.h>
-#include <innodb/log_write/compute_how_much_to_write.h>
-#include <innodb/log_write/prepare_full_blocks.h>
-#include <innodb/log_write/write_blocks.h>
-#include <innodb/log_write/compute_write_event_slot.h>
+
 
 namespace Log_files_write_impl {
 
@@ -477,111 +214,15 @@ static inline void notify_about_advanced_write_lsn(log_t &log,
   }
 }
 
-static inline void copy_to_write_ahead_buffer(log_t &log, const byte *buffer,
-                                              size_t &size, lsn_t start_lsn,
-                                              checkpoint_no_t checkpoint_no) {
-  ut_a(size <= srv_log_write_ahead_size);
 
-  ut_a(buffer >= log.buf);
-  ut_a(buffer + size <= log.buf + log.buf_size);
 
-  byte *write_buf = log.write_ahead_buf;
 
-  LOG_SYNC_POINT("log_writer_before_copy_to_write_ahead_buffer");
-
-  std::memcpy(write_buf, buffer, size);
-
-  size_t completed_blocks_size;
-  byte *incomplete_block;
-  size_t incomplete_size;
-
-  completed_blocks_size = ut_uint64_align_down(size, OS_FILE_LOG_BLOCK_SIZE);
-
-  incomplete_block = write_buf + completed_blocks_size;
-
-  incomplete_size = size % OS_FILE_LOG_BLOCK_SIZE;
-
-  ut_a(incomplete_block + incomplete_size <=
-       write_buf + srv_log_write_ahead_size);
-
-  if (incomplete_size != 0) {
-    /* Prepare the incomplete (last) block. */
-    ut_a(incomplete_size >= LOG_BLOCK_HDR_SIZE);
-
-    log_block_set_hdr_no(
-        incomplete_block,
-        log_block_convert_lsn_to_no(start_lsn + completed_blocks_size));
-
-    log_block_set_flush_bit(incomplete_block, completed_blocks_size == 0);
-
-    log_block_set_data_len(incomplete_block, incomplete_size);
-
-    if (log_block_get_first_rec_group(incomplete_block) > incomplete_size) {
-      log_block_set_first_rec_group(incomplete_block, 0);
-    }
-
-    log_block_set_checkpoint_no(incomplete_block, checkpoint_no);
-
-    std::memset(incomplete_block + incomplete_size, 0x00,
-                OS_FILE_LOG_BLOCK_SIZE - incomplete_size);
-
-    log_block_store_checksum(incomplete_block);
-
-    size = completed_blocks_size + OS_FILE_LOG_BLOCK_SIZE;
-  }
-
-  /* Since now, size is about completed blocks always. */
-  ut_a(size % OS_FILE_LOG_BLOCK_SIZE == 0);
-}
-
-static inline size_t prepare_for_write_ahead(log_t &log, uint64_t real_offset,
-                                             size_t &write_size) {
-  /* We need to perform write ahead during this write. */
-
-  const auto next_wa = compute_next_write_ahead_end(real_offset);
-
-  ut_a(real_offset + write_size <= next_wa);
-
-  size_t write_ahead =
-      static_cast<size_t>(next_wa - (real_offset + write_size));
-
-  if (!current_file_has_space(log, real_offset, write_size + write_ahead)) {
-    /* We must not write further than to the end
-    of the current log file.
-
-    Note, that: log.file_size - LOG_FILE_HDR_SIZE
-    does not have to be divisible by size of write
-    ahead. Example given:
-            innodb_log_file_size = 1024M,
-            innodb_log_write_ahead_size = 4KiB,
-            LOG_FILE_HDR_SIZE is 2KiB. */
-
-    write_ahead = static_cast<size_t>(log.current_file_end_offset -
-                                      real_offset - write_size);
-  }
-
-  ut_a(current_file_has_space(log, real_offset, write_size + write_ahead));
-
-  LOG_SYNC_POINT("log_writer_before_write_ahead");
-
-  std::memset(log.write_ahead_buf + write_size, 0x00, write_ahead);
-
-  write_size += write_ahead;
-
-  return (write_ahead);
-}
-
-static inline void update_current_write_ahead(log_t &log, uint64_t real_offset,
-                                              size_t write_size) {
-  const auto end = real_offset + write_size;
-
-  if (end > log.write_ahead_end_offset) {
-    log.write_ahead_end_offset =
-        ut_uint64_align_down(end, srv_log_write_ahead_size);
-  }
-}
 
 }  // namespace Log_files_write_impl
+
+
+
+
 
 static void log_files_write_buffer(log_t &log, byte *buffer, size_t buffer_size,
                                    lsn_t start_lsn) {

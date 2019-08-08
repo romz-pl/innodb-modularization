@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_write/srv_flush_log_at_trx_commit.h>
 #include <innodb/log_write/srv_log_spin_cpu_abs_lwm.h>
 #include <innodb/log_write/srv_cpu_usage.h>
 #include <innodb/log_write/Srv_cpu_usage.h>
@@ -74,6 +75,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/srv_log_write_events.h>
 #include <innodb/log_redo/srv_log_recent_written_size.h>
 #include <innodb/log_redo/srv_log_recent_closed_size.h>
+#include <innodb/log_write/srv_log_wait_for_flush_spin_delay.h>
+#include <innodb/log_write/srv_log_wait_for_flush_spin_hwm.h>
+#include <innodb/log_write/srv_log_wait_for_flush_timeout.h>
 
 #include "buf0checksum.h"
 #include "fil0fil.h"
@@ -345,16 +349,11 @@ extern ulong srv_log_write_max_size;
 
 
 
-/** Number of spin iterations, when spinning and waiting for log flushed. */
-extern ulong srv_log_wait_for_flush_spin_delay;
 
-/** Maximum value of average log flush time for which spin-delay is used.
-When flushing takes longer, user threads no longer spin when waiting for
-flushed redo. Expressed in microseconds. */
-extern ulong srv_log_wait_for_flush_spin_hwm;
 
-/** Timeout used when waiting for redo flush (microseconds). */
-extern ulong srv_log_wait_for_flush_timeout;
+
+
+
 
 /** Number of spin iterations, for which log writer thread is waiting
 for new data to write or flush without sleeping. */
@@ -409,7 +408,7 @@ extern bool srv_inject_too_many_concurrent_trxs;
 
 #endif /* UNIV_DEBUG */
 
-extern ulong srv_flush_log_at_trx_commit;
+
 extern uint srv_flush_log_at_timeout;
 extern ulong srv_log_write_ahead_size;
 extern bool srv_adaptive_flushing;

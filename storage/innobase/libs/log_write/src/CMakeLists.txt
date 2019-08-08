@@ -22,6 +22,18 @@ add_library( ${LIB_NAME} STATIC
     write_blocks.cpp
     compute_write_event_slot.cpp
     notify_about_advanced_write_lsn.cpp
+    copy_to_write_ahead_buffer.cpp
+    prepare_for_write_ahead.cpp
+    update_current_write_ahead.cpp
+    log_wait_for_flush.cpp
+    srv_log_wait_for_flush_spin_delay.cpp
+    srv_log_wait_for_flush_spin_hwm.cpp
+    srv_log_wait_for_flush_timeout.cpp
+    recv_no_ibuf_operations.cpp
+    log_write_up_to.cpp
+    srv_flush_log_at_trx_commit.cpp
+    Log_thread_waiting.cpp
+    Log_write_to_file_requests_monitor.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

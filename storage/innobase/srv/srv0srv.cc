@@ -84,6 +84,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_array/sync_arr_wake_threads_if_sema_free.h>
 #include <innodb/sync_array/sync_array_print_long_waits.h>
 
+
 #include "sync0debug.h"
 #include "btr0sea.h"
 #include "buf0flu.h"
@@ -251,10 +252,7 @@ ulonglong srv_log_file_size;
 ulonglong srv_log_file_size_requested;
 
 
-/** Maximum value of average log flush time for which spin-delay is used.
-When flushing takes longer, user threads no longer spin when waiting for
-flushed redo. Expressed in microseconds. */
-ulong srv_log_wait_for_flush_spin_hwm;
+
 
 /* EXPERIMENTAL sys vars below - we need defaults set explicitly here. */
 
@@ -269,13 +267,8 @@ ulong srv_log_write_max_size = INNODB_LOG_WRITE_MAX_SIZE_DEFAULT;
 
 
 
-/** Number of spin iterations, when spinning and waiting for log flushed. */
-ulong srv_log_wait_for_flush_spin_delay =
-    INNODB_LOG_WAIT_FOR_FLUSH_SPIN_DELAY_DEFAULT;
 
-/** Timeout used when waiting for redo flush (microseconds). */
-ulong srv_log_wait_for_flush_timeout =
-    INNODB_LOG_WAIT_FOR_FLUSH_TIMEOUT_DEFAULT;
+
 
 /** Number of spin iterations, for which log writer thread is waiting
 for new data to write or flush without sleeping. */
@@ -334,7 +327,7 @@ bool srv_inject_too_many_concurrent_trxs = false;
 
 #endif /* UNIV_DEBUG */
 
-ulong srv_flush_log_at_trx_commit = 1;
+
 uint srv_flush_log_at_timeout = 1;
 ulong srv_page_size = UNIV_PAGE_SIZE_DEF;
 ulong srv_page_size_shift = UNIV_PAGE_SIZE_SHIFT_DEF;
