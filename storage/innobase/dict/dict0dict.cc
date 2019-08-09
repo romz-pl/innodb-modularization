@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/sync_os/pfs.h>
 #include <innodb/memory/mem_heap_strdupl.h>
 #include <innodb/memory/mem_heap_empty.h>
 #include <innodb/memory/mem_heap_strdupl.h>

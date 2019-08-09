@@ -46,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/sync_os/pfs.h>
 #include <innodb/log_write/srv_flushing_avg_loops.h>
 #include <innodb/log_write/srv_log_spin_cpu_pct_hwm.h>
 #include <innodb/log_redo/log_checkpointer_mutex_exit.h>
@@ -181,7 +182,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mysql/plugin.h"
 #include "mysql/psi/mysql_data_lock.h"
 #include "mysys_err.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 
 
 #include "p_s.h"
@@ -207,7 +208,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0priv.h"
 #include "dict0sdi.h"
 #include "dict0upgrade.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 
 #include "sql/item.h"
 #include "sql/json_dom.h"

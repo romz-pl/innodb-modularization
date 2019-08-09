@@ -84,28 +84,8 @@ class buf_page_t;
 #include <innodb/error/dberr_t.h>
 #include <innodb/sync_event/os_event_t.h>
 #include <innodb/log_arch/page_archiver_is_active.h>
-
-
-
-
-
-
-
-
-
-/** Start log archiver background thread.
-@return error code */
-int start_log_archiver_background();
-
-/** Start page archiver background thread.
-@return error code */
-int start_page_archiver_background();
-
-
-
-
-
-
+#include <innodb/log_arch/start_page_archiver_background.h>
+#include <innodb/log_arch/start_log_archiver_background.h>
 
 
 #endif /* ARCH_ARCH_INCLUDE */

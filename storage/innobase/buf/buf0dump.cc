@@ -62,7 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_sys.h"
 #include "my_thread.h"
 #include "mysql/psi/mysql_stage.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 
 #include "srv0srv.h"
 #include "srv0start.h"

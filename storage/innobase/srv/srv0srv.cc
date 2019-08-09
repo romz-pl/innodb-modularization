@@ -105,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_inttypes.h"
 #include "my_psi_config.h"
 #include "os0proc.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 #include "pars0pars.h"
 #include "que0que.h"
 #include "row0mysql.h"

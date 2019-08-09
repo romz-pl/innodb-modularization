@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fts0plugin.h"
 #include "ha_prototypes.h"
 #include "lob0lob.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 #include "pars0pars.h"
 #include "row0ftsort.h"
 #include "row0merge.h"

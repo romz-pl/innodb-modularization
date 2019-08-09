@@ -109,7 +109,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_psi_config.h"
 #include "mysql/psi/mysql_stage.h"
 #include "mysqld.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 #include "sync0debug.h"
 #include "page0cur.h"
 #include "page0page.h"
@@ -205,8 +205,6 @@ static char *srv_monitor_file_name;
 
 /* Keys to register InnoDB threads with performance schema */
 #ifdef UNIV_PFS_THREAD
-mysql_pfs_key_t log_archiver_thread_key;
-mysql_pfs_key_t page_archiver_thread_key;
 mysql_pfs_key_t buf_dump_thread_key;
 mysql_pfs_key_t buf_resize_thread_key;
 mysql_pfs_key_t dict_stats_thread_key;

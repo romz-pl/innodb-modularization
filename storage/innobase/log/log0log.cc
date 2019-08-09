@@ -67,7 +67,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 #include "dict0boot.h"
 #include "ha_prototypes.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 #include "trx0sys.h"
 
 

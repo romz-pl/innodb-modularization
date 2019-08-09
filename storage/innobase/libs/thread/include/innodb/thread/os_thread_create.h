@@ -35,13 +35,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/logger/warn.h>
-#include <innodb/sync_os/pfs.h>
-
+#include <innodb/pfs/mysql_pfs_key_t.h>
+#include <innodb/pfs/PFS_NOT_INSTRUMENTED.h>
 
 
 #include <my_thread.h>
 #include <atomic>
 #include <functional>
+#include <thread>
+#include <vector>
 
 /** Maximum number of threads inside InnoDB */
 extern ulint srv_max_n_threads;

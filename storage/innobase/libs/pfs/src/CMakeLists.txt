@@ -2,6 +2,7 @@ set( LIB_NAME pfs )
 
 add_library( ${LIB_NAME} STATIC
     mysql_pfs_key_t.cpp
+    PFS_NOT_INSTRUMENTED.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

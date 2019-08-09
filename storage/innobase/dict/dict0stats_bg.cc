@@ -46,7 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0stats.h"
 #include "dict0stats_bg.h"
 
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 #include "row0mysql.h"
 #include "srv0start.h"
 #include <innodb/time/ut_time.h>

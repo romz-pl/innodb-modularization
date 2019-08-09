@@ -1,6 +1,7 @@
 set( LIB_NAME thread )
 
 add_library( ${LIB_NAME} STATIC
+    os_thread_create.cpp
     os_thread_eq.cpp
     os_thread_get_curr_id.cpp
     os_thread_handle.cpp
@@ -22,6 +23,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     logger
+    pfs
     PRIVATE
 )
 

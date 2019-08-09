@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <innodb/sync_os/pfs.h>
 #include <innodb/sync_rw/rw_lock_sx_lock.h>
 #include <innodb/mtr/mtr_memo_push.h>
 #include <innodb/sync_rw/rw_lock_sx_lock_inline.h>
@@ -154,7 +155,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0dump.h"
 #include "dict0dict.h"
 #include "log0recv.h"
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 #include "page0zip.h"
 #include "srv0mon.h"
 #include "srv0srv.h"

@@ -127,7 +127,7 @@ The tablespace memory cache */
 #include "srv0srv.h"
 #endif /* !UNIV_HOTBACKUP */
 
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 
 #include "current_thd.h"
 #include "ha_prototypes.h"

@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "lock0lock.h"
 #include <innodb/machine/data.h>
-#include "os0thread-create.h"
+#include <innodb/thread/os_thread_create.h>
 #include "pars0pars.h"
 #include "que0que.h"
 #include "read0read.h"

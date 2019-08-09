@@ -34,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/logger/info.h>
 #include <innodb/io/srv_is_being_started.h>
+#include <innodb/sync_os/pfs.h>
 
 #include "trx0rseg.h"
 

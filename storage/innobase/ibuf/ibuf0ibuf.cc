@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/sync_os/pfs.h>
 #include <innodb/mtr/mtr_x_lock_space.h>
 #include <innodb/mtr/mtr_sx_lock.h>
 #include <innodb/mtr/mtr_s_lock.h>

@@ -38,6 +38,8 @@ add_library( ${LIB_NAME} STATIC
     Page_Wait_Flush_Archiver_Cbk.cpp
     Page_Arch_Client_Ctx.cpp
     page_archiver_thread.cpp
+    start_page_archiver_background.cpp
+    pfs.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
