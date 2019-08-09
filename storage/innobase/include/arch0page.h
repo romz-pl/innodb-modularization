@@ -34,8 +34,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/sync_mutex/mutex_exit.h>
+#include <innodb/sync_mutex/mutex_enter.h>
+#include <innodb/sync_mutex/mutex_free.h>
+#include <innodb/log_arch/flags.h>
+#include <innodb/log_arch/Arch_Client_State.h>
+#include <innodb/log_arch/Arch_Page_Pos.h>
+#include <innodb/sync_mutex/mutex_create.h>
+
 #include "arch0arch.h"
 #include "buf0buf.h"
+
+class Arch_Group;
 
 /** Archived page header file size (RESET Page) in number of blocks. */
 constexpr uint ARCH_PAGE_FILE_NUM_RESET_PAGE = 1;

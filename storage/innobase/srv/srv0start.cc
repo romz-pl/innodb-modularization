@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/log_arch/arch_free.h>
 #include <innodb/log_redo/log_files_header_flush.h>
 #include <innodb/log_redo/log_stop_background_threads.h>
 #include <innodb/log_redo/log_start.h>

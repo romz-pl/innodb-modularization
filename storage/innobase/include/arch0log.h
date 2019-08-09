@@ -34,7 +34,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_arch/Arch_Client_State.h>
+
 #include "arch0arch.h"
+
+class Arch_Group;
 
 /** File Node Iterator callback
 @param[in]	file_name	NULL terminated file name

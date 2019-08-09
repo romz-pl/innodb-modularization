@@ -64,11 +64,9 @@ uint ARCH_PAGE_FILE_DATA_CAPACITY =
     ARCH_PAGE_FILE_CAPACITY - ARCH_PAGE_FILE_NUM_RESET_PAGE;
 #endif
 
-/** Global to indicate if the page archiver task is active */
-bool page_archiver_is_active = false;
 
-/** Event to signal the page archiver thread. */
-os_event_t page_archiver_thread_event;
+
+
 
 /** Archiver background thread */
 void page_archiver_thread() {
