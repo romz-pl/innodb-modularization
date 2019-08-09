@@ -8,7 +8,7 @@
 #include <innodb/log_redo/log_deallocate_checkpoint_buffer.h>
 #include <innodb/log_redo/log_deallocate_write_ahead_buffer.h>
 #include <innodb/log_redo/log_deallocate_buffer.h>
-#include <innodb/log_redo/log_sys.h>
+#include <innodb/log_types/log_sys.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_event/os_event_destroy.h>
 #include <innodb/log_redo/log_sys_object.h>

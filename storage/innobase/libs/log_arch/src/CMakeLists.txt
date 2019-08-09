@@ -34,6 +34,10 @@ add_library( ${LIB_NAME} STATIC
     arch_free.cpp
     start_log_archiver_background.cpp
     log_archiver_thread.cpp
+    Page_Arch_Cbk.cpp
+    Page_Wait_Flush_Archiver_Cbk.cpp
+    Page_Arch_Client_Ctx.cpp
+    page_archiver_thread.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -47,8 +51,8 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    io
-    log_types
+    buffer
+    crc32
     PRIVATE
 )
 

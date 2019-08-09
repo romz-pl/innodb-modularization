@@ -1,6 +1,6 @@
 #include <innodb/log_redo/log_lsn_validate.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 
 bool log_lsn_validate(lsn_t lsn) {
   const uint32_t offset = lsn % OS_FILE_LOG_BLOCK_SIZE;

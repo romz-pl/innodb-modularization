@@ -84,8 +84,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/log_checksum_func_t.h>
 #include <innodb/log_types/Log_handle.h>
-#include <innodb/log_redo/flags.h>
-#include <innodb/log_redo/log_sys.h>
+#include <innodb/log_types/flags.h>
+#include <innodb/log_types/log_sys.h>
 #include <innodb/log_redo/log_checksum_algorithm_ptr.h>
 #include <innodb/log_redo/log_allocate_buffer.h>
 #include <innodb/log_redo/log_allocate_write_ahead_buffer.h>
@@ -118,10 +118,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_get_max_modified_age_async.h>
 #include <innodb/log_redo/log_needs_free_check.h>
 #include <innodb/log_redo/log_free_check.h>
-#include <innodb/log_redo/log_translate_sn_to_lsn.h>
+#include <innodb/log_types/log_translate_sn_to_lsn.h>
 #include <innodb/log_redo/log_lsn_validate.h>
-#include <innodb/log_redo/log_get_lsn.h>
-#include <innodb/log_redo/log_get_checkpoint_lsn.h>
+#include <innodb/log_types/log_get_lsn.h>
+#include <innodb/log_types/log_get_checkpoint_lsn.h>
 #include <innodb/log_redo/log_get_checkpoint_age.h>
 #include <innodb/log_redo/log_buffer_flush_to_disk.h>
 #include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>

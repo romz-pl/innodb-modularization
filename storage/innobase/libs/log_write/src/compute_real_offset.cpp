@@ -1,7 +1,7 @@
 #include <innodb/log_write/compute_real_offset.h>
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_redo/log_files_real_offset_for_lsn.h>
 
 namespace Log_files_write_impl {

@@ -1,7 +1,7 @@
 #include <innodb/log_write/compute_how_much_to_write.h>
 
 #include <innodb/align/ut_uint64_align_down.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_redo/srv_log_write_ahead_size.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/compute_next_write_ahead_end.h>

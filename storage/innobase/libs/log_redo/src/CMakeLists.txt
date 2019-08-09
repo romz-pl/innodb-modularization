@@ -3,7 +3,7 @@ set( LIB_NAME log_redo )
 add_library( ${LIB_NAME} STATIC
     LOG_SYNC_POINT.cpp
     Log_test.cpp
-    flags.cpp
+
     log_allocate_buffer.cpp
     log_allocate_checkpoint_buffer.cpp
     log_allocate_file_header_buffers.cpp
@@ -49,15 +49,11 @@ add_library( ${LIB_NAME} STATIC
     log_deallocate_write_events.cpp
     log_free_check.cpp
     log_get_checkpoint_age.cpp
-    log_get_checkpoint_lsn.cpp
-    log_get_lsn.cpp
     log_get_max_modified_age_async.cpp
     log_lsn_validate.cpp
     log_needs_free_check.cpp
-    log_sys.cpp
     log_test.cpp
     log_translate_lsn_to_sn.cpp
-    log_translate_sn_to_lsn.cpp
     log_write_to_file_requests_are_frequent.cpp
     srv_log_buffer_size.cpp
     srv_log_flush_events.cpp

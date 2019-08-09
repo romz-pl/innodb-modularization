@@ -12,7 +12,7 @@
 #include <innodb/log_redo/srv_log_write_ahead_size.h>
 #include <innodb/log_redo/LOG_SYNC_POINT.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 
 namespace Log_files_write_impl {
 

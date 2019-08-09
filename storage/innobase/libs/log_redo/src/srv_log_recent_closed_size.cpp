@@ -1,6 +1,6 @@
 #include <innodb/log_redo/srv_log_recent_closed_size.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 
 /** Number of slots in a small buffer, which is used to break requirement
 for total order of dirty pages, when they are added to flush lists.

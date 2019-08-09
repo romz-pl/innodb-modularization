@@ -1,7 +1,7 @@
 #include <innodb/log_redo/log_advance_ready_for_write_lsn.h>
 
 #include <innodb/log_redo/LOG_SYNC_POINT.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
 #include <innodb/log_redo/log_lsn_validate.h>
 #include <innodb/log_redo/log_test.h>

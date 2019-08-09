@@ -1,7 +1,7 @@
 #include <innodb/log_write/log_file_header_fill_encryption.h>
 
 #include <innodb/io/Encryption.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/assert/assert.h>
 
 bool log_file_header_fill_encryption(byte *buf, byte *key, byte *iv,

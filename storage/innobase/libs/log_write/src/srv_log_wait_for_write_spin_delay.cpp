@@ -1,6 +1,6 @@
 #include <innodb/log_write/srv_log_wait_for_write_spin_delay.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 
 /** Number of spin iterations, when spinning and waiting for log buffer
 written up to given LSN, before we fallback to loop with sleeps.

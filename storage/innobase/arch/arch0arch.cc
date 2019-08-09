@@ -53,30 +53,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0thread-create.h"
 #include "srv0srv.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int start_page_archiver_background() {
   bool ret;
   char errbuf[MYSYS_STRERROR_SIZE];

@@ -1,6 +1,6 @@
 #include <innodb/log_redo/log_block_get_flush_bit.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/machine/data.h>
 
 bool log_block_get_flush_bit(const byte *log_block) {

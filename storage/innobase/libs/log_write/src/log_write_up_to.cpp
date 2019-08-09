@@ -1,7 +1,7 @@
 #include <innodb/log_write/log_write_up_to.h>
 
 #include <innodb/io/srv_read_only_mode.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/log_wait_for_flush.h>
 #include <innodb/log_write/log_wait_for_write.h>

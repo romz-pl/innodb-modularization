@@ -6,7 +6,7 @@
 #include <innodb/log_redo/log_checkpointer_mutex_enter.h>
 #include <innodb/log_redo/log_checkpointer_mutex_exit.h>
 #include <innodb/log_redo/log_translate_lsn_to_sn.h>
-#include <innodb/log_redo/log_translate_sn_to_lsn.h>
+#include <innodb/log_types/log_translate_sn_to_lsn.h>
 #include <innodb/log_redo/log_writer_mutex_enter.h>
 #include <innodb/log_redo/log_writer_mutex_exit.h>
 #include <innodb/log_types/Log_handle.h>

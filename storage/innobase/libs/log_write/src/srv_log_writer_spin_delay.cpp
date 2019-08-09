@@ -1,6 +1,6 @@
 #include <innodb/log_write/srv_log_writer_spin_delay.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 
 
 /** Number of spin iterations, for which log writer thread is waiting

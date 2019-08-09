@@ -1,6 +1,6 @@
 #include <innodb/log_redo/log_buffer_flush_to_disk.h>
 
-#include <innodb/log_redo/log_get_lsn.h>
+#include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_types/recv_recovery_is_on.h>
 
 
@@ -9,7 +9,7 @@ extern bool srv_read_only_mode;
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/log_redo/log_sys.h>
+#include <innodb/log_types/log_sys.h>
 
 void log_buffer_flush_to_disk(bool sync) {
   log_buffer_flush_to_disk(*log_sys, sync);

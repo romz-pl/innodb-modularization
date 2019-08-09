@@ -3,8 +3,8 @@
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_redo/log_buffer_x_lock_own.h>
 #include <innodb/log_redo/log_checkpointer_mutex_own.h>
-#include <innodb/log_redo/log_get_lsn.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/log_get_lsn.h>
+#include <innodb/log_types/flags.h>
 
 void log_position_collect_lsn_info(const log_t &log, lsn_t *current_lsn,
                                    lsn_t *checkpoint_lsn) {

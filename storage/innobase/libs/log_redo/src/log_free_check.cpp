@@ -3,7 +3,7 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/log_sys.h>
+#include <innodb/log_types/log_sys.h>
 //#include <innodb/log_redo/log_free_check_wait.h>
 
 void log_free_check_wait(log_t &log, sn_t sn);

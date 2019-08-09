@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_get_checkpoint_lsn.h>
+#include <innodb/log_types/log_get_checkpoint_lsn.h>
 
 #ifndef UNIV_HOTBACKUP
 

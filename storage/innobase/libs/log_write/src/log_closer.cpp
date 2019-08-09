@@ -5,7 +5,7 @@
 #include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
 #include <innodb/log_redo/log_closer_mutex_enter.h>
 #include <innodb/log_redo/log_closer_mutex_exit.h>
-#include <innodb/log_redo/log_get_lsn.h>
+#include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_redo/log_lsn_validate.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/Log_thread_waiting.h>

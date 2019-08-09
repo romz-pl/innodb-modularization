@@ -45,7 +45,7 @@ the file COPYING.Google.
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/assert/assert.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_redo/log_lsn_validate.h>
 #include <innodb/log_types/mlog_id_t.h>
 #include <innodb/machine/data.h>

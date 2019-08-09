@@ -1,6 +1,6 @@
 #include <innodb/log_redo/log_files_header_fill.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_redo/log_block_set_checksum.h>
 #include <innodb/log_redo/log_block_calc_checksum_crc32.h>
 #include <innodb/assert/assert.h>

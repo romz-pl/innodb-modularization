@@ -20,6 +20,11 @@ add_library( ${LIB_NAME} STATIC
     mlog_id_t.cpp
     recv_recovery_is_on.cpp
     recv_recovery_on.cpp
+    log_sys.cpp
+    log_get_checkpoint_lsn.cpp
+    flags.cpp
+    log_translate_sn_to_lsn.cpp
+    log_get_lsn.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

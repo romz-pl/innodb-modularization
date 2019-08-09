@@ -3,7 +3,7 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/log_get_lsn.h>
+#include <innodb/log_types/log_get_lsn.h>
 
 lsn_t log_get_checkpoint_age(const log_t &log) {
   const lsn_t last_checkpoint_lsn = log.last_checkpoint_lsn.load();

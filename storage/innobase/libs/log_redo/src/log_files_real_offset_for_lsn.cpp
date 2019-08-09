@@ -1,6 +1,6 @@
 #include <innodb/log_redo/log_files_real_offset_for_lsn.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_redo/log_files_real_offset.h>
 #include <innodb/log_redo/log_files_size_offset.h>
 #include <innodb/log_redo/log_writer_mutex_own.h>

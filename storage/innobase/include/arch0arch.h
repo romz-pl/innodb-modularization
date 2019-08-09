@@ -71,6 +71,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_arch/arch_init.h>
 #include <innodb/sync_event/os_event_destroy.h>
 #include <innodb/log_arch/log_archiver_thread.h>
+#include <innodb/log_arch/page_archiver_thread.h>
 
 #include <mysql/components/services/page_track_service.h>
 #include "log0log.h"
@@ -104,8 +105,7 @@ int start_page_archiver_background();
 
 
 
-/** Page archiver background thread */
-void page_archiver_thread();
+
 
 
 #endif /* ARCH_ARCH_INCLUDE */

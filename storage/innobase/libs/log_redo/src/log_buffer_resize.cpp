@@ -1,7 +1,7 @@
 #include <innodb/log_redo/log_buffer_resize.h>
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/log_get_lsn.h>
+#include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_redo/log_checkpointer_mutex_enter.h>
 #include <innodb/log_redo/log_writer_mutex_enter.h>
 #include <innodb/log_redo/log_buffer_resize_low.h>

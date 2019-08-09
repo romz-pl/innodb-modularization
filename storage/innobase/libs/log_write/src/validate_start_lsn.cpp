@@ -1,7 +1,7 @@
 #include <innodb/log_write/validate_start_lsn.h>
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 
 namespace Log_files_write_impl {
 

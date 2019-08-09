@@ -4,7 +4,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_types/lsn_t.h>
 
 

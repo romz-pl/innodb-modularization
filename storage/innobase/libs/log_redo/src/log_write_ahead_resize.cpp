@@ -5,7 +5,7 @@
 #include <innodb/log_redo/log_deallocate_write_ahead_buffer.h>
 #include <innodb/log_redo/log_writer_mutex_enter.h>
 #include <innodb/log_redo/log_writer_mutex_exit.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_redo/srv_log_write_ahead_size.h>
 

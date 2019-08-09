@@ -1,6 +1,6 @@
 #include <innodb/log_redo/log_translate_lsn_to_sn.h>
 
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_types/sn_t.h>
 
 

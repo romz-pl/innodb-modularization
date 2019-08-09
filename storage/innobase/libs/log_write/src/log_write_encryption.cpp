@@ -5,7 +5,7 @@
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/disk/univ_page_size.h>
 #include <innodb/io/IORequestLogWrite.h>
-#include <innodb/log_redo/flags.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/log_write/log_file_header_fill_encryption.h>
 #include <innodb/page/page_id_t.h>
 #include <innodb/tablespace/consts.h>
