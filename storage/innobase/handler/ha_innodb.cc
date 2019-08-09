@@ -46,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/log_write/srv_flushing_avg_loops.h>
 #include <innodb/log_write/srv_log_spin_cpu_pct_hwm.h>
 #include <innodb/log_redo/log_checkpointer_mutex_exit.h>
 #include <innodb/log_redo/log_writer_mutex_exit.h>

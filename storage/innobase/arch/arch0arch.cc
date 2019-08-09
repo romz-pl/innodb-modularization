@@ -61,8 +61,7 @@ Arch_Page_Sys *arch_page_sys = nullptr;
 /** Event to signal the log archiver thread. */
 os_event_t log_archiver_thread_event;
 
-/** Global to indicate if the log archiver task is active */
-bool log_archiver_is_active = false;
+
 
 void arch_remove_file(const char *file_path, const char *file_name) {
   char path[MAX_ARCH_PAGE_FILE_NAME_LEN];

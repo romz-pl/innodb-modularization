@@ -50,6 +50,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_write/srv_log_writer_spin_delay.h>
+#include <innodb/log_write/srv_log_writer_timeout.h>
+#include <innodb/log_write/srv_flush_log_at_timeout.h>
+#include <innodb/log_write/srv_log_flusher_timeout.h>
+#include <innodb/log_write/srv_log_flusher_spin_delay.h>
 #include <innodb/log_write/srv_log_write_notifier_timeout.h>
 #include <innodb/log_write/srv_log_write_notifier_spin_delay.h>
 #include <innodb/log_redo/srv_stats.h>
@@ -288,24 +293,18 @@ extern ulonglong srv_log_file_size_requested;
 
 
 
-/** Number of spin iterations, for which log writer thread is waiting
-for new data to write or flush without sleeping. */
-extern ulong srv_log_writer_spin_delay;
 
-/** Initial timeout used to wait on writer_event. */
-extern ulong srv_log_writer_timeout;
+
+
 
 /** Number of milliseconds every which a periodical checkpoint is written
 by the log checkpointer thread (unless periodical checkpoints are disabled,
 which is a case during initial phase of startup). */
 extern ulong srv_log_checkpoint_every;
 
-/** Number of spin iterations, for which log flusher thread is waiting
-for new data to flush, without sleeping. */
-extern ulong srv_log_flusher_spin_delay;
 
-/** Initial timeout used to wait on flusher_event. */
-extern ulong srv_log_flusher_timeout;
+
+
 
 
 
@@ -333,7 +332,7 @@ extern bool srv_inject_too_many_concurrent_trxs;
 #endif /* UNIV_DEBUG */
 
 
-extern uint srv_flush_log_at_timeout;
+
 extern ulong srv_log_write_ahead_size;
 extern bool srv_adaptive_flushing;
 extern bool srv_flush_sync;
@@ -392,7 +391,7 @@ extern double srv_max_dirty_pages_pct;
 extern double srv_max_dirty_pages_pct_lwm;
 
 extern ulong srv_adaptive_flushing_lwm;
-extern ulong srv_flushing_avg_loops;
+
 
 extern ulong srv_force_recovery;
 #ifdef UNIV_DEBUG

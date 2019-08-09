@@ -266,24 +266,15 @@ ulonglong srv_log_file_size_requested;
 
 
 
-/** Number of spin iterations, for which log writer thread is waiting
-for new data to write or flush without sleeping. */
-ulong srv_log_writer_spin_delay = INNODB_LOG_WRITER_SPIN_DELAY_DEFAULT;
 
-/** Initial timeout used to wait on writer_event. */
-ulong srv_log_writer_timeout = INNODB_LOG_WRITER_TIMEOUT_DEFAULT;
+
 
 /** Number of milliseconds every which a periodical checkpoint is written
 by the log checkpointer thread (unless periodical checkpoints are disabled,
 which is a case during initial phase of startup). */
 ulong srv_log_checkpoint_every = INNODB_LOG_CHECKPOINT_EVERY_DEFAULT;
 
-/** Number of spin iterations, for which log flusher thread is waiting
-for new data to flush, without sleeping. */
-ulong srv_log_flusher_spin_delay = INNODB_LOG_FLUSHER_SPIN_DELAY_DEFAULT;
 
-/** Initial timeout used to wait on flusher_event. */
-ulong srv_log_flusher_timeout = INNODB_LOG_FLUSHER_TIMEOUT_DEFAULT;
 
 
 
@@ -309,7 +300,7 @@ bool srv_inject_too_many_concurrent_trxs = false;
 #endif /* UNIV_DEBUG */
 
 
-uint srv_flush_log_at_timeout = 1;
+
 ulong srv_page_size = UNIV_PAGE_SIZE_DEF;
 ulong srv_page_size_shift = UNIV_PAGE_SIZE_SHIFT_DEF;
 
@@ -386,8 +377,6 @@ double srv_max_dirty_pages_pct_lwm = 0.0;
 if enabled, will kick in. */
 ulong srv_adaptive_flushing_lwm = 10;
 
-/* Number of iterations over which adaptive flushing is averaged. */
-ulong srv_flushing_avg_loops = 30;
 
 /* The number of purge threads to use.*/
 ulong srv_n_purge_threads = 4;

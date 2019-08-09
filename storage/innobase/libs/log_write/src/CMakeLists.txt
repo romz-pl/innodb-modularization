@@ -51,6 +51,20 @@ add_library( ${LIB_NAME} STATIC
     srv_log_write_notifier_spin_delay.cpp
     srv_log_write_notifier_timeout.cpp
     log_write_notifier.cpp
+    log_files_write_buffer.cpp
+    log_writer_wait_on_checkpoint.cpp
+    log_increase_concurrency_margin.cpp
+    log_writer_wait_on_archiver.cpp
+    log_flusher.cpp
+    srv_log_flusher_spin_delay.cpp
+    srv_log_flusher_timeout.cpp
+    srv_flush_log_at_timeout.cpp
+    log_flush_update_stats.cpp
+    srv_flushing_avg_loops.cpp
+    log_flush_low.cpp
+    log_writer.cpp
+    srv_log_writer_spin_delay.cpp
+    srv_log_writer_timeout.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

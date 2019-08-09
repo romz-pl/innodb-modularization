@@ -146,6 +146,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_write/log_buffer_reserve.h>
 #include <innodb/log_write/log_flush_notifier.h>
 #include <innodb/log_write/Log_thread_waiting.h>
+#include <innodb/log_write/log_flusher.h>
+#include <innodb/log_write/log_writer.h>
 
 #include <innodb/machine/data.h>
 #include "srv0mon.h"
@@ -296,8 +298,6 @@ void log_files_write_checkpoint(log_t &log, lsn_t next_checkpoint_lsn);
 
 
 
-/** Increase concurrency_margin used inside log_free_check() calls. */
-void log_increase_concurrency_margin(log_t &log);
 
 
 
@@ -331,15 +331,7 @@ void log_start_background_threads(log_t &log);
 
 
 
-/** The log writer thread co-routine.
-@see @ref sect_redo_log_writer
-@param[in,out]	log_ptr		pointer to redo log */
-void log_writer(log_t *log_ptr);
 
-/** The log flusher thread co-routine.
-@see @ref sect_redo_log_flusher
-@param[in,out]	log_ptr		pointer to redo log */
-void log_flusher(log_t *log_ptr);
 
 
 
