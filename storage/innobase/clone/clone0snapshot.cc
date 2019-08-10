@@ -30,18 +30,21 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/mtr/mtr_start.h>
-#include <innodb/logger/info.h>
-#include <innodb/align/ut_uint64_align_up.h>
+#include <innodb/mtr/mtr_commit.h>
 #include <innodb/io/IORequest.h>
 #include <innodb/page/page_zip_set_size.h>
 #include <innodb/clone/Clone_Snapshot.h>
+#include <innodb/tablespace/fil_space_get.h>
+#include <innodb/buffer/Page_fetch.h>
+#include <innodb/log_types/log_sys.h>
+#include <innodb/log_types/log_get_lsn.h>
+#include <innodb/buffer/buf_page_mutex_exit.h>
+#include <innodb/buffer/buf_page_mutex_enter.h>
 
-#include "log0log.h"
 #include "buf0buf.h"
 #include "fil0fil.h"
-#include "sql/handler.h"
-#include "handler.h"
-#include "page0zip.h"
+#include "buf0flu.h"
+
 
 
 int Clone_Snapshot::get_page_for_write(const page_id_t &page_id,

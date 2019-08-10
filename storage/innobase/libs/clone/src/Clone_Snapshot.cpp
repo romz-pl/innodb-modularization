@@ -16,7 +16,16 @@
 #include <innodb/tablespace/fil_space_get.h>
 #include <innodb/tablespace/fil_space_get_page_size.h>
 #include <innodb/tablespace/fsp_header_get_field.h>
-
+#include <innodb/io/os_file_type_t.h>
+#include <innodb/io/macros.h>
+#include <innodb/memory/mem_heap_zalloc.h>
+#include <innodb/tablespace/Fil_iterator.h>
+#include <innodb/clone/add_redo_file_callback.h>
+#include <innodb/clone/add_page_callback.h>
+#include <innodb/io/os_file_size_t.h>
+#include <innodb/clone/is_ddl_temp_table.h>
+#include <innodb/tablespace/fil_space_t.h>
+#include <innodb/io/os_file_get_size.h>
 
 /** Number of clones that can attach to a snapshot. */
 const uint MAX_CLONES_PER_SNAPSHOT = 1;
@@ -716,4 +725,393 @@ int Clone_Snapshot::get_next_page(uint chunk_num, uint &block_num,
   }
   return (err);
 }
+
+
+
+int Clone_Snapshot::init_file_copy() {
+  int err = 0;
+
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_COPY);
+
+  /* If not blocking clone, allocate redo header and trailer buffer. */
+  if (m_snapshot_type != HA_CLONE_BLOCKING) {
+    m_redo_ctx.get_header_size(m_redo_file_size, m_redo_header_size,
+                               m_redo_trailer_size);
+
+    m_redo_header = static_cast<byte *>(mem_heap_zalloc(
+        m_snapshot_heap,
+        m_redo_header_size + m_redo_trailer_size + UNIV_SECTOR_SIZE));
+
+    if (m_redo_header == nullptr) {
+      my_error(ER_OUTOFMEMORY, MYF(0),
+               m_redo_header_size + m_redo_trailer_size);
+
+      return (ER_OUTOFMEMORY);
+    }
+
+    m_redo_header =
+        static_cast<byte *>(ut_align(m_redo_header, UNIV_SECTOR_SIZE));
+
+    m_redo_trailer = m_redo_header + m_redo_header_size;
+  }
+
+  if (m_snapshot_type == HA_CLONE_REDO) {
+    /* Start Redo Archiving */
+    err = m_redo_ctx.start(m_redo_header, m_redo_header_size);
+
+  } else if (m_snapshot_type == HA_CLONE_HYBRID ||
+             m_snapshot_type == HA_CLONE_PAGE) {
+    /* Start modified Page ID Archiving */
+    err = m_page_ctx.start(false, nullptr);
+  } else {
+    ut_ad(m_snapshot_type == HA_CLONE_BLOCKING);
+  }
+
+  if (err != 0) {
+    return (err);
+  }
+
+  /* Add buffer pool dump file. Always the first one in the list. */
+  err = add_buf_pool_file();
+
+  if (err != 0) {
+    return (err);
+  }
+
+  /* Do not include redo files in file list. */
+  bool include_log = (m_snapshot_type == HA_CLONE_BLOCKING);
+
+  /* Iterate all tablespace files and add persistent data files. */
+  auto error = Fil_iterator::for_each_file(
+      include_log, [&](fil_node_t *file) { return (add_node(file)); });
+
+  if (error != DB_SUCCESS) {
+    return (ER_INTERNAL_ERROR);
+  }
+
+  ib::info(ER_IB_MSG_151) << "Clone State FILE COPY : " << m_num_current_chunks
+                          << " chunks, "
+                          << " chunk size : "
+                          << (chunk_size() * UNIV_PAGE_SIZE) / (1024 * 1024)
+                          << " M";
+
+  return (0);
+}
+
+int Clone_Snapshot::init_page_copy(byte *page_buffer, uint page_buffer_len) {
+  int err = 0;
+
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_COPY);
+
+  if (m_snapshot_type == HA_CLONE_HYBRID) {
+    /* Start Redo Archiving */
+    err = m_redo_ctx.start(m_redo_header, m_redo_header_size);
+
+  } else if (m_snapshot_type == HA_CLONE_PAGE) {
+    /* Start COW for all modified pages - Not implemented. */
+    ut_ad(false);
+  } else {
+    ut_ad(false);
+  }
+
+  if (err != 0) {
+    goto func_end;
+  }
+
+  /* Stop modified page archiving. */
+  err = m_page_ctx.stop(nullptr);
+
+  DEBUG_SYNC_C("clone_stop_page_archiving_without_releasing");
+
+  if (err != 0) {
+    goto func_end;
+  }
+
+  /* Collect modified page Ids from Page Archiver. */
+  void *context;
+  uint aligned_size;
+
+  context = static_cast<void *>(this);
+
+  err = m_page_ctx.get_pages(add_page_callback, context, page_buffer,
+                             page_buffer_len);
+
+  m_page_vector.assign(m_page_set.begin(), m_page_set.end());
+
+  aligned_size = ut_calc_align(m_num_pages, chunk_size());
+  m_num_current_chunks = aligned_size >> m_chunk_size_pow2;
+
+  ib::info(ER_IB_MSG_152) << "Clone State PAGE COPY : " << m_num_pages
+                          << " pages, " << m_num_duplicate_pages
+                          << " duplicate pages, " << m_num_current_chunks
+                          << " chunks, "
+                          << " chunk size : "
+                          << (chunk_size() * UNIV_PAGE_SIZE) / (1024 * 1024)
+                          << " M";
+
+func_end:
+  m_page_ctx.release();
+
+  return (err);
+}
+
+int Clone_Snapshot::init_redo_copy() {
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_COPY);
+  ut_ad(m_snapshot_type != HA_CLONE_BLOCKING);
+
+  /* Stop redo archiving. */
+  auto err = m_redo_ctx.stop(m_redo_trailer, m_redo_trailer_size,
+                             m_redo_trailer_offset);
+
+  if (err != 0) {
+    return (err);
+  }
+
+  /* Collect archived redo log files from Log Archiver. */
+  void *context;
+
+  context = static_cast<void *>(this);
+
+  err = m_redo_ctx.get_files(add_redo_file_callback, context);
+
+  /* Add another chunk for the redo log header. */
+  ++m_num_redo_chunks;
+
+  m_monitor.add_estimate(m_redo_header_size);
+
+  /* Add another chunk for the redo log trailer. */
+  ++m_num_redo_chunks;
+
+  if (m_redo_trailer_size != 0) {
+    m_monitor.add_estimate(m_redo_trailer_size);
+  }
+
+  m_num_current_chunks = m_num_redo_chunks;
+
+  ib::info(ER_IB_MSG_153) << "Clone State REDO COPY : " << m_num_current_chunks
+                          << " chunks, "
+                          << " chunk size : "
+                          << (chunk_size() * UNIV_PAGE_SIZE) / (1024 * 1024)
+                          << " M";
+
+  return (err);
+}
+
+Clone_File_Meta *Clone_Snapshot::build_file(const char *file_name,
+                                            ib_uint64_t file_size,
+                                            ib_uint64_t file_offset,
+                                            uint &num_chunks,
+                                            bool copy_file_name) {
+  Clone_File_Meta *file_meta;
+
+  ib_uint64_t aligned_size;
+  ib_uint64_t size_in_pages;
+
+  /* Allocate for file metadata from snapshot heap. */
+  aligned_size = sizeof(Clone_File_Meta);
+
+  if (file_name != nullptr && copy_file_name) {
+    aligned_size += strlen(file_name) + 1;
+  }
+
+  file_meta = static_cast<Clone_File_Meta *>(
+      mem_heap_alloc(m_snapshot_heap, aligned_size));
+
+  if (file_meta == nullptr) {
+    my_error(ER_OUTOFMEMORY, MYF(0), static_cast<int>(aligned_size));
+    return (file_meta);
+  }
+
+  /* For redo file with no data, add dummy entry. */
+  if (file_name == nullptr) {
+    num_chunks = 1;
+
+    file_meta->m_file_name = nullptr;
+    file_meta->m_file_name_len = 0;
+    file_meta->m_file_size = 0;
+
+    file_meta->m_begin_chunk = 1;
+    file_meta->m_end_chunk = 1;
+
+    return (file_meta);
+  }
+
+  file_meta->m_file_size = file_size;
+
+  /* reduce offset amount from total size */
+  ut_ad(file_size >= file_offset);
+  file_size -= file_offset;
+
+  /* Calculate and set chunk parameters. */
+  size_in_pages = ut_uint64_align_up(file_size, UNIV_PAGE_SIZE);
+  size_in_pages /= UNIV_PAGE_SIZE;
+
+  aligned_size = ut_uint64_align_up(size_in_pages, chunk_size());
+
+  num_chunks = static_cast<uint>(aligned_size >> m_chunk_size_pow2);
+
+  file_meta->m_begin_chunk = m_num_current_chunks + 1;
+  file_meta->m_end_chunk = m_num_current_chunks + num_chunks;
+
+  file_meta->m_file_name_len = strlen(file_name) + 1;
+
+  if (copy_file_name) {
+    char *tmp_name = reinterpret_cast<char *>(file_meta + 1);
+
+    strcpy(tmp_name, file_name);
+    file_meta->m_file_name = const_cast<const char *>(tmp_name);
+  } else {
+    /* We use the same pointer as the tablespace and files
+    should not be dropped or changed during clone. */
+    file_meta->m_file_name = file_name;
+  }
+
+  return (file_meta);
+}
+
+int Clone_Snapshot::add_file(const char *name, ib_uint64_t size_bytes,
+                             ulint space_id, bool copy_name) {
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_COPY);
+
+  uint num_chunks;
+
+  /* Build file metadata entry and add to data file vector. */
+  auto file_meta = build_file(name, size_bytes, 0, num_chunks, copy_name);
+
+  if (file_meta == nullptr) {
+    return (ER_OUTOFMEMORY);
+  }
+
+  file_meta->m_space_id = space_id;
+
+  file_meta->m_file_index = m_num_data_files;
+
+  m_data_file_vector.push_back(file_meta);
+
+  ++m_num_data_files;
+
+  ut_ad(m_data_file_vector.size() == m_num_data_files);
+
+  /* Update total number of chunks. */
+  m_num_data_chunks += num_chunks;
+  m_num_current_chunks = m_num_data_chunks;
+
+  /* Update maximum file name length in snapshot. */
+  if (file_meta->m_file_name_len > m_max_file_name_len) {
+    m_max_file_name_len = static_cast<uint32_t>(file_meta->m_file_name_len);
+  }
+
+  return (0);
+}
+
+dberr_t Clone_Snapshot::add_node(fil_node_t *node) {
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_COPY);
+
+  /* Exit if concurrent DDL in progress. */
+  if (is_ddl_temp_table(node)) {
+    my_error(ER_DDL_IN_PROGRESS, MYF(0));
+    return (DB_ERROR);
+  }
+
+  /* Currently don't support encrypted tablespace. */
+  auto space = node->space;
+  if (space->encryption_type != Encryption::NONE) {
+    my_error(ER_NOT_SUPPORTED_YET, MYF(0), "Clone Encrypted Tablespace");
+    return (DB_ERROR);
+  }
+
+  /* Find out the file size from node. */
+  page_size_t page_sz(space->flags);
+
+  /* For compressed pages the file size doesn't match
+  physical page size multiplied by number of pages. It is
+  because we use UNIV_PAGE_SIZE while creating the node
+  and tablespace. */
+
+  uint64_t size_bytes;
+  if (node->is_open && !page_sz.is_compressed()) {
+    size_bytes = static_cast<ib_uint64_t>(node->size);
+    size_bytes *= page_sz.physical();
+  } else {
+    os_file_size_t file_size;
+
+    file_size = os_file_get_size(node->name);
+    size_bytes = file_size.m_total_size;
+  }
+
+  m_monitor.add_estimate(size_bytes);
+
+  /* Add file to snapshot. */
+  auto err = add_file(node->name, size_bytes, space->id, false);
+
+  if (err != 0) {
+    return (DB_ERROR);
+  }
+
+  /* Add to hash map only for first node of the tablesapce. */
+  if (m_data_file_map[space->id] == 0) {
+    m_data_file_map[space->id] = m_num_data_files;
+  }
+
+  return (DB_SUCCESS);
+}
+
+int Clone_Snapshot::add_page(ib_uint32_t space_id, ib_uint32_t page_num) {
+  Clone_Page cur_page;
+
+  cur_page.m_space_id = space_id;
+  cur_page.m_page_no = page_num;
+
+  auto result = m_page_set.insert(cur_page);
+
+  if (result.second) {
+    m_num_pages++;
+    m_monitor.add_estimate(UNIV_PAGE_SIZE);
+  } else {
+    m_num_duplicate_pages++;
+  }
+
+  return (0);
+}
+
+int Clone_Snapshot::add_redo_file(char *file_name, uint64_t file_size,
+                                  uint64_t file_offset) {
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_COPY);
+
+  Clone_File_Meta *file_meta;
+  uint num_chunks;
+
+  /* Build redo file metadata and add to redo vector. */
+  file_meta = build_file(file_name, file_size, file_offset, num_chunks, true);
+
+  m_monitor.add_estimate(file_meta->m_file_size - file_offset);
+
+  if (file_meta == nullptr) {
+    return (ER_OUTOFMEMORY);
+  }
+
+  /* Set the start offset for first redo file. This could happen
+  if redo archiving was already in progress, possibly by another
+  concurrent snapshot. */
+  if (m_num_redo_files == 0) {
+    m_redo_start_offset = file_offset;
+  } else {
+    ut_ad(file_offset == 0);
+  }
+
+  file_meta->m_space_id = dict_sys_t_s_log_space_first_id;
+
+  file_meta->m_file_index = m_num_redo_files;
+
+  m_redo_file_vector.push_back(file_meta);
+  ++m_num_redo_files;
+
+  ut_ad(m_redo_file_vector.size() == m_num_redo_files);
+
+  m_num_redo_chunks += num_chunks;
+  m_num_current_chunks = m_num_redo_chunks;
+
+  return (0);
+}
+
 

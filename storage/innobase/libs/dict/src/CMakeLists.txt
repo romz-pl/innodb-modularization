@@ -16,6 +16,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    flags.cpp
     compiler_hints
     PRIVATE
 )

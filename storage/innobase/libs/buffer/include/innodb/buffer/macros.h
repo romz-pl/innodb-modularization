@@ -40,3 +40,7 @@ this must be equal to UNIV_PAGE_SIZE */
 
 /** Magic value to use instead of checksums when they are disabled */
 #define BUF_NO_CHECKSUM_MAGIC 0xDEADBEEFUL
+
+/** The buffer pool dump/load file name */
+#define SRV_BUF_DUMP_FILENAME_DEFAULT "ib_buffer_pool"
+

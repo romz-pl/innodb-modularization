@@ -41,6 +41,9 @@ add_library( ${LIB_NAME} STATIC
     clone_sys.cpp
     print_chunk_info.cpp
     pfs.cpp
+    add_redo_file_callback.cpp
+    add_page_callback.cpp
+    is_ddl_temp_table.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -54,6 +57,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    dict
     log_arch
     mtr
     PRIVATE

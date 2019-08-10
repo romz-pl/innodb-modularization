@@ -39,6 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/flag.h>
 
 #include <innodb/sync_mutex/ib_mutex_t.h>
+#include <innodb/dict/flags.h>
 
 #include "ibuf0types.h" /* IBUF_SPACE_ID */
 
@@ -152,13 +153,7 @@ enum ib_quiesce_t {
 typedef ib_mutex_t DictSysMutex;
 #endif /* !UNIV_HOTBACKUP */
 
-/** Prefix for tmp tables, adopted from sql/table.h */
-#define TEMP_FILE_PREFIX "#sql"
-#define TEMP_FILE_PREFIX_LENGTH 4
-#define TEMP_FILE_PREFIX_INNODB "#sql-ib"
 
-#define TEMP_TABLE_PREFIX "#sql"
-#define TEMP_TABLE_PATH_PREFIX "/" TEMP_TABLE_PREFIX
 
 #if defined UNIV_DEBUG || defined UNIV_IBUF_DEBUG
 /** Flag to control insert buffer debugging. */
