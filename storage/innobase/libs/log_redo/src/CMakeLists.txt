@@ -137,7 +137,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    tablespace
+    log_files
     PRIVATE
 )
 

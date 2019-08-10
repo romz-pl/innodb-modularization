@@ -1,4 +1,4 @@
-#include <innodb/log_types/log_files_size_offset.h>
+#include <innodb/log_files/log_files_size_offset.h>
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/flags.h>

@@ -1,8 +1,8 @@
-#include <innodb/log_types/log_files_real_offset_for_lsn.h>
+#include <innodb/log_files/log_files_real_offset_for_lsn.h>
 
 #include <innodb/log_types/flags.h>
-#include <innodb/log_types/log_files_real_offset.h>
-#include <innodb/log_types/log_files_size_offset.h>
+#include <innodb/log_files/log_files_real_offset.h>
+#include <innodb/log_files/log_files_size_offset.h>
 #include <innodb/log_types/log_writer_mutex_own.h>
 #include <innodb/log_types/log_t.h>
 

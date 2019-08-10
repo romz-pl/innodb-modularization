@@ -1,8 +1,8 @@
-#include <innodb/log_types/log_files_header_fill.h>
+#include <innodb/log_files/log_files_header_fill.h>
 
 #include <innodb/log_types/flags.h>
-#include <innodb/log_types/log_block_set_checksum.h>
-#include <innodb/log_types/log_block_calc_checksum_crc32.h>
+#include <innodb/log_block/log_block_set_checksum.h>
+#include <innodb/log_block/log_block_calc_checksum_crc32.h>
 #include <innodb/assert/assert.h>
 #include <innodb/machine/data.h>
 #include <innodb/log_types/log_header_format_t.h>

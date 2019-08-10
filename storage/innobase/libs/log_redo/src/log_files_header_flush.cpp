@@ -1,14 +1,14 @@
 #include <innodb/log_redo/log_files_header_flush.h>
 
-#include <innodb/io/IORequestLogWrite.h>
-#include <innodb/log_types/log_t.h>
-#include <innodb/log_types/LSN_PF.h>
-#include <innodb/log_types/log_files_header_fill.h>
-#include <innodb/monitor/MONITOR_INC.h>
-#include <innodb/tablespace/fil_redo_io.h>
-#include <innodb/log_types/flags.h>
 #include <innodb/disk/univ_page_size.h>
+#include <innodb/io/IORequestLogWrite.h>
+#include <innodb/log_types/LSN_PF.h>
+#include <innodb/log_types/flags.h>
+#include <innodb/log_files/log_files_header_fill.h>
+#include <innodb/log_types/log_t.h>
+#include <innodb/monitor/MONITOR_INC.h>
 #include <innodb/page/page_id_t.h>
+#include <innodb/tablespace/fil_redo_io.h>
 
 void log_files_header_flush(log_t &log, uint32_t nth_file, lsn_t start_lsn) {
   ut_ad(log_writer_mutex_own(log));

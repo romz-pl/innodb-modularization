@@ -1,4 +1,4 @@
-#include <innodb/log_types/log_block_get_checksum.h>
+#include <innodb/log_block/log_block_get_checksum.h>
 
 #include <innodb/log_types/flags.h>
 #include <innodb/machine/data.h>
