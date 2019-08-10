@@ -34,8 +34,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_arch/page_archiver_thread_event.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/log_arch/Page_Wait_Flush_Archiver_Cbk.h>
+#include <innodb/clone/Clone_Sys.h>
 
-#include "clone0clone.h"
+#include "handler.h"
+#include "mysql/plugin.h"  // thd_killed()
+#include "log0log.h"
+#include "buf0buf.h"
+#include "fil0fil.h"
+#include "sql/handler.h"
 
 
 

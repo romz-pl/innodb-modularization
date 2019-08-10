@@ -551,14 +551,10 @@ extern PSI_stage_info srv_stage_alter_tablespace_encryption;
 extern PSI_stage_info srv_stage_buffer_pool_load;
 #endif /* HAVE_PSI_STAGE_INTERFACE */
 
-/** Performance schema stage event for monitoring clone file copy progress. */
-extern PSI_stage_info srv_stage_clone_file_copy;
 
-/** Performance schema stage event for monitoring clone redo copy progress. */
-extern PSI_stage_info srv_stage_clone_redo_copy;
 
-/** Performance schema stage event for monitoring clone page copy progress. */
-extern PSI_stage_info srv_stage_clone_page_copy;
+#include <innodb/io/srv_is_direct_io.h>
+
 
 #ifndef _WIN32
 
@@ -567,10 +563,7 @@ extern PSI_stage_info srv_stage_clone_page_copy;
 
 
 
-inline bool srv_is_direct_io() {
-  return (srv_unix_file_flush_method == SRV_UNIX_O_DIRECT ||
-          srv_unix_file_flush_method == SRV_UNIX_O_DIRECT_NO_FSYNC);
-}
+
 
 #else
 /** Alternatives for file i/o in Windows. @see innodb_flush_method_names. */
@@ -582,9 +575,7 @@ enum srv_win_flush_t {
 };
 extern enum srv_win_flush_t srv_win_file_flush_method;
 
-inline bool srv_is_direct_io() {
-  return (srv_win_file_flush_method == SRV_WIN_IO_UNBUFFERED);
-}
+
 
 #endif /* _WIN32 */
 

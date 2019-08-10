@@ -41,8 +41,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/clone/Clone_Desc_Task_Meta.h>
 #include <innodb/clone/Clone_Desc_File_MetaData.h>
 #include <innodb/clone/Clone_Desc_Data.h>
+#include <innodb/clone/Clone_Snapshot.h>
+#include <innodb/clone/Clone_Handle.h>
 
-#include "clone0clone.h"
+#include "handler.h"
+#include "mysql/plugin.h"  // thd_killed()
+#include "log0log.h"
+#include "buf0buf.h"
+#include "fil0fil.h"
+#include "sql/handler.h"
 #include "dict0dict.h"
 #include "handler.h"
 #include "log0log.h"

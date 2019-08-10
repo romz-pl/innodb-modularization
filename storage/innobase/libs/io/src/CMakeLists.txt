@@ -151,7 +151,7 @@ add_library( ${LIB_NAME} STATIC
     srv_use_native_aio.cpp
     os_file_create_tmpfile.cpp
     os_file_decompress_page.cpp
-
+    srv_is_direct_io.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

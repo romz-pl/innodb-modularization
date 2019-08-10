@@ -74,6 +74,37 @@ const uint SNAPSHOT_STATE_CHANGE_SLEEP = 100 * 1000;
 
 
 
+/** Clone in progress file name length. */
+const size_t CLONE_FILE_LEN = 32;
+
+/** Clone in progress file name. */
+const char CLONE_IN_PROGRESS_FILE[] = "#clone_in_progress";
+
+/** Maximum number of concurrent snapshots */
+const int MAX_SNAPSHOTS = 1;
+
+/** Maximum number of concurrent clones */
+const int MAX_CLONES = 1;
+
+/** Clone system array size */
+const int CLONE_ARR_SIZE = 2 * MAX_CLONES;
+
+/** Snapshot system array size */
+const int SNAPSHOT_ARR_SIZE = 2 * MAX_SNAPSHOTS;
+
+
+#include <innodb/clone/Clone_Msec.h>
+#include <innodb/clone/Clone_Sec.h>
+#include <innodb/clone/Clone_Min.h>
+
+/** Default sleep time while waiting: 100 ms */
+const Clone_Msec CLONE_DEF_SLEEP{100};
+
+/** Default alert interval in multiple of sleep time: 5 seconds */
+const Clone_Sec CLONE_DEF_ALERT_INTERVAL{5};
+
+/** Default timeout in multiple of sleep time: 30 minutes */
+const Clone_Min CLONE_DEF_TIMEOUT{30};
 
 
 

@@ -64,7 +64,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     buffer
-    crc32
     PRIVATE
 )
 

@@ -69,7 +69,6 @@ SET(INNOBASE_SOURCES
     buf/buf0lru.cc
     buf/buf0rea.cc
     clone/clone0api.cc
-    clone/clone0clone.cc
     clone/clone0copy.cc
     clone/clone0apply.cc
     clone/clone0snapshot.cc

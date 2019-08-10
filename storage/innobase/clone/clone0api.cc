@@ -29,11 +29,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/clone/clone_sys.h>
 #include <innodb/io/os_file_status.h>
 #include <innodb/clone/clone_validate_locator.h>
 
 #include "clone0api.h"
-#include "clone0clone.h"
+#include "handler.h"
+#include "mysql/plugin.h"  // thd_killed()
+#include "log0log.h"
+#include "buf0buf.h"
+#include "fil0fil.h"
+#include "sql/handler.h"
 #include <innodb/thread/os_thread_create.h>
 
 #include "sql/mysqld.h"

@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/clone/pfs.h>
 #include <innodb/log_arch/page_archiver_thread_event.h>
 #include <innodb/log_arch/page_archiver_is_active.h>
 #include <innodb/log_arch/log_archiver_is_active.h>

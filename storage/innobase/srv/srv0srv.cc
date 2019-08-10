@@ -707,17 +707,7 @@ PSI_stage_info srv_stage_buffer_pool_load = {
     0, "buffer pool load", PSI_FLAG_STAGE_PROGRESS, PSI_DOCUMENT_ME};
 #endif /* HAVE_PSI_STAGE_INTERFACE */
 
-/** Performance schema stage event for monitoring clone file copy progress. */
-PSI_stage_info srv_stage_clone_file_copy = {
-    0, "clone (file copy)", PSI_FLAG_STAGE_PROGRESS, PSI_DOCUMENT_ME};
 
-/** Performance schema stage event for monitoring clone redo copy progress. */
-PSI_stage_info srv_stage_clone_redo_copy = {
-    0, "clone (redo copy)", PSI_FLAG_STAGE_PROGRESS, PSI_DOCUMENT_ME};
-
-/** Performance schema stage event for monitoring clone page copy progress. */
-PSI_stage_info srv_stage_clone_page_copy = {
-    0, "clone (page copy)", PSI_FLAG_STAGE_PROGRESS, PSI_DOCUMENT_ME};
 
 /** Prints counters for work done by srv_master_thread. */
 static void srv_print_master_thread_info(FILE *file) /* in: output stream */

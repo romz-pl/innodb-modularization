@@ -47,7 +47,7 @@ SET( INNODB_COMPONENT_LIBS
     #ioasync
 
     # L
-    log_arch
+    #log_arch
     #log_redo
     #log_types
     log_write
@@ -60,7 +60,7 @@ SET( INNODB_COMPONENT_LIBS
     #memory
     #memory_check
     #monitor
-    mtr
+    #mtr
 
     # P
     #page

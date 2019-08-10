@@ -29,6 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/clone/clone_sys.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/tablespace/Fil_iterator.h>
@@ -43,7 +44,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/clone/Clone_Desc_Data.h>
 
 #include "buf0dump.h"
-#include "clone0clone.h"
+#include "handler.h"
+#include "mysql/plugin.h"  // thd_killed()
+#include "log0log.h"
+#include "buf0buf.h"
+#include "fil0fil.h"
+#include "sql/handler.h"
 #include "dict0dict.h"
 
 #include "handler.h"
