@@ -2,8 +2,8 @@
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/flags.h>
-#include <innodb/log_redo/log_checkpointer_mutex_own.h>
-#include <innodb/log_redo/log_writer_mutex_own.h>
+#include <innodb/log_types/log_checkpointer_mutex_own.h>
+#include <innodb/log_types/log_writer_mutex_own.h>
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/log_redo/log_deallocate_buffer.h>

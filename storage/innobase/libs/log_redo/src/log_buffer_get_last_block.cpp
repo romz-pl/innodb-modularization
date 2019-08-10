@@ -6,8 +6,8 @@
 #include <innodb/log_redo/log_block_set_data_len.h>
 #include <innodb/log_redo/log_block_set_hdr_no.h>
 #include <innodb/log_redo/log_block_store_checksum.h>
-#include <innodb/log_redo/log_buffer_x_lock_enter.h>
-#include <innodb/log_redo/log_buffer_x_lock_exit.h>
+#include <innodb/log_types/log_buffer_x_lock_enter.h>
+#include <innodb/log_types/log_buffer_x_lock_exit.h>
 #include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_types/log_t.h>
 

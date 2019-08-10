@@ -1,11 +1,11 @@
 #include <innodb/log_redo/log_buffer_set_first_record_group.h>
 
 #include <innodb/align/ut_uint64_align_down.h>
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/log_block_get_first_rec_group.h>
 #include <innodb/log_redo/log_block_set_first_rec_group.h>
 #include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
-#include <innodb/log_redo/log_lsn_validate.h>
+#include <innodb/log_types/log_lsn_validate.h>
 #include <innodb/log_types/Log_handle.h>
 #include <innodb/log_types/log_t.h>
 

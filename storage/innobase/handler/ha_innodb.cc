@@ -46,13 +46,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/log_arch/Page_Arch_Client_Ctx.h>
+#include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/log_write/srv_flushing_avg_loops.h>
 #include <innodb/log_write/srv_log_spin_cpu_pct_hwm.h>
-#include <innodb/log_redo/log_checkpointer_mutex_exit.h>
-#include <innodb/log_redo/log_writer_mutex_exit.h>
-#include <innodb/log_redo/log_writer_mutex_enter.h>
-#include <innodb/log_redo/log_checkpointer_mutex_enter.h>
+#include <innodb/log_types/log_checkpointer_mutex_exit.h>
+#include <innodb/log_types/log_writer_mutex_exit.h>
+#include <innodb/log_types/log_writer_mutex_enter.h>
+#include <innodb/log_types/log_checkpointer_mutex_enter.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/memory/mem_heap_strdupl.h>
 #include <innodb/memory/mem_heap_empty.h>
@@ -126,8 +128,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sql_thd_internal_api.h>
 #include "api0api.h"
 #include "api0misc.h"
-#include "arch0arch.h"
-#include "arch0page.h"
+#include "log0log.h"
+#include "log0log.h"
+#include "buf0buf.h"
 #include "auth_acls.h"
 #include "btr0btr.h"
 #include "btr0bulk.h"

@@ -10,6 +10,13 @@
 #include <innodb/io/os_file_status.h>
 #include <innodb/io/os_file_type_t.h>
 #include <innodb/io/pfs.h>
+#include <innodb/log_arch/Arch_Dblwr_Ctx.h>
+#include <innodb/log_arch/arch_remove_dir.h>
+#include <innodb/log_arch/arch_remove_file.h>
+#include <innodb/log_arch/Arch_Recv_Group_Info.h>
+#include <innodb/io/IORequest.h>
+#include <innodb/log_arch/arch_page_sys.h>
+#include <innodb/io/os_file_read.h>
 
 Arch_File_Ctx Arch_Group::s_dblwr_file_ctx;
 
@@ -435,4 +442,357 @@ uint Arch_Group::purge(lsn_t purge_lsn, lsn_t &group_purged_lsn) {
   group_purged_lsn = purged_lsn;
 
   return (0);
+}
+
+dberr_t Arch_Group::recovery_replace_pages_from_dblwr(
+    Arch_Dblwr_Ctx *dblwr_ctx) {
+  auto ARCH_UNKNOWN_BLOCK = std::numeric_limits<uint>::max();
+  uint full_flush_blk_num = ARCH_UNKNOWN_BLOCK;
+  auto dblwr_blocks = dblwr_ctx->get_blocks();
+  size_t num_files = get_file_count();
+
+  ut_ad(num_files > 0);
+
+  for (uint index = 0; index < dblwr_blocks.size(); ++index) {
+    auto dblwr_block = dblwr_blocks[index];
+
+    switch (dblwr_block.m_block_type) {
+      case ARCH_RESET_BLOCK:
+
+        ut_ad(dblwr_block.m_block_num < num_files);
+        /* If the block does not belong to the last file then ignore. */
+        if (dblwr_block.m_block_num != num_files - 1) {
+          continue;
+        } else {
+          break;
+        }
+
+      case ARCH_DATA_BLOCK: {
+        uint file_index = Arch_Block::get_file_index(dblwr_block.m_block_num);
+        ut_ad(file_index < num_files);
+
+        /* If the block does not belong to the last file then ignore. */
+        if (file_index < num_files - 1) {
+          continue;
+        }
+
+        if (dblwr_block.m_flush_type == ARCH_FLUSH_NORMAL) {
+          full_flush_blk_num = dblwr_block.m_block_num;
+        } else {
+          /* It's possible that the partial flush block might have been fully
+          flushed, in which case we need to skip this block. */
+          if (full_flush_blk_num != ARCH_UNKNOWN_BLOCK &&
+              full_flush_blk_num >= dblwr_block.m_block_num) {
+            continue;
+          }
+        }
+      } break;
+
+      default:
+        ut_ad(false);
+    }
+
+    uint64_t offset = Arch_Block::get_file_offset(dblwr_block.m_block_num,
+                                                  dblwr_block.m_block_type);
+
+    ut_ad(m_file_ctx.is_closed());
+
+    dberr_t err;
+
+    err = m_file_ctx.open(false, m_begin_lsn, num_files - 1, 0);
+
+    if (err != DB_SUCCESS) {
+      return (err);
+    }
+
+    err = m_file_ctx.write(nullptr, dblwr_block.m_block, offset,
+                           ARCH_PAGE_BLK_SIZE);
+
+    if (err != DB_SUCCESS) {
+      return (err);
+    }
+
+    m_file_ctx.close();
+  }
+
+  return (DB_SUCCESS);
+}
+
+dberr_t Arch_Group::recovery_cleanup_if_required(uint &num_files,
+                                                 uint start_index, bool durable,
+                                                 bool &empty_file) {
+  dberr_t err;
+
+  ut_ad(!durable || num_files > 0);
+  ut_ad(m_file_ctx.is_closed());
+
+  uint index = start_index + num_files - 1;
+
+  /* Open the last file in the group. */
+  err = m_file_ctx.open(true, m_begin_lsn, index, 0);
+
+  if (err != DB_SUCCESS) {
+    return (err);
+  }
+
+  if (m_file_ctx.get_phy_size() != 0 && durable) {
+    m_file_ctx.close();
+    return (DB_SUCCESS);
+  }
+
+  empty_file = true;
+
+  /* No blocks have been flushed into the file so delete the file. */
+
+  char file_path[MAX_ARCH_PAGE_FILE_NAME_LEN];
+  char dir_path[MAX_ARCH_DIR_NAME_LEN];
+
+  m_file_ctx.build_name(index, m_begin_lsn, file_path,
+                        MAX_ARCH_PAGE_FILE_NAME_LEN);
+
+  auto found = std::string(file_path).find(ARCH_PAGE_FILE);
+  ut_ad(found != std::string::npos);
+  auto file_name = std::string(file_path).substr(found);
+
+  m_file_ctx.build_dir_name(m_begin_lsn, dir_path, MAX_ARCH_DIR_NAME_LEN);
+
+  m_file_ctx.close();
+
+  arch_remove_file(dir_path, file_name.c_str());
+
+  --num_files;
+
+  /* If there are no archive files in the group we might as well
+  purge it. */
+  if (num_files == 0 || !durable) {
+    m_is_active = false;
+
+    found = std::string(dir_path).find(ARCH_PAGE_DIR);
+    ut_ad(found != std::string::npos);
+
+    auto path = std::string(dir_path).substr(0, found - 1);
+    auto dir_name = std::string(dir_path).substr(found);
+
+    num_files = 0;
+    arch_remove_dir(path.c_str(), dir_name.c_str());
+  }
+
+  /* Need to reinitialize the file context as num_files has changed. */
+  err = m_file_ctx.init(
+      ARCH_DIR, ARCH_PAGE_DIR, ARCH_PAGE_FILE, num_files,
+      static_cast<uint64_t>(ARCH_PAGE_BLK_SIZE) * ARCH_PAGE_FILE_CAPACITY);
+
+  return (err);
+}
+
+dberr_t Arch_Group::recover(Arch_Recv_Group_Info *group_info,
+                            bool &new_empty_file, Arch_Dblwr_Ctx *dblwr_ctx,
+                            Arch_Page_Pos &write_pos,
+                            Arch_Page_Pos &reset_pos) {
+  dberr_t err;
+
+  err = init_file_ctx(
+      ARCH_DIR, ARCH_PAGE_DIR, ARCH_PAGE_FILE, group_info->m_num_files,
+      static_cast<uint64_t>(ARCH_PAGE_BLK_SIZE) * ARCH_PAGE_FILE_CAPACITY);
+
+  if (err != DB_SUCCESS) {
+    return (err);
+  }
+
+  if (group_info->m_active) {
+    /* Since the group was active at the time of crash it's possible that the
+    doublewrite buffer might have the latest data in case of a crash. */
+
+    err = recovery_replace_pages_from_dblwr(dblwr_ctx);
+
+    if (err != DB_SUCCESS) {
+      return (err);
+    }
+  }
+
+  err = recovery_cleanup_if_required(group_info->m_num_files,
+                                     group_info->m_file_start_index,
+                                     group_info->m_durable, new_empty_file);
+
+  if (err != DB_SUCCESS) {
+    return (err);
+  }
+
+  if (group_info->m_num_files == 0) {
+    return (err);
+  }
+
+  err = recovery_parse(write_pos, reset_pos, group_info->m_file_start_index);
+
+  if (err != DB_SUCCESS) {
+    return (err);
+  }
+
+  if (!group_info->m_active) {
+    /* Group was inactive at the time of shutdown/crash, so
+    we just add the group to the group list that the
+    archiver maintains. */
+
+    attach_during_recovery();
+    m_stop_pos = write_pos;
+
+    auto end_lsn = m_file_ctx.get_last_stop_point();
+    ut_ad(end_lsn != LSN_MAX);
+
+    disable(end_lsn);
+  } else {
+    err = open_file_during_recovery(write_pos, new_empty_file);
+  }
+
+  ut_d(m_file_ctx.recovery_reset_print(group_info->m_file_start_index));
+
+  return (err);
+}
+
+dberr_t Arch_Group::recovery_parse(Arch_Page_Pos &write_pos,
+                                   Arch_Page_Pos &reset_pos,
+                                   size_t start_index) {
+  size_t num_files = get_file_count();
+  dberr_t err = DB_SUCCESS;
+
+  if (num_files == 0) {
+    DBUG_PRINT("page_archiver", ("No group information available"));
+    return (DB_SUCCESS);
+  }
+
+  ut_ad(m_file_ctx.is_closed());
+
+  uint file_count = start_index + num_files;
+
+  for (auto file_index = start_index; file_index < file_count; ++file_index) {
+    if (file_index == start_index) {
+      err = m_file_ctx.open(true, m_begin_lsn, start_index, 0);
+    } else {
+      err = m_file_ctx.open_next(m_begin_lsn, 0);
+    }
+
+    if (err != DB_SUCCESS) {
+      break;
+    }
+
+    err = m_file_ctx.fetch_reset_points(file_index, reset_pos);
+
+    if (err != DB_SUCCESS) {
+      break;
+    }
+
+    bool last_file = (file_index + 1 == file_count);
+    err = m_file_ctx.fetch_stop_points(last_file, write_pos);
+
+    if (err != DB_SUCCESS) {
+      break;
+    }
+
+    m_file_ctx.close();
+  }
+
+  m_file_ctx.close();
+
+  return (err);
+}
+
+dberr_t Arch_Group::recovery_read_latest_blocks(byte *buf, uint64_t offset,
+                                                Arch_Blk_Type type) {
+  dberr_t err = DB_SUCCESS;
+
+  ut_ad(!m_file_ctx.is_closed());
+
+  switch (type) {
+    case ARCH_RESET_BLOCK: {
+      ut_d(uint64_t file_size = m_file_ctx.get_phy_size());
+      ut_ad((file_size > ARCH_PAGE_FILE_NUM_RESET_PAGE * ARCH_PAGE_BLK_SIZE) &&
+            (file_size % ARCH_PAGE_BLK_SIZE == 0));
+
+      err = m_file_ctx.read(buf, 0, ARCH_PAGE_BLK_SIZE);
+    } break;
+
+    case ARCH_DATA_BLOCK:
+      err = m_file_ctx.read(buf, offset, ARCH_PAGE_BLK_SIZE);
+      break;
+  }
+
+  return (err);
+}
+
+#ifdef UNIV_DEBUG
+void Arch_Group::adjust_end_lsn(lsn_t &stop_lsn, uint32_t &blk_len) {
+  stop_lsn = ut_uint64_align_down(get_begin_lsn(), OS_FILE_LOG_BLOCK_SIZE);
+
+  stop_lsn += get_file_size() - LOG_FILE_HDR_SIZE;
+  blk_len = 0;
+
+  /* Increase Stop LSN 64 bytes ahead of file end not exceeding
+  redo block size. */
+  DBUG_EXECUTE_IF("clone_arch_log_extra_bytes",
+                  blk_len = OS_FILE_LOG_BLOCK_SIZE;
+                  stop_lsn += 64;);
+}
+#endif /* UNIV_DEBUG */
+
+int Arch_Group::read_from_file(Arch_Page_Pos *read_pos, uint read_len,
+                               byte *read_buff) {
+  char errbuf[MYSYS_STRERROR_SIZE];
+  char file_name[MAX_ARCH_PAGE_FILE_NAME_LEN];
+
+  /* Build file name */
+  auto file_index =
+      static_cast<uint>(Arch_Block::get_file_index(read_pos->m_block_num));
+
+  get_file_name(file_index, file_name, MAX_ARCH_PAGE_FILE_NAME_LEN);
+
+  /* Find offset to read from. */
+  os_offset_t offset =
+      Arch_Block::get_file_offset(read_pos->m_block_num, ARCH_DATA_BLOCK);
+  offset += read_pos->m_offset;
+
+  bool success;
+
+  /* Open file in read only mode. */
+  pfs_os_file_t file =
+      os_file_create(innodb_arch_file_key, file_name, OS_FILE_OPEN,
+                     OS_FILE_NORMAL, OS_CLONE_LOG_FILE, true, &success);
+
+  if (!success) {
+    my_error(ER_CANT_OPEN_FILE, MYF(0), file_name, errno,
+             my_strerror(errbuf, sizeof(errbuf), errno));
+
+    return (ER_CANT_OPEN_FILE);
+  }
+
+  /* Read from file to the user buffer. */
+  IORequest request(IORequest::READ);
+
+  request.disable_compression();
+  request.clear_encrypted();
+
+  auto db_err = os_file_read(request, file, read_buff, offset, read_len);
+
+  os_file_close(file);
+
+  if (db_err != DB_SUCCESS) {
+    my_error(ER_ERROR_ON_READ, MYF(0), file_name, errno,
+             my_strerror(errbuf, sizeof(errbuf), errno));
+    return (ER_ERROR_ON_READ);
+  }
+
+  return (0);
+}
+
+int Arch_Group::read_data(Arch_Page_Pos cur_pos, byte *buff, uint buff_len) {
+  int err = 0;
+
+  /* Attempt to read from in memory buffer. */
+  auto success = arch_page_sys->get_pages(this, &cur_pos, buff_len, buff);
+
+  if (!success) {
+    /* The buffer is overwritten. Read from file. */
+    err = read_from_file(&cur_pos, buff_len, buff);
+  }
+
+  return (err);
 }

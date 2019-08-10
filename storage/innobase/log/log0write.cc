@@ -46,6 +46,8 @@ the file COPYING.Google.
 
 #include <cstring>
 
+#include <innodb/log_arch/log_archiver_thread_event.h>
+#include <innodb/log_arch/arch_log_sys.h>
 #include <innodb/log_write/log_writer_wait_on_checkpoint.h>
 #include <innodb/log_write/log_flush_low.h>
 #include <innodb/log_write/log_flush_update_stats.h>
@@ -61,8 +63,8 @@ the file COPYING.Google.
 #include <innodb/log_redo/log_write_notifier_mutex_enter.h>
 #include <innodb/log_redo/log_flusher_mutex_exit.h>
 #include <innodb/log_redo/log_flusher_mutex_enter.h>
-#include <innodb/log_redo/log_writer_mutex_enter.h>
-#include <innodb/log_redo/log_writer_mutex_exit.h>
+#include <innodb/log_types/log_writer_mutex_enter.h>
+#include <innodb/log_types/log_writer_mutex_exit.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>
@@ -97,7 +99,7 @@ the file COPYING.Google.
 
 #include <debug_sync.h>
 
-#include "arch0arch.h"
+#include "log0log.h"
 #include "buf0buf.h"
 #include "buf0flu.h"
 #include "dict0boot.h"

@@ -3,7 +3,7 @@
 #include <innodb/io/IORequestLogWrite.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/LSN_PF.h>
-#include <innodb/log_redo/log_files_header_fill.h>
+#include <innodb/log_types/log_files_header_fill.h>
 #include <innodb/monitor/MONITOR_INC.h>
 #include <innodb/tablespace/fil_redo_io.h>
 #include <innodb/log_types/flags.h>

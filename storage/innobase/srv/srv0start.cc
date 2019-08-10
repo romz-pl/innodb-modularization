@@ -50,6 +50,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/log_arch/page_archiver_thread_event.h>
+#include <innodb/log_arch/page_archiver_is_active.h>
+#include <innodb/log_arch/log_archiver_is_active.h>
+#include <innodb/log_arch/arch_page_sys.h>
+#include <innodb/log_arch/arch_init.h>
+#include <innodb/log_arch/log_archiver_thread_event.h>
+#include <innodb/log_arch/log_archiver_is_active.h>
 #include <innodb/log_arch/arch_free.h>
 #include <innodb/log_redo/log_files_header_flush.h>
 #include <innodb/log_redo/log_stop_background_threads.h>
@@ -121,8 +128,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0trx.h"
 #include <innodb/enum/to_int.h>
 
-#include "arch0arch.h"
-#include "arch0recv.h"
+#include "log0log.h"
+#include "buf0buf.h"
 #include "btr0pcur.h"
 #include "btr0sea.h"
 #include "buf0flu.h"

@@ -20,6 +20,7 @@
 #include <innodb/log_arch/Arch_Block.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/logger/info.h>
+#include <innodb/machine/data.h>
 
 #include <algorithm>
 
@@ -757,3 +758,167 @@ lsn_t Arch_File_Ctx::purge(lsn_t begin_lsn, lsn_t end_lsn, lsn_t purge_lsn) {
   return (purged_lsn);
 }
 
+#ifdef UNIV_DEBUG
+void Arch_File_Ctx::recovery_reset_print(uint file_start_index) {
+  Arch_Reset reset;
+  Arch_Reset_File reset_file;
+  Arch_Point start_point;
+
+  DBUG_PRINT("page_archiver", ("No. of files : %u", m_count));
+
+  if (m_reset.size() == 0) {
+    DBUG_PRINT("page_archiver", ("No reset info available for this group."));
+  }
+
+  for (auto reset_file : m_reset) {
+    DBUG_PRINT("page_archiver", ("File %u\tFile LSN : %" PRIu64 "",
+                                 reset_file.m_file_index, reset_file.m_lsn));
+
+    if (reset_file.m_start_point.size() == 0) {
+      DBUG_PRINT("page_archiver", ("No reset info available for this file."));
+    }
+
+    for (uint i = 0; i < reset_file.m_start_point.size(); i++) {
+      start_point = reset_file.m_start_point[i];
+      DBUG_PRINT("page_archiver",
+                 ("\tReset lsn : %" PRIu64 ", reset_pos : %" PRIu64 "\t %u",
+                  start_point.lsn, start_point.pos.m_block_num,
+                  start_point.pos.m_offset));
+    }
+  }
+
+  DBUG_PRINT("page_archiver",
+             ("Starting index of the file : %u", file_start_index));
+
+  DBUG_PRINT("page_archiver", ("Latest stop points"));
+  uint file_index = 0;
+  for (auto stop_point : m_stop_points) {
+    DBUG_PRINT("page_archiver",
+               ("\tFile %u : %" PRIu64 "", file_index, stop_point));
+    ++file_index;
+  }
+}
+#endif
+
+
+dberr_t Arch_File_Ctx::fetch_stop_points(bool last_file,
+                                         Arch_Page_Pos &write_pos) {
+  ut_ad(!is_closed());
+
+  uint64_t offset;
+  byte buf[ARCH_PAGE_BLK_SIZE];
+
+  if (last_file) {
+    offset = get_phy_size() - ARCH_PAGE_BLK_SIZE;
+  } else {
+    offset = ARCH_PAGE_FILE_DATA_CAPACITY * ARCH_PAGE_BLK_SIZE;
+  }
+
+  auto err = read(buf, offset, ARCH_PAGE_BLK_SIZE);
+
+  if (err != DB_SUCCESS) {
+    return (err);
+  }
+
+  auto stop_lsn = Arch_Block::get_stop_lsn(buf);
+  m_stop_points.push_back(stop_lsn);
+
+  write_pos.init();
+  write_pos.m_block_num = Arch_Block::get_block_number(buf);
+  write_pos.m_offset =
+      Arch_Block::get_data_len(buf) + ARCH_PAGE_BLK_HEADER_LENGTH;
+
+  return (err);
+}
+
+dberr_t Arch_File_Ctx::fetch_reset_points(uint file_index,
+                                          Arch_Page_Pos &reset_pos) {
+  ut_ad(!is_closed());
+  ut_ad(m_index == file_index);
+
+  byte buf[ARCH_PAGE_BLK_SIZE];
+
+  /* Read reset block to fetch reset points. */
+  auto err = read(buf, 0, ARCH_PAGE_BLK_SIZE);
+
+  if (err != DB_SUCCESS) {
+    return (err);
+  }
+
+  auto block_num = Arch_Block::get_block_number(buf);
+  auto data_len = Arch_Block::get_data_len(buf);
+
+  if (file_index != block_num) {
+    /* This means there was no reset for this file and hence the
+    reset block was not flushed. */
+
+    ut_ad(Arch_Block::is_zeroes(buf));
+    reset_pos.init();
+    reset_pos.m_block_num = file_index;
+    return (err);
+  }
+
+  /* Normal case. */
+  reset_pos.m_block_num = block_num;
+  reset_pos.m_offset = data_len + ARCH_PAGE_BLK_HEADER_LENGTH;
+
+  Arch_Reset_File reset_file;
+  reset_file.init();
+  reset_file.m_file_index = file_index;
+
+  if (data_len != 0) {
+    uint length = 0;
+    byte *buf1 = buf + ARCH_PAGE_BLK_HEADER_LENGTH;
+
+    ut_ad(data_len >= ARCH_PAGE_FILE_HEADER_RESET_LSN_SIZE +
+                          ARCH_PAGE_FILE_HEADER_RESET_POS_SIZE);
+
+    reset_file.m_lsn = mach_read_from_8(buf1);
+    length += ARCH_PAGE_FILE_HEADER_RESET_LSN_SIZE;
+
+    Arch_Point start_point;
+    Arch_Page_Pos pos;
+
+    while (length != data_len) {
+      ut_ad((data_len - length) % ARCH_PAGE_FILE_HEADER_RESET_POS_SIZE == 0);
+
+      pos.m_block_num = mach_read_from_2(buf1 + length);
+      length += ARCH_PAGE_FILE_HEADER_RESET_BLOCK_NUM_SIZE;
+
+      pos.m_offset = mach_read_from_2(buf1 + length);
+      length += ARCH_PAGE_FILE_HEADER_RESET_BLOCK_OFFSET_SIZE;
+
+      start_point.lsn = fetch_reset_lsn(pos.m_block_num);
+      start_point.pos = pos;
+
+      reset_file.m_start_point.push_back(start_point);
+    }
+
+    m_reset.push_back(reset_file);
+  }
+
+  return (err);
+}
+
+lsn_t Arch_File_Ctx::fetch_reset_lsn(uint64_t block_num) {
+  ut_ad(!is_closed());
+  ut_ad(Arch_Block::get_file_index(block_num) == m_index);
+
+  byte buf[ARCH_PAGE_BLK_SIZE];
+
+  auto offset = Arch_Block::get_file_offset(block_num, ARCH_DATA_BLOCK);
+
+  ut_ad(offset + ARCH_PAGE_BLK_SIZE <= get_phy_size());
+
+  auto err = read(buf, offset, ARCH_PAGE_BLK_HEADER_LENGTH);
+
+  if (err != DB_SUCCESS) {
+    return (LSN_MAX);
+  }
+
+  auto lsn = Arch_Block::get_reset_lsn(buf);
+
+  ut_ad(lsn != LSN_MAX);
+
+  return (lsn);
+}

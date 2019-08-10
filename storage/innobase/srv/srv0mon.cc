@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <time.h>
 
+#include <innodb/log_arch/arch_log_sys.h>
 #include <innodb/logger/info.h>
 #include <innodb/sync_rw/rw_lock_stats.h>
 #include <innodb/buffer/buf_pool_stat_t.h>
@@ -42,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_n_file_reads.h>
 #include <innodb/io/os_n_file_writes.h>
 
-#include "arch0arch.h"
+#include "log0log.h"
 #include "buf0buf.h"
 #include "dict0mem.h"
 #include "ibuf0ibuf.h"

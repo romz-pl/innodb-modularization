@@ -7,7 +7,7 @@
 #include <innodb/log_types/log_t.h>
 #include <innodb/monitor/MONITOR_INC_WAIT_STATS.h>
 #include <innodb/wait/Wait_stats.h>
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_write/log_write_up_to.h>
 
 void log_wait_for_space_in_log_buf(log_t &log, sn_t end_sn) {

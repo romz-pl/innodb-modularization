@@ -34,10 +34,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_arch/Page_Arch_Client_Ctx.h>
+#include <innodb/log_arch/Log_Arch_Client_Ctx.h>
 #include <innodb/sync_mutex/mutex_own.h>
 
-#include "arch0log.h"
-#include "arch0page.h"
+#include "log0log.h"
+#include "buf0buf.h"
 #include "clone0desc.h"
 #include "clone0monitor.h"
 #include "fil0fil.h"

@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/align/ut_uint64_align_up.h>
@@ -68,7 +69,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <string>
 #include <vector>
 
-#include "arch0arch.h"
+#include "log0log.h"
 #include "log0recv.h"
 
 #include "btr0btr.h"

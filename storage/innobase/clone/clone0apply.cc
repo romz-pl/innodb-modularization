@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_create.h>
 #include <innodb/io/os_file_close.h>
 #include <innodb/io/os_file_seek.h>
+#include <innodb/io/os_file_flush.h>
+#include <innodb/io/os_file_get_size.h>
 
 #include "clone0clone.h"
 #include "dict0dict.h"

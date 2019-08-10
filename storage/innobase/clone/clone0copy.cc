@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/create_type.h>
 #include <innodb/io/os_file_status.h>
 #include <innodb/io/os_file_seek.h>
+#include <innodb/io/os_file_size_t.h>
+#include <innodb/io/os_file_get_size.h>
 
 #include "buf0dump.h"
 #include "clone0clone.h"

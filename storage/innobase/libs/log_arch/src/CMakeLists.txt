@@ -40,6 +40,16 @@ add_library( ${LIB_NAME} STATIC
     page_archiver_thread.cpp
     start_page_archiver_background.cpp
     pfs.cpp
+    Arch_Recv_Group_Info.cpp
+    Arch_Dir_Group_Info_Map.cpp
+    Arch_Dblwr_Block.cpp
+    Arch_Dblwr_Blocks.cpp
+    Arch_Dblwr_Ctx.cpp
+    Recv.cpp
+    Log_Arch_Cbk.cpp
+    Log_Arch_Client_Ctx.cpp
+    srv_log_file_size.cpp
+    srv_log_group_home_dir.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

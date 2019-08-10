@@ -1,6 +1,6 @@
 #include <innodb/log_write/log_wait_for_flush.h>
 
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/log_max_spins_when_waiting_in_user_thread.h>
 #include <innodb/log_write/srv_log_wait_for_flush_spin_delay.h>

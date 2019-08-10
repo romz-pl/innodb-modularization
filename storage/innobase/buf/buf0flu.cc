@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <time.h>
 
+#include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/log_write/srv_flushing_avg_loops.h>
 #include <innodb/monitor/MONITOR_INC_WAIT_STATS_EX.h>
 #include <innodb/time/ut_time.h>
@@ -81,7 +82,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 #include "page0zip.h"
 #ifndef UNIV_HOTBACKUP
-#include "arch0arch.h"
+#include "log0log.h"
 #include "buf0lru.h"
 #include "buf0rea.h"
 #include "fil0fil.h"

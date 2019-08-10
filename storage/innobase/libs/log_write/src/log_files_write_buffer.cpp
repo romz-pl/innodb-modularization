@@ -1,6 +1,6 @@
 #include <innodb/log_write/log_files_write_buffer.h>
 
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/srv_stats.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/compute_how_much_to_write.h>

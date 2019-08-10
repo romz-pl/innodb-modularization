@@ -44,10 +44,11 @@ the file COPYING.Google.
 
  *******************************************************/
 
-#include <innodb/log_redo/log_checkpointer_mutex_exit.h>
-#include <innodb/log_redo/log_checkpointer_mutex_enter.h>
-#include <innodb/log_redo/log_writer_mutex_enter.h>
-#include <innodb/log_redo/log_writer_mutex_exit.h>
+#include <innodb/log_arch/arch_page_sys.h>
+#include <innodb/log_types/log_checkpointer_mutex_exit.h>
+#include <innodb/log_types/log_checkpointer_mutex_enter.h>
+#include <innodb/log_types/log_writer_mutex_enter.h>
+#include <innodb/log_types/log_writer_mutex_exit.h>
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/wait/ut_wait_for.h>
@@ -67,7 +68,7 @@ the file COPYING.Google.
 #include <debug_sync.h>
 #endif /* !UNIV_HOTBACKUP */
 
-#include "arch0arch.h"
+#include "log0log.h"
 #include "buf0buf.h"
 #include "buf0flu.h"
 #include "dict0boot.h"

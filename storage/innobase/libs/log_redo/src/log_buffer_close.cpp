@@ -1,9 +1,9 @@
 #include <innodb/log_redo/log_buffer_close.h>
 
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
 #include <innodb/log_redo/log_buffer_s_lock_exit.h>
-#include <innodb/log_redo/log_lsn_validate.h>
+#include <innodb/log_types/log_lsn_validate.h>
 #include <innodb/log_types/Log_handle.h>
 #include <innodb/log_types/log_t.h>
 

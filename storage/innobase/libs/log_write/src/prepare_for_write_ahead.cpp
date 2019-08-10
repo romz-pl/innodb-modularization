@@ -3,7 +3,7 @@
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/compute_next_write_ahead_end.h>
 #include <innodb/log_write/current_file_has_space.h>
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 
 
 namespace Log_files_write_impl {

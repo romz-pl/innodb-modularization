@@ -1,8 +1,8 @@
 #include <innodb/log_redo/log_buffer_write_completed.h>
 
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
-#include <innodb/log_redo/log_lsn_validate.h>
+#include <innodb/log_types/log_lsn_validate.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/monitor/MONITOR_INC_VALUE.h>
 

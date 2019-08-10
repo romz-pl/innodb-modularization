@@ -1,7 +1,7 @@
 #include <innodb/log_redo/log_files_update_offsets.h>
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/log_files_real_offset_for_lsn.h>
+#include <innodb/log_types/log_files_real_offset_for_lsn.h>
 #include <innodb/align/ut_uint64_align_down.h>
 
 #ifndef UNIV_HOTBACKUP

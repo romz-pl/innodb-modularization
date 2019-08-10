@@ -39,10 +39,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
  *******************************************************/
 
-#include <innodb/log_redo/log_checkpointer_mutex_exit.h>
-#include <innodb/log_redo/log_writer_mutex_exit.h>
-#include <innodb/log_redo/log_writer_mutex_enter.h>
-#include <innodb/log_redo/log_checkpointer_mutex_enter.h>
+#include <innodb/log_types/log_checkpointer_mutex_exit.h>
+#include <innodb/log_types/log_writer_mutex_exit.h>
+#include <innodb/log_types/log_writer_mutex_enter.h>
+#include <innodb/log_types/log_checkpointer_mutex_enter.h>
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/align/ut_uint64_align_up.h>
@@ -50,7 +50,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 #ifndef UNIV_HOTBACKUP
 
-#include "arch0arch.h"
+#include "log0log.h"
 #include "log0log.h"
 #include "log0recv.h"  /* recv_recovery_is_on() */
 //#include "srv0start.h" /* SRV_SHUTDOWN_FLUSH_PHASE */

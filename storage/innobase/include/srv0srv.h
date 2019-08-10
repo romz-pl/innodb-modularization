@@ -50,6 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_arch/srv_log_group_home_dir.h>
+#include <innodb/log_arch/srv_log_file_size.h>
 #include <innodb/log_write/srv_log_writer_spin_delay.h>
 #include <innodb/log_write/srv_log_writer_timeout.h>
 #include <innodb/log_write/srv_flush_log_at_timeout.h>
@@ -250,7 +252,6 @@ extern bool srv_undo_log_truncate;
 /** Enable or disable Encrypt of UNDO tablespace. */
 extern bool srv_undo_log_encrypt;
 
-extern char *srv_log_group_home_dir;
 
 /** Enable or Disable Encrypt of REDO tablespace. */
 extern bool srv_redo_log_encrypt;
@@ -263,15 +264,7 @@ extern ulong srv_n_log_files;
 extern ulong srv_debug_system_mem_size;
 #endif /* UNIV_DEBUG_DEDICATED */
 
-/** At startup, this is the current redo log file size.
-During startup, if this is different from srv_log_file_size_requested
-(innodb_log_file_size), the redo log will be rebuilt and this size
-will be initialized to srv_log_file_size_requested.
-When upgrading from a previous redo log format, this will be set to 0,
-and writing to the redo log is not allowed.
 
-During startup, this is in bytes, and later converted to pages. */
-extern ulonglong srv_log_file_size;
 
 /** The value of the startup parameter innodb_log_file_size. */
 extern ulonglong srv_log_file_size_requested;

@@ -1,6 +1,6 @@
 #include <innodb/log_redo/log_update_limits.h>
 
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/flags.h>
 #include <innodb/log_redo/log_free_check_margin.h>
 #include <innodb/log_redo/log_translate_lsn_to_sn.h>

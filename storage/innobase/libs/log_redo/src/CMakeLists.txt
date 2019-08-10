@@ -1,8 +1,8 @@
 set( LIB_NAME log_redo )
 
 add_library( ${LIB_NAME} STATIC
-    LOG_SYNC_POINT.cpp
-    Log_test.cpp
+
+
 
     log_allocate_buffer.cpp
     log_allocate_checkpoint_buffer.cpp
@@ -12,19 +12,17 @@ add_library( ${LIB_NAME} STATIC
     log_allocate_recent_written.cpp
     log_allocate_write_ahead_buffer.cpp
     log_allocate_write_events.cpp
-    log_block_calc_checksum.cpp
-    log_block_calc_checksum_crc32.cpp
-    log_block_calc_checksum_none.cpp
+
     log_block_convert_lsn_to_no.cpp
     log_block_get_checkpoint_no.cpp
-    log_block_get_checksum.cpp
+
     log_block_get_data_len.cpp
     log_block_get_encrypt_bit.cpp
     log_block_get_first_rec_group.cpp
     log_block_get_flush_bit.cpp
     log_block_get_hdr_no.cpp
     log_block_set_checkpoint_no.cpp
-    log_block_set_checksum.cpp
+
     log_block_set_data_len.cpp
     log_block_set_encrypt_bit.cpp
     log_block_set_first_rec_group.cpp
@@ -38,7 +36,7 @@ add_library( ${LIB_NAME} STATIC
     log_buffer_s_lock_enter.cpp
     log_buffer_s_lock_exit.cpp
     log_calc_buf_size.cpp
-    log_checksum_algorithm_ptr.cpp
+
     log_deallocate_buffer.cpp
     log_deallocate_checkpoint_buffer.cpp
     log_deallocate_file_header_buffers.cpp
@@ -50,9 +48,9 @@ add_library( ${LIB_NAME} STATIC
     log_free_check.cpp
     log_get_checkpoint_age.cpp
     log_get_max_modified_age_async.cpp
-    log_lsn_validate.cpp
+
     log_needs_free_check.cpp
-    log_test.cpp
+
     log_translate_lsn_to_sn.cpp
     log_write_to_file_requests_are_frequent.cpp
     srv_log_buffer_size.cpp
@@ -61,13 +59,11 @@ add_library( ${LIB_NAME} STATIC
     srv_log_recent_written_size.cpp
     srv_log_write_ahead_size.cpp
     srv_log_write_events.cpp
-    log_buffer_x_lock_enter.cpp
-    log_buffer_x_lock_exit.cpp
+
     log_buffer_x_lock_own.cpp
     meb_log_print_file_hdr.cpp
-    log_checkpointer_mutex_enter.cpp
-    log_checkpointer_mutex_exit.cpp
-    log_checkpointer_mutex_own.cpp
+
+
     log_closer_mutex_enter.cpp
     log_closer_mutex_exit.cpp
     log_closer_mutex_own.cpp
@@ -78,16 +74,16 @@ add_library( ${LIB_NAME} STATIC
     log_flush_notifier_mutex_enter.cpp
     log_flush_notifier_mutex_exit.cpp
     log_flush_notifier_mutex_own.cpp
-    log_writer_mutex_enter.cpp
+
     log_writer_mutex_enter_nowait.cpp
-    log_writer_mutex_exit.cpp
-    log_writer_mutex_own.cpp
+
+
     log_write_notifier_mutex_enter.cpp
     log_write_notifier_mutex_exit.cpp
     log_write_notifier_mutex_own.cpp
-    log_files_size_offset.cpp
-    log_files_real_offset.cpp
-    log_files_real_offset_for_lsn.cpp
+
+
+
     log_files_update_offsets.cpp
     log_writer_thread_active_validate.cpp
     log_closer_thread_active_validate.cpp
@@ -115,7 +111,7 @@ add_library( ${LIB_NAME} STATIC
     log_buffer_resize_low.cpp
     log_threads_active.cpp
     log_stop_background_threads.cpp
-    log_files_header_fill.cpp
+
     log_files_header_flush.cpp
     log_advance_dirty_pages_added_up_to_lsn.cpp
     srv_log_write_max_size.cpp

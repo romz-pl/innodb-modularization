@@ -1,7 +1,7 @@
 #include <innodb/log_write/log_flush_low.h>
 
 #include <innodb/io/srv_unix_file_flush_method.h>
-#include <innodb/log_redo/LOG_SYNC_POINT.h>
+#include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/log_flush_update_stats.h>
 #include <innodb/sync_event/os_event_reset.h>
