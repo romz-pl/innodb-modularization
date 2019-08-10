@@ -1,8 +1,8 @@
-#include <innodb/log_redo/log_allocate_flush_events.h>
+#include <innodb/log_flush/log_allocate_flush_events.h>
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/flags.h>
-#include <innodb/log_redo/srv_log_flush_events.h>
+#include <innodb/log_flush/srv_log_flush_events.h>
 #include <innodb/assert/assert.h>
 #include <innodb/sync_event/os_event_create.h>
 

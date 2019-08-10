@@ -1,6 +1,6 @@
 #include <innodb/log_write/log_flush_update_stats.h>
 
-#include <innodb/log_redo/log_flusher_mutex_own.h>
+#include <innodb/log_flush/log_flusher_mutex_own.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/srv_flushing_avg_loops.h>
 #include <innodb/monitor/MONITOR_INC_VALUE.h>

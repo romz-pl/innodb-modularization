@@ -4,7 +4,7 @@
 #include <innodb/log_buffer/log_allocate_buffer.h>
 #include <innodb/log_chkp/log_allocate_checkpoint_buffer.h>
 #include <innodb/log_files/log_allocate_file_header_buffers.h>
-#include <innodb/log_redo/log_allocate_flush_events.h>
+#include <innodb/log_flush/log_allocate_flush_events.h>
 #include <innodb/log_redo/log_allocate_recent_closed.h>
 #include <innodb/log_redo/log_allocate_recent_written.h>
 #include <innodb/log_redo/log_allocate_write_ahead_buffer.h>

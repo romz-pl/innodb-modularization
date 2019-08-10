@@ -2,8 +2,8 @@
 
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>
-#include <innodb/log_redo/log_flush_notifier_mutex_enter.h>
-#include <innodb/log_redo/log_flush_notifier_mutex_exit.h>
+#include <innodb/log_flush/log_flush_notifier_mutex_enter.h>
+#include <innodb/log_flush/log_flush_notifier_mutex_exit.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/Log_thread_waiting.h>
 #include <innodb/log_write/srv_log_flush_notifier_spin_delay.h>

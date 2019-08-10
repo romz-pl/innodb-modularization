@@ -91,8 +91,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_allocate_write_ahead_buffer.h>
 #include <innodb/log_chkp/log_allocate_checkpoint_buffer.h>
 #include <innodb/log_chkp/log_deallocate_checkpoint_buffer.h>
-#include <innodb/log_redo/log_deallocate_flush_events.h>
-#include <innodb/log_redo/log_allocate_flush_events.h>
+#include <innodb/log_flush/log_deallocate_flush_events.h>
+#include <innodb/log_flush/log_allocate_flush_events.h>
 #include <innodb/log_redo/log_deallocate_write_ahead_buffer.h>
 #include <innodb/log_buffer/log_deallocate_buffer.h>
 #include <innodb/log_sn/log_translate_lsn_to_sn.h>

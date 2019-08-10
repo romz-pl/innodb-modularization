@@ -85,7 +85,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/srv_buf_pool_instances_default.h>
 #include <innodb/buffer/srv_buf_pool_dump_pct.h>
 #include <innodb/log_redo/srv_log_write_ahead_size.h>
-#include <innodb/log_redo/srv_log_flush_events.h>
+#include <innodb/log_flush/srv_log_flush_events.h>
 #include <innodb/log_buffer/srv_log_buffer_size.h>
 #include <innodb/log_redo/srv_log_write_events.h>
 #include <innodb/log_redo/srv_log_recent_written_size.h>

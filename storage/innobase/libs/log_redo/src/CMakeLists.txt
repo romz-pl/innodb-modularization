@@ -3,7 +3,6 @@ set( LIB_NAME log_redo )
 add_library( ${LIB_NAME} STATIC
     log_advance_dirty_pages_added_up_to_lsn.cpp
     log_advance_ready_for_write_lsn.cpp
-    log_allocate_flush_events.cpp
     log_allocate_recent_closed.cpp
     log_allocate_recent_written.cpp
     log_allocate_write_ahead_buffer.cpp
@@ -17,18 +16,10 @@ add_library( ${LIB_NAME} STATIC
     log_closer_mutex_exit.cpp
     log_closer_mutex_own.cpp
     log_closer_thread_active_validate.cpp
-    log_deallocate_flush_events.cpp
     log_deallocate_recent_closed.cpp
     log_deallocate_recent_written.cpp
     log_deallocate_write_ahead_buffer.cpp
     log_deallocate_write_events.cpp
-    log_flush_notifier_mutex_enter.cpp
-    log_flush_notifier_mutex_exit.cpp
-    log_flush_notifier_mutex_own.cpp
-    log_flusher_mutex_enter.cpp
-    log_flusher_mutex_enter_nowait.cpp
-    log_flusher_mutex_exit.cpp
-    log_flusher_mutex_own.cpp
     log_free_check.cpp
     log_get_max_modified_age_async.cpp
     log_needs_free_check.cpp
@@ -53,7 +44,6 @@ add_library( ${LIB_NAME} STATIC
     log_writer_thread_active_validate.cpp
     meb_log_print_file_hdr.cpp
     pfs.cpp
-    srv_log_flush_events.cpp
     srv_log_recent_closed_size.cpp
     srv_log_recent_written_size.cpp
     srv_log_write_ahead_size.cpp
@@ -77,6 +67,7 @@ target_link_libraries(
     PUBLIC
     log_buffer
     log_files
+    log_flush
     PRIVATE
 )
 
