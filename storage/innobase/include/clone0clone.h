@@ -34,13 +34,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/logger/info.h>
+#include <innodb/clone/Clone_Task_Meta.h>
+#include <innodb/clone/Chunk_Info.h>
+#include <innodb/clone/flags.h>
+#include <innodb/clone/Clone_Desc_Locator.h>
 
 #include <chrono>
 #include <innodb/error/dberr_t.h>
 #include "handler.h"
 #include "mysql/plugin.h"  // thd_killed()
 
-#include "clone0desc.h"
 #include "clone0snapshot.h"
 
 /** Clone in progress file name length. */

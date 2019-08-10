@@ -38,6 +38,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_seek.h>
 #include <innodb/io/os_file_size_t.h>
 #include <innodb/io/os_file_get_size.h>
+#include <innodb/clone/Clone_Desc_Task_Meta.h>
+#include <innodb/clone/Clone_Desc_File_MetaData.h>
+#include <innodb/clone/Clone_Desc_Data.h>
 
 #include "buf0dump.h"
 #include "clone0clone.h"

@@ -37,10 +37,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_arch/Page_Arch_Client_Ctx.h>
 #include <innodb/log_arch/Log_Arch_Client_Ctx.h>
 #include <innodb/sync_mutex/mutex_own.h>
+#include <innodb/clone/Clone_File_Meta.h>
+#include <innodb/clone/Snapshot_State.h>
+#include <innodb/clone/Clone_Desc_State.h>
 
 #include "log0log.h"
 #include "buf0buf.h"
-#include "clone0desc.h"
 #include "clone0monitor.h"
 #include "fil0fil.h"
 #include "sql/handler.h"

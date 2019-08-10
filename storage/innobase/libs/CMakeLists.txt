@@ -6,6 +6,7 @@ add_subdirectory( atomic )
 add_subdirectory( bit )
 add_subdirectory( buffer )
 
+add_subdirectory( clone )
 add_subdirectory( compiler_hints )
 add_subdirectory( crc32 )
 add_subdirectory( counter )

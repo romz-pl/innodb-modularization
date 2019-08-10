@@ -24,6 +24,7 @@ SET( INNODB_COMPONENT_LIBS
     #buffer
 
     # C
+    clone
     #compiler_hints
     #counter
     #crc32

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/io/os_file_status.h>
+#include <innodb/clone/clone_validate_locator.h>
 
 #include "clone0api.h"
 #include "clone0clone.h"
