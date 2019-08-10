@@ -1,12 +1,12 @@
 #include <innodb/log_write/prepare_full_blocks.h>
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/log_block_set_flush_bit.h>
-#include <innodb/log_redo/log_block_set_data_len.h>
-#include <innodb/log_redo/log_block_set_checkpoint_no.h>
-#include <innodb/log_redo/log_block_store_checksum.h>
-#include <innodb/log_redo/log_block_set_hdr_no.h>
-#include <innodb/log_redo/log_block_convert_lsn_to_no.h>
+#include <innodb/log_block/log_block_set_flush_bit.h>
+#include <innodb/log_block/log_block_set_data_len.h>
+#include <innodb/log_block/log_block_set_checkpoint_no.h>
+#include <innodb/log_block/log_block_store_checksum.h>
+#include <innodb/log_block/log_block_set_hdr_no.h>
+#include <innodb/log_block/log_block_convert_lsn_to_no.h>
 
 namespace Log_files_write_impl {
 

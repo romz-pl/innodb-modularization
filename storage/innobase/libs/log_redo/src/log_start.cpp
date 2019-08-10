@@ -3,11 +3,11 @@
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/log_types/flags.h>
-#include <innodb/log_redo/log_block_convert_lsn_to_no.h>
-#include <innodb/log_redo/log_block_set_data_len.h>
-#include <innodb/log_redo/log_block_set_first_rec_group.h>
-#include <innodb/log_redo/log_block_set_flush_bit.h>
-#include <innodb/log_redo/log_block_set_hdr_no.h>
+#include <innodb/log_block/log_block_convert_lsn_to_no.h>
+#include <innodb/log_block/log_block_set_data_len.h>
+#include <innodb/log_block/log_block_set_first_rec_group.h>
+#include <innodb/log_block/log_block_set_flush_bit.h>
+#include <innodb/log_block/log_block_set_hdr_no.h>
 #include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
 #include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
 #include <innodb/log_redo/log_files_update_offsets.h>

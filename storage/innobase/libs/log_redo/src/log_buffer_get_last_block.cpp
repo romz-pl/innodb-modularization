@@ -1,11 +1,11 @@
 #include <innodb/log_redo/log_buffer_get_last_block.h>
 
 #include <innodb/align/ut_uint64_align_down.h>
-#include <innodb/log_redo/log_block_convert_lsn_to_no.h>
-#include <innodb/log_redo/log_block_set_checkpoint_no.h>
-#include <innodb/log_redo/log_block_set_data_len.h>
-#include <innodb/log_redo/log_block_set_hdr_no.h>
-#include <innodb/log_redo/log_block_store_checksum.h>
+#include <innodb/log_block/log_block_convert_lsn_to_no.h>
+#include <innodb/log_block/log_block_set_checkpoint_no.h>
+#include <innodb/log_block/log_block_set_data_len.h>
+#include <innodb/log_block/log_block_set_hdr_no.h>
+#include <innodb/log_block/log_block_store_checksum.h>
 #include <innodb/log_types/log_buffer_x_lock_enter.h>
 #include <innodb/log_types/log_buffer_x_lock_exit.h>
 #include <innodb/log_types/log_get_lsn.h>

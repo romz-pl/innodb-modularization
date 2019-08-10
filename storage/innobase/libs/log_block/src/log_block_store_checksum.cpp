@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_block_store_checksum.h>
+#include <innodb/log_block/log_block_store_checksum.h>
 
 #include <innodb/log_block/log_block_set_checksum.h>
 #include <innodb/log_block/log_block_calc_checksum.h>

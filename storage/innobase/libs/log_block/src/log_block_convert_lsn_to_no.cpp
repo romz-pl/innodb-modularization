@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_block_convert_lsn_to_no.h>
+#include <innodb/log_block/log_block_convert_lsn_to_no.h>
 
 #include <innodb/log_types/flags.h>
 #include <innodb/machine/data.h>

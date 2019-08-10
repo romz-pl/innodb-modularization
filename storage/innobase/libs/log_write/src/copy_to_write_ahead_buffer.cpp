@@ -1,14 +1,14 @@
 #include <innodb/log_write/copy_to_write_ahead_buffer.h>
 
 #include <innodb/align/ut_uint64_align_down.h>
-#include <innodb/log_redo/log_block_convert_lsn_to_no.h>
-#include <innodb/log_redo/log_block_get_first_rec_group.h>
-#include <innodb/log_redo/log_block_set_checkpoint_no.h>
-#include <innodb/log_redo/log_block_set_data_len.h>
-#include <innodb/log_redo/log_block_set_first_rec_group.h>
-#include <innodb/log_redo/log_block_set_flush_bit.h>
-#include <innodb/log_redo/log_block_set_hdr_no.h>
-#include <innodb/log_redo/log_block_store_checksum.h>
+#include <innodb/log_block/log_block_convert_lsn_to_no.h>
+#include <innodb/log_block/log_block_get_first_rec_group.h>
+#include <innodb/log_block/log_block_set_checkpoint_no.h>
+#include <innodb/log_block/log_block_set_data_len.h>
+#include <innodb/log_block/log_block_set_first_rec_group.h>
+#include <innodb/log_block/log_block_set_flush_bit.h>
+#include <innodb/log_block/log_block_set_hdr_no.h>
+#include <innodb/log_block/log_block_store_checksum.h>
 #include <innodb/log_redo/srv_log_write_ahead_size.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/log_t.h>
