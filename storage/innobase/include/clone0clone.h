@@ -38,13 +38,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/clone/Chunk_Info.h>
 #include <innodb/clone/flags.h>
 #include <innodb/clone/Clone_Desc_Locator.h>
+#include <innodb/clone/Clone_Snapshot.h>
 
 #include <chrono>
 #include <innodb/error/dberr_t.h>
 #include "handler.h"
 #include "mysql/plugin.h"  // thd_killed()
 
-#include "clone0snapshot.h"
+#include "log0log.h"
+#include "buf0buf.h"
+#include "fil0fil.h"
+#include "sql/handler.h"
 
 /** Clone in progress file name length. */
 const size_t CLONE_FILE_LEN = 32;

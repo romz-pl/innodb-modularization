@@ -17,6 +17,16 @@ add_library( ${LIB_NAME} STATIC
     Clone_Desc_Data.cpp
     choose_desc_version.cpp
     clone_validate_locator.cpp
+    Clone_Monitor.cpp
+    add_redo_file_callback.cpp
+    Clone_File_Vec.cpp
+    Clone_File_Map.cpp
+    Clone_Page.cpp
+    Less_Clone_Page.cpp
+    Clone_Page_Vec.cpp
+    Clone_Page_Set.cpp
+    Clone_Handle_Type.cpp
+    Clone_Snapshot.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

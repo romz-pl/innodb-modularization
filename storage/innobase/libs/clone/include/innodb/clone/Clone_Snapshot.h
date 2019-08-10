@@ -1,122 +1,28 @@
-/*****************************************************************************
-
-Copyright (c) 2017, 2018, Oracle and/or its affiliates. All Rights Reserved.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License, version 2.0, as published by the
-Free Software Foundation.
-
-This program is also distributed with certain software (including but not
-limited to OpenSSL) that is licensed under separate terms, as designated in a
-particular file or component or in included license documentation. The authors
-of MySQL hereby grant you an additional permission to link the program and
-your derivative works with the separately licensed software that they have
-included with MySQL.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License, version 2.0,
-for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-*****************************************************************************/
-
-/** @file include/clone0snapshot.h
- Database Physical Snapshot
-
- *******************************************************/
-
-#ifndef CLONE_SNAPSHOT_INCLUDE
-#define CLONE_SNAPSHOT_INCLUDE
+#pragma once
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/log_arch/Page_Arch_Client_Ctx.h>
-#include <innodb/log_arch/Log_Arch_Client_Ctx.h>
-#include <innodb/sync_mutex/mutex_own.h>
-#include <innodb/clone/Clone_File_Meta.h>
-#include <innodb/clone/Snapshot_State.h>
 #include <innodb/clone/Clone_Desc_State.h>
+#include <innodb/clone/Clone_File_Map.h>
+#include <innodb/clone/Clone_File_Vec.h>
+#include <innodb/clone/Clone_Handle_Type.h>
+#include <innodb/clone/Clone_Monitor.h>
+#include <innodb/clone/Clone_Page_Set.h>
+#include <innodb/clone/Clone_Page_Vec.h>
+#include <innodb/clone/Snapshot_State.h>
+#include <innodb/clone/flags.h>
+#include <innodb/disk/page_size_t.h>
+#include <innodb/error/dberr_t.h>
+#include <innodb/log_arch/Log_Arch_Client_Ctx.h>
+#include <innodb/log_arch/Page_Arch_Client_Ctx.h>
+#include <innodb/memory/mem_heap_t.h>
+#include <innodb/page/page_id_t.h>
+#include <innodb/sync_mutex/mutex_own.h>
+#include <innodb/tablespace/fil_node_t.h>
 
-#include "log0log.h"
-#include "buf0buf.h"
-#include "clone0monitor.h"
-#include "fil0fil.h"
 #include "sql/handler.h"
 
-#include <map>
-#include <vector>
-
-/** Vector type for storing clone files */
-using Clone_File_Vec = std::vector<Clone_File_Meta *>;
-
-/** Map type for mapping space ID to clone file index */
-using Clone_File_Map = std::map<space_id_t, uint>;
-
-/** Page identified by space and page number */
-struct Clone_Page {
-  /** Tablespace ID */
-  ib_uint32_t m_space_id;
-
-  /** Page number within tablespace */
-  ib_uint32_t m_page_no;
-};
-
-/** Comparator for storing sorted page ID. */
-struct Less_Clone_Page {
-  /** Less than operator for page ID.
-  @param[in]	page1	first page
-  @param[in]	page2	second page
-  @return true, if page1 is less than page2 */
-  inline bool operator()(const Clone_Page &page1,
-                         const Clone_Page &page2) const {
-    if (page1.m_space_id < page2.m_space_id) {
-      return (true);
-    }
-
-    if (page1.m_space_id == page2.m_space_id &&
-        page1.m_page_no < page2.m_page_no) {
-      return (true);
-    }
-    return (false);
-  }
-};
-
-/** Vector type for storing clone page IDs */
-using Clone_Page_Vec = std::vector<Clone_Page>;
-
-/** Set for storing unique page IDs. */
-using Clone_Page_Set = std::set<Clone_Page, Less_Clone_Page>;
-
-/** Clone handle type */
-enum Clone_Handle_Type {
-  /** Clone Handle for COPY */
-  CLONE_HDL_COPY = 1,
-
-  /** Clone Handle for APPLY */
-  CLONE_HDL_APPLY
-};
-
-/** Default chunk size in power of 2 in unit of pages.
-Chunks are reserved by each thread for multi-threaded clone. For 16k page
-size, chunk size is 64M. */
-const uint SNAPSHOT_DEF_CHUNK_SIZE_POW2 = 12;
-
-/** Default block size in power of 2 in unit of pages.
-Data transfer callback is invoked once for each block. This is also
-the maximum size of data that would be re-send if clone is stopped
-and resumed. For 16k page size, block size is 1M. */
-const uint SNAPSHOT_DEF_BLOCK_SIZE_POW2 = 6;
-
-/** Maximum block size in power of 2 in unit of pages.
-For 16k page size, maximum block size is 64M. */
-const uint SNAPSHOT_MAX_BLOCK_SIZE_POW2 = 12;
-
-/** Sleep time in microseconds while waiting for other clone/task */
-const uint SNAPSHOT_STATE_CHANGE_SLEEP = 100 * 1000;
+#include <functional>
 
 /** Dynamic database snapshot: Holds metadata and handle to data */
 class Clone_Snapshot {
@@ -556,5 +462,3 @@ class Clone_Snapshot {
   /** Performance Schema accounting object to monitor stage progess */
   Clone_Monitor m_monitor;
 };
-
-#endif /* CLONE_SNAPSHOT_INCLUDE */

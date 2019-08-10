@@ -53,6 +53,23 @@ const uint CLONE_DESC_LOC_BASE_LEN = CLONE_LOC_META_OFFSET + 1;
 
 
 
+/** Default chunk size in power of 2 in unit of pages.
+Chunks are reserved by each thread for multi-threaded clone. For 16k page
+size, chunk size is 64M. */
+const uint SNAPSHOT_DEF_CHUNK_SIZE_POW2 = 12;
+
+/** Default block size in power of 2 in unit of pages.
+Data transfer callback is invoked once for each block. This is also
+the maximum size of data that would be re-send if clone is stopped
+and resumed. For 16k page size, block size is 1M. */
+const uint SNAPSHOT_DEF_BLOCK_SIZE_POW2 = 6;
+
+/** Maximum block size in power of 2 in unit of pages.
+For 16k page size, maximum block size is 64M. */
+const uint SNAPSHOT_MAX_BLOCK_SIZE_POW2 = 12;
+
+/** Sleep time in microseconds while waiting for other clone/task */
+const uint SNAPSHOT_STATE_CHANGE_SLEEP = 100 * 1000;
 
 
 
