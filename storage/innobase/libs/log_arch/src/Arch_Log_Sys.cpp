@@ -17,8 +17,8 @@
 #include <innodb/log_block/log_block_calc_checksum_crc32.h>
 #include <innodb/log_block/log_block_get_checksum.h>
 #include <innodb/log_block/log_block_set_checksum.h>
-#include <innodb/log_types/log_checkpointer_mutex_enter.h>
-#include <innodb/log_types/log_checkpointer_mutex_exit.h>
+#include <innodb/log_chkp/log_checkpointer_mutex_enter.h>
+#include <innodb/log_chkp/log_checkpointer_mutex_exit.h>
 #include <innodb/log_files/log_files_header_fill.h>
 #include <innodb/log_files/log_files_real_offset_for_lsn.h>
 #include <innodb/log_types/log_sys.h>

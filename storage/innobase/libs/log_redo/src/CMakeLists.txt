@@ -3,8 +3,6 @@ set( LIB_NAME log_redo )
 add_library( ${LIB_NAME} STATIC
     log_advance_dirty_pages_added_up_to_lsn.cpp
     log_advance_ready_for_write_lsn.cpp
-    log_allocate_checkpoint_buffer.cpp
-
     log_allocate_flush_events.cpp
     log_allocate_recent_closed.cpp
     log_allocate_recent_written.cpp
@@ -19,8 +17,6 @@ add_library( ${LIB_NAME} STATIC
     log_closer_mutex_exit.cpp
     log_closer_mutex_own.cpp
     log_closer_thread_active_validate.cpp
-    log_deallocate_checkpoint_buffer.cpp
-
     log_deallocate_flush_events.cpp
     log_deallocate_recent_closed.cpp
     log_deallocate_recent_written.cpp
@@ -34,8 +30,6 @@ add_library( ${LIB_NAME} STATIC
     log_flusher_mutex_exit.cpp
     log_flusher_mutex_own.cpp
     log_free_check.cpp
-
-    log_get_checkpoint_age.cpp
     log_get_max_modified_age_async.cpp
     log_needs_free_check.cpp
     log_position_collect_lsn_info.cpp

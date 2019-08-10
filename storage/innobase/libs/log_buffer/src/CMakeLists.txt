@@ -32,6 +32,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     log_block
+    log_chkp
     monitor
     PRIVATE
 )

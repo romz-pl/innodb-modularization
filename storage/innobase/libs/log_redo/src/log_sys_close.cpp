@@ -5,7 +5,7 @@
 #include <innodb/log_redo/log_deallocate_flush_events.h>
 #include <innodb/log_redo/log_deallocate_recent_closed.h>
 #include <innodb/log_redo/log_deallocate_recent_written.h>
-#include <innodb/log_redo/log_deallocate_checkpoint_buffer.h>
+#include <innodb/log_chkp/log_deallocate_checkpoint_buffer.h>
 #include <innodb/log_redo/log_deallocate_write_ahead_buffer.h>
 #include <innodb/log_buffer/log_deallocate_buffer.h>
 #include <innodb/log_types/log_sys.h>

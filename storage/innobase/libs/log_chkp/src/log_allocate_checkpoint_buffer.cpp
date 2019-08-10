@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_allocate_checkpoint_buffer.h>
+#include <innodb/log_chkp/log_allocate_checkpoint_buffer.h>
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/disk/flags.h>

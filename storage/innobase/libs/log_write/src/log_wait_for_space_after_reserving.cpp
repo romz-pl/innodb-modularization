@@ -3,8 +3,8 @@
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_buffer/log_buffer_resize_low.h>
-#include <innodb/log_types/log_checkpointer_mutex_enter.h>
-#include <innodb/log_types/log_checkpointer_mutex_exit.h>
+#include <innodb/log_chkp/log_checkpointer_mutex_enter.h>
+#include <innodb/log_chkp/log_checkpointer_mutex_exit.h>
 #include <innodb/log_sn/log_translate_lsn_to_sn.h>
 #include <innodb/log_sn/log_translate_sn_to_lsn.h>
 #include <innodb/log_types/log_writer_mutex_enter.h>

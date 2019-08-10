@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_get_checkpoint_age.h>
+#include <innodb/log_chkp/log_get_checkpoint_age.h>
 
 #ifndef UNIV_HOTBACKUP
 

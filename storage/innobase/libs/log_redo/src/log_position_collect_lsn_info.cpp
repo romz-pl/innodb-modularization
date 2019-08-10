@@ -2,7 +2,7 @@
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_buffer/log_buffer_x_lock_own.h>
-#include <innodb/log_types/log_checkpointer_mutex_own.h>
+#include <innodb/log_chkp/log_checkpointer_mutex_own.h>
 #include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_types/flags.h>
 

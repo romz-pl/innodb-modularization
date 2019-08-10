@@ -11,9 +11,6 @@ add_library( ${LIB_NAME} STATIC
     flags.cpp
     log_buffer_x_lock_enter.cpp
     log_buffer_x_lock_exit.cpp
-    log_checkpointer_mutex_enter.cpp
-    log_checkpointer_mutex_exit.cpp
-    log_checkpointer_mutex_own.cpp
     log_checksum_algorithm_ptr.cpp
     log_checksum_func_t.cpp
     log_flushes_t.cpp
