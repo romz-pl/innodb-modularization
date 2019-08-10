@@ -44,6 +44,21 @@ add_library( ${LIB_NAME} STATIC
     add_redo_file_callback.cpp
     add_page_callback.cpp
     is_ddl_temp_table.cpp
+    innodb_clone_get_capability.cpp
+    innodb_clone_begin.cpp
+    srv_redo_log_encrypt.cpp
+    srv_undo_log_encrypt.cpp
+    innodb_clone_copy.cpp
+    innodb_clone_ack.cpp
+    innodb_clone_end.cpp
+    innodb_clone_apply_begin.cpp
+    innodb_clone_apply.cpp
+    innodb_clone_apply_end.cpp
+    clone_init.cpp
+    clone_free.cpp
+    clone_mark_abort.cpp
+    clone_mark_active.cpp
+    fix_cloned_tables.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

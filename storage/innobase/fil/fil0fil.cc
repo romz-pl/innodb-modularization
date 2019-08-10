@@ -33,6 +33,8 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/clone/clone_mark_active.h>
+#include <innodb/clone/clone_mark_abort.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/io/os_file_create_directory.h>
 #include <innodb/io/Dir_Walker.h>
@@ -94,7 +96,6 @@ The tablespace memory cache */
 #include "btr0btr.h"
 #include "buf0buf.h"
 #include "buf0flu.h"
-#include "clone0api.h"
 #include "dict0boot.h"
 #include "dict0dd.h"
 #include "dict0dict.h"

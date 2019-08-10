@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/clone/clone_mark_abort.h>
+#include <innodb/clone/clone_mark_active.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/memory/mem_heap_strdup_replace.h>
 #include <innodb/data_types/dtype_get_mblen.h>
@@ -88,7 +90,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_dbug.h"
 #include "my_io.h"
 
-#include "clone0api.h"
 #include "dict0dd.h"
 #include "fts0plugin.h"
 #include "fts0priv.h"

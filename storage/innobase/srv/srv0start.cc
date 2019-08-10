@@ -50,6 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/clone/clone_init.h>
+#include <innodb/clone/clone_free.h>
 #include <innodb/clone/pfs.h>
 #include <innodb/log_arch/page_archiver_thread_event.h>
 #include <innodb/log_arch/page_archiver_is_active.h>
@@ -135,7 +137,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0sea.h"
 #include "buf0flu.h"
 #include "buf0rea.h"
-#include "clone0api.h"
 #include "dict0boot.h"
 #include "dict0crea.h"
 #include "dict0load.h"

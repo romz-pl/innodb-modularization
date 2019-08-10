@@ -189,8 +189,7 @@ it, truncate action is completed but no new tablespace is marked
 for truncate (action is never aborted). */
 bool srv_undo_log_truncate = FALSE;
 
-/** Enable or disable Encrypt of UNDO tablespace. */
-bool srv_undo_log_encrypt = FALSE;
+
 
 /** Maximum size of undo tablespace. */
 unsigned long long srv_max_undo_tablespace_size;
@@ -231,8 +230,7 @@ static os_event_t srv_master_thread_disabled_event;
 /*------------------------- LOG FILES ------------------------ */
 
 
-/** Enable or disable Encrypt of REDO tablespace. */
-bool srv_redo_log_encrypt = false;
+
 
 ulong srv_n_log_files = SRV_N_LOG_FILES_MAX;
 

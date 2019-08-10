@@ -50,6 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/clone/srv_undo_log_encrypt.h>
+#include <innodb/clone/srv_redo_log_encrypt.h>
 #include <innodb/log_arch/srv_log_group_home_dir.h>
 #include <innodb/log_arch/srv_log_file_size.h>
 #include <innodb/log_write/srv_log_writer_spin_delay.h>
@@ -248,12 +250,10 @@ extern ulong srv_purge_rseg_truncate_frequency;
 /** Enable or Disable Truncate of UNDO tablespace. */
 extern bool srv_undo_log_truncate;
 
-/** Enable or disable Encrypt of UNDO tablespace. */
-extern bool srv_undo_log_encrypt;
 
 
-/** Enable or Disable Encrypt of REDO tablespace. */
-extern bool srv_redo_log_encrypt;
+
+
 
 /** Maximum number of srv_n_log_files, or innodb_log_files_in_group */
 #define SRV_N_LOG_FILES_MAX 100

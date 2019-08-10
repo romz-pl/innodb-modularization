@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/clone/clone_mark_abort.h>
+#include <innodb/clone/clone_mark_active.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_empty.h>
@@ -55,7 +57,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_status.h>
 #include <innodb/io/access_type.h>
 
-#include "clone0api.h"
 #include "dict0dd.h"
 #include "fil0fil.h"
 #include "fsp0fsp.h"

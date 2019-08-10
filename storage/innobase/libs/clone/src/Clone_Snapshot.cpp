@@ -1,5 +1,8 @@
 #include <innodb/clone/Clone_Snapshot.h>
 
+#include <innodb/log_types/flags.h>
+#include <innodb/io/Fil_path.h>
+#include <innodb/log_types/flags.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/buffer/Page_fetch.h>
@@ -1114,4 +1117,166 @@ int Clone_Snapshot::add_redo_file(char *file_name, uint64_t file_size,
   return (0);
 }
 
+
+int Clone_Snapshot::get_file_from_desc(Clone_File_Meta *&file_desc,
+                                       const char *data_dir, bool desc_create,
+                                       bool &desc_exists) {
+  int err = 0;
+
+  mutex_enter(&m_snapshot_mutex);
+
+  auto idx = file_desc->m_file_index;
+
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_APPLY);
+
+  ut_ad(m_snapshot_state == CLONE_SNAPSHOT_FILE_COPY ||
+        m_snapshot_state == CLONE_SNAPSHOT_REDO_COPY);
+
+  Clone_File_Vec &file_vector = (m_snapshot_state == CLONE_SNAPSHOT_FILE_COPY)
+                                    ? m_data_file_vector
+                                    : m_redo_file_vector;
+
+  desc_exists = false;
+
+  /* File metadata is already there, possibly sent by another task. */
+  if (file_vector[idx] != nullptr) {
+    file_desc = file_vector[idx];
+    desc_exists = true;
+
+  } else if (desc_create) {
+    /* Create the descriptor. */
+    err = create_desc(data_dir, file_desc);
+  }
+
+  mutex_exit(&m_snapshot_mutex);
+
+  return (err);
+}
+
+int Clone_Snapshot::create_desc(const char *data_dir,
+                                Clone_File_Meta *&file_desc) {
+  /* Build complete path for the new file to be added. */
+  auto dir_len = static_cast<ulint>(strlen(data_dir));
+
+  auto name_len = static_cast<ulint>((file_desc->m_file_name == nullptr)
+                                         ? MAX_LOG_FILE_NAME
+                                         : file_desc->m_file_name_len);
+
+  auto alloc_size = static_cast<ulint>(dir_len + 1 + name_len);
+  alloc_size += sizeof(Clone_File_Meta);
+
+  auto ptr = static_cast<char *>(mem_heap_alloc(m_snapshot_heap, alloc_size));
+
+  if (ptr == nullptr) {
+    my_error(ER_OUTOFMEMORY, MYF(0), alloc_size);
+    return (ER_OUTOFMEMORY);
+  }
+
+  auto file_meta = reinterpret_cast<Clone_File_Meta *>(ptr);
+  ptr += sizeof(Clone_File_Meta);
+
+  *file_meta = *file_desc;
+
+  file_meta->m_file_name = static_cast<const char *>(ptr);
+  name_len = 0;
+
+  strcpy(ptr, data_dir);
+
+  /* Add path separator at the end of data directory if not there. */
+  if (ptr[dir_len - 1] != OS_PATH_SEPARATOR) {
+    ptr[dir_len] = OS_PATH_SEPARATOR;
+    ptr++;
+    name_len++;
+  }
+  ptr += dir_len;
+  name_len += dir_len;
+
+  std::string name;
+  char name_buf[MAX_LOG_FILE_NAME];
+  bool absolute_path = false;
+
+  /* Construct correct file path */
+  if (m_snapshot_state == CLONE_SNAPSHOT_FILE_COPY) {
+    name.assign(file_desc->m_file_name);
+    absolute_path = Fil_path::is_absolute_path(name);
+
+    if (absolute_path) {
+      /* Set current pointer back as we don't want to append data directory
+      for external files with absolute path. */
+      ptr = const_cast<char *>(file_meta->m_file_name);
+      name_len = 0;
+    } else {
+      /* For relative path remove "./" if there. */
+      if (Fil_path::has_prefix(name, Fil_path::DOT_SLASH)) {
+        name.erase(0, 2);
+      }
+    }
+  } else {
+    ut_ad(m_snapshot_state == CLONE_SNAPSHOT_REDO_COPY);
+    /* This is redo file. Use standard name. */
+    snprintf(name_buf, MAX_LOG_FILE_NAME, "%s%u", ib_logfile_basename,
+             file_desc->m_file_index);
+    name.assign(name_buf);
+  }
+
+  strcpy(ptr, name.c_str());
+  name_len += name.length();
+  ++name_len;
+
+  file_meta->m_file_name_len = name_len;
+  file_desc = file_meta;
+
+  /* For absolute path, we must ensure that the file is not
+  present. This would always fail for local clone. */
+  if (absolute_path) {
+    ut_ad(m_snapshot_state == CLONE_SNAPSHOT_FILE_COPY);
+
+    auto is_hard_path = test_if_hard_path(file_desc->m_file_name);
+    /* Check if the absolute path is not in right format */
+    if (is_hard_path == 0) {
+      my_error(ER_WRONG_VALUE, MYF(0), "file path", name.c_str());
+      return (ER_WRONG_VALUE);
+    }
+
+    auto type = Fil_path::get_file_type(name);
+    /* The file should not already exist */
+    if (type == OS_FILE_TYPE_MISSING) {
+      return (0);
+    }
+    if (type == OS_FILE_TYPE_FILE) {
+      my_error(ER_FILE_EXISTS_ERROR, MYF(0), name.c_str());
+      return (ER_FILE_EXISTS_ERROR);
+    }
+    /* Either the stat() call failed or the name is a
+    directory/block device, or permission error etc. */
+    char errbuf[MYSYS_STRERROR_SIZE];
+    my_error(ER_ERROR_ON_WRITE, MYF(0), name.c_str(), errno,
+             my_strerror(errbuf, sizeof(errbuf), errno));
+    return (ER_ERROR_ON_WRITE);
+  }
+  return (0);
+}
+
+
+bool Clone_Snapshot::add_file_from_desc(Clone_File_Meta *&file_desc) {
+  mutex_enter(&m_snapshot_mutex);
+
+  ut_ad(m_snapshot_handle_type == CLONE_HDL_APPLY);
+
+  if (m_snapshot_state == CLONE_SNAPSHOT_FILE_COPY) {
+    m_data_file_vector[file_desc->m_file_index] = file_desc;
+  } else {
+    ut_ad(m_snapshot_state == CLONE_SNAPSHOT_REDO_COPY);
+    m_redo_file_vector[file_desc->m_file_index] = file_desc;
+  }
+
+  mutex_exit(&m_snapshot_mutex);
+
+  /** Check if it the last file */
+  if (file_desc->m_file_index == m_num_data_files - 1) {
+    return true;
+  }
+
+  return (false);
+}
 

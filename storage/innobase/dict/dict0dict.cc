@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/clone/clone_mark_active.h>
+#include <innodb/clone/clone_mark_abort.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/memory/mem_heap_strdupl.h>
 #include <innodb/memory/mem_heap_empty.h>
@@ -81,7 +83,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_dbug.h"
 
 #ifndef UNIV_HOTBACKUP
-#include "clone0api.h"
 #include "mysqld.h"  // system_charset_info
 #include "que0types.h"
 #include "row0sel.h"

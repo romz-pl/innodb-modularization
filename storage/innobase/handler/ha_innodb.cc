@@ -46,6 +46,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/clone/clone_mark_abort.h>
+#include <innodb/clone/clone_mark_active.h>
+#include <innodb/clone/innodb_clone_apply_begin.h>
+#include <innodb/clone/innodb_clone_apply.h>
+#include <innodb/clone/innodb_clone_apply_end.h>
+#include <innodb/clone/innodb_clone_begin.h>
+#include <innodb/clone/innodb_clone_copy.h>
+#include <innodb/clone/innodb_clone_ack.h>
+#include <innodb/clone/innodb_clone_end.h>
+#include <innodb/clone/innodb_clone_get_capability.h>
+#include <innodb/clone/fix_cloned_tables.h>
 #include <innodb/log_arch/Page_Arch_Client_Ctx.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/sync_os/pfs.h>
@@ -141,7 +152,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0flu.h"
 #include "buf0lru.h"
 #include "buf0stats.h"
-#include "clone0api.h"
 #include "dd/dd.h"
 #include "dd/dictionary.h"
 #include "dd/properties.h"
