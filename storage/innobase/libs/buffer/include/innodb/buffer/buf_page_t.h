@@ -4,7 +4,7 @@
 
 #include <innodb/buffer/buf_io_fix.h>
 #include <innodb/buffer/buf_page_state.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 #include <innodb/buffer/macros.h>
 #include <innodb/page/page_id_t.h>
 #include <innodb/lst/lst.h>

@@ -6,7 +6,7 @@
 
 struct log_t;
 
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 /** Gets the current lsn value. This value points to the first non
 reserved data byte in the redo log. When next user thread reserves

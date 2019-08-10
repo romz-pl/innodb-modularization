@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/counter/counter.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 /* Global counters used inside InnoDB. */
 struct srv_stats_t {

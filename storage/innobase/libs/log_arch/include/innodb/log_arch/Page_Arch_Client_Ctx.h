@@ -4,7 +4,7 @@
 
 #include <innodb/log_arch/Arch_Page_Pos.h>
 #include <innodb/log_arch/Arch_Client_State.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/log_arch/Page_Arch_Cbk.h>
 #include <innodb/sync_mutex/ib_mutex_t.h>

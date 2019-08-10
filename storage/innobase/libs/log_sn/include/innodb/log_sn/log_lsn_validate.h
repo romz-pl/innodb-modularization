@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 /** Validates a given lsn value. Checks if the lsn value points to data
 bytes inside log block (not to some bytes in header/footer). It is used

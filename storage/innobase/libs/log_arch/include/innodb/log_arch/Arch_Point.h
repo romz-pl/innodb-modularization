@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/log_arch/Arch_Page_Pos.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 /** Structure which represents a point in a file. */
 struct Arch_Point {

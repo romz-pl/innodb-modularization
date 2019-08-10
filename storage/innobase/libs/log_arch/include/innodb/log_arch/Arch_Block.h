@@ -4,7 +4,7 @@
 
 #include <innodb/log_arch/Arch_Blk_Flush_Type.h>
 #include <innodb/log_arch/Arch_Blk_State.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 #include <innodb/log_arch/Arch_Blk_Type.h>
 #include <innodb/log_arch/Arch_Page_Pos.h>
 #include <innodb/log_arch/flags.h>

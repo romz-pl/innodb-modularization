@@ -4,7 +4,7 @@
 
 struct log_t;
 
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 /* Waits until the archiver has archived enough for log_writer to proceed
 or until the archiver becomes aborted.

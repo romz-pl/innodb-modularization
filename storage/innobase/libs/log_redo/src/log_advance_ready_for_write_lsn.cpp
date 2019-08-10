@@ -3,7 +3,7 @@
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/flags.h>
 #include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
-#include <innodb/log_types/log_lsn_validate.h>
+#include <innodb/log_sn/log_lsn_validate.h>
 #include <innodb/log_types/log_test.h>
 #include <innodb/log_types/log_writer_mutex_own.h>
 #include <innodb/log_redo/log_writer_thread_active_validate.h>

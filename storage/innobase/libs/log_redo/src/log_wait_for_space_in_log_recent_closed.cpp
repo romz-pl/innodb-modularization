@@ -1,7 +1,7 @@
 #include <innodb/log_redo/log_wait_for_space_in_log_recent_closed.h>
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_types/log_lsn_validate.h>
+#include <innodb/log_sn/log_lsn_validate.h>
 #include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
 #include <innodb/monitor/MONITOR_INC_VALUE.h>
 

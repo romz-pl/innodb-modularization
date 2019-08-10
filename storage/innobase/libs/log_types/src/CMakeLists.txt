@@ -2,14 +2,11 @@ set( LIB_NAME log_types )
 
 add_library( ${LIB_NAME} STATIC
     LOG_SYNC_POINT.cpp
-    LSN_PF.cpp
     Link_buf.cpp
     Log_clock.cpp
     Log_clock_point.cpp
     Log_handle.cpp
     Log_test.cpp
-    atomic_lsn_t.cpp
-    atomic_sn_t.cpp
     checkpoint_no_t.cpp
     flags.cpp
     log_buffer_x_lock_enter.cpp
@@ -21,23 +18,19 @@ add_library( ${LIB_NAME} STATIC
     log_checksum_func_t.cpp
     log_flushes_t.cpp
     log_get_checkpoint_lsn.cpp
-    log_get_lsn.cpp
     log_header_format_t.cpp
     log_lock_no_t.cpp
-    log_lsn_validate.cpp
     log_state_t.cpp
     log_sys.cpp
     log_t.cpp
     log_test.cpp
-    log_translate_sn_to_lsn.cpp
     log_writer_mutex_enter.cpp
     log_writer_mutex_exit.cpp
     log_writer_mutex_own.cpp
-    lsn_t.cpp
     mlog_id_t.cpp
     recv_recovery_is_on.cpp
     recv_recovery_on.cpp
-    sn_t.cpp
+    log_get_lsn.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -52,7 +45,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     crc32
-    disk
+    log_sn
     sync_rw
     PRIVATE
 )

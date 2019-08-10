@@ -10,7 +10,7 @@
 #include <innodb/io/pfs_os_file_t.h>
 #include <innodb/log_arch/Arch_Reset.h>
 #include <innodb/error/dberr_t.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 #include <innodb/allocator/ut_free.h>
 
 class Arch_Group;

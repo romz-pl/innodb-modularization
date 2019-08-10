@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 /** Converts a lsn to a log block number. Consecutive log blocks have
 consecutive numbers (unless the sequence wraps). It is guaranteed that

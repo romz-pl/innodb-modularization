@@ -2,8 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/disk/flags.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/flags.h>
 
 /** Prefix for name of log file, e.g. "ib_logfile" */
 constexpr const char *const ib_logfile_basename = "ib_logfile";
@@ -35,8 +34,7 @@ constexpr uint32_t LOG_POOL_PREFLUSH_RATIO_SYNC = 16;
 Should be less than the LOG_POOL_PREFLUSH_RATIO_SYNC. */
 constexpr uint32_t LOG_POOL_PREFLUSH_RATIO_ASYNC = 8;
 
-/** The counting of lsn's starts from this value: this must be non-zero. */
-constexpr lsn_t LOG_START_LSN = 16 * OS_FILE_LOG_BLOCK_SIZE;
+
 
 /* Offsets used in a log block header. */
 
@@ -72,8 +70,7 @@ block was last written to: if the block has not yet been written full,
 this value is only updated before a log buffer flush. */
 constexpr uint32_t LOG_BLOCK_CHECKPOINT_NO = 8;
 
-/** Size of the log block's header in bytes. */
-constexpr uint32_t LOG_BLOCK_HDR_SIZE = 12;
+
 
 /* Offsets used in a log block's footer (refer to the end of the block). */
 
@@ -81,15 +78,9 @@ constexpr uint32_t LOG_BLOCK_HDR_SIZE = 12;
 this did not contain the checksum, but the same value as .._HDR_NO. */
 constexpr uint32_t LOG_BLOCK_CHECKSUM = 4;
 
-/** Size of the log block footer (trailer) in bytes. */
-constexpr uint32_t LOG_BLOCK_TRL_SIZE = 4;
 
-static_assert(LOG_BLOCK_HDR_SIZE + LOG_BLOCK_TRL_SIZE < OS_FILE_LOG_BLOCK_SIZE,
-              "Header + footer cannot be larger than the whole log block.");
 
-/** Size of log block's data fragment (where actual data is stored). */
-constexpr uint32_t LOG_BLOCK_DATA_SIZE =
-    OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_HDR_SIZE - LOG_BLOCK_TRL_SIZE;
+
 
 /** Ensure, that 64 bits are enough to represent lsn values, when 63 bits
 are used to represent sn values. It is enough to ensure that lsn < 2*sn,

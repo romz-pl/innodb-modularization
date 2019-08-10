@@ -8,7 +8,7 @@
 #include <innodb/log_arch/Arch_Grp_List.h>
 #include <innodb/log_arch/Arch_Page_Pos.h>
 #include <innodb/log_arch/Arch_State.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 #include <innodb/sync_mutex/ib_mutex_t.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>

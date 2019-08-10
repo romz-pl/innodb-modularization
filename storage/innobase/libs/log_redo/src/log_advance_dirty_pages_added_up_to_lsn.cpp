@@ -6,7 +6,7 @@
 #include <innodb/log_redo/log_closer_mutex_own.h>
 #include <innodb/log_redo/log_closer_thread_active_validate.h>
 #include <innodb/log_types/log_get_checkpoint_lsn.h>
-#include <innodb/log_types/log_lsn_validate.h>
+#include <innodb/log_sn/log_lsn_validate.h>
 #include <innodb/log_types/log_t.h>
 
 bool log_advance_dirty_pages_added_up_to_lsn(log_t &log) {

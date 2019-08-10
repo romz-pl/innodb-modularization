@@ -118,8 +118,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_get_max_modified_age_async.h>
 #include <innodb/log_redo/log_needs_free_check.h>
 #include <innodb/log_redo/log_free_check.h>
-#include <innodb/log_types/log_translate_sn_to_lsn.h>
-#include <innodb/log_types/log_lsn_validate.h>
+#include <innodb/log_sn/log_translate_sn_to_lsn.h>
+#include <innodb/log_sn/log_lsn_validate.h>
 #include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_types/log_get_checkpoint_lsn.h>
 #include <innodb/log_redo/log_get_checkpoint_age.h>

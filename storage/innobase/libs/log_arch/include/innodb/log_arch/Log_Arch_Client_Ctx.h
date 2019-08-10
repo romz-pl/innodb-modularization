@@ -4,7 +4,7 @@
 
 #include <innodb/log_arch/Arch_Client_State.h>
 #include <innodb/log_arch/Log_Arch_Cbk.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 class Arch_Group;
 

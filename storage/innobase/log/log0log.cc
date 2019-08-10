@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/log_types/log_checksum_func_t.h>
-#include <innodb/log_types/LSN_PF.h>
+#include <innodb/log_sn/LSN_PF.h>
 #include <innodb/log_types/log_header_format_t.h>
 #include <innodb/log_redo/log_allocate_write_events.h>
 #include <innodb/log_redo/log_deallocate_write_events.h>

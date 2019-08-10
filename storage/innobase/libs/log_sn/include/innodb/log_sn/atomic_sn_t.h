@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/log_types/sn_t.h>
+#include <innodb/log_sn/sn_t.h>
 
 #include <atomic>
 

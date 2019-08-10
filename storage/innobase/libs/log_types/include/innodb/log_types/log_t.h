@@ -6,8 +6,8 @@
 #include <innodb/disk/flags.h>
 #include <innodb/log_types/Link_buf.h>
 #include <innodb/log_types/Log_clock_point.h>
-#include <innodb/log_types/atomic_lsn_t.h>
-#include <innodb/log_types/atomic_sn_t.h>
+#include <innodb/log_sn/atomic_lsn_t.h>
+#include <innodb/log_sn/atomic_sn_t.h>
 #include <innodb/log_types/checkpoint_no_t.h>
 #include <innodb/log_types/log_state_t.h>
 #include <innodb/sync_rw/Sharded_rw_lock.h>

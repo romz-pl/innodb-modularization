@@ -2,7 +2,7 @@
 
 #include <innodb/disk/univ_page_size.h>
 #include <innodb/io/IORequestLogWrite.h>
-#include <innodb/log_types/LSN_PF.h>
+#include <innodb/log_sn/LSN_PF.h>
 #include <innodb/log_types/flags.h>
 #include <innodb/log_files/log_files_header_fill.h>
 #include <innodb/log_types/log_t.h>

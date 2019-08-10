@@ -5,7 +5,7 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/mtr/mtr_buf_t.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 lsn_t log_buffer_write(log_t &log, const Log_handle &handle, const byte *str,
                        size_t str_len, lsn_t start_lsn);

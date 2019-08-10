@@ -4,8 +4,8 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/log_types/flags.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/flags.h>
+#include <innodb/log_sn/lsn_t.h>
 
 
 /** Calculates lsn value for given sn value. Sequence of sn values

@@ -5,7 +5,7 @@
 #include <innodb/error/dberr_t.h>
 #include <innodb/log_arch/Arch_Grp_List.h>
 #include <innodb/log_arch/Arch_State.h>
-#include <innodb/log_types/atomic_lsn_t.h>
+#include <innodb/log_sn/atomic_lsn_t.h>
 #include <innodb/sync_mutex/ib_mutex_t.h>
 #include <innodb/sync_mutex/mutex_create.h>
 #include <innodb/sync_mutex/mutex_enter.h>

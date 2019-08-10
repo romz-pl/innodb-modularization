@@ -4,7 +4,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 struct log_t;
 

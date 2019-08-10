@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/log_types/checkpoint_no_t.h>
-#include <innodb/log_types/lsn_t.h>
+#include <innodb/log_sn/lsn_t.h>
 
 struct log_t;
 
