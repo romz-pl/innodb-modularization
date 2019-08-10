@@ -1,8 +1,8 @@
 #include <innodb/log_write/log_closer.h>
 
 #include <innodb/log_redo/log_advance_dirty_pages_added_up_to_lsn.h>
-#include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
-#include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
+#include <innodb/log_buffer/log_buffer_dirty_pages_added_up_to_lsn.h>
+#include <innodb/log_buffer/log_buffer_ready_for_write_lsn.h>
 #include <innodb/log_redo/log_closer_mutex_enter.h>
 #include <innodb/log_redo/log_closer_mutex_exit.h>
 #include <innodb/log_types/log_get_lsn.h>

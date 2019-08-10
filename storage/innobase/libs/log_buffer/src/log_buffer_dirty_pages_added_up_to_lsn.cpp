@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
+#include <innodb/log_buffer/log_buffer_dirty_pages_added_up_to_lsn.h>
 
 #ifndef UNIV_HOTBACKUP
 

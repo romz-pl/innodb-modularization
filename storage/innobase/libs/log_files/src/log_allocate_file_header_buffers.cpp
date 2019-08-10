@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_allocate_file_header_buffers.h>
+#include <innodb/log_files/log_allocate_file_header_buffers.h>
 
 #include <innodb/log_types/log_t.h>
 

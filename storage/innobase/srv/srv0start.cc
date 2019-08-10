@@ -61,7 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_arch/log_archiver_thread_event.h>
 #include <innodb/log_arch/log_archiver_is_active.h>
 #include <innodb/log_arch/arch_free.h>
-#include <innodb/log_redo/log_files_header_flush.h>
+#include <innodb/log_files/log_files_header_flush.h>
 #include <innodb/log_redo/log_stop_background_threads.h>
 #include <innodb/log_redo/log_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>

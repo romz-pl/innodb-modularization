@@ -3,9 +3,8 @@ set( LIB_NAME log_redo )
 add_library( ${LIB_NAME} STATIC
     log_advance_dirty_pages_added_up_to_lsn.cpp
     log_advance_ready_for_write_lsn.cpp
-    log_allocate_buffer.cpp
     log_allocate_checkpoint_buffer.cpp
-    log_allocate_file_header_buffers.cpp
+
     log_allocate_flush_events.cpp
     log_allocate_recent_closed.cpp
     log_allocate_recent_written.cpp
@@ -14,39 +13,19 @@ add_library( ${LIB_NAME} STATIC
     log_background_threads_active_validate.cpp
     log_background_threads_inactive_validate.cpp
     log_background_write_threads_active_validate.cpp
-
-    log_buffer_close.cpp
-    log_buffer_dirty_pages_added_up_to_lsn.cpp
-    log_buffer_flush_order_lag.cpp
-    log_buffer_flush_to_disk.cpp
-    log_buffer_get_last_block.cpp
-    log_buffer_ready_for_write_lsn.cpp
-    log_buffer_resize.cpp
-    log_buffer_resize_low.cpp
-    log_buffer_s_lock_enter.cpp
-    log_buffer_s_lock_exit.cpp
-    log_buffer_set_first_record_group.cpp
-    log_buffer_write.cpp
-    log_buffer_write_completed.cpp
-    log_buffer_x_lock_own.cpp
-    log_calc_buf_size.cpp
-    log_calc_buf_size.cpp
     log_calc_concurrency_margin.cpp
     log_calc_max_ages.cpp
     log_closer_mutex_enter.cpp
     log_closer_mutex_exit.cpp
     log_closer_mutex_own.cpp
     log_closer_thread_active_validate.cpp
-    log_deallocate_buffer.cpp
     log_deallocate_checkpoint_buffer.cpp
-    log_deallocate_file_header_buffers.cpp
+
     log_deallocate_flush_events.cpp
     log_deallocate_recent_closed.cpp
     log_deallocate_recent_written.cpp
     log_deallocate_write_ahead_buffer.cpp
     log_deallocate_write_events.cpp
-    log_files_header_flush.cpp
-    log_files_update_offsets.cpp
     log_flush_notifier_mutex_enter.cpp
     log_flush_notifier_mutex_exit.cpp
     log_flush_notifier_mutex_own.cpp
@@ -55,7 +34,7 @@ add_library( ${LIB_NAME} STATIC
     log_flusher_mutex_exit.cpp
     log_flusher_mutex_own.cpp
     log_free_check.cpp
-    log_free_check_margin.cpp
+
     log_get_checkpoint_age.cpp
     log_get_max_modified_age_async.cpp
     log_needs_free_check.cpp
@@ -70,8 +49,6 @@ add_library( ${LIB_NAME} STATIC
     log_sys_init.cpp
     log_sys_object.cpp
     log_threads_active.cpp
-    log_translate_lsn_to_sn.cpp
-    log_update_limits.cpp
     log_wait_for_space_in_log_recent_closed.cpp
     log_write_ahead_resize.cpp
     log_write_notifier_mutex_enter.cpp
@@ -82,7 +59,6 @@ add_library( ${LIB_NAME} STATIC
     log_writer_thread_active_validate.cpp
     meb_log_print_file_hdr.cpp
     pfs.cpp
-    srv_log_buffer_size.cpp
     srv_log_flush_events.cpp
     srv_log_recent_closed_size.cpp
     srv_log_recent_written_size.cpp
@@ -105,6 +81,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    log_buffer
     log_files
     PRIVATE
 )

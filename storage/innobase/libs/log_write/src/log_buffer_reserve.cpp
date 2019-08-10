@@ -3,7 +3,7 @@
 #include <innodb/ioasync/srv_shutdown_state.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_redo/log_background_threads_active_validate.h>
-#include <innodb/log_redo/log_buffer_s_lock_enter.h>
+#include <innodb/log_buffer/log_buffer_s_lock_enter.h>
 #include <innodb/log_sn/log_lsn_validate.h>
 #include <innodb/log_sn/log_translate_sn_to_lsn.h>
 #include <innodb/log_redo/srv_stats.h>

@@ -60,7 +60,7 @@ the file COPYING.Google.
 #include <innodb/io/srv_is_being_started.h>
 #include <innodb/log_types/log_header_format_t.h>
 #include <innodb/log_types/recv_recovery_is_on.h>
-#include <innodb/log_redo/log_files_header_flush.h>
+#include <innodb/log_files/log_files_header_flush.h>
 
 #include "ha_prototypes.h"
 

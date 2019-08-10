@@ -8,12 +8,12 @@
 #include <innodb/log_block/log_block_set_first_rec_group.h>
 #include <innodb/log_block/log_block_set_flush_bit.h>
 #include <innodb/log_block/log_block_set_hdr_no.h>
-#include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
-#include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
-#include <innodb/log_redo/log_files_update_offsets.h>
+#include <innodb/log_buffer/log_buffer_dirty_pages_added_up_to_lsn.h>
+#include <innodb/log_buffer/log_buffer_ready_for_write_lsn.h>
+#include <innodb/log_files/log_files_update_offsets.h>
 #include <innodb/log_types/log_sys.h>
-#include <innodb/log_redo/log_translate_lsn_to_sn.h>
-#include <innodb/log_redo/log_update_limits.h>
+#include <innodb/log_sn/log_translate_lsn_to_sn.h>
+#include <innodb/log_types/log_update_limits.h>
 #include <innodb/log_redo/srv_log_write_ahead_size.h>
 #include <innodb/log_types/log_t.h>
 

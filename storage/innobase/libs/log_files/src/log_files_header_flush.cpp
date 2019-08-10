@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_files_header_flush.h>
+#include <innodb/log_files/log_files_header_flush.h>
 
 #include <innodb/disk/univ_page_size.h>
 #include <innodb/io/IORequestLogWrite.h>

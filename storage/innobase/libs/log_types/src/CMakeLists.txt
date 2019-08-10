@@ -31,6 +31,8 @@ add_library( ${LIB_NAME} STATIC
     recv_recovery_is_on.cpp
     recv_recovery_on.cpp
     log_get_lsn.cpp
+    log_update_limits.cpp
+    log_free_check_margin.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

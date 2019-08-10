@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_deallocate_file_header_buffers.h>
+#include <innodb/log_files/log_deallocate_file_header_buffers.h>
 
 #include <innodb/log_types/log_t.h>
 

@@ -2,7 +2,7 @@
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_sn/log_lsn_validate.h>
-#include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
+#include <innodb/log_buffer/log_buffer_dirty_pages_added_up_to_lsn.h>
 #include <innodb/monitor/MONITOR_INC_VALUE.h>
 
 void log_wait_for_space_in_log_recent_closed(log_t &log, lsn_t lsn) {

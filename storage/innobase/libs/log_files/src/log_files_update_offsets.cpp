@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_files_update_offsets.h>
+#include <innodb/log_files/log_files_update_offsets.h>
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_files/log_files_real_offset_for_lsn.h>

@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_buffer_resize_low.h>
+#include <innodb/log_buffer/log_buffer_resize_low.h>
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/flags.h>
@@ -6,10 +6,10 @@
 #include <innodb/log_types/log_writer_mutex_own.h>
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/align/ut_uint64_align_up.h>
-#include <innodb/log_redo/log_deallocate_buffer.h>
-#include <innodb/log_redo/log_allocate_buffer.h>
-#include <innodb/log_redo/log_calc_buf_size.h>
-#include <innodb/log_redo/srv_log_buffer_size.h>
+#include <innodb/log_buffer/log_deallocate_buffer.h>
+#include <innodb/log_buffer/log_allocate_buffer.h>
+#include <innodb/log_buffer/log_calc_buf_size.h>
+#include <innodb/log_buffer/srv_log_buffer_size.h>
 #include <innodb/logger/info.h>
 
 bool log_buffer_resize_low(log_t &log, size_t new_size, lsn_t end_lsn) {

@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_buffer_get_last_block.h>
+#include <innodb/log_buffer/log_buffer_get_last_block.h>
 
 #include <innodb/align/ut_uint64_align_down.h>
 #include <innodb/log_block/log_block_convert_lsn_to_no.h>

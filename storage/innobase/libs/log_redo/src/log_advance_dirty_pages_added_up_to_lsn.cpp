@@ -2,7 +2,7 @@
 
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/flags.h>
-#include <innodb/log_redo/log_buffer_dirty_pages_added_up_to_lsn.h>
+#include <innodb/log_buffer/log_buffer_dirty_pages_added_up_to_lsn.h>
 #include <innodb/log_redo/log_closer_mutex_own.h>
 #include <innodb/log_redo/log_closer_thread_active_validate.h>
 #include <innodb/log_types/log_get_checkpoint_lsn.h>

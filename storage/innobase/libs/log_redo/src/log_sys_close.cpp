@@ -1,13 +1,13 @@
 #include <innodb/log_redo/log_sys_close.h>
 
-#include <innodb/log_redo/log_deallocate_file_header_buffers.h>
+#include <innodb/log_files/log_deallocate_file_header_buffers.h>
 #include <innodb/log_redo/log_deallocate_write_events.h>
 #include <innodb/log_redo/log_deallocate_flush_events.h>
 #include <innodb/log_redo/log_deallocate_recent_closed.h>
 #include <innodb/log_redo/log_deallocate_recent_written.h>
 #include <innodb/log_redo/log_deallocate_checkpoint_buffer.h>
 #include <innodb/log_redo/log_deallocate_write_ahead_buffer.h>
-#include <innodb/log_redo/log_deallocate_buffer.h>
+#include <innodb/log_buffer/log_deallocate_buffer.h>
 #include <innodb/log_types/log_sys.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_event/os_event_destroy.h>

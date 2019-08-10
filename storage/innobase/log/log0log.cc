@@ -51,9 +51,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_deallocate_recent_written.h>
 #include <innodb/log_redo/log_allocate_recent_closed.h>
 #include <innodb/log_redo/log_deallocate_recent_closed.h>
-#include <innodb/log_redo/log_allocate_file_header_buffers.h>
-#include <innodb/log_redo/log_deallocate_file_header_buffers.h>
-#include <innodb/log_redo/log_calc_buf_size.h>
+#include <innodb/log_files/log_allocate_file_header_buffers.h>
+#include <innodb/log_files/log_deallocate_file_header_buffers.h>
+#include <innodb/log_buffer/log_calc_buf_size.h>
 #include <innodb/log_redo/log_sys_object.h>
 #include <innodb/log_redo/pfs.h>
 #include <innodb/log_write/log_closer.h>

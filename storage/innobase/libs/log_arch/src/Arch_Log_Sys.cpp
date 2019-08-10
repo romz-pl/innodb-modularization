@@ -25,7 +25,7 @@
 #include <innodb/log_types/log_writer_mutex_enter.h>
 #include <innodb/log_types/log_writer_mutex_exit.h>
 #include <innodb/machine/data.h>
-// #include <innodb/log_redo/log_buffer_get_last_block.h>
+// #include <innodb/log_buffer/log_buffer_get_last_block.h>
 
 /** Chunk size for archiving redo log */
 const uint ARCH_LOG_CHUNK_SIZE = 1024 * 1024;

@@ -74,7 +74,7 @@ the file COPYING.Google.
 #include <innodb/sync_event/os_event_wait_for.h>
 #include <innodb/io/IORequestLogRead.h>
 #include <innodb/io/IORequestLogWrite.h>
-#include <innodb/log_redo/log_files_header_flush.h>
+#include <innodb/log_files/log_files_header_flush.h>
 #include <innodb/log_write/validate_buffer.h>
 #include <innodb/log_write/validate_start_lsn.h>
 #include <innodb/log_write/compute_real_offset.h>

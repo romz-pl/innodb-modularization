@@ -1,8 +1,8 @@
 #include <innodb/log_write/start_next_file.h>
 
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_redo/log_files_header_flush.h>
-#include <innodb/log_redo/log_files_update_offsets.h>
+#include <innodb/log_files/log_files_header_flush.h>
+#include <innodb/log_files/log_files_update_offsets.h>
 
 namespace Log_files_write_impl {
 

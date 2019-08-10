@@ -6,6 +6,7 @@ add_library( ${LIB_NAME} STATIC
     atomic_sn_t.cpp
     flags.cpp
     log_lsn_validate.cpp
+    log_translate_lsn_to_sn.cpp
     log_translate_sn_to_lsn.cpp
     lsn_t.cpp
     sn_t.cpp

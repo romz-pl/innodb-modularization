@@ -1,7 +1,7 @@
 #include <innodb/log_write/log_wait_for_space_in_log_buf.h>
 
-#include <innodb/log_redo/log_translate_lsn_to_sn.h>
-#include <innodb/log_redo/log_translate_lsn_to_sn.h>
+#include <innodb/log_sn/log_translate_lsn_to_sn.h>
+#include <innodb/log_sn/log_translate_lsn_to_sn.h>
 #include <innodb/log_sn/log_translate_sn_to_lsn.h>
 #include <innodb/log_redo/srv_stats.h>
 #include <innodb/log_types/log_t.h>

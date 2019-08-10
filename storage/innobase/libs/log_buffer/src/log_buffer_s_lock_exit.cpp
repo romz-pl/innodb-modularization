@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_buffer_s_lock_exit.h>
+#include <innodb/log_buffer/log_buffer_s_lock_exit.h>
 
 #include <innodb/log_types/log_t.h>
 

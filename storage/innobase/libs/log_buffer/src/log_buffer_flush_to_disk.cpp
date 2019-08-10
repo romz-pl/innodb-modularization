@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_buffer_flush_to_disk.h>
+#include <innodb/log_buffer/log_buffer_flush_to_disk.h>
 
 #include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_types/recv_recovery_is_on.h>

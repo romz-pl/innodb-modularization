@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_buffer_ready_for_write_lsn.h>
+#include <innodb/log_buffer/log_buffer_ready_for_write_lsn.h>
 
 #ifndef UNIV_HOTBACKUP
 
