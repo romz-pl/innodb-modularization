@@ -1,4 +1,4 @@
-#include <innodb/log_write/log_closer.h>
+#include <innodb/log_closer/log_closer.h>
 
 #include <innodb/log_redo/log_advance_dirty_pages_added_up_to_lsn.h>
 #include <innodb/log_buffer/log_buffer_dirty_pages_added_up_to_lsn.h>
@@ -9,8 +9,8 @@
 #include <innodb/log_sn/log_lsn_validate.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/Log_thread_waiting.h>
-#include <innodb/log_write/srv_log_closer_spin_delay.h>
-#include <innodb/log_write/srv_log_closer_timeout.h>
+#include <innodb/log_closer/srv_log_closer_spin_delay.h>
+#include <innodb/log_closer/srv_log_closer_timeout.h>
 #include <innodb/sync_event/os_event_set.h>
 
 void log_closer(log_t *log_ptr) {

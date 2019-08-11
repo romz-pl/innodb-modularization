@@ -56,7 +56,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_buffer/log_calc_buf_size.h>
 #include <innodb/log_sys/log_sys_object.h>
 #include <innodb/log_redo/pfs.h>
-#include <innodb/log_write/log_closer.h>
+#include <innodb/log_closer/log_closer.h>
 #include <innodb/log_write/log_flush_notifier.h>
 #include <innodb/log_write/log_write_notifier.h>
 

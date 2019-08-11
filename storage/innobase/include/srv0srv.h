@@ -63,8 +63,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_write/srv_log_write_notifier_spin_delay.h>
 #include <innodb/log_redo/srv_stats.h>
 #include <innodb/log_redo/srv_log_write_max_size.h>
-#include <innodb/log_write/srv_log_closer_timeout.h>
-#include <innodb/log_write/srv_log_closer_spin_delay.h>
+#include <innodb/log_closer/srv_log_closer_timeout.h>
+#include <innodb/log_closer/srv_log_closer_spin_delay.h>
 #include <innodb/log_write/srv_flush_log_at_trx_commit.h>
 #include <innodb/log_write/srv_log_spin_cpu_abs_lwm.h>
 #include <innodb/log_write/srv_cpu_usage.h>

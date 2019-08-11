@@ -39,9 +39,8 @@ add_library( ${LIB_NAME} STATIC
     log_write_encryption.cpp
     log_rotate_encryption.cpp
     redo_rotate_default_master_key.cpp
-    log_closer.cpp
-    srv_log_closer_spin_delay.cpp
-    srv_log_closer_timeout.cpp
+
+
     log_wait_for_space_in_log_buf.cpp
     log_wait_for_space_after_reserving.cpp
     log_buffer_reserve.cpp
@@ -63,8 +62,7 @@ add_library( ${LIB_NAME} STATIC
     srv_flushing_avg_loops.cpp
     log_flush_low.cpp
     log_writer.cpp
-    srv_log_writer_spin_delay.cpp
-    srv_log_writer_timeout.cpp
+
     log_write_notifier_mutex_enter.cpp
     log_write_notifier_mutex_exit.cpp
     log_write_notifier_mutex_own.cpp
