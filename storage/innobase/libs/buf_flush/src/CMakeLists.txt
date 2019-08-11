@@ -1,12 +1,10 @@
-set( LIB_NAME buf_chunk )
+set( LIB_NAME buf_flush )
 
 add_library( ${LIB_NAME} STATIC
-    buf_chunk_init.cpp
-    buf_chunk_map_reg.cpp
-    buf_chunk_not_freed.cpp
-    buf_chunk_t.cpp
-    buf_get_nth_chunk_block.cpp
-    buf_pool_chunk_map_t.cpp
+    buf_flush_list_mutex_enter.cpp
+    buf_flush_list_mutex_exit.cpp
+    buf_flush_list_mutex_own.cpp
+    buf_flush_ready_for_replace.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -20,8 +18,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    buf_block
-    buf_flush
+    buf_page
     PRIVATE
 )
 

@@ -36,8 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
 #include <innodb/print/ut_print_buf.h>
-#include <innodb/buffer/buf_flush_list_mutex_enter.h>
-#include <innodb/buffer/buf_flush_list_mutex_exit.h>
+#include <innodb/buf_flush/buf_flush_list_mutex_enter.h>
+#include <innodb/buf_flush/buf_flush_list_mutex_exit.h>
 #include <innodb/buf_page/buf_page_set_sticky.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>
 #include <innodb/buffer/buf_get_withdraw_depth.h>

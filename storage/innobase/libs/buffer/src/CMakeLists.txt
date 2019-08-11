@@ -13,10 +13,6 @@ add_library( ${LIB_NAME} STATIC
     LRUHp.cpp
     LRUItr.cpp
     Page_fetch.cpp
-    buf_flush_list_mutex_enter.cpp
-    buf_flush_list_mutex_exit.cpp
-    buf_flush_list_mutex_own.cpp
-    buf_flush_ready_for_replace.cpp
     buf_get_total_list_len.cpp
     buf_get_total_list_size_in_bytes.cpp
     buf_get_total_stat.cpp

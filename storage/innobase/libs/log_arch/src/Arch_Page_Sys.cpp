@@ -16,8 +16,8 @@
 #include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/buf_pool/srv_buf_pool_instances.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>
-#include <innodb/buffer/buf_flush_list_mutex_enter.h>
-#include <innodb/buffer/buf_flush_list_mutex_exit.h>
+#include <innodb/buf_flush/buf_flush_list_mutex_enter.h>
+#include <innodb/buf_flush/buf_flush_list_mutex_exit.h>
 #include <innodb/tablespace/fsp_is_system_temporary.h>
 // #include <innodb/log_buffer/log_buffer_flush_order_lag.h>
 #include <innodb/buf_page/buf_page_get_io_fix_unlocked.h>

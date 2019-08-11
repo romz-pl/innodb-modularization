@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_flush_ready_for_replace.h>
+#include <innodb/buf_flush/buf_flush_ready_for_replace.h>
 
 #include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buf_page/buf_page_get_mutex.h>

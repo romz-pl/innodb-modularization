@@ -75,8 +75,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_sx_unlock_gen.h>
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/print/ut_sprintf_timestamp.h>
-#include <innodb/buffer/buf_flush_list_mutex_enter.h>
-#include <innodb/buffer/buf_flush_list_mutex_exit.h>
+#include <innodb/buf_flush/buf_flush_list_mutex_enter.h>
+#include <innodb/buf_flush/buf_flush_list_mutex_exit.h>
 #include <innodb/buf_block/buf_block_set_io_fix.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>
 #include <innodb/buf_pool/buf_pool_size_align.h>
