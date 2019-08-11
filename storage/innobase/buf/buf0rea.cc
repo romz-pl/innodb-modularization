@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buffer/buf_pool_t.h>
-#include <innodb/buffer/buf_page_is_accessed.h>
+#include <innodb/buf_page/buf_page_is_accessed.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/ioasync/os_aio_simulated_put_read_threads_to_sleep.h>
 #include <innodb/io/IORequest.h>

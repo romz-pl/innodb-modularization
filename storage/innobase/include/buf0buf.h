@@ -46,7 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_info_t.h>
 #include <innodb/buffer/buf_pools_list_size_t.h>
 #include <innodb/buf_page/flags.h>
-#include <innodb/buffer/buf_page_print_flags.h>
+#include <innodb/buf_page/buf_page_print_flags.h>
 #include <innodb/buffer/BPageMutex.h>
 #include <innodb/buffer/BPageLock.h>
 #include <innodb/buffer/BufListMutex.h>

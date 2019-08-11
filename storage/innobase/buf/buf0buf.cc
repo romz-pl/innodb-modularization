@@ -83,7 +83,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get.h>
 #include <innodb/buffer/buf_block_fix.h>
 #include <innodb/buffer/buf_block_buf_fix_dec.h>
-#include <innodb/buffer/buf_page_free_descriptor.h>
+#include <innodb/buf_page/buf_page_free_descriptor.h>
 #include <innodb/buffer/buf_page_set_accessed.h>
 #include <innodb/buf_page/buf_page_alloc_descriptor.h>
 #include <innodb/buffer/buf_page_get_block.h>
@@ -102,7 +102,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get_curr_size.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>
 #include <innodb/buffer/buf_chunk_t.h>
-#include <innodb/buffer/buf_page_is_accessed.h>
+#include <innodb/buf_page/buf_page_is_accessed.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/buffer/CheckInLRUList.h>
 #include <innodb/buffer/buf_block_get_state.h>

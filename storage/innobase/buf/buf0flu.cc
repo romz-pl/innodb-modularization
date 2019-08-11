@@ -60,11 +60,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_set_io_fix.h>
 #include <innodb/buffer/buf_page_get_mutex.h>
 #include <innodb/buf_page/buf_page_set_flush_type.h>
-#include <innodb/buffer/buf_page_is_old.h>
+#include <innodb/buf_page/buf_page_is_old.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_state.h>
-#include <innodb/buffer/buf_page_set_state.h>
+#include <innodb/buf_page/buf_page_set_state.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>

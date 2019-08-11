@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_page_get_freed_page_clock.h>
+#include <innodb/buf_page/buf_page_get_freed_page_clock.h>
 
 #ifndef UNIV_HOTBACKUP
 

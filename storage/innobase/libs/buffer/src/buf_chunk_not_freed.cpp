@@ -4,8 +4,8 @@
 #include <innodb/buffer/buf_chunk_t.h>
 #include <innodb/buffer/buf_block_get_state.h>
 #include <innodb/buffer/buf_flush_ready_for_replace.h>
-#include <innodb/buffer/buf_page_mutex_enter.h>
-#include <innodb/buffer/buf_page_mutex_exit.h>
+#include <innodb/buf_page/buf_page_mutex_enter.h>
+#include <innodb/buf_page/buf_page_mutex_exit.h>
 #include <innodb/error/ut_error.h>
 
 /** Checks that all file pages in the buffer chunk are in a replaceable state.

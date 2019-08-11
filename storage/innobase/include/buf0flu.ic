@@ -32,8 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
-#include <innodb/buffer/buf_page_mutex_exit.h>
-#include <innodb/buffer/buf_page_mutex_enter.h>
+#include <innodb/buf_page/buf_page_mutex_exit.h>
+#include <innodb/buf_page/buf_page_mutex_enter.h>
 #include <innodb/buffer/buf_pool_from_block.h>
 
 #include "buf0buf.h"

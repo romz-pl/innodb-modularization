@@ -38,8 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/Page_fetch.h>
 #include <innodb/log_types/log_sys.h>
 #include <innodb/log_types/log_get_lsn.h>
-#include <innodb/buffer/buf_page_mutex_exit.h>
-#include <innodb/buffer/buf_page_mutex_enter.h>
+#include <innodb/buf_page/buf_page_mutex_exit.h>
+#include <innodb/buf_page/buf_page_mutex_enter.h>
 
 #include "buf0buf.h"
 #include "fil0fil.h"
