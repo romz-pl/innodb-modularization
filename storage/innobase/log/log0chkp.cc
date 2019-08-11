@@ -44,6 +44,7 @@ the file COPYING.Google.
 
  *******************************************************/
 
+#include <innodb/log_chkp/log_checkpoint_time_elapsed.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/log_chkp/log_checkpointer_mutex_exit.h>
 #include <innodb/log_chkp/log_checkpointer_mutex_enter.h>
@@ -61,6 +62,7 @@ the file COPYING.Google.
 #include <innodb/log_types/log_header_format_t.h>
 #include <innodb/log_types/recv_recovery_is_on.h>
 #include <innodb/log_files/log_files_header_flush.h>
+#include <innodb/log_chkp/log_should_checkpoint.h>
 
 #include "ha_prototypes.h"
 
@@ -88,11 +90,6 @@ the file COPYING.Google.
 
 #ifndef UNIV_HOTBACKUP
 
-/** Checks if checkpoint should be written. Checks time elapsed since the last
-checkpoint, age of the last checkpoint and if there was any extra request to
-write the checkpoint (e.g. coming from log_make_latest_checkpoint()).
-@return true if checkpoint should be written */
-static bool log_should_checkpoint(log_t &log);
 
 /** Considers writing next checkpoint. Checks if checkpoint should be written
 (using log_should_checkpoint()) and writes the checkpoint if that's the case.
@@ -109,9 +106,7 @@ in the buffer pool, and writes information about the lsn in log files.
 @param[in,out]	log	redo log */
 static void log_checkpoint(log_t &log);
 
-/** Calculates time that elapsed since last checkpoint.
-@return number of microseconds since the last checkpoint */
-static uint64_t log_checkpoint_time_elapsed(const log_t &log);
+
 
 /** Requests a checkpoint written for lsn greater or equal to provided one.
 The log.checkpointer_mutex has to be acquired before it is called, and it
@@ -280,20 +275,7 @@ static void log_update_available_for_checkpoint_lsn(log_t &log) {
 
 
 
-void log_files_header_read(log_t &log, uint32_t header) {
-  ut_a(srv_is_being_started);
-  ut_a(!log.checkpointer_thread_alive.load());
 
-  const auto page_no =
-      static_cast<page_no_t>(header / univ_page_size.physical());
-
-  auto err = fil_redo_io(IORequestLogRead,
-                         page_id_t{log.files_space_id, page_no}, univ_page_size,
-                         static_cast<ulint>(header % univ_page_size.physical()),
-                         OS_FILE_LOG_BLOCK_SIZE, log.checkpoint_buf);
-
-  ut_a(err == DB_SUCCESS);
-}
 
 #endif /* UNIV_HOTBACKUP */
 #ifdef UNIV_HOTBACKUP
@@ -320,31 +302,6 @@ void meb_log_print_file_hdr(byte *block) {
 
 #ifndef UNIV_HOTBACKUP
 
-void log_files_downgrade(log_t &log) {
-  ut_ad(srv_is_being_shutdown);
-  ut_a(!log.checkpointer_thread_alive.load());
-
-  const uint32_t nth_file = 0;
-
-  byte *const buf = log.file_header_bufs[nth_file];
-
-  const lsn_t dest_offset = nth_file * log.file_size;
-
-  const page_no_t page_no =
-      static_cast<page_no_t>(dest_offset / univ_page_size.physical());
-
-  /* Write old version */
-  mach_write_to_4(buf + LOG_HEADER_FORMAT, LOG_HEADER_FORMAT_5_7_9);
-
-  log_block_set_checksum(buf, log_block_calc_checksum_crc32(buf));
-
-  auto err = fil_redo_io(
-      IORequestLogWrite, page_id_t{log.files_space_id, page_no}, univ_page_size,
-      static_cast<ulint>(dest_offset % univ_page_size.physical()),
-      OS_FILE_LOG_BLOCK_SIZE, buf);
-
-  ut_a(err == DB_SUCCESS);
-}
 
 /* @} */
 
@@ -369,87 +326,6 @@ static lsn_t log_determine_checkpoint_lsn(log_t &log) {
   }
 }
 
-void log_files_write_checkpoint(log_t &log, lsn_t next_checkpoint_lsn) {
-  ut_ad(log_checkpointer_mutex_own(log));
-  ut_a(!srv_read_only_mode);
-
-  log_writer_mutex_enter(log);
-
-  const checkpoint_no_t checkpoint_no = log.next_checkpoint_no.load();
-
-  DBUG_PRINT("ib_log", ("checkpoint " UINT64PF " at " LSN_PF " written",
-                        checkpoint_no, next_checkpoint_lsn));
-
-  byte *buf = log.checkpoint_buf;
-
-  memset(buf, 0x00, OS_FILE_LOG_BLOCK_SIZE);
-
-  mach_write_to_8(buf + LOG_CHECKPOINT_NO, checkpoint_no);
-
-  mach_write_to_8(buf + LOG_CHECKPOINT_LSN, next_checkpoint_lsn);
-
-  const uint64_t lsn_offset =
-      log_files_real_offset_for_lsn(log, next_checkpoint_lsn);
-
-  mach_write_to_8(buf + LOG_CHECKPOINT_OFFSET, lsn_offset);
-
-  mach_write_to_8(buf + LOG_CHECKPOINT_LOG_BUF_SIZE, log.buf_size);
-
-  log_block_set_checksum(buf, log_block_calc_checksum_crc32(buf));
-
-  ut_a(LOG_CHECKPOINT_1 < univ_page_size.physical());
-  ut_a(LOG_CHECKPOINT_2 < univ_page_size.physical());
-
-  /* Note: We alternate the physical place of the checkpoint info.
-  See the (next_checkpoint_no & 1) below. */
-  LOG_SYNC_POINT("log_before_checkpoint_write");
-
-  auto err = fil_redo_io(
-      IORequestLogWrite, page_id_t{log.files_space_id, 0}, univ_page_size,
-      (checkpoint_no & 1) ? LOG_CHECKPOINT_2 : LOG_CHECKPOINT_1,
-      OS_FILE_LOG_BLOCK_SIZE, buf);
-
-  ut_a(err == DB_SUCCESS);
-
-  LOG_SYNC_POINT("log_before_checkpoint_flush");
-
-#ifdef _WIN32
-  switch (srv_win_file_flush_method) {
-    case SRV_WIN_IO_UNBUFFERED:
-      break;
-    case SRV_WIN_IO_NORMAL:
-      fil_flush_file_redo();
-      break;
-  }
-#else
-  switch (srv_unix_file_flush_method) {
-    case SRV_UNIX_O_DSYNC:
-    case SRV_UNIX_NOSYNC:
-      break;
-    case SRV_UNIX_FSYNC:
-    case SRV_UNIX_LITTLESYNC:
-    case SRV_UNIX_O_DIRECT:
-    case SRV_UNIX_O_DIRECT_NO_FSYNC:
-      fil_flush_file_redo();
-  }
-#endif /* _WIN32 */
-
-  DBUG_PRINT("ib_log", ("checkpoint info written"));
-
-  log.next_checkpoint_no.fetch_add(1);
-
-  LOG_SYNC_POINT("log_before_checkpoint_lsn_update");
-
-  log.last_checkpoint_lsn.store(next_checkpoint_lsn);
-
-  LOG_SYNC_POINT("log_before_checkpoint_limits_update");
-
-  log_update_limits(log);
-
-  log.dict_max_allowed_checkpoint_lsn = 0;
-
-  log_writer_mutex_exit(log);
-}
 
 static void log_checkpoint(log_t &log) {
   ut_ad(log_checkpointer_mutex_own(log));
@@ -749,83 +625,8 @@ static bool log_consider_sync_flush(log_t &log) {
   return (false);
 }
 
-static uint64_t log_checkpoint_time_elapsed(const log_t &log) {
-  ut_ad(log_checkpointer_mutex_own(log));
 
-  const auto current_time = std::chrono::high_resolution_clock::now();
 
-  const auto checkpoint_time = log.last_checkpoint_time;
-
-  if (current_time < log.last_checkpoint_time) {
-    return (0);
-  }
-
-  return (std::chrono::duration_cast<std::chrono::microseconds>(current_time -
-                                                                checkpoint_time)
-              .count());
-}
-
-static bool log_should_checkpoint(log_t &log) {
-  lsn_t last_checkpoint_lsn;
-  lsn_t oldest_lsn;
-  lsn_t current_lsn;
-  lsn_t requested_checkpoint_lsn;
-  uint64_t checkpoint_age;
-  uint64_t checkpoint_time_elapsed;
-
-  ut_ad(log_checkpointer_mutex_own(log));
-
-#ifdef UNIV_DEBUG
-  if (srv_checkpoint_disabled) {
-    return (false);
-  }
-#endif /* UNIV_DEBUG */
-
-  last_checkpoint_lsn = log.last_checkpoint_lsn.load();
-
-  oldest_lsn = log.available_for_checkpoint_lsn;
-
-  if (oldest_lsn <= last_checkpoint_lsn) {
-    return (false);
-  }
-
-  requested_checkpoint_lsn = log.requested_checkpoint_lsn;
-
-  current_lsn = log_get_lsn(log);
-
-  ut_a(last_checkpoint_lsn <= oldest_lsn);
-  ut_a(oldest_lsn <= current_lsn);
-
-  const sn_t margin = log_free_check_margin(log);
-
-  current_lsn =
-      log_translate_sn_to_lsn(log_translate_lsn_to_sn(current_lsn) + margin);
-
-  checkpoint_age = current_lsn - last_checkpoint_lsn;
-
-  checkpoint_time_elapsed = log_checkpoint_time_elapsed(log);
-
-  /* Update checkpoint_lsn stored in header of log files if:
-          a) more than 1s elapsed since last checkpoint
-          b) checkpoint age is greater than max_checkpoint_age_async
-          c) it was requested to have greater checkpoint_lsn,
-             and oldest_lsn allows to satisfy the request */
-
-  bool periodical_checkpoint_disabled = false;
-
-  DBUG_EXECUTE_IF("periodical_checkpoint_disabled",
-                  periodical_checkpoint_disabled = true;);
-
-  if ((log.periodical_checkpoints_enabled && !periodical_checkpoint_disabled &&
-       checkpoint_time_elapsed >= srv_log_checkpoint_every * 1000ULL) ||
-      checkpoint_age >= log.max_checkpoint_age_async ||
-      (requested_checkpoint_lsn > last_checkpoint_lsn &&
-       requested_checkpoint_lsn <= oldest_lsn)) {
-    return (true);
-  }
-
-  return (false);
-}
 
 static bool log_consider_checkpoint(log_t &log) {
   ut_ad(log_checkpointer_mutex_own(log));

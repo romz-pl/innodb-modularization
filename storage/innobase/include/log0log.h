@@ -46,6 +46,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_files/log_files_downgrade.h>
+#include <innodb/log_files/log_files_header_read.h>
 #include <innodb/log_buffer/log_buffer_set_first_record_group.h>
 #include <innodb/log_buffer/log_buffer_get_last_block.h>
 #include <innodb/log_write/log_advance_ready_for_write_lsn.h>
@@ -148,6 +150,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_wait/Log_thread_waiting.h>
 #include <innodb/log_flush/log_flusher.h>
 #include <innodb/log_write/log_writer.h>
+#include <innodb/log_files/log_files_write_checkpoint.h>
 
 #include <innodb/machine/data.h>
 #include "srv0mon.h"
@@ -256,26 +259,9 @@ requests a checkpoint write and waits until it is finished.
 @return true iff current lsn was greater than last checkpoint lsn */
 bool log_make_latest_checkpoint();
 
-/** Reads a log file header page to log.checkpoint_buf.
-@param[in,out]	log	redo log
-@param[in]	header	0 or LOG_CHECKPOINT_1 or LOG_CHECKPOINT2 */
-void log_files_header_read(log_t &log, uint32_t header);
 
 
 
-/** Changes format of redo files to previous format version.
-
-@note Note this will work between the two formats 5_7_9 & current because
-the only change is the version number */
-void log_files_downgrade(log_t &log);
-
-/** Writes the next checkpoint info to header of the first log file.
-Note that two pages of the header are used alternately for consecutive
-checkpoints. If we crashed during the write, we would still have the
-previous checkpoint info and recovery would work.
-@param[in,out]	log			redo log
-@param[in]	next_checkpoint_lsn	writes checkpoint at this lsn */
-void log_files_write_checkpoint(log_t &log, lsn_t next_checkpoint_lsn);
 
 
 

@@ -9,6 +9,9 @@ add_library( ${LIB_NAME} STATIC
     log_files_real_offset_for_lsn.cpp
     log_files_size_offset.cpp
     log_files_update_offsets.cpp
+    log_files_header_read.cpp
+    log_files_downgrade.cpp
+    log_files_write_checkpoint.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -23,6 +26,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     log_block
+    log_chkp
     tablespace
     PRIVATE
 )

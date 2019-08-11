@@ -37,7 +37,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    log_types
     log_wait
     tablespace
     PRIVATE

@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_chkp/srv_log_checkpoint_every.h>
 #include <innodb/clone/srv_undo_log_encrypt.h>
 #include <innodb/clone/srv_redo_log_encrypt.h>
 #include <innodb/log_arch/srv_log_group_home_dir.h>
@@ -289,10 +290,7 @@ extern ulonglong srv_log_file_size_requested;
 
 
 
-/** Number of milliseconds every which a periodical checkpoint is written
-by the log checkpointer thread (unless periodical checkpoints are disabled,
-which is a case during initial phase of startup). */
-extern ulong srv_log_checkpoint_every;
+
 
 
 

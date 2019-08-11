@@ -7,6 +7,9 @@ add_library( ${LIB_NAME} STATIC
     log_checkpointer_mutex_own.cpp
     log_deallocate_checkpoint_buffer.cpp
     log_get_checkpoint_age.cpp
+    log_checkpoint_time_elapsed.cpp
+    srv_log_checkpoint_every.cpp
+    log_should_checkpoint.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
