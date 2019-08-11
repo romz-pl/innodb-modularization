@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buf_page/buf_page_get_mutex.h>
 
 #ifndef UNIV_HOTBACKUP
 

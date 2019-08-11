@@ -3,7 +3,7 @@
 #include <innodb/mtr/mtr_memo_slot_t.h>
 #include <innodb/mtr/mtr_memo_type_t.h>
 #include <innodb/buf_block/buf_block_unfix.h>
-#include <innodb/buffer/buf_page_release_latch.h>
+#include <innodb/buf_page/buf_page_release_latch.h>
 #include <innodb/sync_rw/rw_lock_s_unlock.h>
 #include <innodb/sync_rw/rw_lock_sx_unlock.h>
 #include <innodb/sync_rw/rw_lock_x_unlock.h>

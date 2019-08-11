@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_page_get_io_fix.h>
+#include <innodb/buf_page/buf_page_get_io_fix.h>
 #include <innodb/buf_block/buf_block_t.h>
 
 /** Gets the io_fix state of a block.

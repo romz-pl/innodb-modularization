@@ -1,10 +1,10 @@
 #include <innodb/buffer/buf_flush_ready_for_replace.h>
 
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buf_page/buf_page_get_mutex.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/logger/fatal.h>
-#include <innodb/buffer/buf_page_get_io_fix.h>
+#include <innodb/buf_page/buf_page_get_io_fix.h>
 
 /** Returns TRUE if the file page block is immediately suitable for replacement,
 i.e., the transition FILE_PAGE => NOT_USED allowed. The caller must hold the

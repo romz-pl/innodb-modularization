@@ -1,10 +1,10 @@
-#include <innodb/buffer/buf_page_set_sticky.h>
+#include <innodb/buf_page/buf_page_set_sticky.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_page_get_io_fix.h>
-#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buf_page/buf_page_get_io_fix.h>
+#include <innodb/buf_page/buf_page_get_mutex.h>
 #include <innodb/sync_mutex/mutex_own.h>
 
 /** Makes a block sticky. A sticky block implies that even after we release

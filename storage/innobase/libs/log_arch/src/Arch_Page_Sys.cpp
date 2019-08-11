@@ -20,7 +20,7 @@
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
 #include <innodb/tablespace/fsp_is_system_temporary.h>
 // #include <innodb/log_buffer/log_buffer_flush_order_lag.h>
-#include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
+#include <innodb/buf_page/buf_page_get_io_fix_unlocked.h>
 #include <innodb/log_types/log_buffer_x_lock_exit.h>
 #include <innodb/log_types/log_buffer_x_lock_enter.h>
 #include <innodb/log_types/log_get_lsn.h>

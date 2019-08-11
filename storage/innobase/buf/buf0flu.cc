@@ -55,10 +55,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get.h>
 #include <innodb/buffer/buf_get_withdraw_depth.h>
 #include <innodb/buf_page/buf_page_get_flush_type.h>
-#include <innodb/buffer/buf_page_get_io_fix.h>
-#include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
-#include <innodb/buffer/buf_page_set_io_fix.h>
-#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buf_page/buf_page_get_io_fix.h>
+#include <innodb/buf_page/buf_page_get_io_fix_unlocked.h>
+#include <innodb/buf_page/buf_page_set_io_fix.h>
+#include <innodb/buf_page/buf_page_get_mutex.h>
 #include <innodb/buf_page/buf_page_set_flush_type.h>
 #include <innodb/buf_page/buf_page_is_old.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>

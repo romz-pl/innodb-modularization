@@ -44,20 +44,7 @@ add_library( ${LIB_NAME} STATIC
     buf_get_total_list_size_in_bytes.cpp
     buf_get_total_stat.cpp
     buf_get_withdraw_depth.cpp
-    buf_page_belongs_to_unzip_LRU.cpp
-    buf_page_can_relocate.cpp
-    buf_page_get_block.cpp
-    buf_page_get_io_fix.cpp
-    buf_page_get_io_fix_unlocked.cpp
-    buf_page_get_mutex.cpp
-    buf_page_get_newest_modification.cpp
-    buf_page_release_latch.cpp
-    buf_page_release_zip.cpp
-    buf_page_set_accessed.cpp
-    buf_page_set_io_fix.cpp
-    buf_page_set_old.cpp
-    buf_page_set_sticky.cpp
-    buf_page_unset_sticky.cpp
+
     buf_pool_chunk_map_t.cpp
     buf_pool_from_array.cpp
     buf_pool_from_block.cpp

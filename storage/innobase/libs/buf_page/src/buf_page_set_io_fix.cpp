@@ -1,10 +1,10 @@
-#include <innodb/buffer/buf_page_set_io_fix.h>
+#include <innodb/buf_page/buf_page_set_io_fix.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_page_get_mutex.h>
-#include <innodb/buffer/buf_page_get_io_fix.h>
+#include <innodb/buf_page/buf_page_get_mutex.h>
+#include <innodb/buf_page/buf_page_get_io_fix.h>
 #include <innodb/sync_mutex/mutex_own.h>
 
 /** Sets the io_fix state of a block. */

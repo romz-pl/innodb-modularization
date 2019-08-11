@@ -8,7 +8,7 @@
 #include <innodb/sync_rw/rw_lock_x_lock_inline.h>
 #include <innodb/sync_rw/rw_lock_sx_lock_inline.h>
 #include <innodb/buf_block/buf_block_unfix.h>
-#include <innodb/buffer/buf_page_release_latch.h>
+#include <innodb/buf_page/buf_page_release_latch.h>
 #include <innodb/tablespace/mach_read_ulint.h>
 
 

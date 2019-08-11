@@ -1,11 +1,11 @@
-#include <innodb/buffer/buf_page_can_relocate.h>
+#include <innodb/buf_page/buf_page_can_relocate.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_page_get_io_fix.h>
-#include <innodb/buffer/buf_page_get_mutex.h>
+#include <innodb/buf_page/buf_page_get_io_fix.h>
+#include <innodb/buf_page/buf_page_get_mutex.h>
 #include <innodb/sync_mutex/mutex_own.h>
 
 /** Determine if a buffer block can be relocated in memory.  The block

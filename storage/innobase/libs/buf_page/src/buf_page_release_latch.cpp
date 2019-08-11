@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_page_release_latch.h>
+#include <innodb/buf_page/buf_page_release_latch.h>
 
 #ifndef UNIV_HOTBACKUP
 
