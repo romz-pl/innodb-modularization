@@ -1,4 +1,4 @@
-#include <innodb/log_write/log_allocate_write_ahead_buffer.h>
+#include <innodb/log_sys/log_allocate_write_ahead_buffer.h>
 
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_types/flags.h>

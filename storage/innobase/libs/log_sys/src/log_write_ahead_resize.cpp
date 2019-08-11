@@ -1,8 +1,8 @@
-#include <innodb/log_write/log_write_ahead_resize.h>
+#include <innodb/log_sys/log_write_ahead_resize.h>
 
 #include <innodb/align/ut_uint64_align_down.h>
-#include <innodb/log_write/log_allocate_write_ahead_buffer.h>
-#include <innodb/log_write/log_deallocate_write_ahead_buffer.h>
+#include <innodb/log_sys/log_allocate_write_ahead_buffer.h>
+#include <innodb/log_sys/log_deallocate_write_ahead_buffer.h>
 #include <innodb/log_types/log_writer_mutex_enter.h>
 #include <innodb/log_types/log_writer_mutex_exit.h>
 #include <innodb/log_types/flags.h>

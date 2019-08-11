@@ -55,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_files/log_files_header_fill.h>
 #include <innodb/log_write/log_threads_active.h>
 #include <innodb/log_buffer/log_buffer_resize_low.h>
-#include <innodb/log_write/log_write_ahead_resize.h>
+#include <innodb/log_sys/log_write_ahead_resize.h>
 #include <innodb/log_types/log_update_limits.h>
 #include <innodb/log_write/log_position_collect_lsn_info.h>
 #include <innodb/log_write/log_position_unlock.h>
@@ -88,12 +88,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_types/log_sys.h>
 #include <innodb/log_types/log_checksum_algorithm_ptr.h>
 #include <innodb/log_buffer/log_allocate_buffer.h>
-#include <innodb/log_write/log_allocate_write_ahead_buffer.h>
+#include <innodb/log_sys/log_allocate_write_ahead_buffer.h>
 #include <innodb/log_chkp/log_allocate_checkpoint_buffer.h>
 #include <innodb/log_chkp/log_deallocate_checkpoint_buffer.h>
 #include <innodb/log_flush/log_deallocate_flush_events.h>
 #include <innodb/log_flush/log_allocate_flush_events.h>
-#include <innodb/log_write/log_deallocate_write_ahead_buffer.h>
+#include <innodb/log_sys/log_deallocate_write_ahead_buffer.h>
 #include <innodb/log_buffer/log_deallocate_buffer.h>
 #include <innodb/log_sn/log_translate_lsn_to_sn.h>
 #include <innodb/log_block/log_block_get_flush_bit.h>
