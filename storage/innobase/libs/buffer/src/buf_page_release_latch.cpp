@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/sync_rw/rw_lock_s_unlock.h>
 #include <innodb/sync_rw/rw_lock_sx_unlock.h>
 #include <innodb/sync_rw/rw_lock_type_t.h>

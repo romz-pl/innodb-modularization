@@ -8,7 +8,7 @@
 #include <innodb/mtr/mtr_state_t.h>
 #include <innodb/log_types/mlog_id_t.h>
 
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 
 class FlushObserver;
 struct fil_space_t;

@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get_curr_size.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_state.h>
-#include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/io/IORequestWrite.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>

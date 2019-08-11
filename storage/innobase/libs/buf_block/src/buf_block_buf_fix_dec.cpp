@@ -1,9 +1,9 @@
-#include <innodb/buffer/buf_block_buf_fix_dec.h>
+#include <innodb/buf_block/buf_block_buf_fix_dec.h>
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_block_t.h>
-#include <innodb/buffer/buf_block_unfix.h>
+#include <innodb/buf_block/buf_block_t.h>
+#include <innodb/buf_block/buf_block_unfix.h>
 
 /** Decrements the bufferfix count. */
 void buf_block_buf_fix_dec(

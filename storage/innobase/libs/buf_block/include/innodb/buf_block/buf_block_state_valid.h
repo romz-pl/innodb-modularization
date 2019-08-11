@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/buf_page/buf_page_state.h>
 
 /** Check if a buf_block_t object is in a valid state

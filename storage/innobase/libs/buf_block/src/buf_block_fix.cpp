@@ -1,9 +1,9 @@
-#include <innodb/buffer/buf_block_fix.h>
+#include <innodb/buf_block/buf_block_fix.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/assert/assert.h>
 #include <innodb/atomic/atomic.h>
 

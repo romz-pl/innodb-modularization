@@ -1,7 +1,7 @@
 #include <innodb/buffer/buf_block_get_frame.h>
 
 #include <innodb/assert/assert.h>
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 
 #ifndef UNIV_HOTBACKUP
 #ifdef UNIV_DEBUG

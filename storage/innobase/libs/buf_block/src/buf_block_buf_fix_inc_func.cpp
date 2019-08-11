@@ -1,9 +1,9 @@
-#include <innodb/buffer/buf_block_buf_fix_inc_func.h>
+#include <innodb/buf_block/buf_block_buf_fix_inc_func.h>
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_block_t.h>
-#include <innodb/buffer/buf_block_fix.h>
+#include <innodb/buf_block/buf_block_t.h>
+#include <innodb/buf_block/buf_block_fix.h>
 
 /** Increments the bufferfix count. */
 void buf_block_buf_fix_inc_func(

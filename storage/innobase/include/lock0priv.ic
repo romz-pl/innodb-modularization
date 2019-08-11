@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created July 16, 2007 Vasil Dimov
  *******************************************************/
 
-#include <innodb/buffer/buf_block_get_lock_hash_val.h>
+#include <innodb/buf_block/buf_block_get_lock_hash_val.h>
 
 /* This file contains only methods which are used in
 lock/lock0* files, other than lock/lock0lock.cc.

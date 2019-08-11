@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_get.h>
 #include <innodb/buffer/buf_page_get_mutex.h>
 #include <innodb/buffer/buf_page_can_relocate.h>
-#include <innodb/buffer/buf_block_set_state.h>
+#include <innodb/buf_block/buf_block_set_state.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buffer/buf_buddy_free_t.h>
 #include <innodb/buffer/buf_pool_t.h>

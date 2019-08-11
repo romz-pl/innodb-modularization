@@ -1,8 +1,8 @@
-#include <innodb/buffer/buf_block_get_lock_hash_val.h>
+#include <innodb/buf_block/buf_block_get_lock_hash_val.h>
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/sync_rw/rw_lock_own.h>
 

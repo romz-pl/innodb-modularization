@@ -7,7 +7,7 @@
 #include <innodb/buffer/FlushHp.h>
 #include <innodb/buffer/LRUHp.h>
 #include <innodb/buffer/LRUItr.h>
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/buffer/buf_buddy_free_t.h>
 #include <innodb/buffer/buf_buddy_stat_t.h>
 #include <innodb/buf_page/buf_flush_t.h>

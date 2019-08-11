@@ -54,7 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buffer/buf_page_belongs_to_unzip_LRU.h>
-#include <innodb/buffer/buf_block_set_state.h>
+#include <innodb/buf_block/buf_block_set_state.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>
 #include <innodb/buf_page/buf_page_set_state.h>
 #include <innodb/buffer/buf_pool_t.h>
@@ -62,7 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/CheckInLRUList.h>
 #include <innodb/buffer/CheckInFreeList.h>
 #include <innodb/buffer/CheckUnzipLRUAndLRUList.h>
-#include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/io/os_n_fsyncs.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>

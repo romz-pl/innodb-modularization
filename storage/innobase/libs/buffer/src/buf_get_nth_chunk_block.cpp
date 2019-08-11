@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/buffer/buf_chunk_t.h>
 

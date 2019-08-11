@@ -3,7 +3,7 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buffer/buf_pool_from_bpage.h>
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 
 /** Returns the buffer pool instance given a block instance
  @return buf_pool */

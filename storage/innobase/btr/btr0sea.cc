@@ -50,8 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buffer/buf_pool_t.h>
-#include <innodb/buffer/buf_block_get_state.h>
-#include <innodb/buffer/buf_block_state_valid.h>
+#include <innodb/buf_block/buf_block_get_state.h>
+#include <innodb/buf_block/buf_block_state_valid.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/record/rec_offs_init.h>
 

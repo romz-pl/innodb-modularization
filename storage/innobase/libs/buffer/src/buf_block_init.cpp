@@ -1,7 +1,7 @@
 #include <innodb/buffer/buf_block_init.h>
 
 #include <innodb/buffer/buf_pool_t.h>
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/buffer/buf_pool_index.h>
 #include <innodb/sync_mutex/mutex_create.h>
 #include <innodb/sync_mutex/mutex_exit.h>

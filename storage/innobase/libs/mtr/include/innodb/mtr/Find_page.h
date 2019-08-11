@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/mtr/mtr_memo_slot_t.h>
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/mtr/mtr_memo_type_t.h>
 
 static_assert(static_cast<int>(MTR_MEMO_PAGE_S_FIX) ==

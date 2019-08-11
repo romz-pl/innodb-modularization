@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 
 /** Get the page type as a string.
 @return the page type as a string. */

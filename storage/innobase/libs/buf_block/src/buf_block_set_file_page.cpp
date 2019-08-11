@@ -1,10 +1,10 @@
-#include <innodb/buffer/buf_block_set_file_page.h>
+#include <innodb/buf_block/buf_block_set_file_page.h>
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 #include <innodb/page/page_id_t.h>
-#include <innodb/buffer/buf_block_set_state.h>
+#include <innodb/buf_block/buf_block_set_state.h>
 
 /** Map a block to a file page.
 @param[in,out]	block	pointer to control block

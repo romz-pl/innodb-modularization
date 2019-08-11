@@ -64,9 +64,9 @@ The tablespace memory cache */
 #include <innodb/tablespace/Char_Ptr_Hash.h>
 #include <innodb/tablespace/Tablespace_files.h>
 #include <innodb/tablespace/Tablespace_dirs.h>
-#include <innodb/buffer/buf_block_set_file_page.h>
-#include <innodb/buffer/buf_block_set_state.h>
-#include <innodb/buffer/buf_block_get_state.h>
+#include <innodb/buf_block/buf_block_set_file_page.h>
+#include <innodb/buf_block/buf_block_set_state.h>
+#include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/io/os_has_said_disk_full.h>
 #include <innodb/io/IORequestRead.h>
 #include <innodb/io/IORequestWrite.h>

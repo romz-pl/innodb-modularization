@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/mtr/mtr_set_flush_observer.h>
 #include <innodb/page/cursor_movement.h>
-#include <innodb/buffer/buf_block_buf_fix_inc.h>
+#include <innodb/buf_block/buf_block_buf_fix_inc.h>
 #include <innodb/record/rec_set_heap_no_new.h>
 #include <innodb/record/rec_set_heap_no_old.h>
 #include <innodb/record/rec_copy.h>

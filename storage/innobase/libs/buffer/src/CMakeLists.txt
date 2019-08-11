@@ -1,8 +1,7 @@
 set( LIB_NAME buffer )
 
 add_library( ${LIB_NAME} STATIC
-    BPageLock.cpp
-    BPageMutex.cpp
+
     BufListMutex.cpp
     BufPoolZipMutex.cpp
     Cache_hint.cpp
@@ -15,23 +14,18 @@ add_library( ${LIB_NAME} STATIC
     LRUHp.cpp
     LRUItr.cpp
     Page_fetch.cpp
-    buf_block_buf_fix_dec.cpp
-    buf_block_buf_fix_inc.cpp
-    buf_block_buf_fix_inc_func.cpp
-    buf_block_fix.cpp
+
+
     buf_block_get_frame.cpp
-    buf_block_get_freed_page_clock.cpp
     buf_block_get_io_fix.cpp
     buf_block_get_io_fix_unlocked.cpp
-    buf_block_get_lock_hash_val.cpp
-    buf_block_get_state.cpp
+
     buf_block_init.cpp
-    buf_block_set_file_page.cpp
+
     buf_block_set_io_fix.cpp
-    buf_block_set_state.cpp
-    buf_block_state_valid.cpp
-    buf_block_t.cpp
-    buf_block_unfix.cpp
+
+
+
     buf_buddy_free_t.cpp
     buf_buddy_stat_t.cpp
     buf_chunk_init.cpp
@@ -42,7 +36,6 @@ add_library( ${LIB_NAME} STATIC
     buf_flush_list_mutex_exit.cpp
     buf_flush_list_mutex_own.cpp
     buf_flush_ready_for_replace.cpp
-
     buf_frame_align.cpp
     buf_frame_copy.cpp
     buf_frame_t.cpp
@@ -51,34 +44,19 @@ add_library( ${LIB_NAME} STATIC
     buf_get_total_list_size_in_bytes.cpp
     buf_get_total_stat.cpp
     buf_get_withdraw_depth.cpp
-
-
     buf_page_belongs_to_unzip_LRU.cpp
     buf_page_can_relocate.cpp
-
     buf_page_get_block.cpp
-
-
     buf_page_get_io_fix.cpp
     buf_page_get_io_fix_unlocked.cpp
     buf_page_get_mutex.cpp
     buf_page_get_newest_modification.cpp
-
-
-
-
-
-
     buf_page_release_latch.cpp
     buf_page_release_zip.cpp
     buf_page_set_accessed.cpp
-
     buf_page_set_io_fix.cpp
     buf_page_set_old.cpp
-
     buf_page_set_sticky.cpp
-
-
     buf_page_unset_sticky.cpp
     buf_pool_chunk_map_t.cpp
     buf_pool_from_array.cpp
@@ -130,6 +108,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    buf_block
     buf_page
     tablespace
     PRIVATE

@@ -48,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_sx_lock_inline.h>
 #include <innodb/sync_rw/rw_lock_s_lock_inline.h>
 #include <innodb/sync_rw/rw_lock_x_lock_inline.h>
-#include <innodb/buffer/buf_block_unfix.h>
+#include <innodb/buf_block/buf_block_unfix.h>
 #include <innodb/hash/hash_unlock_x_all_but.h>
 #include <innodb/hash/hash_lock_s_confirm.h>
 #include <innodb/hash/HASH_SEARCH.h>
@@ -81,8 +81,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_from_array.h>
 #include <innodb/buffer/buf_pool_size_align.h>
 #include <innodb/buffer/buf_pool_get.h>
-#include <innodb/buffer/buf_block_fix.h>
-#include <innodb/buffer/buf_block_buf_fix_dec.h>
+#include <innodb/buf_block/buf_block_fix.h>
+#include <innodb/buf_block/buf_block_buf_fix_dec.h>
 #include <innodb/buf_page/buf_page_free_descriptor.h>
 #include <innodb/buffer/buf_page_set_accessed.h>
 #include <innodb/buf_page/buf_page_alloc_descriptor.h>
@@ -92,10 +92,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_page_get_mutex.h>
 #include <innodb/buffer/buf_page_can_relocate.h>
 #include <innodb/buffer/buf_block_get_io_fix_unlocked.h>
-#include <innodb/buffer/buf_block_set_file_page.h>
+#include <innodb/buf_block/buf_block_set_file_page.h>
 #include <innodb/buffer/buf_page_set_io_fix.h>
 #include <innodb/buf_page/buf_page_get_flush_type.h>
-#include <innodb/buffer/buf_block_set_state.h>
+#include <innodb/buf_block/buf_block_set_state.h>
 #include <innodb/buffer/buf_pool_index.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buf_page/buf_page_in_file.h>
@@ -105,8 +105,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_is_accessed.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/buffer/CheckInLRUList.h>
-#include <innodb/buffer/buf_block_get_state.h>
-#include <innodb/buffer/buf_block_buf_fix_inc.h>
+#include <innodb/buf_block/buf_block_get_state.h>
+#include <innodb/buf_block/buf_block_buf_fix_inc.h>
 #include <innodb/buffer/buf_pool_should_madvise.h>
 #include <innodb/buffer/innobase_disable_core_dump.h>
 #include <innodb/buffer/innobase_should_madvise_buf_pool.h>

@@ -1,10 +1,10 @@
-#include <innodb/buffer/buf_block_unfix.h>
+#include <innodb/buf_block/buf_block_unfix.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/atomic/atomic.h>
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_block_t.h>
+#include <innodb/buf_block/buf_block_t.h>
 
 /** Decrements the bufferfix count.
 @param[in,out]	bpage	block to bufferunfix

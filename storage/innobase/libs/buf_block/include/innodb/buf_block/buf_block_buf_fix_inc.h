@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/buffer/buf_block_buf_fix_inc_func.h>
+#include <innodb/buf_block/buf_block_buf_fix_inc_func.h>
 
 #ifndef UNIV_HOTBACKUP
 #ifdef UNIV_DEBUG

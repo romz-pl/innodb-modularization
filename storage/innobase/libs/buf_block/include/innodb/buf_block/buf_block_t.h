@@ -3,8 +3,8 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/BPageLock.h>
-#include <innodb/buffer/BPageMutex.h>
+#include <innodb/buf_block/BPageLock.h>
+#include <innodb/buf_block/BPageMutex.h>
 #include <innodb/disk/page_type_t.h>
 #include <innodb/disk/flags.h>
 #include <innodb/machine/data.h>
