@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buf_page/buf_page_get_state.h>
 
 #include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buf_page/buf_page_state.h>

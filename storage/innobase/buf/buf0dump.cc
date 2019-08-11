@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_pool_from_block.h>
 #include <innodb/buffer/buf_pool_get_n_pages.h>
 #include <innodb/buffer/buf_pool_from_array.h>
-#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>

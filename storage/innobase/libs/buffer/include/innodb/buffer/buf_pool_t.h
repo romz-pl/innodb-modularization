@@ -10,7 +10,7 @@
 #include <innodb/buffer/buf_block_t.h>
 #include <innodb/buffer/buf_buddy_free_t.h>
 #include <innodb/buffer/buf_buddy_stat_t.h>
-#include <innodb/buffer/buf_flush_t.h>
+#include <innodb/buf_page/buf_flush_t.h>
 #include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_pool_stat_t.h>
 #include <innodb/buf_page/flags.h>

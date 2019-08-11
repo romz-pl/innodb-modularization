@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/log_types/mlog_id_t.h>
 #include <innodb/allocator/ut_allocator.h>
-#include <innodb/buffer/buf_flush_t.h>
+#include <innodb/buf_page/buf_flush_t.h>
 #include <innodb/memory/mem_heap_t.h>
 #include <innodb/log_types/recv_recovery_on.h>
 #include <innodb/log_types/log_t.h>

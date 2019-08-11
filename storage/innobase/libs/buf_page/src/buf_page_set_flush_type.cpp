@@ -1,9 +1,9 @@
-#include <innodb/buffer/buf_page_set_flush_type.h>
+#include <innodb/buf_page/buf_page_set_flush_type.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_page_get_flush_type.h>
+#include <innodb/buf_page/buf_page_get_flush_type.h>
 
 /** Set the flush type of a page. */
 void buf_page_set_flush_type(buf_page_t *bpage,      /*!< in: buffer page */

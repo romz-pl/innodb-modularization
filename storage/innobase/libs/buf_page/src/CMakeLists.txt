@@ -5,6 +5,12 @@ add_library( ${LIB_NAME} STATIC
     buf_io_fix.cpp
     buf_page_state.cpp
     buf_page_t.cpp
+    buf_page_alloc_descriptor.cpp
+    buf_page_get_state.cpp
+    buf_page_in_file.cpp
+    buf_flush_t.cpp
+    buf_page_get_flush_type.cpp
+    buf_page_set_flush_type.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

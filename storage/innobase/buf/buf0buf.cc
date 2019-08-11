@@ -85,7 +85,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_block_buf_fix_dec.h>
 #include <innodb/buffer/buf_page_free_descriptor.h>
 #include <innodb/buffer/buf_page_set_accessed.h>
-#include <innodb/buffer/buf_page_alloc_descriptor.h>
+#include <innodb/buf_page/buf_page_alloc_descriptor.h>
 #include <innodb/buffer/buf_page_get_block.h>
 #include <innodb/buffer/buf_page_get_io_fix.h>
 #include <innodb/buffer/buf_page_get_io_fix_unlocked.h>
@@ -94,11 +94,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_block_get_io_fix_unlocked.h>
 #include <innodb/buffer/buf_block_set_file_page.h>
 #include <innodb/buffer/buf_page_set_io_fix.h>
-#include <innodb/buffer/buf_page_get_flush_type.h>
+#include <innodb/buf_page/buf_page_get_flush_type.h>
 #include <innodb/buffer/buf_block_set_state.h>
 #include <innodb/buffer/buf_pool_index.h>
-#include <innodb/buffer/buf_page_get_state.h>
-#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buf_page/buf_page_get_state.h>
+#include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buffer/buf_pool_get_curr_size.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>
 #include <innodb/buffer/buf_chunk_t.h>

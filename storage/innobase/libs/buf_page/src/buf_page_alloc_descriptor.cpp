@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_page_alloc_descriptor.h>
+#include <innodb/buf_page/buf_page_alloc_descriptor.h>
 
 #ifndef UNIV_HOTBACKUP
 

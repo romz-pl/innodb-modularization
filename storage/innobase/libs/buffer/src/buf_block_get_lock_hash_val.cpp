@@ -3,7 +3,7 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buffer/buf_block_t.h>
-#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/sync_rw/rw_lock_own.h>
 
 /** Gets the hash value of the page the pointer is pointing to. This can be used

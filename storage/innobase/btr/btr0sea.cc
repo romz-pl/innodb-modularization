@@ -47,8 +47,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_malloc.h>
 #include <innodb/buffer/buf_pool_from_array.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>
-#include <innodb/buffer/buf_page_in_file.h>
-#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buf_page/buf_page_in_file.h>
+#include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/buffer/buf_block_get_state.h>
 #include <innodb/buffer/buf_block_state_valid.h>

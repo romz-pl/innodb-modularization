@@ -4,7 +4,7 @@
 
 #include <innodb/buffer/buf_page_get_mutex.h>
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_page_in_file.h>
+#include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/sync_mutex/mutex_own.h>
 #include <innodb/time/ut_time_ms.h>
 

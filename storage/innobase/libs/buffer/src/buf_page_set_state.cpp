@@ -2,7 +2,7 @@
 
 #include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buf_page/buf_page_state.h>
-#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buf_page/buf_page_get_state.h>
 
 /** Sets the state of a block.
 @param[in,out]	bpage	pointer to control block

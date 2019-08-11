@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_page_get_flush_type.h>
+#include <innodb/buf_page/buf_page_get_flush_type.h>
 
 #ifndef UNIV_HOTBACKUP
 

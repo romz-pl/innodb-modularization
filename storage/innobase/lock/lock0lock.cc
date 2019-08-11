@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/buffer/buf_pool_from_array.h>
 #include <innodb/buffer/buf_pool_t.h>
-#include <innodb/buffer/buf_page_get_state.h>
+#include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/io/os_file_create_tmpfile.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_offs_comp.h>
