@@ -144,9 +144,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_write/log_wait_for_space_in_log_buf.h>
 #include <innodb/log_write/log_wait_for_space_after_reserving.h>
 #include <innodb/log_write/log_buffer_reserve.h>
-#include <innodb/log_write/log_flush_notifier.h>
+#include <innodb/log_flush/log_flush_notifier.h>
 #include <innodb/log_write/Log_thread_waiting.h>
-#include <innodb/log_write/log_flusher.h>
+#include <innodb/log_flush/log_flusher.h>
 #include <innodb/log_write/log_writer.h>
 
 #include <innodb/machine/data.h>

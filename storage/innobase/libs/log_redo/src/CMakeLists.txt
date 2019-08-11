@@ -67,7 +67,6 @@ target_link_libraries(
     PUBLIC
     log_buffer
     log_files
-    log_flush
     PRIVATE
 )
 

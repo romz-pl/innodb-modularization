@@ -6,7 +6,7 @@
 #include <innodb/log_write/log_wait_for_flush.h>
 #include <innodb/log_write/log_wait_for_write.h>
 #include <innodb/log_write/recv_no_ibuf_operations.h>
-#include <innodb/log_write/srv_flush_log_at_trx_commit.h>
+#include <innodb/log_flush/srv_flush_log_at_trx_commit.h>
 
 Wait_stats log_write_up_to(log_t &log, lsn_t end_lsn, bool flush_to_disk) {
   ut_a(!srv_read_only_mode);

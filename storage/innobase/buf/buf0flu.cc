@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 
 #include <innodb/log_arch/arch_page_sys.h>
-#include <innodb/log_write/srv_flushing_avg_loops.h>
+#include <innodb/log_flush/srv_flushing_avg_loops.h>
 #include <innodb/monitor/MONITOR_INC_WAIT_STATS_EX.h>
 #include <innodb/time/ut_time.h>
 #include <innodb/logger/info.h>

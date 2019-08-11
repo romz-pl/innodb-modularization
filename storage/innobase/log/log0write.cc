@@ -49,8 +49,8 @@ the file COPYING.Google.
 #include <innodb/log_arch/log_archiver_thread_event.h>
 #include <innodb/log_arch/arch_log_sys.h>
 #include <innodb/log_write/log_writer_wait_on_checkpoint.h>
-#include <innodb/log_write/log_flush_low.h>
-#include <innodb/log_write/log_flush_update_stats.h>
+#include <innodb/log_flush/log_flush_low.h>
+#include <innodb/log_flush/log_flush_update_stats.h>
 #include <innodb/log_write/log_file_header_fill_encryption.h>
 #include <innodb/log_write/log_wait_for_write.h>
 #include <innodb/log_write/srv_log_wait_for_write_spin_delay.h>

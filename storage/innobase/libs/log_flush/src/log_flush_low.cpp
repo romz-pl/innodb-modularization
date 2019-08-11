@@ -1,9 +1,9 @@
-#include <innodb/log_write/log_flush_low.h>
+#include <innodb/log_flush/log_flush_low.h>
 
 #include <innodb/io/srv_unix_file_flush_method.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_write/log_flush_update_stats.h>
+#include <innodb/log_flush/log_flush_update_stats.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/sync_event/os_event_set.h>
 #include <innodb/tablespace/fil_flush_file_redo.h>
