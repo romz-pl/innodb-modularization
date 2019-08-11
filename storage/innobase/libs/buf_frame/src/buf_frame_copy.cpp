@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_frame_copy.h>
+#include <innodb/buf_frame/buf_frame_copy.h>
 
 #include <innodb/assert/assert.h>
 

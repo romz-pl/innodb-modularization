@@ -23,9 +23,6 @@ add_library( ${LIB_NAME} STATIC
     buf_flush_list_mutex_exit.cpp
     buf_flush_list_mutex_own.cpp
     buf_flush_ready_for_replace.cpp
-    buf_frame_align.cpp
-    buf_frame_copy.cpp
-    buf_frame_t.cpp
     buf_get_nth_chunk_block.cpp
     buf_get_total_list_len.cpp
     buf_get_total_list_size_in_bytes.cpp

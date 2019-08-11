@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_frame_align.h>
+#include <innodb/buf_frame/buf_frame_align.h>
 
 #include <innodb/align/ut_align_down.h>
 #include <innodb/assert/assert.h>

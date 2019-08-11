@@ -45,6 +45,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    buffer
     buf_block
     PRIVATE
 )

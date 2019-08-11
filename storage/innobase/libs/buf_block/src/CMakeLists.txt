@@ -33,7 +33,9 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    buf_frame
     buf_page
+    buf_pool
     sync_rw
     PRIVATE
 )

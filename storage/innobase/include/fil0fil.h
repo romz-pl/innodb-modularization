@@ -80,7 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fil_space_t.h>
 #include <innodb/tablespace/fil_faddr_t.h>
 #include <innodb/tablespace/fil_addr_t.h>
-#include <innodb/buffer/buf_frame_t.h>
+#include <innodb/buf_frame/buf_frame_t.h>
 #include <innodb/tablespace/buf_remove_t.h>
 #include <innodb/tablespace/fil_no_punch_hole.h>
 #include <innodb/tablespace/consts.h>

@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/assert/ASSERT_ZERO.h>
 #include <innodb/assert/ASSERT_ZERO_BLOB.h>
-#include <innodb/buffer/buf_frame_copy.h>
+#include <innodb/buf_frame/buf_frame_copy.h>
 #include <innodb/disk/page_size_t.h>
 #include <innodb/page/page_zip_dir_encode.h>
 #include <innodb/page/page_zip_dir_find.h>

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <innodb/buffer/buf_frame_t.h>
+#include <innodb/buf_frame/buf_frame_t.h>
 
 
 //

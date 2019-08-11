@@ -47,7 +47,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    buffer
+    buf_pool
     log_sn
     page
     sync_mutex
