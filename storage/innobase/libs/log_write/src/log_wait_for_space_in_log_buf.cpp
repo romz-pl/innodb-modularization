@@ -3,7 +3,7 @@
 #include <innodb/log_sn/log_translate_lsn_to_sn.h>
 #include <innodb/log_sn/log_translate_lsn_to_sn.h>
 #include <innodb/log_sn/log_translate_sn_to_lsn.h>
-#include <innodb/log_redo/srv_stats.h>
+#include <innodb/log_write/srv_stats.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/monitor/MONITOR_INC_WAIT_STATS.h>
 #include <innodb/wait/Wait_stats.h>

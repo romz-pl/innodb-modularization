@@ -45,8 +45,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_types/log_checksum_func_t.h>
 #include <innodb/log_sn/LSN_PF.h>
 #include <innodb/log_types/log_header_format_t.h>
-#include <innodb/log_redo/log_allocate_write_events.h>
-#include <innodb/log_redo/log_deallocate_write_events.h>
+#include <innodb/log_write/log_allocate_write_events.h>
+#include <innodb/log_write/log_deallocate_write_events.h>
 #include <innodb/log_write/log_allocate_recent_written.h>
 #include <innodb/log_write/log_deallocate_recent_written.h>
 #include <innodb/log_closer/log_allocate_recent_closed.h>
@@ -55,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_files/log_deallocate_file_header_buffers.h>
 #include <innodb/log_buffer/log_calc_buf_size.h>
 #include <innodb/log_sys/log_sys_object.h>
-#include <innodb/log_redo/pfs.h>
+#include <innodb/log_write/pfs.h>
 #include <innodb/log_closer/log_closer.h>
 #include <innodb/log_flush/log_flush_notifier.h>
 #include <innodb/log_write/log_write_notifier.h>

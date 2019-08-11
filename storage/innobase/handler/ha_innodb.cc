@@ -89,7 +89,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_set_eof.h>
 #include <innodb/io/os_is_o_direct_supported.h>
 #include <innodb/io/os_file_set_umask.h>
-#include <innodb/log_redo/pfs.h>
+#include <innodb/log_write/pfs.h>
 #include <innodb/log_buffer/log_buffer_resize.h>
 
 #include <auto_thd.h>

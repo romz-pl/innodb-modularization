@@ -61,8 +61,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_flush/srv_log_flusher_spin_delay.h>
 #include <innodb/log_write/srv_log_write_notifier_timeout.h>
 #include <innodb/log_write/srv_log_write_notifier_spin_delay.h>
-#include <innodb/log_redo/srv_stats.h>
-#include <innodb/log_redo/srv_log_write_max_size.h>
+#include <innodb/log_write/srv_stats.h>
+#include <innodb/log_write/srv_log_write_max_size.h>
 #include <innodb/log_closer/srv_log_closer_timeout.h>
 #include <innodb/log_closer/srv_log_closer_spin_delay.h>
 #include <innodb/log_flush/srv_flush_log_at_trx_commit.h>
@@ -84,10 +84,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/srv_buf_pool_chunk_unit.h>
 #include <innodb/buffer/srv_buf_pool_instances_default.h>
 #include <innodb/buffer/srv_buf_pool_dump_pct.h>
-#include <innodb/log_redo/srv_log_write_ahead_size.h>
+#include <innodb/log_write/srv_log_write_ahead_size.h>
 #include <innodb/log_flush/srv_log_flush_events.h>
 #include <innodb/log_buffer/srv_log_buffer_size.h>
-#include <innodb/log_redo/srv_log_write_events.h>
+#include <innodb/log_write/srv_log_write_events.h>
 #include <innodb/log_write/srv_log_recent_written_size.h>
 #include <innodb/log_closer/srv_log_recent_closed_size.h>
 #include <innodb/log_wait/srv_log_wait_for_flush_spin_delay.h>
@@ -109,7 +109,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0conc.h"
 #include "trx0types.h"
 #include <innodb/counter/counter.h>
-#include <innodb/log_redo/srv_stats_t.h>
+#include <innodb/log_write/srv_stats_t.h>
 
 
 

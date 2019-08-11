@@ -2,7 +2,7 @@
 
 #include <innodb/disk/univ_page_size.h>
 #include <innodb/io/IORequestLogWrite.h>
-#include <innodb/log_redo/srv_log_write_ahead_size.h>
+#include <innodb/log_write/srv_log_write_ahead_size.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/page/page_id_t.h>
 #include <innodb/tablespace/fil_redo_io.h>

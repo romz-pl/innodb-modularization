@@ -1,6 +1,8 @@
 set( LIB_NAME log_sys )
 
 add_library( ${LIB_NAME} STATIC
+    log_start.cpp
+    log_stop_background_threads.cpp
     log_sys_close.cpp
     log_sys_init.cpp
     log_sys_object.cpp

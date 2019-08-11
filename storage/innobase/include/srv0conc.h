@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/log_redo/srv_thread_concurrency.h>
+#include <innodb/log_write/srv_thread_concurrency.h>
 
 /** We are prepared for a situation that we have this many threads waiting for
 a semaphore inside InnoDB. innobase_start_or_create_for_mysql() sets the

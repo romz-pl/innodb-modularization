@@ -1,7 +1,7 @@
 #include <innodb/log_write/log_writer.h>
 
-#include <innodb/log_redo/log_advance_ready_for_write_lsn.h>
-#include <innodb/log_redo/log_advance_ready_for_write_lsn.h>
+#include <innodb/log_write/log_advance_ready_for_write_lsn.h>
+#include <innodb/log_write/log_advance_ready_for_write_lsn.h>
 #include <innodb/log_buffer/log_buffer_ready_for_write_lsn.h>
 #include <innodb/log_buffer/log_buffer_ready_for_write_lsn.h>
 #include <innodb/log_types/log_writer_mutex_enter.h>

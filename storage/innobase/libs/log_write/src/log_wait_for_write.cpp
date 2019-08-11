@@ -1,7 +1,7 @@
 #include <innodb/log_write/log_wait_for_write.h>
 
 #include <innodb/log_types/flags.h>
-#include <innodb/log_redo/log_background_write_threads_active_validate.h>
+#include <innodb/log_write/log_background_write_threads_active_validate.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_wait/log_max_spins_when_waiting_in_user_thread.h>
 #include <innodb/log_wait/srv_log_wait_for_write_spin_delay.h>

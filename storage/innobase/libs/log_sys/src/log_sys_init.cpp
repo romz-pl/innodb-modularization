@@ -7,17 +7,17 @@
 #include <innodb/log_flush/log_allocate_flush_events.h>
 #include <innodb/log_closer/log_allocate_recent_closed.h>
 #include <innodb/log_write/log_allocate_recent_written.h>
-#include <innodb/log_redo/log_allocate_write_ahead_buffer.h>
-#include <innodb/log_redo/log_allocate_write_events.h>
+#include <innodb/log_write/log_allocate_write_ahead_buffer.h>
+#include <innodb/log_write/log_allocate_write_events.h>
 #include <innodb/log_buffer/log_calc_buf_size.h>
-#include <innodb/log_redo/log_calc_max_ages.h>
+#include <innodb/log_write/log_calc_max_ages.h>
 #include <innodb/log_types/log_sys.h>
 #include <innodb/log_sys/log_sys_object.h>
 #include <innodb/log_types/log_header_format_t.h>
 #include <innodb/log_files/log_files_update_offsets.h>
 #include <innodb/sync_mutex/mutex_create.h>
-#include <innodb/log_redo/pfs.h>
-#include <innodb/log_redo/srv_thread_concurrency.h>
+#include <innodb/log_write/pfs.h>
+#include <innodb/log_write/srv_thread_concurrency.h>
 
 extern const char *INNODB_PARAMETERS_MSG;
 

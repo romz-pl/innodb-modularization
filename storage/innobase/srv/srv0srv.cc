@@ -60,7 +60,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_n_file_writes.h>
 #include <innodb/io/os_file_set_eof.h>
 #include <innodb/log_buffer/srv_log_buffer_size.h>
-#include <innodb/log_redo/srv_log_write_events.h>
+#include <innodb/log_write/srv_log_write_events.h>
 
 #ifndef UNIV_HOTBACKUP
 #include <mysqld.h>
