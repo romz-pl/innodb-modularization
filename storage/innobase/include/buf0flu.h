@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/atomic/atomic.h>
-#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_t.h>
 #include "log0log.h"
 
 class FlushObserver;

@@ -45,11 +45,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/hash/hash_table_t.h>
 #include <innodb/math/ut_pair_cmp.h>
 #include <innodb/allocator/ut_malloc.h>
-#include <innodb/buffer/buf_pool_from_array.h>
-#include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/buf_pool/buf_pool_from_array.h>
+#include <innodb/buf_pool/buf_pool_from_bpage.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_state.h>
-#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/buf_block/buf_block_state_valid.h>
 #include <innodb/sync_os/pfs.h>

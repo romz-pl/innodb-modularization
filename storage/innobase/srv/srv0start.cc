@@ -76,7 +76,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/sync_mutex/MUTEX_TYPE.h>
-#include <innodb/buffer/buf_pool_get_curr_size.h>
+#include <innodb/buf_pool/buf_pool_get_curr_size.h>
 #include <innodb/io/os_has_said_disk_full.h>
 #include <innodb/io/pfs.h>
 #include <innodb/io/pfs.h>

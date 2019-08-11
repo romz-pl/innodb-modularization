@@ -54,7 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/memory/ut_memcmp.h>
 #include <innodb/string/ut_strlen.h>
 #include <innodb/print/ut_print_timestamp.h>
-#include <innodb/buffer/buf_pool_get_curr_size.h>
+#include <innodb/buf_pool/buf_pool_get_curr_size.h>
 #include <innodb/io/pfs.h>
 #include <innodb/io/os_file_create_tmpfile.h>
 #include <innodb/io/os_file_delete_if_exists.h>

@@ -13,9 +13,9 @@
 #include <innodb/ioasync/srv_shutdown_state.h>
 #include <innodb/log_arch/page_archiver_thread_event.h>
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_pool_t.h>
-#include <innodb/buffer/srv_buf_pool_instances.h>
-#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buf_pool/buf_pool_t.h>
+#include <innodb/buf_pool/srv_buf_pool_instances.h>
+#include <innodb/buf_pool/buf_pool_from_array.h>
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
 #include <innodb/tablespace/fsp_is_system_temporary.h>

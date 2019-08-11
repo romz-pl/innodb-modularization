@@ -78,8 +78,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtype_is_string_type.h>
 #include <innodb/io/os_file_status.h>
 #include <innodb/string/ut_str_sql_format.h>
-#include <innodb/buffer/buf_pool_ptr.h>
-#include <innodb/buffer/buf_pool_size_align.h>
+#include <innodb/buf_pool/buf_pool_ptr.h>
+#include <innodb/buf_pool/buf_pool_size_align.h>
 #include <innodb/io/pfs.h>
 #include <innodb/io/srv_use_native_aio.h>
 #include <innodb/tablespace/srv_tmp_space.h>
@@ -119,7 +119,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_rw/rw_lock_list_mutex.h>
 #include <innodb/sync_rw/rw_lock_list.h>
 #include <innodb/string/innobase_basename.h>
-#include <innodb/buffer/srv_buffer_pool_in_core_file.h>
+#include <innodb/buf_pool/srv_buffer_pool_in_core_file.h>
 
 
 #ifndef UNIV_HOTBACKUP

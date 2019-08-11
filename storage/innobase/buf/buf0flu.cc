@@ -51,8 +51,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
-#include <innodb/buffer/buf_pool_from_array.h>
-#include <innodb/buffer/buf_pool_get.h>
+#include <innodb/buf_pool/buf_pool_from_array.h>
+#include <innodb/buf_pool/buf_pool_get.h>
 #include <innodb/buffer/buf_get_withdraw_depth.h>
 #include <innodb/buf_page/buf_page_get_flush_type.h>
 #include <innodb/buf_page/buf_page_get_io_fix.h>
@@ -61,11 +61,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_get_mutex.h>
 #include <innodb/buf_page/buf_page_set_flush_type.h>
 #include <innodb/buf_page/buf_page_is_old.h>
-#include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/buf_pool/buf_pool_from_bpage.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buf_page/buf_page_set_state.h>
-#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>

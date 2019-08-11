@@ -42,12 +42,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/sync_event/os_event_wait.h>
 #include <innodb/sync_event/os_event_reset.h>
 #include <innodb/print/ut_sprintf_timestamp.h>
-#include <innodb/buffer/buf_pool_from_block.h>
-#include <innodb/buffer/buf_pool_get_n_pages.h>
-#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buf_pool/buf_pool_from_block.h>
+#include <innodb/buf_pool/buf_pool_get_n_pages.h>
+#include <innodb/buf_pool/buf_pool_from_array.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/time/ut_time_ms.h>
-#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>
 #include <innodb/ioasync/os_aio_simulated_wake_handler_threads.h>
 #include <innodb/io/os_file_status.h>

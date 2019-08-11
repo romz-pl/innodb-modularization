@@ -1,7 +1,7 @@
 #include <innodb/buffer/buf_get_total_list_len.h>
 
-#include <innodb/buffer/buf_pool_t.h>
-#include <innodb/buffer/buf_pool_from_array.h>
+#include <innodb/buf_pool/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_from_array.h>
 #include <innodb/lst/lst.h>
 
 /** Requested number of buffer pool instances */

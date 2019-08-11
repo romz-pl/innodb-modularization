@@ -5,8 +5,8 @@
 #include <innodb/buf_block/buf_block_t.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buf_page/buf_page_t.h>
-#include <innodb/buffer/buf_pool_from_bpage.h>
-#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_from_bpage.h>
+#include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/error/ut_error.h>
 
 /** Gets the mutex of a block.

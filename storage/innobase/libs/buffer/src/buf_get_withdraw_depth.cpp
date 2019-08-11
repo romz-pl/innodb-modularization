@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
 #include <innodb/atomic/atomic.h>

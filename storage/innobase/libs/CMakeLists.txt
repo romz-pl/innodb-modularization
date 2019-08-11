@@ -6,6 +6,7 @@ add_subdirectory( atomic )
 add_subdirectory( bit )
 add_subdirectory( buf_block )
 add_subdirectory( buf_page )
+add_subdirectory( buf_pool )
 add_subdirectory( buffer )
 
 add_subdirectory( clone )

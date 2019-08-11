@@ -78,9 +78,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
 #include <innodb/buf_block/buf_block_set_io_fix.h>
-#include <innodb/buffer/buf_pool_from_array.h>
-#include <innodb/buffer/buf_pool_size_align.h>
-#include <innodb/buffer/buf_pool_get.h>
+#include <innodb/buf_pool/buf_pool_from_array.h>
+#include <innodb/buf_pool/buf_pool_size_align.h>
+#include <innodb/buf_pool/buf_pool_get.h>
 #include <innodb/buf_block/buf_block_fix.h>
 #include <innodb/buf_block/buf_block_buf_fix_dec.h>
 #include <innodb/buf_page/buf_page_free_descriptor.h>
@@ -96,26 +96,26 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_set_io_fix.h>
 #include <innodb/buf_page/buf_page_get_flush_type.h>
 #include <innodb/buf_block/buf_block_set_state.h>
-#include <innodb/buffer/buf_pool_index.h>
+#include <innodb/buf_pool/buf_pool_index.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buf_page/buf_page_in_file.h>
-#include <innodb/buffer/buf_pool_get_curr_size.h>
-#include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/buf_pool/buf_pool_get_curr_size.h>
+#include <innodb/buf_pool/buf_pool_from_bpage.h>
 #include <innodb/buffer/buf_chunk_t.h>
 #include <innodb/buf_page/buf_page_is_accessed.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/buffer/CheckInLRUList.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/buf_block/buf_block_buf_fix_inc.h>
-#include <innodb/buffer/buf_pool_should_madvise.h>
+#include <innodb/buf_pool/buf_pool_should_madvise.h>
 #include <innodb/buffer/innobase_disable_core_dump.h>
 #include <innodb/buffer/innobase_should_madvise_buf_pool.h>
-#include <innodb/buffer/buf_pool_register_chunk.h>
-#include <innodb/buffer/buf_pool_get_oldest_modification_approx.h>
+#include <innodb/buf_pool/buf_pool_register_chunk.h>
+#include <innodb/buf_pool/buf_pool_get_oldest_modification_approx.h>
 #include <innodb/buf_block/buf_block_init.h>
 #include <innodb/buffer/buf_chunk_init.h>
 #include <innodb/buffer/buf_chunk_not_freed.h>
-#include <innodb/buffer/buf_pool_set_sizes.h>
+#include <innodb/buf_pool/buf_pool_set_sizes.h>
 #include <innodb/page/page_zip_set_size.h>
 #include <innodb/page/page_zip_des_init.h>
 #include <innodb/page/page_zip_get_size.h>
@@ -373,8 +373,8 @@ static const ulint BUF_READ_AHEAD_PAGES = 64;
 read-ahead buffer.  (Divide buf_pool size by this amount) */
 static const ulint BUF_READ_AHEAD_PORTION = 32;
 
-#include <innodb/buffer/buf_pool_ptr.h>
-#include <innodb/buffer/buf_pool_withdrawing.h>
+#include <innodb/buf_pool/buf_pool_ptr.h>
+#include <innodb/buf_pool/buf_pool_withdrawing.h>
 #include <innodb/buffer/buf_withdraw_clock.h>
 #include <innodb/buffer/buf_chunk_map_reg.h>
 

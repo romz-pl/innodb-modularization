@@ -1,7 +1,7 @@
 #include <innodb/buffer/HazardPointer.h>
 
 #include <innodb/sync_mutex/mutex_own.h>
-#include <innodb/buffer/buf_pool_from_bpage.h>
+#include <innodb/buf_pool/buf_pool_from_bpage.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_state.h>
 

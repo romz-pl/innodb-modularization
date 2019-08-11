@@ -25,7 +25,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 *****************************************************************************/
 
 #include <innodb/buf_page/buf_page_release_zip.h>
-#include <innodb/buffer/buf_pool_t.h>
+#include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/record/rec_field_not_null_not_add_col_def.h>
 
