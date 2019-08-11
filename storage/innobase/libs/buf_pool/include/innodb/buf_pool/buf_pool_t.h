@@ -8,8 +8,8 @@
 #include <innodb/buffer/LRUHp.h>
 #include <innodb/buffer/LRUItr.h>
 #include <innodb/buf_block/buf_block_t.h>
-#include <innodb/buffer/buf_buddy_free_t.h>
-#include <innodb/buffer/buf_buddy_stat_t.h>
+#include <innodb/buf_buddy/buf_buddy_free_t.h>
+#include <innodb/buf_buddy/buf_buddy_stat_t.h>
 #include <innodb/buf_page/buf_flush_t.h>
 #include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buf_pool/buf_pool_stat_t.h>

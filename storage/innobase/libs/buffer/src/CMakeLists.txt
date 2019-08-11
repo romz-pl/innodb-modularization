@@ -13,8 +13,6 @@ add_library( ${LIB_NAME} STATIC
     LRUHp.cpp
     LRUItr.cpp
     Page_fetch.cpp
-    buf_buddy_free_t.cpp
-    buf_buddy_stat_t.cpp
     buf_flush_list_mutex_enter.cpp
     buf_flush_list_mutex_exit.cpp
     buf_flush_list_mutex_own.cpp

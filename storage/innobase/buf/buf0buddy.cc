@@ -40,9 +40,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_can_relocate.h>
 #include <innodb/buf_block/buf_block_set_state.h>
 #include <innodb/buf_page/buf_page_get_state.h>
-#include <innodb/buffer/buf_buddy_free_t.h>
+#include <innodb/buf_buddy/buf_buddy_free_t.h>
 #include <innodb/buf_pool/buf_pool_t.h>
-#include <innodb/buffer/buf_buddy_stat_t.h>
+#include <innodb/buf_buddy/buf_buddy_stat_t.h>
 #include <innodb/page/page_zip_get_size.h>
 
 #include "buf0buddy.h"

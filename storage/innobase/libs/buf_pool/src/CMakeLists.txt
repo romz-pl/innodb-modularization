@@ -45,5 +45,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     buffer
+    buf_buddy
     PRIVATE
 )
