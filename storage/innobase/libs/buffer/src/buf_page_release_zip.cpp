@@ -5,7 +5,7 @@
 #include <innodb/buffer/buf_block_t.h>
 #include <innodb/buffer/buf_block_unfix.h>
 #include <innodb/buffer/buf_page_get_state.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/error/ut_error.h>
 
 /** Releases a compressed-only page acquired with buf_page_get_zip(). */

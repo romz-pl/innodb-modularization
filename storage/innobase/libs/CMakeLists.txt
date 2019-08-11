@@ -4,6 +4,7 @@ add_subdirectory( assert )
 add_subdirectory( atomic )
 
 add_subdirectory( bit )
+add_subdirectory( buf_page )
 add_subdirectory( buffer )
 
 add_subdirectory( clone )

@@ -7,7 +7,7 @@
 #include <innodb/logger/warn.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/disk/page_no_t.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 
 uint Arch_Block::get_file_index(uint64_t block_num) {
   return (block_num / ARCH_PAGE_FILE_DATA_CAPACITY);

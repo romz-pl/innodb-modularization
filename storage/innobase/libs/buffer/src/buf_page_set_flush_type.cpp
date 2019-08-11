@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_page_get_flush_type.h>
 
 /** Set the flush type of a page. */

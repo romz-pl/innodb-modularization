@@ -40,18 +40,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/hash/hash_lock_x_confirm.h>
 #include <innodb/hash/hash_get_lock.h>
 #include <innodb/page/page_zip_des_t.h>
-#include <innodb/buffer/buf_page_state.h>
+#include <innodb/buf_page/buf_page_state.h>
 #include <innodb/buffer/Page_fetch.h>
 #include <innodb/buffer/Cache_hint.h>
 #include <innodb/buffer/buf_pool_info_t.h>
 #include <innodb/buffer/buf_pools_list_size_t.h>
-#include <innodb/buffer/macros.h>
+#include <innodb/buf_page/flags.h>
 #include <innodb/buffer/buf_page_print_flags.h>
 #include <innodb/buffer/BPageMutex.h>
 #include <innodb/buffer/BPageLock.h>
 #include <innodb/buffer/BufListMutex.h>
 #include <innodb/buffer/BufPoolZipMutex.h>
-#include <innodb/buffer/buf_io_fix.h>
+#include <innodb/buf_page/buf_io_fix.h>
 
 
 

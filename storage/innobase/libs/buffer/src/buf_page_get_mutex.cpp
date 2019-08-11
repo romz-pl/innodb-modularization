@@ -4,7 +4,7 @@
 
 #include <innodb/buffer/buf_block_t.h>
 #include <innodb/buffer/buf_page_get_state.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_pool_from_bpage.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/error/ut_error.h>

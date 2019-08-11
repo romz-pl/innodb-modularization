@@ -1,6 +1,6 @@
 #include <innodb/clone/Clone_Handle.h>
 
-#include <innodb/buffer/macros.h>
+#include <innodb/buf_page/flags.h>
 #include <innodb/clone/Clone_Desc_Data.h>
 #include <innodb/clone/Clone_Desc_File_MetaData.h>
 #include <innodb/clone/Clone_Desc_Task_Meta.h>

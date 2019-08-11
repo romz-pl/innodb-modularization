@@ -12,7 +12,7 @@
 #include <innodb/logger/warn.h>
 #include <innodb/ioasync/srv_shutdown_state.h>
 #include <innodb/log_arch/page_archiver_thread_event.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/buffer/srv_buf_pool_instances.h>
 #include <innodb/buffer/buf_pool_from_array.h>

@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/BPageLock.h>
 #include <innodb/buffer/BPageMutex.h>
 #include <innodb/disk/page_type_t.h>

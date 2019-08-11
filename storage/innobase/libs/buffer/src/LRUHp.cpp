@@ -1,6 +1,6 @@
 #include <innodb/buffer/LRUHp.h>
 
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/lst/lst.h>
 
 /** Adjust the value of hp. This happens when some other thread working

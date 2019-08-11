@@ -2,7 +2,7 @@
 
 #include <innodb/lst/lst.h>
 #include <innodb/sync_mutex/mutex_own.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_pool_t.h>
 
 /** Selects from where to start a scan. If we have scanned too deep into

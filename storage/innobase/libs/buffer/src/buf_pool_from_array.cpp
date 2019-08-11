@@ -4,7 +4,7 @@
 
 #include <innodb/buffer/buf_pool_t.h>
 #include <innodb/buffer/buf_pool_ptr.h>
-#include <innodb/buffer/macros.h>
+#include <innodb/buf_page/flags.h>
 
 /** Requested number of buffer pool instances */
 extern ulong srv_buf_pool_instances;

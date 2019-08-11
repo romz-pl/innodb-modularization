@@ -2,13 +2,13 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/buffer/buf_io_fix.h>
-#include <innodb/buffer/buf_page_state.h>
-#include <innodb/log_sn/lsn_t.h>
-#include <innodb/buffer/macros.h>
-#include <innodb/page/page_id_t.h>
-#include <innodb/lst/lst.h>
+#include <innodb/buf_page/flags.h>
+#include <innodb/buf_page/buf_io_fix.h>
+#include <innodb/buf_page/buf_page_state.h>
 #include <innodb/disk/page_size_t.h>
+#include <innodb/log_sn/lsn_t.h>
+#include <innodb/lst/lst.h>
+#include <innodb/page/page_id_t.h>
 #include <innodb/page/page_zip_des_t.h>
 
 class FlushObserver;

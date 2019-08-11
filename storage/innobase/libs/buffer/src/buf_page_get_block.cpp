@@ -1,7 +1,7 @@
 #include <innodb/buffer/buf_page_get_block.h>
 
 #include <innodb/buffer/buf_block_t.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_page_get_state.h>
 
 /** Gets the buf_block_t handle of a buffered file block if an uncompressed

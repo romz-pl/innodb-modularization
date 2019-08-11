@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/allocator/ut_zalloc_nokey.h>
 #include <innodb/assert/assert.h>
 #include <innodb/memory_check/memory_check.h>

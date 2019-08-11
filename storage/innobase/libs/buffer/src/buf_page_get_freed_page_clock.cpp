@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 
 /** Reads the freed_page_clock of a buffer block.
  @return freed_page_clock */

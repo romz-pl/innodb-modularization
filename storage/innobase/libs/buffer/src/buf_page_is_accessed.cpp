@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_page_in_file.h>
 
 /** Determine the time of first access of a block in the buffer pool.

@@ -11,9 +11,9 @@
 #include <innodb/buffer/buf_buddy_free_t.h>
 #include <innodb/buffer/buf_buddy_stat_t.h>
 #include <innodb/buffer/buf_flush_t.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/buffer/buf_pool_stat_t.h>
-#include <innodb/buffer/macros.h>
+#include <innodb/buf_page/flags.h>
 #include <innodb/lst/lst.h>
 #include <innodb/disk/page_no_t.h>
 #include <innodb/sync_event/os_event_t.h>

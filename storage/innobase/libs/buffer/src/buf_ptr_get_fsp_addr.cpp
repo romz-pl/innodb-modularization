@@ -2,7 +2,7 @@
 
 #include <innodb/align/ut_align_down.h>
 #include <innodb/align/ut_align_offset.h>
-#include <innodb/buffer/macros.h>
+#include <innodb/buf_page/flags.h>
 #include <innodb/machine/data.h>
 #include <innodb/disk/page_t.h>
 #include <innodb/disk/flags.h>

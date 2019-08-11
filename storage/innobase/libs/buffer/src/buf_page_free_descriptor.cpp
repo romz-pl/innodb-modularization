@@ -2,7 +2,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 #include <innodb/allocator/ut_free.h>
 
 /** Free a buf_page_t descriptor. */

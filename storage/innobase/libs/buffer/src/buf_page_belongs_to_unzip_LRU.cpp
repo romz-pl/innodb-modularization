@@ -2,7 +2,7 @@
 
 #include <innodb/buffer/buf_page_in_file.h>
 #include <innodb/buffer/buf_page_get_state.h>
-#include <innodb/buffer/buf_page_t.h>
+#include <innodb/buf_page/buf_page_t.h>
 
 #ifndef UNIV_HOTBACKUP
 
