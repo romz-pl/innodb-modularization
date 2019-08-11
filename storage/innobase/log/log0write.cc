@@ -59,8 +59,8 @@ the file COPYING.Google.
 #include <innodb/log_redo/log_closer_mutex_enter.h>
 #include <innodb/log_flush/log_flush_notifier_mutex_exit.h>
 #include <innodb/log_flush/log_flush_notifier_mutex_enter.h>
-#include <innodb/log_redo/log_write_notifier_mutex_exit.h>
-#include <innodb/log_redo/log_write_notifier_mutex_enter.h>
+#include <innodb/log_write/log_write_notifier_mutex_exit.h>
+#include <innodb/log_write/log_write_notifier_mutex_enter.h>
 #include <innodb/log_flush/log_flusher_mutex_exit.h>
 #include <innodb/log_flush/log_flusher_mutex_enter.h>
 #include <innodb/log_types/log_writer_mutex_enter.h>

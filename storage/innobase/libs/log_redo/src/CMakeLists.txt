@@ -36,11 +36,11 @@ add_library( ${LIB_NAME} STATIC
     log_threads_active.cpp
     log_wait_for_space_in_log_recent_closed.cpp
     log_write_ahead_resize.cpp
-    log_write_notifier_mutex_enter.cpp
-    log_write_notifier_mutex_exit.cpp
-    log_write_notifier_mutex_own.cpp
-    log_write_to_file_requests_are_frequent.cpp
-    log_writer_mutex_enter_nowait.cpp
+
+
+
+
+
     log_writer_thread_active_validate.cpp
     meb_log_print_file_hdr.cpp
     pfs.cpp

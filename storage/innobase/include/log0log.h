@@ -127,7 +127,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_buffer/log_buffer_ready_for_write_lsn.h>
 #include <innodb/log_buffer/log_buffer_dirty_pages_added_up_to_lsn.h>
 #include <innodb/log_buffer/log_buffer_flush_order_lag.h>
-#include <innodb/log_redo/log_write_to_file_requests_are_frequent.h>
+#include <innodb/log_write/log_write_to_file_requests_are_frequent.h>
 #include <innodb/log_buffer/log_buffer_s_lock_enter.h>
 #include <innodb/log_buffer/log_buffer_s_lock_exit.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>

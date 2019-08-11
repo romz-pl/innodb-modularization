@@ -65,6 +65,11 @@ add_library( ${LIB_NAME} STATIC
     log_writer.cpp
     srv_log_writer_spin_delay.cpp
     srv_log_writer_timeout.cpp
+    log_write_notifier_mutex_enter.cpp
+    log_write_notifier_mutex_exit.cpp
+    log_write_notifier_mutex_own.cpp
+    log_write_to_file_requests_are_frequent.cpp
+    log_writer_mutex_enter_nowait.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

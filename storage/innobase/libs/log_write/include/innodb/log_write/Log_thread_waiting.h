@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/log_redo/log_write_to_file_requests_are_frequent.h>
+#include <innodb/log_write/log_write_to_file_requests_are_frequent.h>
 #include <innodb/log_types/log_t.h>
 #include <innodb/log_write/srv_cpu_usage.h>
 #include <innodb/log_write/srv_log_spin_cpu_abs_lwm.h>
