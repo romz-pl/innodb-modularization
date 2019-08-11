@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_sys_close.h>
+#include <innodb/log_sys/log_sys_close.h>
 
 #include <innodb/log_files/log_deallocate_file_header_buffers.h>
 #include <innodb/log_redo/log_deallocate_write_events.h>
@@ -11,7 +11,7 @@
 #include <innodb/log_types/log_sys.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_event/os_event_destroy.h>
-#include <innodb/log_redo/log_sys_object.h>
+#include <innodb/log_sys/log_sys_object.h>
 
 void log_sys_close() {
   ut_a(log_sys != nullptr);

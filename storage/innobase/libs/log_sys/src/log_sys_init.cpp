@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_sys_init.h>
+#include <innodb/log_sys/log_sys_init.h>
 
 #include <innodb/log_types/flags.h>
 #include <innodb/log_buffer/log_allocate_buffer.h>
@@ -12,7 +12,7 @@
 #include <innodb/log_buffer/log_calc_buf_size.h>
 #include <innodb/log_redo/log_calc_max_ages.h>
 #include <innodb/log_types/log_sys.h>
-#include <innodb/log_redo/log_sys_object.h>
+#include <innodb/log_sys/log_sys_object.h>
 #include <innodb/log_types/log_header_format_t.h>
 #include <innodb/log_files/log_files_update_offsets.h>
 #include <innodb/sync_mutex/mutex_create.h>

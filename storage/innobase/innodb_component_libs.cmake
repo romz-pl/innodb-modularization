@@ -49,6 +49,7 @@ SET( INNODB_COMPONENT_LIBS
     # L
     #log_arch
     #log_redo
+    log_sys
     #log_types
     log_write
     #logger

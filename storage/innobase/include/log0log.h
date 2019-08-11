@@ -62,9 +62,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_redo/log_position_lock.h>
 #include <innodb/log_redo/log_refresh_stats.h>
 #include <innodb/log_redo/log_print.h>
-#include <innodb/log_redo/log_sys_close.h>
+#include <innodb/log_sys/log_sys_close.h>
 #include <innodb/log_types/log_free_check_margin.h>
-#include <innodb/log_redo/log_sys_init.h>
+#include <innodb/log_sys/log_sys_init.h>
 #include <innodb/log_redo/log_calc_max_ages.h>
 #include <innodb/log_redo/log_calc_concurrency_margin.h>
 #include <innodb/log_redo/log_writer_thread_active_validate.h>
