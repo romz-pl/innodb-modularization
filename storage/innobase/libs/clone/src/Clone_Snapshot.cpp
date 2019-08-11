@@ -5,7 +5,7 @@
 #include <innodb/log_types/flags.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/align/ut_uint64_align_up.h>
-#include <innodb/buffer/Page_fetch.h>
+#include <innodb/buf_pool/Page_fetch.h>
 #include <innodb/clone/pfs.h>
 #include <innodb/io/IORequest.h>
 #include <innodb/io/srv_is_direct_io.h>

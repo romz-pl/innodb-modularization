@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/mtr/mtr_start.h>
-#include <innodb/buffer/buf_withdraw_clock.h>
+#include <innodb/buf_pool/buf_withdraw_clock.h>
 #include <innodb/buf_pool/buf_pool_is_obsolete.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 

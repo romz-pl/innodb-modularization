@@ -1,4 +1,4 @@
-#include <innodb/buffer/innobase_should_madvise_buf_pool.h>
+#include <innodb/buf_pool/innobase_should_madvise_buf_pool.h>
 
 #include <innodb/buf_pool/srv_buffer_pool_in_core_file.h>
 

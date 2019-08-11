@@ -2,9 +2,9 @@
 
 #include <innodb/buf_pool/srv_buf_pool_instances.h>
 #include <innodb/buf_pool/buf_pool_should_madvise.h>
-#include <innodb/buffer/innobase_disable_core_dump.h>
+#include <innodb/buf_pool/innobase_disable_core_dump.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>
-#include <innodb/buffer/innobase_should_madvise_buf_pool.h>
+#include <innodb/buf_pool/innobase_should_madvise_buf_pool.h>
 #include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/sync_mutex/mutex_exit.h>
 #include <innodb/sync_mutex/mutex_enter.h>

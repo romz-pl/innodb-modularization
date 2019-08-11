@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define buf0checksum_h
 
 #include <innodb/univ/univ.h>
-#include <innodb/buffer/srv_checksum_algorithm_t.h>
+#include <innodb/buf_pool/srv_checksum_algorithm_t.h>
 #include <innodb/page/page_id_t.h>
 
 

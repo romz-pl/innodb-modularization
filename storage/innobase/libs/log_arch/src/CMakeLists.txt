@@ -64,6 +64,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     buffer
+    buf_page
     log_files
     PRIVATE
 )

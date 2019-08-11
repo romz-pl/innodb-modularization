@@ -1,4 +1,4 @@
-#include <innodb/buffer/FlushHp.h>
+#include <innodb/buf_pool/FlushHp.h>
 
 #include <innodb/lst/lst.h>
 #include <innodb/buf_page/buf_page_t.h>

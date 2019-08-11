@@ -1,6 +1,6 @@
-#include <innodb/buffer/buf_get_total_list_size_in_bytes.h>
+#include <innodb/buf_pool/buf_get_total_list_size_in_bytes.h>
 
-#include <innodb/buffer/buf_pools_list_size_t.h>
+#include <innodb/buf_pool/buf_pools_list_size_t.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>
 #include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/lst/lst.h>

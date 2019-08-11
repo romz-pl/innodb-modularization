@@ -53,7 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_flush/buf_flush_list_mutex_exit.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>
 #include <innodb/buf_pool/buf_pool_get.h>
-#include <innodb/buffer/buf_get_withdraw_depth.h>
+#include <innodb/buf_pool/buf_get_withdraw_depth.h>
 #include <innodb/buf_page/buf_page_get_flush_type.h>
 #include <innodb/buf_page/buf_page_get_io_fix.h>
 #include <innodb/buf_page/buf_page_get_io_fix_unlocked.h>

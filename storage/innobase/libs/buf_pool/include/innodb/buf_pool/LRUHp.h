@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/buffer/HazardPointer.h>
+#include <innodb/buf_pool/HazardPointer.h>
 
 /** Class implementing buf_pool->LRU hazard pointer */
 class LRUHp : public HazardPointer {

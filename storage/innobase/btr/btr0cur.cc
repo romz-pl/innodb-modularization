@@ -59,7 +59,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/mtr/mtr_set_savepoint.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/sync_rw/rw_lock_get_writer.h>
-#include <innodb/buffer/buf_withdraw_clock.h>
+#include <innodb/buf_pool/buf_withdraw_clock.h>
 #include <innodb/buf_pool/buf_pool_is_obsolete.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/buf_block/buf_block_buf_fix_inc.h>

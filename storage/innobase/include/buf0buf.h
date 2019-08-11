@@ -41,16 +41,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/hash/hash_get_lock.h>
 #include <innodb/page/page_zip_des_t.h>
 #include <innodb/buf_page/buf_page_state.h>
-#include <innodb/buffer/Page_fetch.h>
-#include <innodb/buffer/Cache_hint.h>
+#include <innodb/buf_pool/Page_fetch.h>
+#include <innodb/buf_pool/Cache_hint.h>
 #include <innodb/buf_pool/buf_pool_info_t.h>
-#include <innodb/buffer/buf_pools_list_size_t.h>
+#include <innodb/buf_pool/buf_pools_list_size_t.h>
 #include <innodb/buf_page/flags.h>
 #include <innodb/buf_page/buf_page_print_flags.h>
 #include <innodb/buf_block/BPageMutex.h>
 #include <innodb/buf_block/BPageLock.h>
-#include <innodb/buffer/BufListMutex.h>
-#include <innodb/buffer/BufPoolZipMutex.h>
+#include <innodb/buf_pool/BufListMutex.h>
+#include <innodb/buf_pool/BufPoolZipMutex.h>
 #include <innodb/buf_page/buf_io_fix.h>
 
 
@@ -636,9 +636,9 @@ ibool buf_pool_watch_occurred(const page_id_t &page_id)
     MY_ATTRIBUTE((warn_unused_result));
 
 
-#include <innodb/buffer/buf_get_total_stat.h>
-#include <innodb/buffer/buf_get_total_list_size_in_bytes.h>
-#include <innodb/buffer/buf_get_total_list_len.h>
+#include <innodb/buf_pool/buf_get_total_stat.h>
+#include <innodb/buf_pool/buf_get_total_list_size_in_bytes.h>
+#include <innodb/buf_pool/buf_get_total_list_len.h>
 
 
 /** Calculate the checksum of a page from compressed table and update the

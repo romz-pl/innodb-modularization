@@ -34,7 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/hash/HASH_SEARCH.h>
 #include <innodb/hash/HASH_DELETE.h>
 #include <innodb/time/ut_time_us.h>
-#include <innodb/buffer/buf_get_withdraw_depth.h>
+#include <innodb/buf_pool/buf_get_withdraw_depth.h>
 #include <innodb/buf_pool/buf_pool_get.h>
 #include <innodb/buf_page/buf_page_get_mutex.h>
 #include <innodb/buf_page/buf_page_can_relocate.h>

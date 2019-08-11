@@ -1,4 +1,4 @@
-#include <innodb/buffer/LRUHp.h>
+#include <innodb/buf_pool/LRUHp.h>
 
 #include <innodb/buf_page/buf_page_t.h>
 #include <innodb/lst/lst.h>

@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_ptr_get_fsp_addr.h>
+#include <innodb/buf_pool/buf_ptr_get_fsp_addr.h>
 
 #include <innodb/align/ut_align_down.h>
 #include <innodb/align/ut_align_offset.h>

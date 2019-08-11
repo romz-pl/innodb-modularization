@@ -1,4 +1,4 @@
-#include <innodb/buffer/HazardPointer.h>
+#include <innodb/buf_pool/HazardPointer.h>
 
 #include <innodb/sync_mutex/mutex_own.h>
 #include <innodb/buf_pool/buf_pool_from_bpage.h>

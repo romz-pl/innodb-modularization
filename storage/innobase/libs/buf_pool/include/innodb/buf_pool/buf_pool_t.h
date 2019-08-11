@@ -2,11 +2,11 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/buffer/BufListMutex.h>
-#include <innodb/buffer/BufPoolZipMutex.h>
-#include <innodb/buffer/FlushHp.h>
-#include <innodb/buffer/LRUHp.h>
-#include <innodb/buffer/LRUItr.h>
+#include <innodb/buf_pool/BufListMutex.h>
+#include <innodb/buf_pool/BufPoolZipMutex.h>
+#include <innodb/buf_pool/FlushHp.h>
+#include <innodb/buf_pool/LRUHp.h>
+#include <innodb/buf_pool/LRUItr.h>
 #include <innodb/buf_block/buf_block_t.h>
 #include <innodb/buf_buddy/buf_buddy_free_t.h>
 #include <innodb/buf_buddy/buf_buddy_stat_t.h>

@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/buffer/LRUHp.h>
+#include <innodb/buf_pool/LRUHp.h>
 
 /** Special purpose iterators to be used when scanning the LRU list.
 The idea is that when one thread finishes the scan it leaves the

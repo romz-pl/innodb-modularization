@@ -2,7 +2,7 @@
 
 #include <innodb/sync_mutex/mutex_own.h>
 #include <innodb/buf_flush/buf_flush_list_mutex_own.h>
-#include <innodb/buffer/innobase_disable_core_dump.h>
+#include <innodb/buf_pool/innobase_disable_core_dump.h>
 #include <innodb/buf_chunk/buf_chunk_t.h>
 #include <innodb/buf_pool/buf_pool_should_madvise.h>
 

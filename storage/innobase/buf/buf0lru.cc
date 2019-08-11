@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_flush/buf_flush_list_mutex_exit.h>
 #include <innodb/buf_page/buf_page_set_sticky.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>
-#include <innodb/buffer/buf_get_withdraw_depth.h>
+#include <innodb/buf_pool/buf_get_withdraw_depth.h>
 #include <innodb/buf_page/buf_page_alloc_descriptor.h>
 #include <innodb/buf_page/buf_page_free_descriptor.h>
 #include <innodb/buf_page/buf_page_get_mutex.h>
@@ -59,9 +59,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_set_state.h>
 #include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/buf_page/buf_page_is_accessed.h>
-#include <innodb/buffer/CheckInLRUList.h>
-#include <innodb/buffer/CheckInFreeList.h>
-#include <innodb/buffer/CheckUnzipLRUAndLRUList.h>
+#include <innodb/buf_pool/CheckInLRUList.h>
+#include <innodb/buf_pool/CheckInFreeList.h>
+#include <innodb/buf_pool/CheckUnzipLRUAndLRUList.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/io/os_n_fsyncs.h>
 #include <innodb/ioasync/os_aio_wait_until_no_pending_writes.h>

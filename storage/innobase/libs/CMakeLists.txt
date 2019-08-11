@@ -11,7 +11,6 @@ add_subdirectory( buf_flush )
 add_subdirectory( buf_frame )
 add_subdirectory( buf_page )
 add_subdirectory( buf_pool )
-add_subdirectory( buffer )
 
 add_subdirectory( clone )
 add_subdirectory( compiler_hints )

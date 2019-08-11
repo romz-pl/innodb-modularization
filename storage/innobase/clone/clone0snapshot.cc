@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_set_size.h>
 #include <innodb/clone/Clone_Snapshot.h>
 #include <innodb/tablespace/fil_space_get.h>
-#include <innodb/buffer/Page_fetch.h>
+#include <innodb/buf_pool/Page_fetch.h>
 #include <innodb/log_types/log_sys.h>
 #include <innodb/log_types/log_get_lsn.h>
 #include <innodb/buf_page/buf_page_mutex_exit.h>

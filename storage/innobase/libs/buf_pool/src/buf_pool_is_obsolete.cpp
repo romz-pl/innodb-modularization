@@ -3,7 +3,7 @@
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buf_pool/buf_pool_withdrawing.h>
-#include <innodb/buffer/buf_withdraw_clock.h>
+#include <innodb/buf_pool/buf_withdraw_clock.h>
 
 /** Verify the possibility that a stored page is not in buffer pool.
 @param[in]	withdraw_clock	withdraw clock when stored the page

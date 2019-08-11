@@ -1,4 +1,4 @@
-#include <innodb/buffer/innobase_disable_core_dump.h>
+#include <innodb/buf_pool/innobase_disable_core_dump.h>
 
 #include <innodb/buf_pool/srv_buffer_pool_in_core_file.h>
 

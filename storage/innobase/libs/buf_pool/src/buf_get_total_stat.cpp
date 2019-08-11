@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_get_total_stat.h>
+#include <innodb/buf_pool/buf_get_total_stat.h>
 
 #include <innodb/buf_pool/buf_pool_stat_t.h>
 #include <innodb/buf_pool/buf_pool_from_array.h>

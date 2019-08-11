@@ -104,12 +104,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_chunk/buf_chunk_t.h>
 #include <innodb/buf_page/buf_page_is_accessed.h>
 #include <innodb/time/ut_time_ms.h>
-#include <innodb/buffer/CheckInLRUList.h>
+#include <innodb/buf_pool/CheckInLRUList.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/buf_block/buf_block_buf_fix_inc.h>
 #include <innodb/buf_pool/buf_pool_should_madvise.h>
-#include <innodb/buffer/innobase_disable_core_dump.h>
-#include <innodb/buffer/innobase_should_madvise_buf_pool.h>
+#include <innodb/buf_pool/innobase_disable_core_dump.h>
+#include <innodb/buf_pool/innobase_should_madvise_buf_pool.h>
 #include <innodb/buf_pool/buf_pool_register_chunk.h>
 #include <innodb/buf_pool/buf_pool_get_oldest_modification_approx.h>
 #include <innodb/buf_block/buf_block_init.h>
@@ -375,7 +375,7 @@ static const ulint BUF_READ_AHEAD_PORTION = 32;
 
 #include <innodb/buf_pool/buf_pool_ptr.h>
 #include <innodb/buf_pool/buf_pool_withdrawing.h>
-#include <innodb/buffer/buf_withdraw_clock.h>
+#include <innodb/buf_pool/buf_withdraw_clock.h>
 #include <innodb/buf_chunk/buf_chunk_map_reg.h>
 
 /** true when resizing buffer pool is in the critical path. */
