@@ -1,9 +1,11 @@
 set( LIB_NAME log_write )
 
 add_library( ${LIB_NAME} STATIC
-    Log_thread_waiting.cpp
+
+    log_wait_for_space_in_log_buf.cpp
+    log_wait_for_space_after_reserving.cpp
     Log_write_to_file_requests_monitor.cpp
-    Srv_cpu_usage.cpp
+
     compute_how_much_to_write.cpp
     compute_next_write_ahead_end.cpp
     compute_real_offset.cpp
@@ -16,19 +18,16 @@ add_library( ${LIB_NAME} STATIC
     log_files_write_buffer.cpp
 
     log_increase_concurrency_margin.cpp
-    log_max_spins_when_waiting_in_user_thread.cpp
+
     log_read_encryption.cpp
     log_rotate_encryption.cpp
-    log_wait_for_flush.cpp
-    log_wait_for_space_after_reserving.cpp
-    log_wait_for_space_in_log_buf.cpp
-    log_wait_for_write.cpp
+
     log_write_encryption.cpp
     log_write_notifier.cpp
     log_write_notifier_mutex_enter.cpp
     log_write_notifier_mutex_exit.cpp
     log_write_notifier_mutex_own.cpp
-    log_write_to_file_requests_are_frequent.cpp
+
     log_write_up_to.cpp
     log_writer.cpp
     log_writer_mutex_enter_nowait.cpp
@@ -39,15 +38,11 @@ add_library( ${LIB_NAME} STATIC
     prepare_full_blocks.cpp
     recv_no_ibuf_operations.cpp
     redo_rotate_default_master_key.cpp
-    srv_cpu_usage.cpp
 
-    srv_log_spin_cpu_abs_lwm.cpp
-    srv_log_spin_cpu_pct_hwm.cpp
-    srv_log_wait_for_flush_spin_delay.cpp
-    srv_log_wait_for_flush_spin_hwm.cpp
-    srv_log_wait_for_flush_timeout.cpp
-    srv_log_wait_for_write_spin_delay.cpp
-    srv_log_wait_for_write_timeout.cpp
+
+
+
+
     srv_log_write_notifier_spin_delay.cpp
     srv_log_write_notifier_timeout.cpp
     start_next_file.cpp
@@ -56,6 +51,12 @@ add_library( ${LIB_NAME} STATIC
     validate_start_lsn.cpp
     write_ahead_enough.cpp
     write_blocks.cpp
+
+    log_wait_for_write.cpp
+
+    log_allocate_recent_written.cpp
+    log_deallocate_recent_written.cpp
+    srv_log_recent_written_size.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

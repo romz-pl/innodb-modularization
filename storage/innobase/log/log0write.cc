@@ -53,8 +53,8 @@ the file COPYING.Google.
 #include <innodb/log_flush/log_flush_update_stats.h>
 #include <innodb/log_write/log_file_header_fill_encryption.h>
 #include <innodb/log_write/log_wait_for_write.h>
-#include <innodb/log_write/srv_log_wait_for_write_spin_delay.h>
-#include <innodb/log_write/log_max_spins_when_waiting_in_user_thread.h>
+#include <innodb/log_wait/srv_log_wait_for_write_spin_delay.h>
+#include <innodb/log_wait/log_max_spins_when_waiting_in_user_thread.h>
 #include <innodb/log_redo/log_closer_mutex_exit.h>
 #include <innodb/log_redo/log_closer_mutex_enter.h>
 #include <innodb/log_flush/log_flush_notifier_mutex_exit.h>
@@ -90,8 +90,8 @@ the file COPYING.Google.
 #include <innodb/log_write/copy_to_write_ahead_buffer.h>
 #include <innodb/log_write/prepare_for_write_ahead.h>
 #include <innodb/log_write/update_current_write_ahead.h>
-#include <innodb/log_write/log_wait_for_flush.h>
-#include <innodb/log_write/Log_thread_waiting.h>
+#include <innodb/log_wait/log_wait_for_flush.h>
+#include <innodb/log_wait/Log_thread_waiting.h>
 #include <innodb/log_write/Log_write_to_file_requests_monitor.h>
 #include <innodb/log_write/log_files_write_buffer.h>
 

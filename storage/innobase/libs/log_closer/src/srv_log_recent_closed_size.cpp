@@ -1,4 +1,4 @@
-#include <innodb/log_redo/srv_log_recent_closed_size.h>
+#include <innodb/log_closer/srv_log_recent_closed_size.h>
 
 #include <innodb/log_types/flags.h>
 

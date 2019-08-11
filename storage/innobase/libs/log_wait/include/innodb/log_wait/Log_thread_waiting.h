@@ -2,10 +2,10 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/log_write/log_write_to_file_requests_are_frequent.h>
+#include <innodb/log_wait/log_write_to_file_requests_are_frequent.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_write/srv_cpu_usage.h>
-#include <innodb/log_write/srv_log_spin_cpu_abs_lwm.h>
+#include <innodb/log_wait/srv_cpu_usage.h>
+#include <innodb/log_wait/srv_log_spin_cpu_abs_lwm.h>
 #include <innodb/wait/Wait_stats.h>
 #include <innodb/sync_event/os_event_wait_for.h>
 

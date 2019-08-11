@@ -1,11 +1,11 @@
-#include <innodb/log_write/log_wait_for_flush.h>
+#include <innodb/log_wait/log_wait_for_flush.h>
 
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_write/log_max_spins_when_waiting_in_user_thread.h>
-#include <innodb/log_write/srv_log_wait_for_flush_spin_delay.h>
-#include <innodb/log_write/srv_log_wait_for_flush_spin_hwm.h>
-#include <innodb/log_write/srv_log_wait_for_flush_timeout.h>
+#include <innodb/log_wait/log_max_spins_when_waiting_in_user_thread.h>
+#include <innodb/log_wait/srv_log_wait_for_flush_spin_delay.h>
+#include <innodb/log_wait/srv_log_wait_for_flush_spin_hwm.h>
+#include <innodb/log_wait/srv_log_wait_for_flush_timeout.h>
 #include <innodb/monitor/MONITOR_INC_WAIT_STATS.h>
 #include <innodb/sync_event/os_event_set.h>
 #include <innodb/sync_event/os_event_wait_for.h>

@@ -1,4 +1,4 @@
-#include <innodb/log_write/Log_thread_waiting.h>
+#include <innodb/log_wait/Log_thread_waiting.h>
 
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>

@@ -1,4 +1,4 @@
-#include <innodb/log_write/log_write_to_file_requests_are_frequent.h>
+#include <innodb/log_wait/log_write_to_file_requests_are_frequent.h>
 
 #ifndef UNIV_HOTBACKUP
 

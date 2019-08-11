@@ -1,8 +1,8 @@
-#include <innodb/log_write/log_max_spins_when_waiting_in_user_thread.h>
+#include <innodb/log_wait/log_max_spins_when_waiting_in_user_thread.h>
 
-#include <innodb/log_write/srv_cpu_usage.h>
-#include <innodb/log_write/srv_log_spin_cpu_pct_hwm.h>
-#include <innodb/log_write/srv_log_spin_cpu_abs_lwm.h>
+#include <innodb/log_wait/srv_cpu_usage.h>
+#include <innodb/log_wait/srv_log_spin_cpu_pct_hwm.h>
+#include <innodb/log_wait/srv_log_spin_cpu_abs_lwm.h>
 
 
 /** Computes maximum number of spin rounds which should be used when waiting

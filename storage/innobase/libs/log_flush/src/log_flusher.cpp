@@ -4,7 +4,7 @@
 #include <innodb/monitor/MONITOR_INC_WAIT_STATS.h>
 #include <innodb/sync_event/os_event_wait_time_low.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_write/Log_thread_waiting.h>
+#include <innodb/log_wait/Log_thread_waiting.h>
 #include <innodb/log_flush/log_flusher_mutex_enter.h>
 #include <innodb/log_types/LOG_SYNC_POINT.h>
 #include <innodb/log_flush/log_flush_low.h>

@@ -3,8 +3,8 @@ set( LIB_NAME log_redo )
 add_library( ${LIB_NAME} STATIC
     log_advance_dirty_pages_added_up_to_lsn.cpp
     log_advance_ready_for_write_lsn.cpp
-    log_allocate_recent_closed.cpp
-    log_allocate_recent_written.cpp
+
+
     log_allocate_write_ahead_buffer.cpp
     log_allocate_write_events.cpp
     log_background_threads_active_validate.cpp
@@ -16,8 +16,8 @@ add_library( ${LIB_NAME} STATIC
     log_closer_mutex_exit.cpp
     log_closer_mutex_own.cpp
     log_closer_thread_active_validate.cpp
-    log_deallocate_recent_closed.cpp
-    log_deallocate_recent_written.cpp
+
+
     log_deallocate_write_ahead_buffer.cpp
     log_deallocate_write_events.cpp
     log_free_check.cpp
@@ -44,8 +44,8 @@ add_library( ${LIB_NAME} STATIC
     log_writer_thread_active_validate.cpp
     meb_log_print_file_hdr.cpp
     pfs.cpp
-    srv_log_recent_closed_size.cpp
-    srv_log_recent_written_size.cpp
+
+
     srv_log_write_ahead_size.cpp
     srv_log_write_events.cpp
     srv_log_write_max_size.cpp

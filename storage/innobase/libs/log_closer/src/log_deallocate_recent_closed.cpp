@@ -1,4 +1,4 @@
-#include <innodb/log_redo/log_deallocate_recent_closed.h>
+#include <innodb/log_closer/log_deallocate_recent_closed.h>
 
 #include <innodb/log_types/log_t.h>
 

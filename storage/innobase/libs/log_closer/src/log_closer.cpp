@@ -8,7 +8,7 @@
 #include <innodb/log_types/log_get_lsn.h>
 #include <innodb/log_sn/log_lsn_validate.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_write/Log_thread_waiting.h>
+#include <innodb/log_wait/Log_thread_waiting.h>
 #include <innodb/log_closer/srv_log_closer_spin_delay.h>
 #include <innodb/log_closer/srv_log_closer_timeout.h>
 #include <innodb/sync_event/os_event_set.h>

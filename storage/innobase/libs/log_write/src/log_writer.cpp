@@ -7,7 +7,7 @@
 #include <innodb/log_types/log_writer_mutex_enter.h>
 #include <innodb/log_types/log_writer_mutex_exit.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_write/Log_thread_waiting.h>
+#include <innodb/log_wait/Log_thread_waiting.h>
 #include <innodb/log_write/Log_write_to_file_requests_monitor.h>
 #include <innodb/log_write/srv_log_writer_spin_delay.h>
 #include <innodb/log_write/srv_log_writer_timeout.h>

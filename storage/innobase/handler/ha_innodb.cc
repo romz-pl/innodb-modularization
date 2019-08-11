@@ -61,7 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/log_flush/srv_flushing_avg_loops.h>
-#include <innodb/log_write/srv_log_spin_cpu_pct_hwm.h>
+#include <innodb/log_wait/srv_log_spin_cpu_pct_hwm.h>
 #include <innodb/log_chkp/log_checkpointer_mutex_exit.h>
 #include <innodb/log_types/log_writer_mutex_exit.h>
 #include <innodb/log_types/log_writer_mutex_enter.h>

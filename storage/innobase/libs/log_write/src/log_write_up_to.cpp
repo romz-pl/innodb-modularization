@@ -3,7 +3,7 @@
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/log_types/flags.h>
 #include <innodb/log_types/log_t.h>
-#include <innodb/log_write/log_wait_for_flush.h>
+#include <innodb/log_wait/log_wait_for_flush.h>
 #include <innodb/log_write/log_wait_for_write.h>
 #include <innodb/log_write/recv_no_ibuf_operations.h>
 #include <innodb/log_flush/srv_flush_log_at_trx_commit.h>

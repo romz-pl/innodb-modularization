@@ -17,8 +17,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    log_redo
-    log_write
+    log_closer
     PRIVATE
 )
 
