@@ -101,7 +101,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_pool/buf_pool_get_curr_size.h>
 #include <innodb/buf_pool/buf_pool_from_bpage.h>
-#include <innodb/buffer/buf_chunk_t.h>
+#include <innodb/buf_chunk/buf_chunk_t.h>
 #include <innodb/buf_page/buf_page_is_accessed.h>
 #include <innodb/time/ut_time_ms.h>
 #include <innodb/buffer/CheckInLRUList.h>
@@ -113,8 +113,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_pool/buf_pool_register_chunk.h>
 #include <innodb/buf_pool/buf_pool_get_oldest_modification_approx.h>
 #include <innodb/buf_block/buf_block_init.h>
-#include <innodb/buffer/buf_chunk_init.h>
-#include <innodb/buffer/buf_chunk_not_freed.h>
+#include <innodb/buf_chunk/buf_chunk_init.h>
+#include <innodb/buf_chunk/buf_chunk_not_freed.h>
 #include <innodb/buf_pool/buf_pool_set_sizes.h>
 #include <innodb/page/page_zip_set_size.h>
 #include <innodb/page/page_zip_des_init.h>
@@ -376,7 +376,7 @@ static const ulint BUF_READ_AHEAD_PORTION = 32;
 #include <innodb/buf_pool/buf_pool_ptr.h>
 #include <innodb/buf_pool/buf_pool_withdrawing.h>
 #include <innodb/buffer/buf_withdraw_clock.h>
-#include <innodb/buffer/buf_chunk_map_reg.h>
+#include <innodb/buf_chunk/buf_chunk_map_reg.h>
 
 /** true when resizing buffer pool is in the critical path. */
 volatile bool buf_pool_resizing;

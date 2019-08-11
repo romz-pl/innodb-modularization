@@ -1,10 +1,10 @@
-#include <innodb/buffer/buf_get_nth_chunk_block.h>
+#include <innodb/buf_chunk/buf_get_nth_chunk_block.h>
 
 #ifndef UNIV_HOTBACKUP
 
 #include <innodb/buf_block/buf_block_t.h>
 #include <innodb/buf_pool/buf_pool_t.h>
-#include <innodb/buffer/buf_chunk_t.h>
+#include <innodb/buf_chunk/buf_chunk_t.h>
 
 /** Get the nth chunk's buffer block in the specified buffer pool.
  @return the nth chunk's buffer block. */

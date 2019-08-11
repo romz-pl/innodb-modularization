@@ -1,7 +1,6 @@
 set( LIB_NAME buf_pool )
 
 add_library( ${LIB_NAME} STATIC
-    buf_pool_chunk_map_t.cpp
     buf_pool_from_array.cpp
     buf_pool_from_block.cpp
     buf_pool_from_bpage.cpp
@@ -46,7 +45,5 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     buffer
-    buf_block
     PRIVATE
 )
-

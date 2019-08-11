@@ -15,15 +15,10 @@ add_library( ${LIB_NAME} STATIC
     Page_fetch.cpp
     buf_buddy_free_t.cpp
     buf_buddy_stat_t.cpp
-    buf_chunk_init.cpp
-    buf_chunk_map_reg.cpp
-    buf_chunk_not_freed.cpp
-    buf_chunk_t.cpp
     buf_flush_list_mutex_enter.cpp
     buf_flush_list_mutex_exit.cpp
     buf_flush_list_mutex_own.cpp
     buf_flush_ready_for_replace.cpp
-    buf_get_nth_chunk_block.cpp
     buf_get_total_list_len.cpp
     buf_get_total_list_size_in_bytes.cpp
     buf_get_total_stat.cpp
@@ -47,7 +42,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    buf_page
+    buf_chunk
     buf_pool
     tablespace
     PRIVATE

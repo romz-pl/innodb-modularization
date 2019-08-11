@@ -62,7 +62,6 @@ target_link_libraries(
     PUBLIC
     buffer
     memory
-    sync_rw
     PRIVATE
 )
 

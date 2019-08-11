@@ -1,7 +1,7 @@
-#include <innodb/buffer/buf_chunk_init.h>
+#include <innodb/buf_chunk/buf_chunk_init.h>
 
 #include <innodb/buf_pool/buf_pool_t.h>
-#include <innodb/buffer/buf_chunk_t.h>
+#include <innodb/buf_chunk/buf_chunk_t.h>
 #include <innodb/sync_mutex/mutex_own.h>
 #include <innodb/math/ut_2pow_round.h>
 #include <innodb/align/ut_align.h>

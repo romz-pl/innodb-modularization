@@ -1,4 +1,4 @@
-#include <innodb/buffer/buf_chunk_t.h>
+#include <innodb/buf_chunk/buf_chunk_t.h>
 
 #include <innodb/logger/warn.h>
 

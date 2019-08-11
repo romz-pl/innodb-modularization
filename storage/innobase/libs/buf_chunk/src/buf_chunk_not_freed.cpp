@@ -1,7 +1,7 @@
-#include <innodb/buffer/buf_chunk_not_freed.h>
+#include <innodb/buf_chunk/buf_chunk_not_freed.h>
 
 #include <innodb/buf_block/buf_block_t.h>
-#include <innodb/buffer/buf_chunk_t.h>
+#include <innodb/buf_chunk/buf_chunk_t.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/buffer/buf_flush_ready_for_replace.h>
 #include <innodb/buf_page/buf_page_mutex_enter.h>

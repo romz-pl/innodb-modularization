@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_get_state.h>
 #include <innodb/buf_page/buf_page_in_file.h>
 #include <innodb/buf_page/buf_page_get_io_fix.h>
-#include <innodb/buffer/buf_get_nth_chunk_block.h>
+#include <innodb/buf_chunk/buf_get_nth_chunk_block.h>
 #include <innodb/tablespace/fsp_is_shared_tablespace.h>
 #include <innodb/io/os_file_get_status.h>
 #include <innodb/io/os_file_get_size.h>
