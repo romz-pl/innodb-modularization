@@ -5,7 +5,7 @@
 #include <innodb/sync_mutex/mutex_own.h>
 #include <innodb/math/ut_2pow_round.h>
 #include <innodb/align/ut_align.h>
-#include <innodb/buffer/buf_block_init.h>
+#include <innodb/buf_block/buf_block_init.h>
 #include <innodb/buffer/buf_pool_register_chunk.h>
 #include <innodb/memory_check/memory_check.h>
 

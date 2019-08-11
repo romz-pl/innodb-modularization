@@ -16,13 +16,7 @@ add_library( ${LIB_NAME} STATIC
     Page_fetch.cpp
 
 
-    buf_block_get_frame.cpp
-    buf_block_get_io_fix.cpp
-    buf_block_get_io_fix_unlocked.cpp
 
-    buf_block_init.cpp
-
-    buf_block_set_io_fix.cpp
 
 
 

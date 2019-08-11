@@ -7,10 +7,15 @@ add_library( ${LIB_NAME} STATIC
     buf_block_buf_fix_inc.cpp
     buf_block_buf_fix_inc_func.cpp
     buf_block_fix.cpp
+    buf_block_get_frame.cpp
     buf_block_get_freed_page_clock.cpp
+    buf_block_get_io_fix.cpp
+    buf_block_get_io_fix_unlocked.cpp
     buf_block_get_lock_hash_val.cpp
     buf_block_get_state.cpp
+    buf_block_init.cpp
     buf_block_set_file_page.cpp
+    buf_block_set_io_fix.cpp
     buf_block_set_state.cpp
     buf_block_state_valid.cpp
     buf_block_t.cpp

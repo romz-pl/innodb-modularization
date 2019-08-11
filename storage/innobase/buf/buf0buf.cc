@@ -77,7 +77,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/print/ut_sprintf_timestamp.h>
 #include <innodb/buffer/buf_flush_list_mutex_enter.h>
 #include <innodb/buffer/buf_flush_list_mutex_exit.h>
-#include <innodb/buffer/buf_block_set_io_fix.h>
+#include <innodb/buf_block/buf_block_set_io_fix.h>
 #include <innodb/buffer/buf_pool_from_array.h>
 #include <innodb/buffer/buf_pool_size_align.h>
 #include <innodb/buffer/buf_pool_get.h>
@@ -91,7 +91,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_page/buf_page_get_io_fix_unlocked.h>
 #include <innodb/buf_page/buf_page_get_mutex.h>
 #include <innodb/buf_page/buf_page_can_relocate.h>
-#include <innodb/buffer/buf_block_get_io_fix_unlocked.h>
+#include <innodb/buf_block/buf_block_get_io_fix_unlocked.h>
 #include <innodb/buf_block/buf_block_set_file_page.h>
 #include <innodb/buf_page/buf_page_set_io_fix.h>
 #include <innodb/buf_page/buf_page_get_flush_type.h>
@@ -112,7 +112,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buffer/innobase_should_madvise_buf_pool.h>
 #include <innodb/buffer/buf_pool_register_chunk.h>
 #include <innodb/buffer/buf_pool_get_oldest_modification_approx.h>
-#include <innodb/buffer/buf_block_init.h>
+#include <innodb/buf_block/buf_block_init.h>
 #include <innodb/buffer/buf_chunk_init.h>
 #include <innodb/buffer/buf_chunk_not_freed.h>
 #include <innodb/buffer/buf_pool_set_sizes.h>

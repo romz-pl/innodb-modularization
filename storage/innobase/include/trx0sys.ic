@@ -33,7 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/mtr/mtr_read_ulint.h>
 #include <innodb/disk/univ_page_size.h>
 
-#include <innodb/buffer/buf_block_get_frame.h>
+#include <innodb/buf_block/buf_block_get_frame.h>
 
 #include "data0type.h"
 #include "srv0srv.h"
