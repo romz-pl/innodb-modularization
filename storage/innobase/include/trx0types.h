@@ -147,14 +147,7 @@ struct commit_node_t;
 struct trx_named_savept_t;
 /* @} */
 
-/** Row identifier (DB_ROW_ID, DATA_ROW_ID) */
-typedef ib_id_t row_id_t;
-/** Transaction identifier (DB_TRX_ID, DATA_TRX_ID) */
-typedef ib_id_t trx_id_t;
-/** Rollback pointer (DB_ROLL_PTR, DATA_ROLL_PTR) */
-typedef ib_id_t roll_ptr_t;
-/** Undo number */
-typedef ib_id_t undo_no_t;
+
 
 /** Maximum transaction identifier */
 #define TRX_ID_MAX IB_ID_MAX

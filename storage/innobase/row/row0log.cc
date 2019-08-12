@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2011-05-26 Marko Makela
  *******************************************************/
 
+#include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/io/os_file_write_int_fd.h>

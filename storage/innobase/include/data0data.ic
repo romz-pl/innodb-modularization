@@ -44,6 +44,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 
 
+
+
 #ifdef UNIV_DEBUG
 /** Dummy variable to catch access to uninitialized fields.  In the
 debug version, dtuple_create() will make all fields of dtuple_t point
@@ -61,310 +63,51 @@ dtype_t *dfield_get_type(const dfield_t *field) /*!< in: SQL data field */
 }
 #endif /* UNIV_DEBUG */
 
-/** Sets the type struct of SQL data field. */
-UNIV_INLINE
-void dfield_set_type(
-    dfield_t *field,     /*!< in: SQL data field */
-    const dtype_t *type) /*!< in: pointer to data type struct */
-{
-  ut_ad(field != NULL);
-  ut_ad(type != NULL);
 
-  field->type = *type;
-}
 
-#ifdef UNIV_DEBUG
-/** Gets pointer to the data in a field.
- @return pointer to data */
-UNIV_INLINE
-void *dfield_get_data(const dfield_t *field) /*!< in: field */
-{
-  ut_ad(field);
-  ut_ad((field->len == UNIV_SQL_NULL) || (field->data != &data_error));
 
-  return ((void *)field->data);
-}
-#endif /* UNIV_DEBUG */
 
-/** Gets length of field data.
- @return length of data; UNIV_SQL_NULL if SQL null data */
-UNIV_INLINE
-ulint dfield_get_len(const dfield_t *field) /*!< in: field */
-{
-  ut_ad(field);
-  ut_ad((field->len == UNIV_SQL_NULL) || (field->data != &data_error));
 
-  return (field->len);
-}
 
-/** Sets length in a field. */
-UNIV_INLINE
-void dfield_set_len(dfield_t *field, /*!< in: field */
-                    ulint len)       /*!< in: length or UNIV_SQL_NULL */
-{
-  ut_ad(field);
-#ifdef UNIV_VALGRIND_DEBUG
-  if (len != UNIV_SQL_NULL) UNIV_MEM_ASSERT_RW(field->data, len);
-#endif /* UNIV_VALGRIND_DEBUG */
 
-  field->ext = 0;
-  field->len = static_cast<unsigned int>(len);
-}
 
-/** Determines if a field is SQL NULL
- @return nonzero if SQL null data */
-UNIV_INLINE
-ulint dfield_is_null(const dfield_t *field) /*!< in: field */
-{
-  ut_ad(field);
 
-  return (field->len == UNIV_SQL_NULL);
-}
 
-/** Determines if a field is externally stored
- @return nonzero if externally stored */
-UNIV_INLINE
-ulint dfield_is_ext(const dfield_t *field) /*!< in: field */
-{
-  ut_ad(field);
-  ut_ad(!field->ext || field->len >= BTR_EXTERN_FIELD_REF_SIZE);
 
-  return (field->ext);
-}
 
-/** Sets the "external storage" flag */
-UNIV_INLINE
-void dfield_set_ext(dfield_t *field) /*!< in/out: field */
-{
-  ut_ad(field);
 
-  field->ext = 1;
-}
 
-/** Gets spatial status for "external storage"
-@param[in,out]	field		field */
-UNIV_INLINE
-spatial_status_t dfield_get_spatial_status(const dfield_t *field) {
-  ut_ad(field);
-  ut_ad(dfield_is_ext(field));
 
-  return (static_cast<spatial_status_t>(field->spatial_status));
-}
 
-/** Sets spatial status for "external storage"
-@param[in,out]	field		field
-@param[in]	spatial_status	spatial status */
-UNIV_INLINE
-void dfield_set_spatial_status(dfield_t *field,
-                               spatial_status_t spatial_status) {
-  ut_ad(field);
-  ut_ad(dfield_is_ext(field));
 
-  field->spatial_status = spatial_status;
-}
 
-/** Sets pointer to the data and length in a field. */
-UNIV_INLINE
-void dfield_set_data(dfield_t *field,  /*!< in: field */
-                     const void *data, /*!< in: data */
-                     ulint len)        /*!< in: length or UNIV_SQL_NULL */
-{
-  ut_ad(field);
 
-#ifdef UNIV_VALGRIND_DEBUG
-  if (len != UNIV_SQL_NULL) UNIV_MEM_ASSERT_RW(data, len);
-#endif /* UNIV_VALGRIND_DEBUG */
-  field->data = (void *)data;
-  field->ext = 0;
-  field->len = static_cast<unsigned int>(len);
-}
 
-/** Sets pointer to the data and length in a field. */
-UNIV_INLINE
-void dfield_write_mbr(dfield_t *field,   /*!< in: field */
-                      const double *mbr) /*!< in: data */
-{
-  ut_ad(field);
 
-#ifdef UNIV_VALGRIND_DEBUG
-  if (len != UNIV_SQL_NULL) UNIV_MEM_ASSERT_RW(data, len);
-#endif /* UNIV_VALGRIND_DEBUG */
-  field->ext = 0;
 
-  for (int i = 0; i < SPDIMS * 2; i++) {
-    mach_double_write(static_cast<byte *>(field->data) + i * sizeof(double),
-                      mbr[i]);
-  }
 
-  field->len = DATA_MBR_LEN;
-}
 
-/** Sets a data field to SQL NULL. */
-UNIV_INLINE
-void dfield_set_null(dfield_t *field) /*!< in/out: field */
-{
-  dfield_set_data(field, NULL, UNIV_SQL_NULL);
-}
 
-/** Copies the data and len fields. */
-UNIV_INLINE
-void dfield_copy_data(dfield_t *field1,       /*!< out: field to copy to */
-                      const dfield_t *field2) /*!< in: field to copy from */
-{
-  ut_ad(field1 != NULL);
-  ut_ad(field2 != NULL);
 
-  field1->data = field2->data;
-  field1->len = field2->len;
-  field1->ext = field2->ext;
-  field1->spatial_status = field2->spatial_status;
-}
 
-/** Copies a data field to another. */
-UNIV_INLINE
-void dfield_copy(dfield_t *field1,       /*!< out: field to copy to */
-                 const dfield_t *field2) /*!< in: field to copy from */
-{
-  *field1 = *field2;
-}
 
-/** Copies the data pointed to by a data field. */
-UNIV_INLINE
-void dfield_dup(dfield_t *field,  /*!< in/out: data field */
-                mem_heap_t *heap) /*!< in: memory heap where allocated */
-{
-  if (!dfield_is_null(field) && field->data != NULL) {
-    UNIV_MEM_ASSERT_RW(field->data, field->len);
-    field->data = mem_heap_dup(heap, field->data, field->len);
-  }
-}
 
-/** Tests if two data fields are equal.
- If len==0, tests the data length and content for equality.
- If len>0, tests the first len bytes of the content for equality.
- @return true if both fields are NULL or if they are equal */
-UNIV_INLINE
-ibool dfield_datas_are_binary_equal(
-    const dfield_t *field1, /*!< in: field */
-    const dfield_t *field2, /*!< in: field */
-    ulint len)              /*!< in: maximum prefix to compare,
-                            or 0 to compare the whole field length */
-{
-  ulint len2 = len;
 
-  if (field1->len == UNIV_SQL_NULL || len == 0 || field1->len < len) {
-    len = field1->len;
-  }
 
-  if (field2->len == UNIV_SQL_NULL || len2 == 0 || field2->len < len2) {
-    len2 = field2->len;
-  }
 
-  return (len == len2 &&
-          (len == UNIV_SQL_NULL || !memcmp(field1->data, field2->data, len)));
-}
 
-/** Tests if dfield data length and content is equal to the given.
- @return true if equal */
-UNIV_INLINE
-ibool dfield_data_is_binary_equal(
-    const dfield_t *field, /*!< in: field */
-    ulint len,             /*!< in: data length or UNIV_SQL_NULL */
-    const byte *data)      /*!< in: data */
-{
-  return (len == dfield_get_len(field) &&
-          (len == UNIV_SQL_NULL || len == 0 ||
-           !memcmp(dfield_get_data(field), data, len)));
-}
-#ifndef UNIV_HOTBACKUP
-#endif /* !UNIV_HOTBACKUP */
 
-/** Gets info bits in a data tuple.
- @return info bits */
-UNIV_INLINE
-ulint dtuple_get_info_bits(const dtuple_t *tuple) /*!< in: tuple */
-{
-  ut_ad(tuple);
 
-  return (tuple->info_bits);
-}
 
-/** Sets info bits in a data tuple. */
-UNIV_INLINE
-void dtuple_set_info_bits(dtuple_t *tuple, /*!< in: tuple */
-                          ulint info_bits) /*!< in: info bits */
-{
-  ut_ad(tuple);
 
-  tuple->info_bits = info_bits;
-}
 
-/** Gets number of fields used in record comparisons.
- @return number of fields used in comparisons in rem0cmp.* */
-UNIV_INLINE
-ulint dtuple_get_n_fields_cmp(const dtuple_t *tuple) /*!< in: tuple */
-{
-  ut_ad(tuple);
 
-  return (tuple->n_fields_cmp);
-}
 
-/** Sets number of fields used in record comparisons. */
-UNIV_INLINE
-void dtuple_set_n_fields_cmp(
-    dtuple_t *tuple,    /*!< in: tuple */
-    ulint n_fields_cmp) /*!< in: number of fields used in
-                        comparisons in rem0cmp.* */
-{
-  ut_ad(tuple);
-  ut_ad(n_fields_cmp <= tuple->n_fields);
 
-  tuple->n_fields_cmp = n_fields_cmp;
-}
 
-/** Gets number of fields in a data tuple.
- @return number of fields */
-UNIV_INLINE
-ulint dtuple_get_n_fields(const dtuple_t *tuple) /*!< in: tuple */
-{
-  ut_ad(tuple);
 
-  return (tuple->n_fields);
-}
 
-/** Gets the number of virtual fields in a data tuple.
-@param[in]	tuple	dtuple to check
-@return number of fields */
-UNIV_INLINE
-ulint dtuple_get_n_v_fields(const dtuple_t *tuple) {
-  ut_ad(tuple);
 
-  return (tuple->n_v_fields);
-}
-#ifdef UNIV_DEBUG
-/** Gets nth field of a tuple.
-@param[in]	tuple	tuple
-@param[in]	n	index of field
-@return nth field */
-UNIV_INLINE
-dfield_t *dtuple_get_nth_field(const dtuple_t *tuple, ulint n) {
-  ut_ad(tuple);
-  ut_ad(n < tuple->n_fields);
-
-  return ((dfield_t *)tuple->fields + n);
-}
-/** Gets nth virtual field of a tuple.
-@param[in]	tuple	tuple
-@oaran[in]	n	the nth field to get
-@return nth field */
-UNIV_INLINE
-dfield_t *dtuple_get_nth_v_field(const dtuple_t *tuple, ulint n) {
-  ut_ad(tuple);
-  ut_ad(n < tuple->n_v_fields);
-
-  return (static_cast<dfield_t *>(tuple->v_fields + n));
-}
-#endif /* UNIV_DEBUG */
 
 /** Creates a data tuple from an already allocated chunk of memory.
 The size of the chunk must be at least DTUPLE_EST_ALLOC(n_fields).

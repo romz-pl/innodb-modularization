@@ -36,210 +36,56 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/data_types/dtype_t.h>
 #include <innodb/memory/mem_heap_t.h>
-
-
+#include <innodb/data_types/spatial_status_t.h>
+#include <innodb/data_types/dfield_t.h>
+#include <innodb/data_types/dtuple_t.h>
+#include <innodb/data_types/big_rec_field_t.h>
+#include <innodb/data_types/big_rec_t.h>
+#include <innodb/data_types/dfield_get_type.h>
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_set_type.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/data_types/dfield_set_len.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/data_types/dfield_set_data.h>
+#include <innodb/data_types/dfield_write_mbr.h>
+#include <innodb/data_types/dfield_set_null.h>
+#include <innodb/data_types/dfield_copy_data.h>
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_dup.h>
+#include <innodb/data_types/dfield_datas_are_binary_equal.h>
+#include <innodb/data_types/dfield_data_is_binary_equal.h>
+#include <innodb/data_types/dtuple_get_n_fields.h>
+#include <innodb/data_types/dtuple_get_n_v_fields.h>
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
+#include <innodb/data_types/dtuple_get_info_bits.h>
+#include <innodb/data_types/dtuple_set_info_bits.h>
+#include <innodb/data_types/dtuple_get_n_fields_cmp.h>
+#include <innodb/data_types/dtuple_set_n_fields_cmp.h>
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
+#include <innodb/data_types/dtuple_get_nth_field.h>
 
 #include "trx0types.h"
-
 #include <ostream>
 
 struct dfield_t;
 struct dtuple_t;
 struct dict_index_t;
 struct dict_v_col_t;
-
-/** whether a col is used in spatial index or regular index
-Note: the spatial status is part of persistent undo log,
-so we should not modify the values in MySQL 5.7 */
-enum spatial_status_t {
-  /* Unkown status (undo format in 5.7.9) */
-  SPATIAL_UNKNOWN = 0,
-
-  /** Not used in gis index. */
-  SPATIAL_NONE = 1,
-
-  /** Used in both spatial index and regular index. */
-  SPATIAL_MIXED = 2,
-
-  /** Only used in spatial index. */
-  SPATIAL_ONLY = 3
-};
-
-/** Storage for overflow data in a big record, that is, a clustered
-index record which needs external storage of data fields */
 struct big_rec_t;
 struct upd_t;
 
-#ifdef UNIV_DEBUG
-/** Gets pointer to the type struct of SQL data field.
- @return pointer to the type struct */
-UNIV_INLINE
-dtype_t *dfield_get_type(const dfield_t *field) /*!< in: SQL data field */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Gets pointer to the data in a field.
- @return pointer to data */
-UNIV_INLINE
-void *dfield_get_data(const dfield_t *field) /*!< in: field */
-    MY_ATTRIBUTE((warn_unused_result));
-#else /* UNIV_DEBUG */
-#define dfield_get_type(field) (&(field)->type)
-#define dfield_get_data(field) ((field)->data)
-#endif /* UNIV_DEBUG */
 
-/** Sets the type struct of SQL data field.
-@param[in]	field	SQL data field
-@param[in]	type	pointer to data type struct */
-UNIV_INLINE
-void dfield_set_type(dfield_t *field, const dtype_t *type);
 
-/** Gets length of field data.
- @return length of data; UNIV_SQL_NULL if SQL null data */
-UNIV_INLINE
-ulint dfield_get_len(const dfield_t *field) /*!< in: field */
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Sets length in a field.
-@param[in]	field	field
-@param[in]	len	length or UNIV_SQL_NULL */
-UNIV_INLINE
-void dfield_set_len(dfield_t *field, ulint len);
 
-/** Determines if a field is SQL NULL
- @return nonzero if SQL null data */
-UNIV_INLINE
-ulint dfield_is_null(const dfield_t *field) /*!< in: field */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Determines if a field is externally stored
- @return nonzero if externally stored */
-UNIV_INLINE
-ulint dfield_is_ext(const dfield_t *field) /*!< in: field */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Sets the "external storage" flag */
-UNIV_INLINE
-void dfield_set_ext(dfield_t *field); /*!< in/out: field */
 
-/** Gets spatial status for "external storage"
-@param[in,out]	field		field */
-UNIV_INLINE
-spatial_status_t dfield_get_spatial_status(const dfield_t *field);
 
-/** Sets spatial status for "external storage"
-@param[in,out]	field		field
-@param[in]	spatial_status	spatial status */
-UNIV_INLINE
-void dfield_set_spatial_status(dfield_t *field,
-                               spatial_status_t spatial_status);
 
-/** Sets pointer to the data and length in a field.
-@param[in]	field	field
-@param[in]	data	data
-@param[in]	len	length or UNIV_SQL_NULL */
-UNIV_INLINE
-void dfield_set_data(dfield_t *field, const void *data, ulint len);
 
-/** Sets pointer to the data and length in a field.
-@param[in]	field	field
-@param[in]	mbr	data */
-UNIV_INLINE
-void dfield_write_mbr(dfield_t *field, const double *mbr);
 
-/** Sets a data field to SQL NULL. */
-UNIV_INLINE
-void dfield_set_null(dfield_t *field); /*!< in/out: field */
 
-/** Copies the data and len fields.
-@param[out]	field1	field to copy to
-@param[in]	field2	field to copy from */
-UNIV_INLINE
-void dfield_copy_data(dfield_t *field1, const dfield_t *field2);
-
-/** Copies a data field to another.
-@param[out]	field1	field to copy to
-@param[in]	field2	field to copy from */
-UNIV_INLINE
-void dfield_copy(dfield_t *field1, const dfield_t *field2);
-
-/** Copies the data pointed to by a data field.
-@param[in,out]	field	data field
-@param[in]	heap	memory heap where allocated */
-UNIV_INLINE
-void dfield_dup(dfield_t *field, mem_heap_t *heap);
-
-/** Tests if two data fields are equal.
- If len==0, tests the data length and content for equality.
- If len>0, tests the first len bytes of the content for equality.
- @return true if both fields are NULL or if they are equal */
-UNIV_INLINE
-ibool dfield_datas_are_binary_equal(
-    const dfield_t *field1, /*!< in: field */
-    const dfield_t *field2, /*!< in: field */
-    ulint len)              /*!< in: maximum prefix to compare,
-                            or 0 to compare the whole field length */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Tests if dfield data length and content is equal to the given.
- @return true if equal */
-UNIV_INLINE
-ibool dfield_data_is_binary_equal(
-    const dfield_t *field, /*!< in: field */
-    ulint len,             /*!< in: data length or UNIV_SQL_NULL */
-    const byte *data)      /*!< in: data */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Gets number of fields in a data tuple.
- @return number of fields */
-UNIV_INLINE
-ulint dtuple_get_n_fields(const dtuple_t *tuple) /*!< in: tuple */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Gets number of virtual fields in a data tuple.
-@param[in]	tuple	dtuple to check
-@return number of fields */
-UNIV_INLINE
-ulint dtuple_get_n_v_fields(const dtuple_t *tuple);
-
-#ifdef UNIV_DEBUG
-/** Gets nth field of a tuple.
-@param[in]	tuple	tuple
-@param[in]	n	index of field
-@return nth field */
-UNIV_INLINE
-dfield_t *dtuple_get_nth_field(const dtuple_t *tuple, ulint n);
-
-/** Gets nth virtual field of a tuple.
-@param[in]	tuple	tuple
-@param[in]	n	the nth field to get
-@return nth field */
-UNIV_INLINE
-dfield_t *dtuple_get_nth_v_field(const dtuple_t *tuple, ulint n);
-
-#else /* UNIV_DEBUG */
-#define dtuple_get_nth_field(tuple, n) ((tuple)->fields + (n))
-#define dtuple_get_nth_v_field(tuple, n) \
-  ((tuple)->fields + (tuple)->n_fields + (n))
-#endif /* UNIV_DEBUG */
-/** Gets info bits in a data tuple.
- @return info bits */
-UNIV_INLINE
-ulint dtuple_get_info_bits(const dtuple_t *tuple) /*!< in: tuple */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Sets info bits in a data tuple.
-@param[in]	tuple		tuple
-@param[in]	info_bits	info bits */
-UNIV_INLINE
-void dtuple_set_info_bits(dtuple_t *tuple, ulint info_bits);
-
-/** Gets number of fields used in record comparisons.
- @return number of fields used in comparisons in rem0cmp.* */
-UNIV_INLINE
-ulint dtuple_get_n_fields_cmp(const dtuple_t *tuple) /*!< in: tuple */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Gets number of fields used in record comparisons.
-@param[in]	tuple		tuple
-@param[in]	n_fields_cmp	number of fields used in comparisons in
-                                rem0cmp */
-UNIV_INLINE
-void dtuple_set_n_fields_cmp(dtuple_t *tuple, ulint n_fields_cmp);
 
 /* Estimate the number of bytes that are going to be allocated when
 creating a new dtuple_t object */
@@ -415,193 +261,14 @@ void dtuple_big_rec_free(big_rec_t *vector); /*!< in, own: big rec vector; it is
 
 /*######################################################################*/
 
-/** Structure for an SQL data field */
-struct dfield_t {
-  void *data;       /*!< pointer to data */
-  unsigned ext : 1; /*!< TRUE=externally stored, FALSE=local */
-  unsigned spatial_status : 2;
-  /*!< spatial status of externally stored field
-  in undo log for purge */
-  unsigned len; /*!< data length; UNIV_SQL_NULL if SQL null */
-  dtype_t type; /*!< type of data */
 
-  void reset() {
-    data = nullptr;
-    ext = FALSE;
-    spatial_status = SPATIAL_UNKNOWN, len = 0;
-  }
 
-  /** Create a deep copy of this object
-  @param[in]	heap	the memory heap in which the clone will be
-                          created.
-  @return	the cloned object. */
-  dfield_t *clone(mem_heap_t *heap);
 
-  byte *blobref() const;
 
-  /** Obtain the LOB version number, if this is an externally
-  stored field. */
-  uint32_t lob_version() const;
 
-  dfield_t()
-      : data(nullptr), ext(0), spatial_status(0), len(0), type({0, 0, 0, 0}) {}
 
-  /** Print the dfield_t object into the given output stream.
-  @param[in]	out	the output stream.
-  @return	the ouput stream. */
-  std::ostream &print(std::ostream &out) const;
 
-  /** Adjust and(or) set virtual column value which is read from undo
-  or online DDL log
-  @param[in]	vcol	virtual column definition
-  @param[in]	comp	true if compact format
-  @param[in]	field	virtual column value
-  @param[in]	len	value length
-  @param[in,out]	heap	memory heap to keep value when necessary */
-  void adjust_v_data_mysql(const dict_v_col_t *vcol, bool comp,
-                           const byte *field, ulint len, mem_heap_t *heap);
-};
 
-/** Overloading the global output operator to easily print the given dfield_t
-object into the given output stream.
-@param[in]	out	the output stream
-@param[in]	obj	the given object to print.
-@return the output stream. */
-inline std::ostream &operator<<(std::ostream &out, const dfield_t &obj) {
-  return (obj.print(out));
-}
-
-/** Structure for an SQL data tuple of fields (logical record) */
-struct dtuple_t {
-  ulint info_bits;    /*!< info bits of an index record:
-                      the default is 0; this field is used
-                      if an index record is built from
-                      a data tuple */
-  ulint n_fields;     /*!< number of fields in dtuple */
-  ulint n_fields_cmp; /*!< number of fields which should
-                      be used in comparison services
-                      of rem0cmp.*; the index search
-                      is performed by comparing only these
-                      fields, others are ignored; the
-                      default value in dtuple creation is
-                      the same value as n_fields */
-  dfield_t *fields;   /*!< fields */
-  ulint n_v_fields;   /*!< number of virtual fields */
-  dfield_t *v_fields; /*!< fields on virtual column */
-  UT_LIST_NODE_T(dtuple_t) tuple_list;
-  /*!< data tuples can be linked into a
-  list using this field */
-#ifdef UNIV_DEBUG
-
-  /** memory heap where this tuple is allocated. */
-  mem_heap_t *m_heap;
-
-  ulint magic_n; /*!< magic number, used in
-                 debug assertions */
-/** Value of dtuple_t::magic_n */
-#define DATA_TUPLE_MAGIC_N 65478679
-#endif /* UNIV_DEBUG */
-
-  std::ostream &print(std::ostream &out) const {
-    dtuple_print(out, this);
-    return (out);
-  }
-
-  /* Read the trx id from the tuple (DB_TRX_ID)
-  @return transaction id of the tuple. */
-  trx_id_t get_trx_id() const;
-
-  /** Ignore at most n trailing default fields if this is a tuple
-  from instant index
-  @param[in]	index	clustered index object for this tuple */
-  void ignore_trailing_default(const dict_index_t *index);
-};
-
-/** A slot for a field in a big rec vector */
-struct big_rec_field_t {
-  /** Constructor.
-  @param[in]	field_no_	the field number
-  @param[in]	len_		the data length
-  @param[in]	data_		the data */
-  big_rec_field_t(ulint field_no_, ulint len_, void *data_)
-      : field_no(field_no_),
-        len(len_),
-        data(data_),
-        ext_in_old(false),
-        ext_in_new(false) {}
-
-  byte *ptr() const { return (static_cast<byte *>(data)); }
-
-  ulint field_no; /*!< field number in record */
-  ulint len;      /*!< stored data length, in bytes */
-  void *data;     /*!< stored data */
-
-  /** If true, this field was stored externally in the old row.
-  If false, this field was stored inline in the old row.*/
-  bool ext_in_old;
-
-  /** If true, this field is stored externally in the new row.
-  If false, this field is stored inline in the new row.*/
-  bool ext_in_new;
-
-  /** Print the big_rec_field_t object into the given output stream.
-  @param[in]	out	the output stream.
-  @return	the ouput stream. */
-  std::ostream &print(std::ostream &out) const;
-};
-
-/** Overloading the global output operator to easily print the given
-big_rec_field_t object into the given output stream.
-@param[in]	out	the output stream
-@param[in]	obj	the given object to print.
-@return the output stream. */
-inline std::ostream &operator<<(std::ostream &out, const big_rec_field_t &obj) {
-  return (obj.print(out));
-}
-
-/** Storage format for overflow data in a big record, that is, a
-clustered index record which needs external storage of data fields */
-struct big_rec_t {
-  mem_heap_t *heap;        /*!< memory heap from which
-                           allocated */
-  const ulint capacity;    /*!< fields array size */
-  ulint n_fields;          /*!< number of stored fields */
-  big_rec_field_t *fields; /*!< stored fields */
-
-  /** Constructor.
-  @param[in]	max	the capacity of the array of fields. */
-  explicit big_rec_t(const ulint max)
-      : heap(0), capacity(max), n_fields(0), fields(0) {}
-
-  /** Append one big_rec_field_t object to the end of array of fields */
-  void append(const big_rec_field_t &field) {
-    ut_ad(n_fields < capacity);
-    fields[n_fields] = field;
-    n_fields++;
-  }
-
-  /** Allocate a big_rec_t object in the given memory heap, and for
-  storing n_fld number of fields.
-  @param[in]	heap	memory heap in which this object is allocated
-  @param[in]	n_fld	maximum number of fields that can be stored in
-                  this object
-  @return the allocated object */
-  static big_rec_t *alloc(mem_heap_t *heap, ulint n_fld);
-
-  /** Print the current object into the given output stream.
-  @param[in]	out	the output stream.
-  @return	the ouput stream. */
-  std::ostream &print(std::ostream &out) const;
-};
-
-/** Overloading the global output operator to easily print the given
-big_rec_t object into the given output stream.
-@param[in]	out	the output stream
-@param[in]	obj	the given object to print.
-@return the output stream. */
-inline std::ostream &operator<<(std::ostream &out, const big_rec_t &obj) {
-  return (obj.print(out));
-}
 
 #include "data0data.ic"
 

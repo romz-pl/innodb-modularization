@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/data_types/dtype_get_mbmaxlen.h>
 #include <innodb/data_types/dtype_get_mbminlen.h>
 #include <innodb/logger/warn.h>

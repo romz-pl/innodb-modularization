@@ -433,15 +433,27 @@ constexpr uint32_t UINT32_UNDEFINED = -1;
 
 /** The generic InnoDB system object identifier data type */
 typedef ib_uint64_t ib_id_t;
+
 #define IB_ID_MAX IB_UINT64_MAX
 
 
 /** Table or partition identifier (unique within an InnoDB instance). */
 typedef ib_id_t table_id_t;
 
-
 /** Tablespace identifier */
 typedef uint32_t space_id_t;
+
+/** Row identifier (DB_ROW_ID, DATA_ROW_ID) */
+typedef ib_id_t row_id_t;
+
+/** Transaction identifier (DB_TRX_ID, DATA_TRX_ID) */
+typedef ib_id_t trx_id_t;
+
+/** Rollback pointer (DB_ROLL_PTR, DATA_ROLL_PTR) */
+typedef ib_id_t roll_ptr_t;
+
+/** Undo number */
+typedef ib_id_t undo_no_t;
 
 #include <limits>
 

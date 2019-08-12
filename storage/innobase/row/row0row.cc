@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dfield_get_spatial_status.h>
+#include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
 #include <innodb/string/ut_str_sql_format.h>
 #include <innodb/string/ut_raw_to_hex.h>

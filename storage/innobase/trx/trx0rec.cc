@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dfield_set_spatial_status.h>
+#include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/buf_pool/buf_withdraw_clock.h>
 #include <innodb/buf_pool/buf_pool_is_obsolete.h>

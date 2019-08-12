@@ -33,6 +33,38 @@ add_library( ${LIB_NAME} STATIC
     dtype_sql_name.cpp
     dtype_print.cpp
     dtype_get_at_most_n_mbchars.cpp
+    spatial_status_t.cpp
+    dfield_t.cpp
+    dtuple_t.cpp
+    dtuple_print.cpp
+    big_rec_field_t.cpp
+    big_rec_t.cpp
+    dfield_get_type.cpp
+    dfield_get_data.cpp
+    dfield_set_type.cpp
+    dfield_get_len.cpp
+    dfield_set_len.cpp
+    dfield_is_null.cpp
+    dfield_is_ext.cpp
+    dfield_set_ext.cpp
+    dfield_get_spatial_status.cpp
+    dfield_set_spatial_status.cpp
+    dfield_set_data.cpp
+    dfield_write_mbr.cpp
+    dfield_set_null.cpp
+    dfield_copy_data.cpp
+    dfield_copy.cpp
+    dfield_dup.cpp
+    dfield_datas_are_binary_equal.cpp
+    dfield_data_is_binary_equal.cpp
+    dtuple_get_n_fields.cpp
+    dtuple_get_n_v_fields.cpp
+    dtuple_get_nth_field.cpp
+    dtuple_get_nth_v_field.cpp
+    dtuple_get_info_bits.cpp
+    dtuple_set_info_bits.cpp
+    dtuple_get_n_fields_cmp.cpp
+    dtuple_set_n_fields_cmp.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -48,6 +80,7 @@ target_link_libraries(
     PUBLIC
     error
     machine
+    memory
     PRIVATE
 )
 
