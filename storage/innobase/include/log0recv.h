@@ -35,6 +35,23 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_recv/recv_sys_var_init.h>
+#include <innodb/log_recv/recv_sys_close.h>
+#include <innodb/log_recv/recv_sys_create.h>
+#include <innodb/log_recv/recv_calc_lsn_on_data_add.h>
+#include <innodb/log_recv/recv_encr_ts_list.h>
+#include <innodb/log_recv/recv_n_pool_free_frames.h>
+#include <innodb/log_recv/flags.h>
+#include <innodb/log_recv/recv_lsn_checks_on.h>
+#include <innodb/log_recv/recv_needed_recovery.h>
+#include <innodb/log_recv/recv_sys.h>
+#include <innodb/log_recv/recv_sys_t.h>
+#include <innodb/log_recv/MetadataRecover.h>
+#include <innodb/log_recv/recv_dblwr_t.h>
+#include <innodb/log_recv/recv_addr_t.h>
+#include <innodb/log_recv/recv_addr_state.h>
+#include <innodb/log_recv/recv_t.h>
+#include <innodb/log_recv/recv_data_t.h>
 #include <innodb/log_types/mlog_id_t.h>
 #include <innodb/allocator/ut_allocator.h>
 #include <innodb/buf_page/buf_flush_t.h>
@@ -172,8 +189,6 @@ a freshly read page)
 /** Frees the recovery system. */
 void recv_sys_free();
 
-/** Reset the state of the recovery system variables. */
-void recv_sys_var_init();
 
 #endif /* UNIV_HOTBACKUP */
 
@@ -200,22 +215,12 @@ dberr_t recv_recovery_from_checkpoint_start(log_t &log, lsn_t flush_lsn)
 MetadataRecover *recv_recovery_from_checkpoint_finish(log_t &log, bool aborting)
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Creates the recovery system. */
-void recv_sys_create();
 
-/** Release recovery system mutexes. */
-void recv_sys_close();
 
 /** Inits the recovery system for a recovery operation.
 @param[in]	max_mem		Available memory in bytes */
 void recv_sys_init(ulint max_mem);
 
-/** Calculates the new value for lsn when more data is added to the log.
-@param[in]	lsn		Old LSN
-@param[in]	len		This many bytes of data is added, log block
-                                headers not included
-@return LSN after data addition */
-lsn_t recv_calc_lsn_on_data_add(lsn_t lsn, uint64_t len);
 
 /** Empties the hash table of stored log records, applying them to appropriate
 pages.
@@ -237,359 +242,8 @@ void recv_apply_hashed_log_recs(log_t &log, bool allow_ibuf);
 const char *get_mlog_string(mlog_id_t type);
 #endif /* UNIV_DEBUG || UNIV_HOTBACKUP */
 
-/** Block of log record data */
-struct recv_data_t {
-  /** pointer to the next block or NULL.  The log record data
-  is stored physically immediately after this struct, max amount
-  RECV_DATA_BLOCK_SIZE bytes of it */
 
-  recv_data_t *next;
-};
 
-/** Stored log record struct */
-struct recv_t {
-  using Node = UT_LIST_NODE_T(recv_t);
-
-  /** Log record type */
-  mlog_id_t type;
-
-  /** Log record body length in bytes */
-  ulint len;
-
-  /** Chain of blocks containing the log record body */
-  recv_data_t *data;
-
-  /** Start lsn of the log segment written by the mtr which generated
-  this log record: NOTE that this is not necessarily the start lsn of
-  this log record */
-  lsn_t start_lsn;
-
-  /** End lsn of the log segment written by the mtr which generated
-  this log record: NOTE that this is not necessarily the end LSN of
-  this log record */
-  lsn_t end_lsn;
-
-  /** List node, list anchored in recv_addr_t */
-  Node rec_list;
-};
-
-/** States of recv_addr_t */
-enum recv_addr_state {
-
-  /** not yet processed */
-  RECV_NOT_PROCESSED,
-
-  /** page is being read */
-  RECV_BEING_READ,
-
-  /** log records are being applied on the page */
-  RECV_BEING_PROCESSED,
-
-  /** log records have been applied on the page */
-  RECV_PROCESSED,
-
-  /** log records have been discarded because the tablespace
-  does not exist */
-  RECV_DISCARDED
-};
-
-/** Hashed page file address struct */
-struct recv_addr_t {
-  using List = UT_LIST_BASE_NODE_T(recv_t);
-
-  /** recovery state of the page */
-  recv_addr_state state;
-
-  /** Space ID */
-  space_id_t space;
-
-  /** Page number */
-  page_no_t page_no;
-
-  /** List of log records for this page */
-  List rec_list;
-};
-
-struct recv_dblwr_t {
-  // Default constructor
-  recv_dblwr_t() : deferred(), pages() {}
-
-  /** Add a page frame to the doublewrite recovery buffer. */
-  void add(const byte *page) { pages.push_back(page); }
-
-  /** Find a doublewrite copy of a page.
-  @param[in]	space_id	tablespace identifier
-  @param[in]	page_no		page number
-  @return	page frame
-  @retval NULL if no page was found */
-  const byte *find_page(space_id_t space_id, page_no_t page_no);
-
-  using List = std::list<const byte *>;
-
-  struct Page {
-    /** Default constructor */
-    Page() : m_no(), m_ptr(), m_page() {}
-
-    /** Constructor
-    @param[in]	no	Doublewrite page number
-    @param[in]	page	Page read from no */
-    Page(page_no_t no, const byte *page);
-
-    /** Free the memory */
-    void close() {
-      ut_free(m_ptr);
-      m_ptr = nullptr;
-      m_page = nullptr;
-    }
-
-    /** Page number if the doublewrite buffer */
-    page_no_t m_no;
-
-    /** Unaligned pointer */
-    byte *m_ptr;
-
-    /** Aligned pointer derived from ptr */
-    byte *m_page;
-  };
-
-  using Deferred = std::list<Page>;
-
-  /** Pages that could not be recovered from the doublewrite
-  buffer at the start and need to be recovered once we process an
-  MLOG_FILE_OPEN redo log record */
-  Deferred deferred;
-
-  /** Recovered doublewrite buffer page frames */
-  List pages;
-
-  // Disable copying
-  recv_dblwr_t(const recv_dblwr_t &) = delete;
-  recv_dblwr_t &operator=(const recv_dblwr_t &) = delete;
-};
-
-/** Class to parse persistent dynamic metadata redo log, store and
-merge them and apply them to in-memory table objects finally */
-class MetadataRecover {
-  using PersistentTables = std::map<
-      table_id_t, PersistentTableMetadata *, std::less<table_id_t>,
-      ut_allocator<std::pair<const table_id_t, PersistentTableMetadata *>>>;
-
- public:
-  /** Default constructor */
-  MetadataRecover() UNIV_NOTHROW {}
-
-  /** Destructor */
-  ~MetadataRecover();
-
-  /** Parse a dynamic metadata redo log of a table and store
-  the metadata locally
-  @param[in]	id		table id
-  @param[in]	version		table dynamic metadata version
-  @param[in]	ptr		redo log start
-  @param[in]	end		end of redo log
-  @retval ptr to next redo log record, NULL if this log record
-  was truncated */
-  byte *parseMetadataLog(table_id_t id, uint64_t version, byte *ptr, byte *end);
-
-  /** Apply the collected persistent dynamic metadata to in-memory
-  table objects */
-  void apply();
-
-  /** Store the collected persistent dynamic metadata to
-  mysql.innodb_dynamic_metadata */
-  void store();
-
-  /** If there is any metadata to be applied
-  @return	true if any metadata to be applied, otherwise false */
-  bool empty() const { return (m_tables.empty()); }
-
- private:
-  /** Get the dynamic metadata of a specified table,
-  create a new one if not exist
-  @param[in]	id	table id
-  @return the metadata of the specified table */
-  PersistentTableMetadata *getMetadata(table_id_t id);
-
- private:
-  /** Map used to store and merge persistent dynamic metadata */
-  PersistentTables m_tables;
-};
-
-/** Recovery system data structure */
-struct recv_sys_t {
-  using Pages =
-      std::unordered_map<page_no_t, recv_addr_t *, std::hash<page_no_t>,
-                         std::equal_to<page_no_t>>;
-
-  /** Every space has its own heap and pages that belong to it. */
-  struct Space {
-    /** Constructor
-    @param[in,out]	heap	Heap to use for the log records. */
-    explicit Space(mem_heap_t *heap) : m_heap(heap), m_pages() {}
-
-    /** Default constructor */
-    Space() : m_heap(), m_pages() {}
-
-    /** Memory heap of log records and file addresses */
-    mem_heap_t *m_heap;
-
-    /** Pages that need to be recovered */
-    Pages m_pages;
-  };
-
-  using Missing_Ids = std::set<space_id_t>;
-
-  using Spaces = std::unordered_map<space_id_t, Space, std::hash<space_id_t>,
-                                    std::equal_to<space_id_t>>;
-
-  /* Recovery encryption information */
-  struct Encryption_Key {
-    /** Tablespace ID */
-    space_id_t space_id;
-
-    /** Encryption key */
-    byte *ptr;
-
-    /** Encryption IV */
-    byte *iv;
-  };
-
-  using Encryption_Keys = std::vector<Encryption_Key>;
-
-#ifndef UNIV_HOTBACKUP
-
-  /*!< mutex protecting the fields apply_log_recs, n_addrs, and the
-  state field in each recv_addr struct */
-  ib_mutex_t mutex;
-
-  /** mutex coordinating flushing between recv_writer_thread and
-  the recovery thread. */
-  ib_mutex_t writer_mutex;
-
-  /** event to activate page cleaner threads */
-  os_event_t flush_start;
-
-  /** event to signal that the page cleaner has finished the request */
-  os_event_t flush_end;
-
-  /** type of the flush request. BUF_FLUSH_LRU: flush end of LRU,
-  keeping free blocks.  BUF_FLUSH_LIST: flush all of blocks. */
-  buf_flush_t flush_type;
-
-#endif /* !UNIV_HOTBACKUP */
-
-  /** This is true when log rec application to pages is allowed;
-  this flag tells the i/o-handler if it should do log record
-  application */
-  bool apply_log_recs;
-
-  /** This is true when a log rec application batch is running */
-  bool apply_batch_on;
-
-  /** Possible incomplete last recovered log block */
-  byte *last_block;
-
-  /** The nonaligned start address of the preceding buffer */
-  byte *last_block_buf_start;
-
-  /** Buffer for parsing log records */
-  byte *buf;
-
-  /** Size of the parsing buffer */
-  size_t buf_len;
-
-  /** Amount of data in buf */
-  ulint len;
-
-  /** This is the lsn from which we were able to start parsing
-  log records and adding them to the hash table; zero if a suitable
-  start point not found yet */
-  lsn_t parse_start_lsn;
-
-  /** Checkpoint lsn that was used during recovery (read from file). */
-  lsn_t checkpoint_lsn;
-
-  /** Number of data bytes to ignore until we reach checkpoint_lsn. */
-  ulint bytes_to_ignore_before_checkpoint;
-
-  /** The log data has been scanned up to this lsn */
-  lsn_t scanned_lsn;
-
-  /** The log data has been scanned up to this checkpoint
-  number (lowest 4 bytes) */
-  ulint scanned_checkpoint_no;
-
-  /** Start offset of non-parsed log records in buf */
-  ulint recovered_offset;
-
-  /** The log records have been parsed up to this lsn */
-  lsn_t recovered_lsn;
-
-  /** Set when finding a corrupt log block or record, or there
-  is a log parsing buffer overflow */
-  bool found_corrupt_log;
-
-  /** Set when an inconsistency with the file system contents
-  is detected during log scan or apply */
-  bool found_corrupt_fs;
-
-  /** If the recovery is from a cloned database. */
-  bool is_cloned_db;
-
-  /** Hash table of pages, indexed by SpaceID. */
-  Spaces *spaces;
-
-  /** Number of not processed hashed file addresses in the hash table */
-  ulint n_addrs;
-
-  /** Doublewrite buffer state during recovery. */
-  recv_dblwr_t dblwr;
-
-  /** We store and merge all table persistent data here during
-  scanning redo logs */
-  MetadataRecover *metadata_recover;
-
-  /** Encryption Key information per tablespace ID */
-  Encryption_Keys *keys;
-
-  /** Tablespace IDs that were ignored during redo log apply. */
-  Missing_Ids missing_ids;
-
-  /** Tablespace IDs that were explicitly deleted. */
-  Missing_Ids deleted;
-};
-
-/** The recovery system */
-extern recv_sys_t *recv_sys;
-
-
-
-
-/** TRUE when recv_init_crash_recovery() has been called. */
-extern bool recv_needed_recovery;
-
-/** TRUE if buf_page_is_corrupted() should check if the log sequence
-number (FIL_PAGE_LSN) is in the future.  Initially FALSE, and set by
-recv_recovery_from_checkpoint_start(). */
-extern bool recv_lsn_checks_on;
-
-/** Size of the parsing buffer; it must accommodate RECV_SCAN_SIZE many
-times! */
-#define RECV_PARSING_BUF_SIZE (2 * 1024 * 1024)
-
-/** Size of block reads when the log groups are scanned forward to do a
-roll-forward */
-#define RECV_SCAN_SIZE (4 * UNIV_PAGE_SIZE)
-
-/** This many frames must be left free in the buffer pool when we scan
-the log and store the scanned log records in the buffer pool: we will
-use these free frames to read in pages when we start applying the
-log records to the database. */
-extern ulint recv_n_pool_free_frames;
-
-/** A list of tablespaces for which (un)encryption process was not
-completed before crash. */
-extern std::list<space_id_t> recv_encr_ts_list;
 
 #include "log0recv.ic"
 

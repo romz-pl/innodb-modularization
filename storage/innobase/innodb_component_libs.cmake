@@ -49,7 +49,7 @@ SET( INNODB_COMPONENT_LIBS
     # L
     #log_arch
     #log_closer
-    #log_redo
+    log_recv
     log_sys
     #log_types
     #log_wait

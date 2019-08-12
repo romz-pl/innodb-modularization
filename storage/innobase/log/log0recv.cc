@@ -31,6 +31,19 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/log_recv/recv_report_corrupt_log.h>
+#include <innodb/log_recv/recv_heap_used.h>
+#include <innodb/log_recv/recv_sys_finish.h>
+#include <innodb/log_recv/recv_sys_resize_buf.h>
+#include <innodb/log_recv/recv_writer_thread_active.h>
+#include <innodb/log_recv/recv_max_page_lsn.h>
+#include <innodb/log_recv/recv_previous_parsed_rec_is_multi.h>
+#include <innodb/log_recv/recv_previous_parsed_rec_offset.h>
+#include <innodb/log_recv/recv_previous_parsed_rec_type.h>
+#include <innodb/log_recv/recv_scan_print_counter.h>
+#include <innodb/log_recv/recv_is_from_backup.h>
+#include <innodb/log_recv/recv_is_making_a_backup.h>
+#include <innodb/log_recv/psf.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/memory/mem_heap_get_size.h>
@@ -92,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0zip.h"
 #include "trx0rec.h"
 #include "trx0undo.h"
-#include "ut0call_destructor.h"
+#include <innodb/univ/call_destructor.h>
 
 
 #ifndef UNIV_HOTBACKUP
@@ -109,17 +122,9 @@ bool meb_replay_file_ops = true;
 #include "../meb/mutex.h"
 #endif /* !UNIV_HOTBACKUP */
 
-std::list<space_id_t> recv_encr_ts_list;
 
-/** Log records are stored in the hash table in chunks at most of this size;
-this must be less than UNIV_PAGE_SIZE as it is stored in the buffer pool */
-#define RECV_DATA_BLOCK_SIZE (MEM_MAX_ALLOC_IN_BUF - sizeof(recv_data_t))
 
-/** Read-ahead area in applying log records to file pages */
-static const size_t RECV_READ_AHEAD_AREA = 32;
 
-/** The recovery system */
-recv_sys_t *recv_sys = nullptr;
 
 #ifdef UNIV_HOTBACKUP
 volatile bool is_online_redo_copy = true;
@@ -166,63 +171,11 @@ void meb_print_page_header(const page_t *page) {
 }
 #endif /* UNIV_HOTBACKUP */
 
-#ifndef UNIV_HOTBACKUP
-PSI_memory_key mem_log_recv_page_hash_key;
-PSI_memory_key mem_log_recv_space_hash_key;
-#endif /* !UNIV_HOTBACKUP */
 
-/** true when recv_init_crash_recovery() has been called. */
-bool recv_needed_recovery;
-
-/** true if buf_page_is_corrupted() should check if the log sequence
-number (FIL_PAGE_LSN) is in the future.  Initially false, and set by
-recv_recovery_from_checkpoint_start(). */
-bool recv_lsn_checks_on;
-
-
-
-/** true When the redo log is being backed up */
-bool recv_is_making_a_backup = false;
-
-/** true when recovering from a backed up redo log file */
-bool recv_is_from_backup = false;
 
 #define buf_pool_get_curr_size() (5 * 1024 * 1024)
 
-/** The following counter is used to decide when to print info on
-log scan */
-static ulint recv_scan_print_counter;
 
-/** The type of the previous parsed redo log record */
-static mlog_id_t recv_previous_parsed_rec_type;
-
-/** The offset of the previous parsed redo log record */
-static ulint recv_previous_parsed_rec_offset;
-
-/** The 'multi' flag of the previous parsed redo log record */
-static ulint recv_previous_parsed_rec_is_multi;
-
-/** This many frames must be left free in the buffer pool when we scan
-the log and store the scanned log records in the buffer pool: we will
-use these free frames to read in pages when we start applying the
-log records to the database.
-This is the default value. If the actual size of the buffer pool is
-larger than 10 MB we'll set this value to 512. */
-ulint recv_n_pool_free_frames;
-
-/** The maximum lsn we see for a page during the recovery process. If this
-is bigger than the lsn we are able to scan up to, that is an indication that
-the recovery failed and the database may be corrupt. */
-static lsn_t recv_max_page_lsn;
-
-#ifndef UNIV_HOTBACKUP
-#ifdef UNIV_PFS_THREAD
-mysql_pfs_key_t recv_writer_thread_key;
-#endif /* UNIV_PFS_THREAD */
-
-/** Flag indicating if recv_writer thread is active. */
-bool recv_writer_thread_active = false;
-#endif /* !UNIV_HOTBACKUP */
 
 /* prototypes */
 
@@ -241,36 +194,13 @@ recv_needed_recovery == false. */
 static void recv_init_crash_recovery();
 #endif /* !UNIV_HOTBACKUP */
 
-/** Calculates the new value for lsn when more data is added to the log.
-@param[in]	lsn		Old LSN
-@param[in]	len		This many bytes of data is added, log block
-                                headers not included
-@return LSN after data addition */
-lsn_t recv_calc_lsn_on_data_add(lsn_t lsn, uint64_t len) {
-  ulint frag_len;
-  uint64_t lsn_len;
-
-  frag_len = (lsn % OS_FILE_LOG_BLOCK_SIZE) - LOG_BLOCK_HDR_SIZE;
-
-  ut_ad(frag_len <
-        OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_HDR_SIZE - LOG_BLOCK_TRL_SIZE);
-
-  lsn_len = len;
-
-  lsn_len +=
-      (lsn_len + frag_len) /
-      (OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_HDR_SIZE - LOG_BLOCK_TRL_SIZE) *
-      (LOG_BLOCK_HDR_SIZE + LOG_BLOCK_TRL_SIZE);
-
-  return (lsn + lsn_len);
-}
-
 /** Destructor */
 MetadataRecover::~MetadataRecover() {
   for (auto &table : m_tables) {
     UT_DELETE(table.second);
   }
 }
+
 
 /** Get the dynamic metadata of a specified table, create a new one
 if not exist
@@ -390,195 +320,16 @@ void MetadataRecover::apply() {
   }
 }
 
-/** Creates the recovery system. */
-void recv_sys_create() {
-  if (recv_sys != nullptr) {
-    return;
-  }
 
-  recv_sys = static_cast<recv_sys_t *>(ut_zalloc_nokey(sizeof(*recv_sys)));
 
-  mutex_create(LATCH_ID_RECV_SYS, &recv_sys->mutex);
-  mutex_create(LATCH_ID_RECV_WRITER, &recv_sys->writer_mutex);
 
-  recv_sys->spaces = nullptr;
-}
 
-/** Resize the recovery parsing buffer upto log_buffer_size */
-static bool recv_sys_resize_buf() {
-  ut_ad(recv_sys->buf_len <= srv_log_buffer_size);
 
-  /* If the buffer cannot be extended further, return false. */
-  if (recv_sys->buf_len == srv_log_buffer_size) {
-    ib::error(ER_IB_MSG_723, srv_log_buffer_size);
-    return false;
-  }
 
-  /* Extend the buffer by double the current size with the resulting
-  size not more than srv_log_buffer_size. */
-  recv_sys->buf_len = ((recv_sys->buf_len * 2) >= srv_log_buffer_size)
-                          ? srv_log_buffer_size
-                          : recv_sys->buf_len * 2;
 
-  /* Resize the buffer to the new size. */
-  recv_sys->buf =
-      static_cast<byte *>(ut_realloc(recv_sys->buf, recv_sys->buf_len));
 
-  ut_ad(recv_sys->buf != nullptr);
 
-  /* Return error and fail the recovery if not enough memory available */
-  if (recv_sys->buf == nullptr) {
-    ib::error(ER_IB_MSG_740);
-    return false;
-  }
 
-  ib::info(ER_IB_MSG_739, recv_sys->buf_len);
-  return true;
-}
-
-/** Free up recovery data structures. */
-static void recv_sys_finish() {
-  if (recv_sys->spaces != nullptr) {
-    for (auto &space : *recv_sys->spaces) {
-      if (space.second.m_heap != nullptr) {
-        mem_heap_free(space.second.m_heap);
-        space.second.m_heap = nullptr;
-      }
-    }
-
-    UT_DELETE(recv_sys->spaces);
-  }
-
-#ifndef UNIV_HOTBACKUP
-  ut_a(recv_sys->dblwr.pages.empty());
-
-  if (!recv_sys->dblwr.deferred.empty()) {
-    /* Free the pages that were not required for recovery. */
-    for (auto &page : recv_sys->dblwr.deferred) {
-      page.close();
-    }
-  }
-
-  recv_sys->dblwr.deferred.clear();
-#endif /* !UNIV_HOTBACKUP */
-
-  ut_free(recv_sys->buf);
-  ut_free(recv_sys->last_block_buf_start);
-  UT_DELETE(recv_sys->metadata_recover);
-
-  recv_sys->buf = nullptr;
-  recv_sys->spaces = nullptr;
-  recv_sys->metadata_recover = nullptr;
-  recv_sys->last_block_buf_start = nullptr;
-}
-
-/** Release recovery system mutexes. */
-void recv_sys_close() {
-  if (recv_sys == nullptr) {
-    return;
-  }
-
-  recv_sys_finish();
-
-#ifndef UNIV_HOTBACKUP
-  if (recv_sys->flush_start != nullptr) {
-    os_event_destroy(recv_sys->flush_start);
-  }
-
-  if (recv_sys->flush_end != nullptr) {
-    os_event_destroy(recv_sys->flush_end);
-  }
-
-  ut_ad(!recv_writer_thread_active);
-  mutex_free(&recv_sys->writer_mutex);
-#endif /* !UNIV_HOTBACKUP */
-
-  call_destructor(&recv_sys->dblwr);
-  call_destructor(&recv_sys->deleted);
-  call_destructor(&recv_sys->missing_ids);
-
-  mutex_free(&recv_sys->mutex);
-
-  ut_free(recv_sys);
-  recv_sys = nullptr;
-}
-
-#ifndef UNIV_HOTBACKUP
-/** Reset the state of the recovery system variables. */
-void recv_sys_var_init() {
-  recv_recovery_on = false;
-  recv_needed_recovery = false;
-  recv_lsn_checks_on = false;
-  recv_no_ibuf_operations = false;
-  recv_scan_print_counter = 0;
-  recv_previous_parsed_rec_type = MLOG_SINGLE_REC_FLAG;
-  recv_previous_parsed_rec_offset = 0;
-  recv_previous_parsed_rec_is_multi = 0;
-  recv_n_pool_free_frames = 256;
-  recv_max_page_lsn = 0;
-}
-#endif /* !UNIV_HOTBACKUP */
-
-/** Get the number of bytes used by all the heaps
-@return number of bytes used */
-#ifndef UNIV_HOTBACKUP
-static size_t recv_heap_used()
-#else  /* !UNIV_HOTBACKUP */
-size_t meb_heap_used()
-#endif /* !UNIV_HOTBACKUP */
-{
-  size_t size = 0;
-
-  for (auto &space : *recv_sys->spaces) {
-    if (space.second.m_heap != nullptr) {
-      size += mem_heap_get_size(space.second.m_heap);
-    }
-  }
-
-  return (size);
-}
-
-/** Prints diagnostic info of corrupt log.
-@param[in]	ptr	pointer to corrupt log record
-@param[in]	type	type of the log record (could be garbage)
-@param[in]	space	tablespace ID (could be garbage)
-@param[in]	page_no	page number (could be garbage)
-@return whether processing should continue */
-static bool recv_report_corrupt_log(const byte *ptr, int type, space_id_t space,
-                                    page_no_t page_no) {
-  ib::error(ER_IB_MSG_694);
-
-  ib::info(
-      ER_IB_MSG_695, type, ulong{space}, ulong{page_no},
-      ulonglong{recv_sys->recovered_lsn}, int{recv_previous_parsed_rec_type},
-      ulonglong{recv_previous_parsed_rec_is_multi},
-      ssize_t{ptr - recv_sys->buf}, ulonglong{recv_previous_parsed_rec_offset});
-
-  ut_ad(ptr <= recv_sys->buf + recv_sys->len);
-
-  const ulint limit = 100;
-  const ulint before = std::min(recv_previous_parsed_rec_offset, limit);
-  const ulint after = std::min(recv_sys->len - (ptr - recv_sys->buf), limit);
-
-  ib::info(ER_IB_MSG_696, ulonglong{before}, ulonglong{after});
-
-  ut_print_buf(
-      stderr, recv_sys->buf + recv_previous_parsed_rec_offset - before,
-      ptr - recv_sys->buf + before + after - recv_previous_parsed_rec_offset);
-  putc('\n', stderr);
-
-#ifndef UNIV_HOTBACKUP
-  if (srv_force_recovery == 0) {
-    ib::info(ER_IB_MSG_697);
-
-    return (false);
-  }
-#endif /* !UNIV_HOTBACKUP */
-
-  ib::warn(ER_IB_MSG_698, FORCE_RECOVERY_MSG);
-
-  return (true);
-}
 
 /** Inits the recovery system for a recovery operation.
 @param[in]	max_mem		Available memory in bytes */

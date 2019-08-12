@@ -111,7 +111,7 @@ The tablespace memory cache */
 #include "my_inttypes.h"
 #include "page0zip.h"
 #include "srv0start.h"
-#include "ut0call_destructor.h"
+#include <innodb/univ/call_destructor.h>
 #include <innodb/enum/to_int.h>
 
 #ifndef UNIV_HOTBACKUP

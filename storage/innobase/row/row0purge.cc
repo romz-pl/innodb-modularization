@@ -68,7 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rseg.h"
 #include "trx0trx.h"
 #include "trx0undo.h"
-#include "ut0call_destructor.h"
+#include <innodb/univ/call_destructor.h>
 
 /*************************************************************************
 IMPORTANT NOTE: Any operation that generates redo MUST check that there

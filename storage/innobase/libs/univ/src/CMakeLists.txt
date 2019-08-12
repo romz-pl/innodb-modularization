@@ -2,6 +2,7 @@ set( LIB_NAME univ )
 
 add_library( ${LIB_NAME} STATIC
     univ.cpp
+    call_destructor.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
