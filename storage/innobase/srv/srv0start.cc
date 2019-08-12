@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/log_recv/recv_sys_init.h>
 #include <innodb/clone/clone_init.h>
 #include <innodb/clone/clone_free.h>
 #include <innodb/clone/pfs.h>

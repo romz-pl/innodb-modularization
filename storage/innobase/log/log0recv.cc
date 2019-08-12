@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/log_recv/recv_log_recover_pre_8_0_4.h>
+#include <innodb/log_recv/recv_sys_empty_hash.h>
 #include <innodb/log_recv/recv_read_in_area.h>
 #include <innodb/log_recv/recv_find_max_checkpoint.h>
 #include <innodb/log_sys/log_start.h>
