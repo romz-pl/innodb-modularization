@@ -96,6 +96,11 @@ add_library( ${LIB_NAME} STATIC
     rec_t.cpp
     rec_validate.cpp
     rec_validate_old.cpp
+    rec_set_n_owned_new.cpp
+    rec_set_deleted_flag_new.cpp
+    rec_offs_any_null_extern.cpp
+    rec_get_n_fields_length.cpp
+    rec_set_n_fields.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -111,6 +116,7 @@ target_link_libraries(
     PUBLIC
     disk
     memory
+    page
     print
     PRIVATE
 )

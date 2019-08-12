@@ -50,20 +50,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0types.h"
 
 
-/** The following function is used to set the number of owned records.
-@param[in,out]	rec		new-style physical record
-@param[in,out]	page_zip	compressed page, or NULL
-@param[in]	n_owned		the number of owned */
-UNIV_INLINE
-void rec_set_n_owned_new(rec_t *rec, page_zip_des_t *page_zip, ulint n_owned);
 
 
-/** The following function is used to set the deleted bit.
-@param[in,out]	rec		new-style physical record
-@param[in,out]	page_zip	compressed page, or NULL
-@param[in]	flag		nonzero if delete marked */
-UNIV_INLINE
-void rec_set_deleted_flag_new(rec_t *rec, page_zip_des_t *page_zip, ulint flag);
+
+
 
 /** Determine how many of the first n columns in a compact
  physical record are stored externally.
@@ -232,19 +222,9 @@ void rec_copy_prefix_to_dtuple(
     mem_heap_t *heap);         /*!< in: memory heap */
 #endif                         /* !UNIV_HOTBACKUP */
 
-/** Get the length of the number of fields for any new style record.
-@param[in]	n_fields	number of fields in the record
-@return	length of specified number of fields */
-UNIV_INLINE
-uint8_t rec_get_n_fields_length(ulint n_fields);
 
-/** Set the number of fields for one new style leaf page record.
-This is only needed for table after instant ADD COLUMN.
-@param[in,out]	rec		leaf page record
-@param[in]	n_fields	number of fields in the record
-@return the length of the n_fields occupies */
-UNIV_INLINE
-uint8_t rec_set_n_fields(rec_t *rec, ulint n_fields);
+
+
 
 
 

@@ -2,7 +2,10 @@ Record manager
 ==============
 
 
-Offsets of the bit-fields in an old-style record. NOTE! In the table the
+Offsets of the bit-fields in an old-style record.
+-------------------------------------------------
+
+NOTE! In the table the
 most significant bytes and bits are written below less significant.
 
         (1) byte offset		(2) bit usage within byte
@@ -18,7 +21,10 @@ most significant bytes and bits are written below less significant.
                                 4 bits info bits
 
 
-Offsets of the bit-fields in a new-style record. NOTE! In the table the
+Offsets of the bit-fields in a new-style record.
+------------------------------------------------
+
+NOTE! In the table the
 most significant bytes and bits are written below less significant.
 
         (1) byte offset		(2) bit usage within byte

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/record/rec_set_n_fields.h>
 #include <innodb/memory/ut_memcpy.h>
 #include <innodb/record/rec_set_bit_field_1.h>
 #include <innodb/record/rec_get_info_bits.h>
@@ -40,139 +41,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_get_converted_extra_size.h>
 #include <innodb/record/rec_get_nth_field_old.h>
 #include <innodb/record/rec_get_n_fields_old_raw.h>
+#include <innodb/record/rec_set_n_owned_new.h>
+#include <innodb/record/rec_set_deleted_flag_new.h>
+#include <innodb/record/rec_offs_any_null_extern.h>
+#include <innodb/record/rec_get_n_fields_length.h>
 
 #include "btr0types.h"
 #include "dict0boot.h"
 #include "dict0dict.h"
 #include "page0types.h"
 #include <innodb/machine/data.h>
-
-
-/* Offsets of the bit-fields in an old-style record. NOTE! In the table the
-most significant bytes and bits are written below less significant.
-
-        (1) byte offset		(2) bit usage within byte
-        downward from
-        origin ->	1	8 bits pointer to next record
-                        2	8 bits pointer to next record
-                        3	1 bit short flag
-                                7 bits number of fields
-                        4	3 bits number of fields
-                                5 bits heap number
-                        5	8 bits heap number
-                        6	4 bits n_owned
-                                4 bits info bits
-*/
-
-/* Offsets of the bit-fields in a new-style record. NOTE! In the table the
-most significant bytes and bits are written below less significant.
-
-        (1) byte offset		(2) bit usage within byte
-        downward from
-        origin ->	1	8 bits relative offset of next record
-                        2	8 bits relative offset of next record
-                                  the relative offset is an unsigned 16-bit
-                                  integer:
-                                  (offset_of_next_record
-                                   - offset_of_this_record) mod 64Ki,
-                                  where mod is the modulo as a non-negative
-                                  number;
-                                  we can calculate the offset of the next
-                                  record with the formula:
-                                  relative_offset + offset_of_this_record
-                                  mod UNIV_PAGE_SIZE
-                        3	3 bits status:
-                                        000=conventional record
-                                        001=node pointer record (inside B-tree)
-                                        010=infimum record
-                                        011=supremum record
-                                        1xx=reserved
-                                5 bits heap number
-                        4	8 bits heap number
-                        5	4 bits n_owned
-                                4 bits info bits
-*/
-
-
-/** The following function is used to set the number of owned records. */
-UNIV_INLINE
-void rec_set_n_owned_new(
-    rec_t *rec,               /*!< in/out: new-style physical record */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    ulint n_owned)            /*!< in: the number of owned */
-{
-  rec_set_bit_field_1(rec, n_owned, REC_NEW_N_OWNED, REC_N_OWNED_MASK,
-                      REC_N_OWNED_SHIFT);
-  if (page_zip && rec_get_status(rec) != REC_STATUS_SUPREMUM) {
-    page_zip_rec_set_owned(page_zip, rec, n_owned);
-  }
-}
-
-
-/** The following function is used to set the deleted bit. */
-UNIV_INLINE
-void rec_set_deleted_flag_new(
-    rec_t *rec,               /*!< in/out: new-style physical record */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    ulint flag)               /*!< in: nonzero if delete marked */
-{
-  ulint val;
-
-  val = rec_get_info_bits(rec, TRUE);
-
-  if (flag) {
-    val |= REC_INFO_DELETED_FLAG;
-  } else {
-    val &= ~REC_INFO_DELETED_FLAG;
-  }
-
-  rec_set_info_bits_new(rec, val);
-
-  if (page_zip) {
-    page_zip_rec_set_deleted(page_zip, rec, flag);
-  }
-}
-
-
-
-/** Determine if the offsets are for a record containing null BLOB pointers.
- @return first field containing a null BLOB pointer, or NULL if none found */
-UNIV_INLINE
-const byte *rec_offs_any_null_extern(
-    const rec_t *rec,     /*!< in: record */
-    const ulint *offsets) /*!< in: rec_get_offsets(rec) */
-{
-  ulint i;
-  ut_ad(rec_offs_validate(rec, NULL, offsets));
-
-  if (!rec_offs_any_extern(offsets)) {
-    return (NULL);
-  }
-
-  for (i = 0; i < rec_offs_n_fields(offsets); i++) {
-    if (rec_offs_nth_extern(offsets, i)) {
-      ulint len;
-      const byte *field = rec_get_nth_field(rec, offsets, i, &len);
-
-      ut_a(len >= BTR_EXTERN_FIELD_REF_SIZE);
-      if (!memcmp(field + len - BTR_EXTERN_FIELD_REF_SIZE, field_ref_zero,
-                  BTR_EXTERN_FIELD_REF_SIZE)) {
-        return (field);
-      }
-    }
-  }
-
-  return (NULL);
-}
-
-
-
-
-
-
-
-
-
 
 
 /** The following function returns the size of a data tuple when converted to
@@ -258,21 +136,6 @@ ulint rec_get_converted_size(
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef UNIV_HOTBACKUP
 /** Compute a hash value of a prefix of a leaf page record.
 @param[in]	rec		leaf page record
@@ -330,38 +193,9 @@ ulint rec_fold(const rec_t *rec, const ulint *offsets, ulint n_fields,
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Get the length of the number of fields for any new style record.
-@param[in]	n_fields	number of fields in the record
-@return	length of specified number of fields */
-UNIV_INLINE
-uint8_t rec_get_n_fields_length(ulint n_fields) {
-  return (n_fields > REC_N_FIELDS_ONE_BYTE_MAX ? 2 : 1);
-}
 
-/** Set the number of fields for one new style leaf page record.
-This is only needed for table after instant ADD COLUMN.
-@param[in,out]	rec		leaf page record
-@param[in]	n_fields	number of fields in the record
-@return	the length of the n_fields occupies */
-UNIV_INLINE
-uint8_t rec_set_n_fields(rec_t *rec, ulint n_fields) {
-  byte *ptr = rec - (REC_N_NEW_EXTRA_BYTES + 1);
 
-  ut_ad(n_fields < REC_MAX_N_FIELDS);
 
-  if (n_fields <= REC_N_FIELDS_ONE_BYTE_MAX) {
-    *ptr = static_cast<byte>(n_fields);
-    return (1);
-  }
-
-  --ptr;
-  *ptr++ = static_cast<byte>(n_fields & 0xFF);
-  *ptr = static_cast<byte>(n_fields >> 8);
-  ut_ad((*ptr & 0x80) == 0);
-  *ptr |= REC_N_FIELDS_TWO_BYTES_FLAG;
-
-  return (2);
-}
 
 /** Gets the value of the specified field in the record in old style.
 This is only used for record from instant index, which is clustered
