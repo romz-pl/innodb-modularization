@@ -21,7 +21,7 @@ SET( INNODB_COMPONENT_LIBS
 
     # B
     #bit
-    #buffer
+    buf_calc
 
     # C
     clone

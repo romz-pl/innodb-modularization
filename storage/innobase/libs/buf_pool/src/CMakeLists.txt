@@ -52,7 +52,6 @@ add_library( ${LIB_NAME} STATIC
     srv_buf_pool_old_size.cpp
     srv_buf_pool_size.cpp
     srv_buffer_pool_in_core_file.cpp
-    srv_checksum_algorithm_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

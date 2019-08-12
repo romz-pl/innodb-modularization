@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/buf_calc/srv_checksum_algorithm.h>
 #include <innodb/log_chkp/srv_log_checkpoint_every.h>
 #include <innodb/clone/srv_undo_log_encrypt.h>
 #include <innodb/clone/srv_redo_log_encrypt.h>
@@ -411,7 +412,7 @@ extern bool srv_stats_include_delete_marked;
 
 extern ibool srv_use_doublewrite_buf;
 extern ulong srv_doublewrite_batch_size;
-extern ulong srv_checksum_algorithm;
+
 
 extern double srv_max_buf_pool_modified_pct;
 extern ulong srv_max_purge_lag;
