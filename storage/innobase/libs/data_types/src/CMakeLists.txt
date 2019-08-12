@@ -65,6 +65,12 @@ add_library( ${LIB_NAME} STATIC
     dtuple_set_info_bits.cpp
     dtuple_get_n_fields_cmp.cpp
     dtuple_set_n_fields_cmp.cpp
+    DTUPLE_EST_ALLOC.cpp
+    dtuple_create_from_mem.cpp
+    dtuple_create.cpp
+    dtuple_dup_v_fld.cpp
+    dtuple_init_v_fld.cpp
+    dtuple_create_with_vcol.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

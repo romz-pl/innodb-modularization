@@ -65,6 +65,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/data_types/dtuple_get_nth_field.h>
+#include <innodb/data_types/DTUPLE_EST_ALLOC.h>
+#include <innodb/data_types/dtuple_create_from_mem.h>
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/dtuple_dup_v_fld.h>
+#include <innodb/data_types/dtuple_init_v_fld.h>
+#include <innodb/data_types/dtuple_create_with_vcol.h>
 
 #include "trx0types.h"
 #include <ostream>
@@ -83,58 +89,6 @@ struct upd_t;
 
 
 
-
-
-
-
-/* Estimate the number of bytes that are going to be allocated when
-creating a new dtuple_t object */
-#define DTUPLE_EST_ALLOC(n_fields) \
-  (sizeof(dtuple_t) + (n_fields) * sizeof(dfield_t))
-
-/** Creates a data tuple from an already allocated chunk of memory.
- The size of the chunk must be at least DTUPLE_EST_ALLOC(n_fields).
- The default value for number of fields used in record comparisons
- for this tuple is n_fields.
- @param[in,out]	buf		buffer to use
- @param[in]	buf_size	buffer size
- @param[in]	n_fields	number of field
- @param[in]	n_v_fields	number of fields on virtual columns
- @return created tuple (inside buf) */
-UNIV_INLINE
-dtuple_t *dtuple_create_from_mem(void *buf, ulint buf_size, ulint n_fields,
-                                 ulint n_v_fields)
-    MY_ATTRIBUTE((warn_unused_result));
-/** Creates a data tuple to a memory heap. The default value for number
- of fields used in record comparisons for this tuple is n_fields.
- @return own: created tuple */
-UNIV_INLINE
-dtuple_t *dtuple_create(
-    mem_heap_t *heap, /*!< in: memory heap where the tuple
-                      is created, DTUPLE_EST_ALLOC(n_fields)
-                      bytes will be allocated from this heap */
-    ulint n_fields)   /*!< in: number of fields */
-    MY_ATTRIBUTE((malloc));
-
-/** Initialize the virtual field data in a dtuple_t
-@param[in,out]		vrow	dtuple contains the virtual fields */
-UNIV_INLINE
-void dtuple_init_v_fld(const dtuple_t *vrow);
-
-/** Duplicate the virtual field data in a dtuple_t
-@param[in,out]		vrow	dtuple contains the virtual fields
-@param[in]		heap	heap memory to use */
-UNIV_INLINE
-void dtuple_dup_v_fld(const dtuple_t *vrow, mem_heap_t *heap);
-
-/** Creates a data tuple with possible virtual columns to a memory heap.
-@param[in]	heap		memory heap where the tuple is created
-@param[in]	n_fields	number of fields
-@param[in]	n_v_fields	number of fields on virtual col
-@return own: created tuple */
-UNIV_INLINE
-dtuple_t *dtuple_create_with_vcol(mem_heap_t *heap, ulint n_fields,
-                                  ulint n_v_fields);
 /** Sets number of fields used in a tuple. Normally this is set in
  dtuple_create, but if you want later to set it smaller, you can use this. */
 void dtuple_set_n_fields(dtuple_t *tuple, /*!< in: tuple */
