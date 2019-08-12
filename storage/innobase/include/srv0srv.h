@@ -54,7 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/clone/srv_undo_log_encrypt.h>
 #include <innodb/clone/srv_redo_log_encrypt.h>
 #include <innodb/log_arch/srv_log_group_home_dir.h>
-#include <innodb/log_arch/srv_log_file_size.h>
+#include <innodb/log_files/srv_log_file_size.h>
 #include <innodb/log_write/srv_log_writer_spin_delay.h>
 #include <innodb/log_write/srv_log_writer_timeout.h>
 #include <innodb/log_flush/srv_flush_log_at_timeout.h>

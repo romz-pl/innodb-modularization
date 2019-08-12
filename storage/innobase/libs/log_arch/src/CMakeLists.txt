@@ -48,7 +48,6 @@ add_library( ${LIB_NAME} STATIC
     Recv.cpp
     Log_Arch_Cbk.cpp
     Log_Arch_Client_Ctx.cpp
-    srv_log_file_size.cpp
     srv_log_group_home_dir.cpp
 )
 

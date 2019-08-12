@@ -12,6 +12,7 @@ add_library( ${LIB_NAME} STATIC
     log_files_header_read.cpp
     log_files_downgrade.cpp
     log_files_write_checkpoint.cpp
+    srv_log_file_size.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

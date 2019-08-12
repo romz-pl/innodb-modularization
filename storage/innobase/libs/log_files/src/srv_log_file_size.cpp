@@ -1,4 +1,4 @@
-#include <innodb/log_arch/srv_log_file_size.h>
+#include <innodb/log_files/srv_log_file_size.h>
 
 /** At startup, this is the current redo log file size.
 During startup, if this is different from srv_log_file_size_requested

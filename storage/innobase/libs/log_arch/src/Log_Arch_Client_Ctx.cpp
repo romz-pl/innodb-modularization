@@ -6,7 +6,7 @@
 #include <innodb/log_arch/Arch_Group.h>
 #include <innodb/log_arch/arch_log_sys.h>
 #include <innodb/log_arch/flags.h>
-#include <innodb/log_arch/srv_log_file_size.h>
+#include <innodb/log_files/srv_log_file_size.h>
 #include <innodb/logger/info.h>
 
 /** Get redo file, header and trailer size

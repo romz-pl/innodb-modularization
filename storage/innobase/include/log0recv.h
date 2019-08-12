@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/log_recv/recv_sys_free.h>
 #include <innodb/log_recv/recv_sys_var_init.h>
 #include <innodb/log_recv/recv_sys_close.h>
 #include <innodb/log_recv/recv_sys_create.h>
@@ -186,8 +187,7 @@ a freshly read page)
 @param[in,out]	block	buffer block */
 #define recv_recover_page(jri, block) recv_recover_page_func(jri, block)
 
-/** Frees the recovery system. */
-void recv_sys_free();
+
 
 
 #endif /* UNIV_HOTBACKUP */
@@ -217,9 +217,7 @@ MetadataRecover *recv_recovery_from_checkpoint_finish(log_t &log, bool aborting)
 
 
 
-/** Inits the recovery system for a recovery operation.
-@param[in]	max_mem		Available memory in bytes */
-void recv_sys_init(ulint max_mem);
+
 
 
 /** Empties the hash table of stored log records, applying them to appropriate

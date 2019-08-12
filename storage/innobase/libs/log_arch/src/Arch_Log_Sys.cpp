@@ -10,7 +10,7 @@
 #include <innodb/log_arch/flags.h>
 #include <innodb/log_arch/log_archiver_thread_event.h>
 #include <innodb/log_arch/log_archiver_thread_event.h>
-#include <innodb/log_arch/srv_log_file_size.h>
+#include <innodb/log_files/srv_log_file_size.h>
 #include <innodb/log_arch/srv_log_group_home_dir.h>
 #include <innodb/log_arch/start_log_archiver_background.h>
 #include <innodb/log_types/flags.h>
