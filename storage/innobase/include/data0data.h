@@ -38,13 +38,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/memory/mem_heap_t.h>
 
 
-#include "data0type.h"
-#include "data0types.h"
 
 #include "trx0types.h"
 
 #include <ostream>
 
+struct dfield_t;
+struct dtuple_t;
 struct dict_index_t;
 struct dict_v_col_t;
 

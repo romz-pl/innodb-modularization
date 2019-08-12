@@ -38,8 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_block/buf_block_t.h>
 
 #include "buf0buf.h"
-#include "data0type.h"
-#include "data0types.h"
+
 #include "dict0types.h"
 #include "gis0geo.h"
 
@@ -53,6 +52,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <list>
 #include <vector>
+
+struct dfield_t;
+struct dtuple_t;
 
 /* Node Sequence Number. Only updated when page splits */
 typedef ib_uint32_t node_seq_t;

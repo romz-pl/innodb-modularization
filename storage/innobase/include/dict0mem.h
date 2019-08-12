@@ -58,7 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql/dd/types/spatial_reference_system.h"
 #endif /* UNIV_HOTBACKUP */
 #include "btr0types.h"
-#include "data0type.h"
+
 #include "dict0types.h"
 
 

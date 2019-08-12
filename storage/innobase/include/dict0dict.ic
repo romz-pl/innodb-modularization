@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/flag.h>
 
 #include "buf0flu.h"
-#include "data0type.h"
+
 #include "dict0load.h"
 #include "fsp0fsp.h"
 

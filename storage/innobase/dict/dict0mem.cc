@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ha_prototypes.h"
 
-#include "data0type.h"
+
 #endif /* !UNIV_HOTBACKUP */
 #include "dict0dd.h"
 #include "dict0dict.h"

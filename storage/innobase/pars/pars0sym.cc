@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "pars0sym.h"
 
 #include "data0data.h"
-#include "data0type.h"
+
 #include "dict0dd.h"
 #include "eval0eval.h"
 

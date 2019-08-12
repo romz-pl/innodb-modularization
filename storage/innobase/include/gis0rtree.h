@@ -37,8 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0cur.h"
 #include "btr0types.h"
-#include "data0type.h"
-#include "data0types.h"
+
 #include "dict0types.h"
 #include "gis0geo.h"
 #include "gis0type.h"
@@ -51,6 +50,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0types.h"
 #include "ut0vec.h"
 #include "ut0wqueue.h"
+
+struct dfield_t;
+struct dtuple_t;
 
 /* Define it for rtree search mode checking. */
 #define RTREE_SEARCH_MODE(mode) \

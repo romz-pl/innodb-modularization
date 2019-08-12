@@ -50,7 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <deque>
 #include "data0data.h"
-#include "data0type.h"
+
 #include "dict/dict.h"
 #include "dict0mem.h"
 #include "dict0types.h"

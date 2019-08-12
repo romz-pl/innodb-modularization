@@ -38,7 +38,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/error/dberr_t.h>
 
-#include "data0types.h"
 #include "dict0types.h"
 
 #include "que0types.h"
@@ -46,6 +45,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0types.h"
 #include "trx0types.h"
 
+struct dfield_t;
+struct dtuple_t;
 class ut_stage_alter_t;
 
 /** Allocate the row log for an index and flag the index

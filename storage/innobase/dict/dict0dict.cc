@@ -109,7 +109,7 @@ extern uint ibuf_debug;
 #include "btr0cur.h"
 #include "btr0sea.h"
 #include "buf0buf.h"
-#include "data0type.h"
+
 #include "dict0boot.h"
 #include "dict0crea.h"
 #ifndef UNIV_HOTBACKUP

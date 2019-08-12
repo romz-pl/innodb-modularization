@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0pcur.h"
 #include "data0data.h"
-#include "data0type.h"
+
 #include <innodb/error/dberr_t.h>
 #include "dict0types.h"
 #include "fts0fts.h"

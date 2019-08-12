@@ -43,7 +43,7 @@ on 1/27/1998 */
 #include "ha_prototypes.h"
 
 #include "data0data.h"
-#include "data0type.h"
+
 #include "dict0crea.h"
 #include "dict0dd.h"
 #include "dict0dict.h"

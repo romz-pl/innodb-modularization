@@ -71,7 +71,6 @@ SET(INNOBASE_SOURCES
     clone/clone0copy.cc
     clone/clone0snapshot.cc
     data/data0data.cc
-    data/data0type.cc
     dict/dict0boot.cc
     dict/dict0crea.cc
     dict/dict0dict.cc

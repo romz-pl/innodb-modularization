@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <my_sys.h>
 #include "data0data.h"
-#include "data0type.h"
+
 #include "dict0dict.h"
 #include "ha_prototypes.h"
 #include "rem0rec.h"

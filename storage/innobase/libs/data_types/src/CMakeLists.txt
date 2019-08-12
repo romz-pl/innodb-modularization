@@ -32,6 +32,7 @@ add_library( ${LIB_NAME} STATIC
     dtype_new_read_for_order_and_null_size.cpp
     dtype_sql_name.cpp
     dtype_print.cpp
+    dtype_get_at_most_n_mbchars.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

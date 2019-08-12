@@ -39,8 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ha_prototypes.h"
 
-#include "data0type.h"
-#include "data0types.h"
+
 #include "dict0types.h"
 #include "ft_global.h"
 
@@ -53,6 +52,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/rbt/rbt.h>
 #include "ut0vec.h"
 #include "ut0wqueue.h"
+
+struct dfield_t;
+struct dtuple_t;
 
 /** "NULL" value of a document id. */
 #define FTS_NULL_DOC_ID 0

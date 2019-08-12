@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/print/ut_print_buf.h>
 #include <innodb/record/rec_offs_init.h>

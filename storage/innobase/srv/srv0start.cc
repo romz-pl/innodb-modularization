@@ -102,7 +102,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0dump.h"
 #include "current_thd.h"
 #include "data0data.h"
-#include "data0type.h"
+
 #include "dict0dd.h"
 #include "dict0dict.h"
 #include "fil0fil.h"

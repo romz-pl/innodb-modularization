@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
 #include <innodb/string/ut_str_sql_format.h>
 #include <innodb/string/ut_raw_to_hex.h>
 #include <innodb/record/rec_copy.h>
@@ -44,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 
 #include "btr0btr.h"
-#include "data0type.h"
+
 #include "dict0boot.h"
 #include "dict0dict.h"
 #include "ha_prototypes.h"
