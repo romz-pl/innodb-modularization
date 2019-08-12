@@ -47,6 +47,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    buf_calc
     buf_pool
     log_sn
     page

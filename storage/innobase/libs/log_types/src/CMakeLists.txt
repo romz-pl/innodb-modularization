@@ -43,7 +43,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    crc32
     log_sn
     sync_rw
     PRIVATE

@@ -36,6 +36,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <time.h>
 
+#include <innodb/buf_calc/buf_calc_page_new_checksum.h>
+#include <innodb/buf_calc/buf_calc_page_old_checksum.h>
+#include <innodb/buf_calc/buf_calc_page_crc32.h>
+#include <innodb/buf_calc/BlockReporter.h>
+#include <innodb/buf_calc/flags.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/log_flush/srv_flushing_avg_loops.h>
 #include <innodb/monitor/MONITOR_INC_WAIT_STATS_EX.h>
@@ -75,7 +80,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef UNIV_HOTBACKUP
 #include "buf0buf.h"
-#include "buf0checksum.h"
 #include "buf0flu.h"
 #include "ha_prototypes.h"
 #include "my_inttypes.h"

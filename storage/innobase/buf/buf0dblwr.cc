@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/logger/info.h>
@@ -50,7 +51,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0buf.h"
 #include "buf/buf.h"
-#include "buf0checksum.h"
 #include "buf0dblwr.h"
 #include "ha_prototypes.h"
 #include "my_compiler.h"

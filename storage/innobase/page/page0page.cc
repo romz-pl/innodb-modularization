@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_dbug.h"
 
+#include <innodb/buf_calc/buf_checksum_algorithm_name.h>
 #include <innodb/logger/info.h>
 #include <innodb/logger/warn.h>
 #include <innodb/page/cursor_movement.h>

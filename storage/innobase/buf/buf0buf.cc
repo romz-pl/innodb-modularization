@@ -42,6 +42,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <innodb/buf_calc/buf_calc_page_old_checksum.h>
+#include <innodb/buf_calc/buf_calc_page_new_checksum.h>
+#include <innodb/buf_calc/buf_calc_page_crc32.h>
+#include <innodb/buf_calc/buf_checksum_algorithm_name.h>
+#include <innodb/buf_calc/BlockReporter.h>
+#include <innodb/buf_calc/flags.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/sync_rw/rw_lock_sx_lock.h>
 #include <innodb/mtr/mtr_memo_push.h>
@@ -151,7 +157,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <new>
 #include <sstream>
 
-#include "buf0checksum.h"
 #include "buf0dump.h"
 #include "dict0dict.h"
 #include "log0recv.h"

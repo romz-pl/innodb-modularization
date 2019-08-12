@@ -29,6 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/mtr/mtr_commit.h>
 #include <innodb/io/IORequest.h>

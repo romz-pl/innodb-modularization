@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/buf_calc/srv_checksum_algorithm_t.h>
 #include <innodb/page/page_size_validate.h>
 #include <innodb/page/page_get_max_insert_size_after_reorganize.h>
 #include <innodb/page/page_get_max_insert_size.h>

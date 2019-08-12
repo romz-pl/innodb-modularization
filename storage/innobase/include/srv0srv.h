@@ -99,7 +99,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_flush/srv_log_flush_notifier_spin_delay.h>
 
 
-#include "buf0checksum.h"
 #include "fil0fil.h"
 
 #include "mysql/psi/mysql_stage.h"

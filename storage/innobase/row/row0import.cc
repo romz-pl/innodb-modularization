@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/tablespace/mach_read_ulint.h>
