@@ -28,6 +28,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/data_types/dtuple_create_with_vcol.h>
+#include <innodb/data_types/dfield_set_null.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_is_ext.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/clone/clone_mark_abort.h>

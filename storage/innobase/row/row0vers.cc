@@ -30,14 +30,19 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/6/1997 Heikki Tuuri
  *******************************************************/
 
-#include <innodb/data_types/dtuple_init_v_fld.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dtuple_coll_eq.h>
+#include <innodb/data_types/dtuple_copy.h>
+#include <innodb/data_types/dtuple_copy_v_fields.h>
+#include <innodb/data_types/dtuple_create_with_vcol.h>
+#include <innodb/data_types/dtuple_dup_v_fld.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/data_types/dtuple_init_v_fld.h>
 #include <innodb/data_types/dtuple_set_types_binary.h>
+#include <innodb/memory/mem_heap_empty.h>
 #include <innodb/mtr/mtr_s_lock.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/record/rec_copy.h>
-#include <innodb/memory/mem_heap_empty.h>
 
 #include <stddef.h>
 

@@ -32,24 +32,34 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_data_is_binary_equal.h>
+#include <innodb/data_types/dfield_data_is_binary_equal.h>
+#include <innodb/data_types/dfield_datas_are_binary_equal.h>
+#include <innodb/data_types/dfield_dup.h>
+#include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_set_ext.h>
+#include <innodb/data_types/dfield_set_null.h>
+#include <innodb/data_types/dtuple_big_rec_free.h>
+#include <innodb/data_types/dtuple_copy.h>
+#include <innodb/data_types/dtuple_get_n_v_fields.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
-#include <innodb/data_types/dtuple_get_n_v_fields.h>
-#include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
+#include <innodb/logger/info.h>
+#include <innodb/memory/mem_heap_empty.h>
 #include <innodb/mtr/mtr_s_lock.h>
 #include <innodb/mtr/mtr_start.h>
-#include <innodb/memory/mem_heap_empty.h>
-#include <innodb/logger/info.h>
+#include <innodb/record/rec_get_instant_flag_new.h>
 #include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_init.h>
+#include <innodb/record/rec_offs_nth_default.h>
 #include <innodb/record/rec_offs_nth_size.h>
 #include <innodb/record/rec_offs_nth_sql_null.h>
-#include <innodb/record/rec_offs_nth_default.h>
-#include <innodb/record/rec_get_instant_flag_new.h>
-#include <innodb/record/rec_set_instant_flag_new.h>
 #include <innodb/record/rec_set_info_bits_old.h>
+#include <innodb/record/rec_set_instant_flag_new.h>
 #include <innodb/record/rec_set_nth_field.h>
-#include <innodb/record/rec_offs_init.h>
 
 #include "dict0dict.h"
 #include "ha_prototypes.h"

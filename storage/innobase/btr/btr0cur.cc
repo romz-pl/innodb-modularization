@@ -49,6 +49,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/DTUPLE_EST_ALLOC.h>
+#include <innodb/data_types/dtuple_big_rec_free.h>
+#include <innodb/data_types/dfield_is_ext.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/mtr/mtr_memo_release.h>
 #include <innodb/mtr/mtr_block_sx_latch_at_savepoint.h>

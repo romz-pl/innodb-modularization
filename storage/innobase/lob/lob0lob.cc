@@ -29,6 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_pool/buf_pool_t.h>
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/record/rec_field_not_null_not_add_col_def.h>
+#include <innodb/data_types/dfield_is_ext.h>
 
 #include <sys/types.h>
 

@@ -37,6 +37,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/data_types/dfield_set_len.h>
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_copy_data.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_set_null.h>
+#include <innodb/data_types/dtuple_create.h>
 #include <innodb/memory/mem_heap_dup.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/data_types/dtuple_set_n_fields.h>

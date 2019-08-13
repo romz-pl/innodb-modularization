@@ -30,6 +30,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2011-05-26 Marko Makela
  *******************************************************/
 
+#include <innodb/data_types/dtuple_contains_null.h>
+#include <innodb/data_types/dtuple_big_rec_free.h>
+#include <innodb/data_types/dtuple_copy.h>
+#include <innodb/data_types/dtuple_copy_v_fields.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_set_len.h>
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dtuple_create_with_vcol.h>
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/DTUPLE_EST_ALLOC.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
 #include <innodb/data_types/dtuple_get_n_v_fields.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
@@ -57,7 +67,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <algorithm>
 #include <map>
 
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 #include "handler0alter.h"
 #include "lob0lob.h"
 #include "que0que.h"

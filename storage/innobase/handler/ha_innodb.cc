@@ -46,6 +46,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/dfield_dup.h>
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_set_null.h>
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_set_len.h>
+#include <innodb/data_types/dtuple_create_with_vcol.h>
+#include <innodb/data_types/dfield_set_null.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
 #include <innodb/data_types/dtuple_set_n_fields.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>

@@ -39,7 +39,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0pcur.h"
 #include "btr0types.h"
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 #include "dict0types.h"
 #include "que0types.h"
 #include "row0types.h"

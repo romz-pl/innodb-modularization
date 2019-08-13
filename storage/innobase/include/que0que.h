@@ -35,7 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "data0data.h"
+#include <innodb/data_types/dtype_t.h>
+
+#include "btr0types.h"
+#include "trx0types.h"
 #include "dict0types.h"
 #include "pars0types.h"
 #include "que0types.h"

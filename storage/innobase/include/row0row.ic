@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/data_types/dtuple_get_nth_field.h>
+#include <innodb/data_types/dfield_set_data.h>
 
 #include <cmath>
 #include <cstdint>

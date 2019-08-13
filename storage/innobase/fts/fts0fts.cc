@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/dfield_is_ext.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_printf.h>
 #include <innodb/string/mem_strdup.h>

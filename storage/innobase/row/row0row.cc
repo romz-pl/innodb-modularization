@@ -30,21 +30,29 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_get_spatial_status.h>
+#include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_set_ext.h>
+#include <innodb/data_types/dfield_set_len.h>
+#include <innodb/data_types/dfield_write_mbr.h>
+#include <innodb/data_types/dtuple_copy.h>
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/dtuple_create_with_vcol.h>
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
+#include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
-#include <innodb/data_types/dtuple_set_info_bits.h>
-#include <innodb/data_types/dtuple_get_nth_v_field.h>
-#include <innodb/data_types/dfield_get_spatial_status.h>
-#include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
-#include <innodb/string/ut_str_sql_format.h>
-#include <innodb/string/ut_raw_to_hex.h>
-#include <innodb/record/rec_copy.h>
-#include <innodb/record/rec_offs_n_extern.h>
-#include <innodb/record/rec_offs_comp.h>
-#include <innodb/record/rec_offs_init.h>
 #include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/data_types/dtype_is_utf8.h>
+#include <innodb/record/rec_copy.h>
+#include <innodb/record/rec_offs_comp.h>
+#include <innodb/record/rec_offs_init.h>
+#include <innodb/record/rec_offs_n_extern.h>
+#include <innodb/string/ut_raw_to_hex.h>
+#include <innodb/string/ut_str_sql_format.h>
 
 #include "row0row.h"
 

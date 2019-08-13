@@ -40,6 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_strdupl.h>
 #include <innodb/logger/info.h>
+#include <innodb/data_types/dtuple_create.h>
 
 #include <debug_sync.h>
 #include "ha_prototypes.h"

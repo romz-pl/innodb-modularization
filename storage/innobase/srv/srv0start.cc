@@ -101,7 +101,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0buf.h"
 #include "buf0dump.h"
 #include "current_thd.h"
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 
 #include "dict0dd.h"
 #include "dict0dict.h"

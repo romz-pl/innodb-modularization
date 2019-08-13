@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/30/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/data_types/dfield_is_null.h>
 #include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/data_types/dtype_get_mbmaxlen.h>
 #include <innodb/data_types/dtype_get_mbminlen.h>
@@ -46,7 +49,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 
 #ifndef UNIV_HOTBACKUP
 #include "row0upd.h"

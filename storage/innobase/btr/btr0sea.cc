@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/17/1996 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/data_types/dtuple_fold.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/memory/mem_heap_empty.h>

@@ -30,6 +30,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/data_types/dfield_write_mbr.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_set_null.h>
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dtuple_big_rec_free.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/data_types/dtuple_get_n_v_fields.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
@@ -52,7 +59,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0cur.h"
 #include "buf0lru.h"
 #include "current_thd.h"
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 #include "dict0boot.h"
 #include "dict0dd.h"
 #include "dict0dict.h"

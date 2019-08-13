@@ -115,10 +115,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     data_types
-    disk
-    memory
     page
-    print
     PRIVATE
 )
 

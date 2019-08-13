@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/data_types/dfield_dup.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/memory/mem_heap_empty.h>
 #include <innodb/allocator/ut_malloc_nokey.h>

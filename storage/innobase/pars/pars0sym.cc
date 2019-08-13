@@ -36,12 +36,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/memory/mem_heap_create_typed.h>
 #include <innodb/memory/mem_heap_strdupl.h>
+#include <innodb/data_types/dfield_set_data.h>
+#include <innodb/data_types/dfield_set_null.h>
 
 #include "current_thd.h"
 
 #include "pars0sym.h"
 
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 
 #include "dict0dd.h"
 #include "eval0eval.h"

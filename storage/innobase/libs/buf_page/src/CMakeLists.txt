@@ -50,7 +50,6 @@ target_link_libraries(
     buf_calc
     buf_pool
     log_sn
-    page
     sync_mutex
     PRIVATE
 )

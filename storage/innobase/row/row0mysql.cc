@@ -31,6 +31,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_create_with_vcol.h>
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/DTUPLE_EST_ALLOC.h>
+#include <innodb/data_types/dfield_dup.h>
+#include <innodb/data_types/dfield_set_null.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/sync_rw/rw_lock_s_lock_inline.h>
 #include <innodb/sync_rw/rw_lock_x_lock_inline.h>

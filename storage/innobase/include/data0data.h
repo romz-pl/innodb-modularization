@@ -35,57 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/data_types/DTUPLE_EST_ALLOC.h>
-#include <innodb/data_types/big_rec_field_t.h>
-#include <innodb/data_types/big_rec_t.h>
-#include <innodb/data_types/dfield_check_typed.h>
-#include <innodb/data_types/dfield_copy.h>
-#include <innodb/data_types/dfield_copy_data.h>
-#include <innodb/data_types/dfield_data_is_binary_equal.h>
-#include <innodb/data_types/dfield_datas_are_binary_equal.h>
-#include <innodb/data_types/dfield_dup.h>
-#include <innodb/data_types/dfield_get_data.h>
-#include <innodb/data_types/dfield_get_len.h>
-#include <innodb/data_types/dfield_get_type.h>
-#include <innodb/data_types/dfield_is_ext.h>
-#include <innodb/data_types/dfield_is_null.h>
-#include <innodb/data_types/dfield_print.h>
-#include <innodb/data_types/dfield_print_also_hex.h>
-#include <innodb/data_types/dfield_set_data.h>
-#include <innodb/data_types/dfield_set_len.h>
-#include <innodb/data_types/dfield_set_null.h>
-#include <innodb/data_types/dfield_set_type.h>
-#include <innodb/data_types/dfield_t.h>
-#include <innodb/data_types/dfield_write_mbr.h>
-#include <innodb/data_types/dtuple_big_rec_free.h>
-#include <innodb/data_types/dtuple_check_typed.h>
-#include <innodb/data_types/dtuple_coll_eq.h>
-#include <innodb/data_types/dtuple_contains_null.h>
-#include <innodb/data_types/dtuple_copy.h>
-#include <innodb/data_types/dtuple_copy_v_fields.h>
-#include <innodb/data_types/dtuple_create.h>
-#include <innodb/data_types/dtuple_create_from_mem.h>
-#include <innodb/data_types/dtuple_create_with_vcol.h>
-#include <innodb/data_types/dtuple_dup_v_fld.h>
-#include <innodb/data_types/dtuple_fold.h>
-
-
-#include "btr0types.h"
-#include "trx0types.h"
-
-#include <ostream>
-
-struct dfield_t;
 struct dtuple_t;
 struct dict_index_t;
-struct dict_v_col_t;
 struct big_rec_t;
 struct upd_t;
-
-
-
-
-
 
 
 /** Moves parts of long fields in entry to the big record vector so that

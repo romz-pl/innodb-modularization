@@ -36,7 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include "btr0pcur.h"
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 #include "dict0stats.h"
 #include "dict0types.h"
 #include "pars0sym.h"

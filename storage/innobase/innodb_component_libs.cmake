@@ -30,7 +30,7 @@ SET( INNODB_COMPONENT_LIBS
     #crc32
 
     # D
-    data_types
+    #data_types
     #dict
 
     # E

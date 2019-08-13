@@ -33,6 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/data_types/dfield_copy.h>
+#include <innodb/data_types/dfield_data_is_binary_equal.h>
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/dfield_set_null.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/data_types/dtype_set.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>

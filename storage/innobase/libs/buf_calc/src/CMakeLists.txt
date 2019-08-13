@@ -24,7 +24,6 @@ target_link_libraries(
     PUBLIC
     crc32
     page
-    random
     PRIVATE
 )
 

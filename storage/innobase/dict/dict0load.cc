@@ -31,6 +31,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/24/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_create_from_mem.h>
+#include <innodb/data_types/DTUPLE_EST_ALLOC.h>
+#include <innodb/data_types/dfield_set_data.h>
+#include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dtuple_get_nth_field.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_get_size.h>

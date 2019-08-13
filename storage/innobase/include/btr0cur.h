@@ -42,6 +42,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "gis0type.h"
 #include "page0cur.h"
+#include "data0data.h"
+
 
 /** Mode flags for btr_cur operations; these can be ORed */
 enum {

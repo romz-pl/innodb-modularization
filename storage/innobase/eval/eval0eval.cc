@@ -34,10 +34,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/data_types/ib_like_t.h>
 #include <innodb/data_types/dtype_get_mtype.h>
+#include <innodb/data_types/dfield_set_data.h>
+#include <innodb/data_types/dfield_is_null.h>
 
 #include "eval0eval.h"
 
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 
 #include "rem0cmp.h"
 #include "row0sel.h"

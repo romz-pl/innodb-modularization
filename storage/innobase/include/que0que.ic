@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 5/27/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtype_t.h>
+#include <innodb/data_types/dfield_get_type.h>
+
 #include "usr0sess.h"
 
 /** Gets the trx of a query thread. */

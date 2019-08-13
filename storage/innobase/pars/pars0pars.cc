@@ -40,11 +40,14 @@ on 1/27/1998 */
 #include <innodb/data_types/ib_like_t.h>
 #include <innodb/memory/ut_memcmp.h>
 #include <innodb/string/ut_strlen.h>
+#include <innodb/data_types/dfield_set_type.h>
+#include <innodb/data_types/dtuple_create.h>
 
 #include "current_thd.h"
 #include "ha_prototypes.h"
 
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 
 #include "dict0crea.h"
 #include "dict0dd.h"

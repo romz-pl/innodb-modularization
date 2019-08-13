@@ -30,8 +30,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 7/1/1994 Heikki Tuuri
  ************************************************************************/
 
+#include <innodb/data_types/dfield_get_type.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dtype_get_charset_coll.h>
 #include <innodb/logger/fatal.h>
+#include <innodb/data_types/dtype_t.h>
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 
 #include <mysql_com.h>
 

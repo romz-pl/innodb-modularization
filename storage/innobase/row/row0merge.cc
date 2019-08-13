@@ -31,6 +31,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed by Sunny Bains and Marko Makela
  *******************************************************/
 
+#include <innodb/data_types/dtuple_create.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_dup.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_dup.h>
+#include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/data_types/dfield_set_len.h>
+#include <innodb/data_types/dfield_is_null.h>
+#include <innodb/data_types/dfield_copy.h>
 #include <innodb/data_types/dtuple_get_n_ext.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
 #include <innodb/memory/mem_heap_zalloc.h>

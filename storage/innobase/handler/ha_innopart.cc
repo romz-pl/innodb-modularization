@@ -45,6 +45,7 @@ Created Nov 22, 2013 Mattias Jonsson */
 #include <strfunc.h>
 #include <new>
 
+#include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dtuple_set_n_fields.h>
 #include <innodb/allocator/ut_zalloc.h>
 #include <innodb/logger/info.h>

@@ -49,7 +49,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <set>
 
 #include <deque>
-#include "data0data.h"
+#include "btr0types.h"
+#include "trx0types.h"
 
 #include "dict/dict.h"
 #include "dict0mem.h"

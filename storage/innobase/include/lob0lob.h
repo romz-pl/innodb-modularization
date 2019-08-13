@@ -28,6 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/data_types/big_rec_t.h>
 #include <innodb/mtr/mtr_x_lock.h>
 #include <innodb/buf_block/buf_block_buf_fix_dec.h>
 #include <innodb/buf_block/buf_block_buf_fix_inc.h>

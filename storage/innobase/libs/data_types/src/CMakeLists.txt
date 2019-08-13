@@ -105,9 +105,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     disk
-    error
-    formatting
-    machine
     memory
     print
     random
