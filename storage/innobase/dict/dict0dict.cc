@@ -139,7 +139,7 @@ extern uint ibuf_debug;
 #endif /* !UNIV_HOTBACKUP */
 #include <innodb/machine/data.h>
 
-#include "os0once.h"
+#include <innodb/dict_mem/os_once.h>
 #include "page0page.h"
 #include "page0zip.h"
 #ifndef UNIV_HOTBACKUP

@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_mem/flags.h>
 #include <innodb/data_types/flags.h>
 #include <innodb/dict_types/index_id_t.h>
 #include <innodb/dict_types/ib_quiesce_t.h>
@@ -83,7 +84,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0buf.h"
 #include "gis0type.h"
 #ifndef UNIV_HOTBACKUP
-#include "os0once.h"
+#include <innodb/dict_mem/os_once.h>
 #endif /* !UNIV_HOTBACKUP */
 #include "dict/mem.h"
 
@@ -99,231 +100,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 struct ib_rbt_t;
 struct dict_foreign_t;
 
-/** Type flags of an index: OR'ing of the flags is allowed to define a
-combination of types */
-/* @{ */
-#define DICT_CLUSTERED                                     \
-  1                   /*!< clustered index; for other than \
-                      auto-generated clustered indexes,    \
-                      also DICT_UNIQUE will be set */
-#define DICT_UNIQUE 2 /*!< unique index */
-#define DICT_IBUF 8   /*!< insert buffer tree */
-#define DICT_CORRUPT                      \
-  16 /*!< bit to store the corrupted flag \
-     in SYS_INDEXES.TYPE */
-#define DICT_FTS                              \
-  32 /* FTS index; can't be combined with the \
-     other flags */
-#define DICT_SPATIAL                                                  \
-  64                     /* SPATIAL index; can't be combined with the \
-                         other flags */
-#define DICT_VIRTUAL 128 /* Index on Virtual column */
-
-#define DICT_SDI                                  \
-  256 /* Tablespace dictionary Index. Set only in \
-      in-memory index structure. */
-
-#define DICT_IT_BITS             \
-  9 /*!< number of bits used for \
-    SYS_INDEXES.TYPE */
-/* @} */
-
-#if 0                         /* not implemented, retained for history */
-/** Types for a table object */
-#define DICT_TABLE_ORDINARY 1 /*!< ordinary table */
-#define DICT_TABLE_CLUSTER_MEMBER 2
-#define DICT_TABLE_CLUSTER          \
-  3 /* this means that the table is \
-    really a cluster definition */
-#endif
-
-/* Table and tablespace flags are generally not used for the Antelope file
-format except for the low order bit, which is used differently depending on
-where the flags are stored.
-
-==================== Low order flags bit =========================
-                    | REDUNDANT | COMPACT | COMPRESSED and DYNAMIC
-SYS_TABLES.TYPE     |     1     |    1    |     1
-dict_table_t::flags |     0     |    1    |     1
-FSP_SPACE_FLAGS     |     0     |    0    |     1
-fil_space_t::flags  |     0     |    0    |     1
-
-Before the 5.1 plugin, SYS_TABLES.TYPE was always DICT_TABLE_ORDINARY (1)
-and the tablespace flags field was always 0. In the 5.1 plugin, these fields
-were repurposed to identify compressed and dynamic row formats.
-
-The following types and constants describe the flags found in dict_table_t
-and SYS_TABLES.TYPE.  Similar flags found in fil_space_t and FSP_SPACE_FLAGS
-are described in fsp0fsp.h. */
-
-/* @{ */
-/** dict_table_t::flags bit 0 is equal to 0 if the row format = Redundant */
-#define DICT_TF_REDUNDANT 0 /*!< Redundant row format. */
-/** dict_table_t::flags bit 0 is equal to 1 if the row format = Compact */
-#define DICT_TF_COMPACT 1 /*!< Compact row format. */
-
-/** This bitmask is used in SYS_TABLES.N_COLS to set and test whether
-the Compact page format is used, i.e ROW_FORMAT != REDUNDANT */
-#define DICT_N_COLS_COMPACT 0x80000000UL
-
-/** Width of the COMPACT flag */
-#define DICT_TF_WIDTH_COMPACT 1
-
-/** Width of the ZIP_SSIZE flag */
-#define DICT_TF_WIDTH_ZIP_SSIZE 4
-
-/** Width of the ATOMIC_BLOBS flag.  The ROW_FORMAT=REDUNDANT and
-ROW_FORMAT=COMPACT broke up BLOB and TEXT fields, storing the first 768 bytes
-in the clustered index. ROW_FORMAT=DYNAMIC and ROW_FORMAT=COMPRESSED
-store the whole blob or text field off-page atomically.
-Secondary indexes are created from this external data using row_ext_t
-to cache the BLOB prefixes. */
-#define DICT_TF_WIDTH_ATOMIC_BLOBS 1
-
-/** If a table is created with the MYSQL option DATA DIRECTORY and
-innodb-file-per-table, an older engine will not be able to find that table.
-This flag prevents older engines from attempting to open the table and
-allows InnoDB to update_create_info() accordingly. */
-#define DICT_TF_WIDTH_DATA_DIR 1
-
-/** Width of the SHARED tablespace flag.
-It is used to identify tables that exist inside a shared general tablespace.
-If a table is created with the TABLESPACE=tsname option, an older engine will
-not be able to find that table. This flag prevents older engines from attempting
-to open the table and allows InnoDB to quickly find the tablespace. */
-
-#define DICT_TF_WIDTH_SHARED_SPACE 1
-
-/** Width of all the currently known table flags */
-#define DICT_TF_BITS                                     \
-  (DICT_TF_WIDTH_COMPACT + DICT_TF_WIDTH_ZIP_SSIZE +     \
-   DICT_TF_WIDTH_ATOMIC_BLOBS + DICT_TF_WIDTH_DATA_DIR + \
-   DICT_TF_WIDTH_SHARED_SPACE)
-
-/** A mask of all the known/used bits in table flags */
-#define DICT_TF_BIT_MASK (~(~0 << DICT_TF_BITS))
-
-/** Zero relative shift position of the COMPACT field */
-#define DICT_TF_POS_COMPACT 0
-/** Zero relative shift position of the ZIP_SSIZE field */
-#define DICT_TF_POS_ZIP_SSIZE (DICT_TF_POS_COMPACT + DICT_TF_WIDTH_COMPACT)
-/** Zero relative shift position of the ATOMIC_BLOBS field */
-#define DICT_TF_POS_ATOMIC_BLOBS \
-  (DICT_TF_POS_ZIP_SSIZE + DICT_TF_WIDTH_ZIP_SSIZE)
-/** Zero relative shift position of the DATA_DIR field */
-#define DICT_TF_POS_DATA_DIR \
-  (DICT_TF_POS_ATOMIC_BLOBS + DICT_TF_WIDTH_ATOMIC_BLOBS)
-/** Zero relative shift position of the SHARED TABLESPACE field */
-#define DICT_TF_POS_SHARED_SPACE (DICT_TF_POS_DATA_DIR + DICT_TF_WIDTH_DATA_DIR)
-/** Zero relative shift position of the start of the UNUSED bits */
-#define DICT_TF_POS_UNUSED \
-  (DICT_TF_POS_SHARED_SPACE + DICT_TF_WIDTH_SHARED_SPACE)
-
-/** Bit mask of the COMPACT field */
-#define DICT_TF_MASK_COMPACT \
-  ((~(~0U << DICT_TF_WIDTH_COMPACT)) << DICT_TF_POS_COMPACT)
-/** Bit mask of the ZIP_SSIZE field */
-#define DICT_TF_MASK_ZIP_SSIZE \
-  ((~(~0U << DICT_TF_WIDTH_ZIP_SSIZE)) << DICT_TF_POS_ZIP_SSIZE)
-/** Bit mask of the ATOMIC_BLOBS field */
-#define DICT_TF_MASK_ATOMIC_BLOBS \
-  ((~(~0U << DICT_TF_WIDTH_ATOMIC_BLOBS)) << DICT_TF_POS_ATOMIC_BLOBS)
-/** Bit mask of the DATA_DIR field */
-#define DICT_TF_MASK_DATA_DIR \
-  ((~(~0U << DICT_TF_WIDTH_DATA_DIR)) << DICT_TF_POS_DATA_DIR)
-/** Bit mask of the SHARED_SPACE field */
-#define DICT_TF_MASK_SHARED_SPACE \
-  ((~(~0U << DICT_TF_WIDTH_SHARED_SPACE)) << DICT_TF_POS_SHARED_SPACE)
-
-/** Return the value of the COMPACT field */
-#define DICT_TF_GET_COMPACT(flags) \
-  ((flags & DICT_TF_MASK_COMPACT) >> DICT_TF_POS_COMPACT)
-/** Return the value of the ZIP_SSIZE field */
-#define DICT_TF_GET_ZIP_SSIZE(flags) \
-  ((flags & DICT_TF_MASK_ZIP_SSIZE) >> DICT_TF_POS_ZIP_SSIZE)
-/** Return the value of the ATOMIC_BLOBS field */
-#define DICT_TF_HAS_ATOMIC_BLOBS(flags) \
-  ((flags & DICT_TF_MASK_ATOMIC_BLOBS) >> DICT_TF_POS_ATOMIC_BLOBS)
-/** Return the value of the DATA_DIR field */
-#define DICT_TF_HAS_DATA_DIR(flags) \
-  ((flags & DICT_TF_MASK_DATA_DIR) >> DICT_TF_POS_DATA_DIR)
-/** Return the value of the SHARED_SPACE field */
-#define DICT_TF_HAS_SHARED_SPACE(flags) \
-  ((flags & DICT_TF_MASK_SHARED_SPACE) >> DICT_TF_POS_SHARED_SPACE)
-/** Return the contents of the UNUSED bits */
-#define DICT_TF_GET_UNUSED(flags) (flags >> DICT_TF_POS_UNUSED)
-/* @} */
-
-/** @brief Table Flags set number 2.
-
-These flags will be stored in SYS_TABLES.MIX_LEN.  All unused flags
-will be written as 0.  The column may contain garbage for tables
-created with old versions of InnoDB that only implemented
-ROW_FORMAT=REDUNDANT.  InnoDB engines do not check these flags
-for unknown bits in order to protect backward incompatibility. */
-/* @{ */
-/** Total number of bits in table->flags2. */
-#define DICT_TF2_BITS 11
-#define DICT_TF2_UNUSED_BIT_MASK (~0U << DICT_TF2_BITS)
-#define DICT_TF2_BIT_MASK ~DICT_TF2_UNUSED_BIT_MASK
-
-/** TEMPORARY; TRUE for tables from CREATE TEMPORARY TABLE. */
-#define DICT_TF2_TEMPORARY 1
-
-/** The table has an internal defined DOC ID column */
-#define DICT_TF2_FTS_HAS_DOC_ID 2
-
-/** The table has an FTS index */
-#define DICT_TF2_FTS 4
-
-/** Need to add Doc ID column for FTS index build.
-This is a transient bit for index build */
-#define DICT_TF2_FTS_ADD_DOC_ID 8
-
-/** This bit is used during table creation to indicate that it will
-use its own tablespace instead of the system tablespace. */
-#define DICT_TF2_USE_FILE_PER_TABLE 16
-
-/** Set when we discard/detach the tablespace */
-#define DICT_TF2_DISCARDED 32
-
-/** Intrinsic table bit
-Intrinsic table is table created internally by MySQL modules viz. Optimizer,
-FTS, etc.... Intrinsic table has all the properties of the normal table except
-it is not created by user and so not visible to end-user. */
-#define DICT_TF2_INTRINSIC 128
-
-/** Encryption table bit for innodb_file-per-table only. */
-#define DICT_TF2_ENCRYPTION_FILE_PER_TABLE 256
-
-/** FTS AUX hidden table bit. */
-#define DICT_TF2_AUX 512
-
-/** Table is opened by resurrected trx during crash recovery. */
-#define DICT_TF2_RESURRECT_PREPARED 1024
-/* @} */
-
-#define DICT_TF2_FLAG_SET(table, flag) (table->flags2 |= (flag))
-
-#define DICT_TF2_FLAG_IS_SET(table, flag) (table->flags2 & (flag))
-
-#define DICT_TF2_FLAG_UNSET(table, flag) (table->flags2 &= ~(flag))
-
-/** Tables could be chained together with Foreign key constraint. When
-first load the parent table, we would load all of its descedents.
-This could result in rescursive calls and out of stack error eventually.
-DICT_FK_MAX_RECURSIVE_LOAD defines the maximum number of recursive loads,
-when exceeded, the child table will not be loaded. It will be loaded when
-the foreign constraint check needs to be run. */
-#define DICT_FK_MAX_RECURSIVE_LOAD 20
-
-/** Similarly, when tables are chained together with foreign key constraints
-with on cascading delete/update clause, delete from parent table could
-result in recursive cascading calls. This defines the maximum number of
-such cascading deletes/updates allowed. When exceeded, the delete from
-parent table will fail, and user has to drop excessive foreign constraint
-before proceeds. */
-#define FK_MAX_CASCADE_DEL 15
 
 /** Adds a virtual column definition to a table.
 @param[in,out]	table		table
@@ -430,314 +206,30 @@ void dict_mem_init(void);
 
 
 
+#include <innodb/dict_mem/dict_col_default_t.h>
+#include <innodb/dict_mem/dict_col_t.h>
+#include <innodb/dict_mem/dict_v_idx_t.h>
+#include <innodb/dict_mem/dict_v_idx_list.h>
+#include <innodb/dict_mem/dict_v_col_t.h>
+#include <innodb/dict_mem/dict_add_v_col_t.h>
+#include <innodb/dict_mem/dict_s_col_t.h>
+#include <innodb/dict_mem/dict_s_col_list.h>
+#include <innodb/dict_mem/dict_field_t.h>
+#include <innodb/dict_mem/zip_pad_info_t.h>
 
-/** Data structure for default value of a column in a table */
-struct dict_col_default_t {
-  /** Pointer to the column itself */
-  dict_col_t *col;
-  /** Default value in bytes */
-  byte *value;
-  /** Length of default value */
-  size_t len;
-};
 
-/** Data structure for a column in a table */
-struct dict_col_t {
-  /*----------------------*/
-  /** The following are copied from dtype_t,
-  so that all bit-fields can be packed tightly. */
-  /* @{ */
 
-  /** Default value when this column was added instantly.
-  If this is not a instantly added column then this is nullptr. */
-  dict_col_default_t *instant_default;
 
-  unsigned prtype : 32; /*!< precise type; MySQL data
-                        type, charset code, flags to
-                        indicate nullability,
-                        signedness, whether this is a
-                        binary string, whether this is
-                        a true VARCHAR where MySQL
-                        uses 2 bytes to store the length */
-  unsigned mtype : 8;   /*!< main data type */
 
-  /* the remaining fields do not affect alphabetical ordering: */
 
-  unsigned len : 16; /*!< length; for MySQL data this
-                     is field->pack_length(),
-                     except that for a >= 5.0.3
-                     type true VARCHAR this is the
-                     maximum byte length of the
-                     string data (in addition to
-                     the string, MySQL uses 1 or 2
-                     bytes to store the string length) */
 
-  unsigned mbminmaxlen : 5; /*!< minimum and maximum length of a
-                            character, in bytes;
-                            DATA_MBMINMAXLEN(mbminlen,mbmaxlen);
-                            mbminlen=DATA_MBMINLEN(mbminmaxlen);
-                            mbmaxlen=DATA_MBMINLEN(mbminmaxlen) */
-  /*----------------------*/
-  /* End of definitions copied from dtype_t */
-  /* @} */
 
-  unsigned ind : 10;        /*!< table column position
-                            (starting from 0) */
-  unsigned ord_part : 1;    /*!< nonzero if this column
-                            appears in the ordering fields
-                            of an index */
-  unsigned max_prefix : 12; /*!< maximum index prefix length on
-                            this column. Our current max limit is
-                            3072 (REC_VERSION_56_MAX_INDEX_COL_LEN)
-                            bytes. */
 
-  /** Returns the minimum size of the column.
-  @return minimum size */
-  ulint get_min_size() const {
-    return (dtype_get_min_size_low(mtype, prtype, len, mbminmaxlen));
-  }
 
-  /** Returns the maximum size of the column.
-  @return maximum size */
-  ulint get_max_size() const { return (dtype_get_max_size_low(mtype, len)); }
 
-  /** Check if a column is a virtual column
-  @return true if it is a virtual column, false otherwise */
-  bool is_virtual() const { return (prtype & DATA_VIRTUAL); }
 
-  /** Check if a column is nullable
-  @return true if it is nullable, otherwise false */
-  bool is_nullable() const { return ((prtype & DATA_NOT_NULL) == 0); }
 
-  /** Gets the column data type.
-  @param[out] type	data type */
-  void copy_type(dtype_t *type) const {
-    ut_ad(type != NULL);
 
-    type->mtype = mtype;
-    type->prtype = prtype;
-    type->len = len;
-    type->mbminmaxlen = mbminmaxlen;
-  }
-
-  /** Gets the minimum number of bytes per character.
-  @return minimum multi-byte char size, in bytes */
-  ulint get_mbminlen() const { return (DATA_MBMINLEN(mbminmaxlen)); }
-
-  /** Gets the maximum number of bytes per character.
-  @return maximum multi-byte char size, in bytes */
-  ulint get_mbmaxlen() const { return (DATA_MBMAXLEN(mbminmaxlen)); }
-
-  /** Sets the minimum and maximum number of bytes per character.
-  @param[in] mbminlen	minimum multi byte character size, in bytes
-  @param[in] mbmaxlen	mAXimum multi-byte character size, in bytes */
-  void set_mbminmaxlen(ulint mbminlen, ulint mbmaxlen) {
-    ut_ad(mbminlen < DATA_MBMAX);
-    ut_ad(mbmaxlen < DATA_MBMAX);
-    ut_ad(mbminlen <= mbmaxlen);
-
-    mbminmaxlen = DATA_MBMINMAXLEN(mbminlen, mbmaxlen);
-  }
-
-  /** Returns the size of a fixed size column, 0 if not a fixed size column.
-  @param[in] comp		nonzero=ROW_FORMAT=COMPACT
-  @return fixed size, or 0 */
-  ulint get_fixed_size(ulint comp) const {
-    return (dtype_get_fixed_size_low(mtype, prtype, len, mbminmaxlen, comp));
-  }
-
-  /** Returns the ROW_FORMAT=REDUNDANT stored SQL NULL size of a column.
-  For fixed length types it is the fixed length of the type, otherwise 0.
-  @param[in] comp		nonzero=ROW_FORMAT=COMPACT
-  @return SQL null storage size in ROW_FORMAT=REDUNDANT */
-  ulint get_null_size(ulint comp) const { return (get_fixed_size(comp)); }
-
-  /** Check whether the col is used in spatial index or regular index.
-  @return spatial status */
-  spatial_status_t get_spatial_status() const {
-    spatial_status_t spatial_status = SPATIAL_NONE;
-
-    /* Column is not a part of any index. */
-    if (!ord_part) {
-      return (spatial_status);
-    }
-
-    if (DATA_GEOMETRY_MTYPE(mtype)) {
-      if (max_prefix == 0) {
-        spatial_status = SPATIAL_ONLY;
-      } else {
-        /* Any regular index on a geometry column
-        should have a prefix. */
-        spatial_status = SPATIAL_MIXED;
-      }
-    }
-
-    return (spatial_status);
-  }
-
-  /** Set default value
-  @param[in]	value	Default value
-  @param[in]	length	Default value length
-  @param[in,out]	heap	Heap to allocate memory */
-  void set_default(const byte *value, size_t length, mem_heap_t *heap);
-
-#ifdef UNIV_DEBUG
-  /** Assert that a column and a data type match.
-  param[in] type		data type
-  @return true */
-  bool assert_equal(const dtype_t *type) const {
-    ut_ad(type);
-
-    ut_ad(mtype == type->mtype);
-    ut_ad(prtype == type->prtype);
-    // ut_ad(col->len == type->len);
-#ifndef UNIV_HOTBACKUP
-    ut_ad(mbminmaxlen == type->mbminmaxlen);
-#endif /* !UNIV_HOTBACKUP */
-
-    return true;
-  }
-#endif /* UNIV_DEBUG */
-};
-
-/** Index information put in a list of virtual column structure. Index
-id and virtual column position in the index will be logged.
-There can be multiple entries for a given index, with a different position. */
-struct dict_v_idx_t {
-  /** active index on the column */
-  dict_index_t *index;
-
-  /** position in this index */
-  ulint nth_field;
-};
-
-/** Index list to put in dict_v_col_t */
-typedef std::list<dict_v_idx_t, ut_allocator<dict_v_idx_t>> dict_v_idx_list;
-
-/** Data structure for a virtual column in a table */
-struct dict_v_col_t {
-  /** column structure */
-  dict_col_t m_col;
-
-  /** array of base column ptr */
-  dict_col_t **base_col;
-
-  /** number of base column */
-  ulint num_base;
-
-  /** column pos in table */
-  ulint v_pos;
-
-  /** Virtual index list, and column position in the index,
-  the allocated memory is not from table->heap, nor it is
-  tracked by dict_sys->size */
-  dict_v_idx_list *v_indexes;
-};
-
-/** Data structure for newly added virtual column in a table */
-struct dict_add_v_col_t {
-  /** number of new virtual column */
-  ulint n_v_col;
-
-  /** column structures */
-  const dict_v_col_t *v_col;
-
-  /** new col names */
-  const char **v_col_name;
-};
-
-/** Data structure for a stored column in a table. */
-struct dict_s_col_t {
-  /** Stored column ptr */
-  dict_col_t *m_col;
-  /** array of base col ptr */
-  dict_col_t **base_col;
-  /** number of base columns */
-  ulint num_base;
-  /** column pos in table */
-  ulint s_pos;
-};
-
-/** list to put stored column for dict_table_t */
-typedef std::list<dict_s_col_t, ut_allocator<dict_s_col_t>> dict_s_col_list;
-
-/** @brief DICT_ANTELOPE_MAX_INDEX_COL_LEN is measured in bytes and
-is the maximum indexed column length (or indexed prefix length) in
-ROW_FORMAT=REDUNDANT and ROW_FORMAT=COMPACT. Also, in any format,
-any fixed-length field that is longer than this will be encoded as
-a variable-length field.
-
-It is set to 3*256, so that one can create a column prefix index on
-256 characters of a TEXT or VARCHAR column also in the UTF-8
-charset. In that charset, a character may take at most 3 bytes.  This
-constant MUST NOT BE CHANGED, or the compatibility of InnoDB data
-files would be at risk! */
-#define DICT_ANTELOPE_MAX_INDEX_COL_LEN REC_ANTELOPE_MAX_INDEX_COL_LEN
-
-/** Find out maximum indexed column length by its table format.
-For ROW_FORMAT=REDUNDANT and ROW_FORMAT=COMPACT, the maximum
-field length is REC_ANTELOPE_MAX_INDEX_COL_LEN - 1 (767). For
-ROW_FORMAT=COMPRESSED and ROW_FORMAT=DYNAMIC, the length could
-be REC_VERSION_56_MAX_INDEX_COL_LEN (3072) bytes */
-#define DICT_MAX_FIELD_LEN_BY_FORMAT(table)                              \
-  (dict_table_has_atomic_blobs(table) ? REC_VERSION_56_MAX_INDEX_COL_LEN \
-                                      : REC_ANTELOPE_MAX_INDEX_COL_LEN - 1)
-
-#define DICT_MAX_FIELD_LEN_BY_FORMAT_FLAG(flags)                      \
-  (DICT_TF_HAS_ATOMIC_BLOBS(flags) ? REC_VERSION_56_MAX_INDEX_COL_LEN \
-                                   : REC_ANTELOPE_MAX_INDEX_COL_LEN - 1)
-
-/** Defines the maximum fixed length column size */
-#define DICT_MAX_FIXED_COL_LEN DICT_ANTELOPE_MAX_INDEX_COL_LEN
-
-/** Data structure for a field in an index */
-struct dict_field_t {
-  dict_field_t() : col(nullptr), prefix_len(0), fixed_len(0), is_ascending(0) {}
-
-  dict_col_t *col;           /*!< pointer to the table column */
-  id_name_t name;            /*!< name of the column */
-  unsigned prefix_len : 12;  /*!< 0 or the length of the column
-                             prefix in bytes in a MySQL index of
-                             type, e.g., INDEX (textcol(25));
-                             must be smaller than
-                             DICT_MAX_FIELD_LEN_BY_FORMAT;
-                             NOTE that in the UTF-8 charset, MySQL
-                             sets this to (mbmaxlen * the prefix len)
-                             in UTF-8 chars */
-  unsigned fixed_len : 10;   /*!< 0 or the fixed length of the
-                             column if smaller than
-                             DICT_ANTELOPE_MAX_INDEX_COL_LEN */
-  unsigned is_ascending : 1; /*!< 0=DESC, 1=ASC */
-};
-
-/** PADDING HEURISTIC BASED ON LINEAR INCREASE OF PADDING TO AVOID
- COMPRESSION FAILURES
- (Note: this is relevant only for compressed indexes)
- GOAL: Avoid compression failures by maintaining information about the
- compressibility of data. If data is not very compressible then leave
- some extra space 'padding' in the uncompressed page making it more
- likely that compression of less than fully packed uncompressed page will
- succeed.
-
- This padding heuristic works by increasing the pad linearly until the
- desired failure rate is reached. A "round" is a fixed number of
- compression operations.
- After each round, the compression failure rate for that round is
- computed. If the failure rate is too high, then padding is incremented
- by a fixed value, otherwise it's left intact.
- If the compression failure is lower than the desired rate for a fixed
- number of consecutive rounds, then the padding is decreased by a fixed
- value. This is done to prevent overshooting the padding value,
- and to accommodate the possible change in data compressibility. */
-
-/** Number of zip ops in one round. */
-#define ZIP_PAD_ROUND_LEN (128)
-
-/** Number of successful rounds after which the padding is decreased */
-#define ZIP_PAD_SUCCESSFUL_ROUND_LIMIT (5)
-
-/** Amount by which padding is increased. */
-#define ZIP_PAD_INCR (128)
 
 /** Percentage of compression failures that are allowed in a single
 round */
@@ -747,23 +239,12 @@ extern ulong zip_failure_threshold_pct;
 compression failures */
 extern ulong zip_pad_max;
 
-/** Data structure to hold information about about how much space in
-an uncompressed page should be left as padding to avoid compression
-failures. This estimate is based on a self-adapting heuristic. */
-struct zip_pad_info_t {
-  SysMutex *mutex; /*!< mutex protecting the info */
-  ulint pad;       /*!< number of bytes used as pad */
-  ulint success;   /*!< successful compression ops during
-                   current round */
-  ulint failure;   /*!< failed compression ops during
-                   current round */
-  ulint n_rounds;  /*!< number of currently successful
-                  rounds */
-#ifndef UNIV_HOTBACKUP
-  volatile os_once::state_t mutex_created;
-  /*!< Creation state of mutex member */
-#endif /* !UNIV_HOTBACKUP */
-};
+
+
+
+
+
+
 
 /** If key is fixed length key then cache the record offsets on first
 computation. This will help save computation cycle that generate same

@@ -1,3 +1,8 @@
+#pragma once
+
+#include <innodb/univ/univ.h>
+
+
 /*****************************************************************************
 
 Copyright (c) 2014, 2018, Oracle and/or its affiliates. All Rights Reserved.
@@ -31,11 +36,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created Feb 20, 2014 Vasil Dimov
  *******************************************************/
 
-#ifndef os0once_h
-#define os0once_h
 
-#include <innodb/univ/univ.h>
+#include <innodb/assert/assert.h>
 #include <innodb/atomic/atomic.h>
+#include <innodb/error/ut_error.h>
+#include <innodb/univ/univ.h>
 #include <innodb/wait/UT_RELAX_CPU.h>
 
 /** Execute a given function exactly once in a multi-threaded environment
@@ -121,4 +126,4 @@ class os_once {
   }
 };
 
-#endif /* os0once_h */
+
