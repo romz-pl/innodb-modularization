@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/mtr/mtr_release_block_at_savepoint.h>
 #include <innodb/mtr/mtr_set_savepoint.h>
 #include <innodb/mtr/mtr_sx_lock.h>

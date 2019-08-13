@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/sync_rw/rw_lock_s_lock_inline.h>
 #include <innodb/sync_rw/rw_lock_x_lock_inline.h>
 #include <innodb/memory/mem_heap_get_size.h>

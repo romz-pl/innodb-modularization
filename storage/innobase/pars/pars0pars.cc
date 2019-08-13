@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Historical note: Innobase executed its first SQL string (CREATE TABLE)
 on 1/27/1998 */
 
+#include <innodb/memory/mem_heap_dup.h>
+#include <innodb/data_types/dtype_set.h>
 #include <innodb/data_types/dtype_copy.h>
 #include <innodb/data_types/dtype_get_mtype.h>
 #include <innodb/data_types/ib_like_t.h>
@@ -1026,12 +1028,12 @@ static void pars_process_assign_list(upd_node_t *node) /*!< in: update node */
     pars_resolve_exp_columns(table_sym, assign_node->val);
     pars_resolve_exp_variables_and_types(NULL, assign_node->val);
 #if 0
-		ut_a(dtype_get_mtype(
-			     dfield_get_type(que_node_get_val(
-						     assign_node->col)))
-		     == dtype_get_mtype(
-			     dfield_get_type(que_node_get_val(
-						     assign_node->val))));
+        ut_a(dtype_get_mtype(
+                 dfield_get_type(que_node_get_val(
+                             assign_node->col)))
+             == dtype_get_mtype(
+                 dfield_get_type(que_node_get_val(
+                             assign_node->val))));
 #endif
 
     /* Add to the update node all the columns found in assignment

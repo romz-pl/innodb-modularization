@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created June 2005 by Marko Makela
  *******************************************************/
 
+#include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/assert/ASSERT_ZERO.h>
 #include <innodb/assert/ASSERT_ZERO_BLOB.h>
 #include <innodb/buf_frame/buf_frame_copy.h>

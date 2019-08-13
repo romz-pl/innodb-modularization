@@ -240,3 +240,8 @@ the underling datatype of GEOMETRY(not DATA_POINT) data. */
 
 
 #define DATA_MYSQL_BINARY_CHARSET_COLL 63
+
+
+
+/* Maximum values for various fields (for non-blob tuples) */
+#define REC_MAX_N_FIELDS (1024 - 1)

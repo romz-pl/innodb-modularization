@@ -71,6 +71,26 @@ add_library( ${LIB_NAME} STATIC
     dtuple_dup_v_fld.cpp
     dtuple_init_v_fld.cpp
     dtuple_create_with_vcol.cpp
+    dtuple_set_n_fields.cpp
+    dtuple_copy_v_fields.cpp
+    dtuple_copy.cpp
+    dtuple_get_data_size.cpp
+    dtuple_check_typed.cpp
+    dtuple_get_n_ext.cpp
+    dtuple_coll_eq.cpp
+    dtuple_fold.cpp
+    dtuple_set_types_binary.cpp
+    dtuple_contains_null.cpp
+    dfield_check_typed.cpp
+    dtuple_validate.cpp
+    dfield_print_also_hex.cpp
+    dtuple_print.cpp
+    dfield_print.cpp
+    dfield_print_raw.cpp
+    data_error.cpp
+    dfield_check_typed_no_assert.cpp
+    dtuple_check_typed_no_assert.cpp
+    dtuple_big_rec_free.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -84,9 +104,13 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    disk
     error
+    formatting
     machine
     memory
+    print
+    random
     PRIVATE
 )
 

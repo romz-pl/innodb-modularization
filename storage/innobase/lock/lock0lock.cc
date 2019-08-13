@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/memory/mem_heap_dup.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_get_size.h>
 #include <innodb/memory/mem_heap_empty.h>

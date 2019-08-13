@@ -49,6 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/mtr/mtr_memo_release.h>
 #include <innodb/mtr/mtr_block_sx_latch_at_savepoint.h>
 #include <innodb/mtr/mtr_block_x_latch_at_savepoint.h>

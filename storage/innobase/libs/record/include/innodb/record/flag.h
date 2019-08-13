@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/disk/page_size_t.h>
-
+#include <innodb/data_types/flags.h>
 
 /* Compact flag ORed to the extra size returned by rec_get_offsets() */
 #define REC_OFFS_COMPACT ((ulint)1 << 31)
@@ -142,8 +142,6 @@ static const uint8_t REC_N_FIELDS_ONE_BYTE_MAX = 0x7F;
 
 
 
-/* Maximum values for various fields (for non-blob tuples) */
-#define REC_MAX_N_FIELDS (1024 - 1)
 #define REC_MAX_HEAP_NO (2 * 8192 - 1)
 #define REC_MAX_N_OWNED (16 - 1)
 
@@ -185,10 +183,3 @@ constexpr ulint REC_MAX_DATA_SIZE = 16384;
 
 
 
-/** The size of a reference to data stored on a different page.
-The reference is stored at the end of the prefix of the field
-in the index record. */
-#define BTR_EXTERN_FIELD_REF_SIZE FIELD_REF_SIZE
-
-/** If the data don't exceed the size, the data are stored locally. */
-#define BTR_EXTERN_LOCAL_STORED_MAX_SIZE (BTR_EXTERN_FIELD_REF_SIZE * 2)

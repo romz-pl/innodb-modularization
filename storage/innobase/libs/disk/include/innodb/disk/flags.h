@@ -355,3 +355,18 @@ ssize, which is the number of shifts from 512. */
 #if PAGE_ZIP_SSIZE_MAX >= (1 << PAGE_ZIP_SSIZE_BITS)
 #error "PAGE_ZIP_SSIZE_MAX >= (1 << PAGE_ZIP_SSIZE_BITS)"
 #endif
+
+
+
+
+#define FIELD_REF_SIZE 20
+
+/** The size of a reference to data stored on a different page.
+The reference is stored at the end of the prefix of the field
+in the index record. */
+#define BTR_EXTERN_FIELD_REF_SIZE FIELD_REF_SIZE
+
+/** If the data don't exceed the size, the data are stored locally. */
+#define BTR_EXTERN_LOCAL_STORED_MAX_SIZE (BTR_EXTERN_FIELD_REF_SIZE * 2)
+
+#define PAGE_SIZE_T_SIZE_BITS 17

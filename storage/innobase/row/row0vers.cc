@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/6/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_init_v_fld.h>
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
+#include <innodb/data_types/dtuple_init_v_fld.h>
+#include <innodb/data_types/dtuple_set_types_binary.h>
 #include <innodb/mtr/mtr_s_lock.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/record/rec_copy.h>

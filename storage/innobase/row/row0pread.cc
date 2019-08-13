@@ -31,6 +31,7 @@ Created 2018-01-27 by Sunny Bains */
 
 #include <vector>
 
+#include <innodb/data_types/dtuple_set_n_fields_cmp.h>
 #include <innodb/sync_rw/rw_lock_sx_lock.h>
 #include <innodb/sync_rw/rw_lock_sx_unlock.h>
 #include <innodb/memory/mem_heap_empty.h>

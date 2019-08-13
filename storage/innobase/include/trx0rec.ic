@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/mem_heap_dup.h>
+
 #ifndef UNIV_HOTBACKUP
 /** Reads from an undo log record the record type.
  @return record type */

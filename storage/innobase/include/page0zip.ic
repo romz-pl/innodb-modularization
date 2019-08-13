@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define UNIV_INLINE
 #endif
 
+#include <innodb/page/page_zip_get_size.h>
 #include <innodb/page/page_dir_get_n_heap.h>
 #include <innodb/page/page_zip_dir_start_offs.h>
 #include <innodb/page/page_zip_get_trailer_len.h>
@@ -45,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_dir_find_low.h>
 #include <innodb/page/page_zip_dir_user_size.h>
 #include <innodb/page/page_zip_dir_find_free.h>
+#include <innodb/memory_check/memory_check.h>
 
 #include "mtr0log.h"
 #include "page0page.h"

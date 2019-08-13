@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 other files in library. The code in this file is used to make a library for
 external tools. */
 
+#include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/data_types/dtype_get_mblen.h>
 #include <innodb/string/mem_strdup.h>
 

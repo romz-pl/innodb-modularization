@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
+#include <innodb/data_types/dtuple_get_n_v_fields.h>
+#include <innodb/data_types/dtuple_set_n_fields_cmp.h>
 #include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
 #include <innodb/mtr/mtr_s_lock.h>

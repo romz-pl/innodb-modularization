@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 7/1/1994 Heikki Tuuri
  ************************************************************************/
 
+#include <innodb/data_types/dtuple_get_nth_field.h>
 #include <innodb/data_types/dtype_is_non_binary_string_type.h>
 #include <innodb/record/rec_offs_comp.h>
 #include <innodb/record/rec_offs_nth_sql_null.h>

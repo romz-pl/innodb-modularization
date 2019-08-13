@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_get_nth_field.h>
+
 #include <cmath>
 #include <cstdint>
 

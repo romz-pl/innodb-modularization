@@ -54,8 +54,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 //#include <unordered_set>
 
-/** printf(3) format used for printing DB_TRX_ID and other system fields */
-#define TRX_ID_FMT IB_ID_FMT
 
 /** maximum length that a formatted trx_t::id could take, not including
 the terminating NUL character. */

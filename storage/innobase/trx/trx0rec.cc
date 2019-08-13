@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_init_v_fld.h>
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/data_types/dfield_set_spatial_status.h>
 #include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/mtr/mtr_start.h>

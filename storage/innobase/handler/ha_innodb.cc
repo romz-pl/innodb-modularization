@@ -46,6 +46,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/data_types/dtuple_set_n_fields_cmp.h>
+#include <innodb/data_types/dtuple_set_n_fields.h>
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
 #include <innodb/data_types/dtype_get_at_most_n_mbchars.h>
 #include <innodb/clone/clone_mark_abort.h>
 #include <innodb/clone/clone_mark_active.h>

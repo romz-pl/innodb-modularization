@@ -38,6 +38,8 @@ external tools. */
 #define rem_rec_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/data_types/dtuple_get_n_fields.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
 #include <innodb/record/flag.h>
 #include <innodb/record/rec_get_n_fields_old_raw.h>

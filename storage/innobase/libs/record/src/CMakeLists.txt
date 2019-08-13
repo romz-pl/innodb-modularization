@@ -114,6 +114,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    data_types
     disk
     memory
     page

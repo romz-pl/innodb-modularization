@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created September 2006 Marko Makela
  *******************************************************/
 
+#include <innodb/data_types/dtuple_get_nth_field.h>
+
 #include "row0ext.h"
 #include "lob0lob.h"
 

@@ -57,3 +57,11 @@ struct dtuple_t {
   @param[in]	index	clustered index object for this tuple */
   void ignore_trailing_default(const dict_index_t *index);
 };
+
+/** Print the contents of a tuple.
+@param[out]	o	output stream
+@param[in]	tuple	data tuple */
+inline std::ostream &operator<<(std::ostream &o, const dtuple_t &tuple) {
+  dtuple_print(o, &tuple);
+  return (o);
+}

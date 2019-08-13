@@ -33,6 +33,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/data_types/dtuple_set_info_bits.h>
+#include <innodb/data_types/dtype_set.h>
+#include <innodb/data_types/dtuple_set_n_fields_cmp.h>
+#include <innodb/data_types/dtuple_get_nth_v_field.h>
+#include <innodb/data_types/dtuple_get_n_v_fields.h>
+#include <innodb/data_types/dtuple_set_types_binary.h>
 #include <innodb/clone/clone_mark_active.h>
 #include <innodb/clone/clone_mark_abort.h>
 #include <innodb/sync_os/pfs.h>

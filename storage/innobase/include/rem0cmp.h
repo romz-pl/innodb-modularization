@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/data_types/dtuple_get_n_fields_cmp.h>
+
 #include <my_sys.h>
 #include "data0data.h"
 

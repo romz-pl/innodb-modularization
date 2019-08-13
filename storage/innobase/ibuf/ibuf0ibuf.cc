@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/data_types/dtuple_set_types_binary.h>
+#include <innodb/data_types/dtype_get_sql_null_size.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/mtr/mtr_x_lock_space.h>
 #include <innodb/mtr/mtr_sx_lock.h>

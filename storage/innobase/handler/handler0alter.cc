@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/memory/mem_heap_zalloc.h>
+#include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/clone/clone_mark_abort.h>
 #include <innodb/clone/clone_mark_active.h>
 #include <innodb/memory/mem_heap_get_size.h>

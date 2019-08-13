@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/27/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/mem_heap_zalloc.h>
+
 #include "mtr0log.h"
 #ifndef UNIV_HOTBACKUP
 #include "lock0lock.h"

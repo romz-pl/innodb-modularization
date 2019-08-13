@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 03/11/2014 Shaohua Wang
  *******************************************************/
 
+#include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/mtr/mtr_set_flush_observer.h>
 #include <innodb/page/cursor_movement.h>
 #include <innodb/buf_block/buf_block_buf_fix_inc.h>
