@@ -35,8 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-/* The insert buffer tree itself is always located in space 0. */
-#define IBUF_SPACE_ID static_cast<space_id_t>(0)
+#include <innodb/dict_types/flags.h>
 
 struct ibuf_t;
 

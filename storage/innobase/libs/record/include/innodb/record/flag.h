@@ -4,6 +4,7 @@
 
 #include <innodb/disk/page_size_t.h>
 #include <innodb/data_types/flags.h>
+#include <innodb/dict_types/flags.h>
 
 /* Compact flag ORed to the extra size returned by rec_get_offsets() */
 #define REC_OFFS_COMPACT ((ulint)1 << 31)
@@ -165,10 +166,7 @@ This constant MUST NOT BE CHANGED, or the compatibility of InnoDB data
 files would be at risk! */
 #define REC_ANTELOPE_MAX_INDEX_COL_LEN 768
 
-/** Maximum indexed field length for tables that have atomic BLOBs.
-This (3072) is the maximum index row length allowed, so we cannot create index
-prefix column longer than that. */
-#define REC_VERSION_56_MAX_INDEX_COL_LEN 3072
+
 
 
 /* Maximum lengths for the data in a physical record if the offsets

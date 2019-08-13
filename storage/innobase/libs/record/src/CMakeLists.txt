@@ -115,6 +115,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     data_types
+    dict_types
     page
     PRIVATE
 )

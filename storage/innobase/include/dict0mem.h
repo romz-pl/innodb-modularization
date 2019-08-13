@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_types/index_id_t.h>
+#include <innodb/dict_types/ib_quiesce_t.h>
 #include <innodb/data_types/dtype_t.h>
 #include <innodb/data_types/spatial_status_t.h>
 #include <innodb/mtr/mtr_commit.h>

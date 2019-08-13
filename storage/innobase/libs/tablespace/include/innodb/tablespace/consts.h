@@ -100,9 +100,7 @@ every XDES_DESCRIBED_PER_PAGE pages in every tablespace. */
 #define FSP_FIRST_RSEG_PAGE_NO  \
   6 /*!< first rollback segment \
     page, in tablespace 0 */
-#define FSP_DICT_HDR_PAGE_NO    \
-  7 /*!< data dictionary header \
-    page, in tablespace 0 */
+
 
 /* The following page exists in each v8 Undo Tablespace.
 (space_id = SRV_LOG_SPACE_FIRST_ID - undo_space_num)

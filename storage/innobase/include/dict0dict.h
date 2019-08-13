@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_types/dict_err_ignore_t.h>
+#include <innodb/dict_types/DictSysMutex.h>
 #include <innodb/hash/hash_table_t.h>
 #include <innodb/hash/HASH_GET_NEXT.h>
 #include <innodb/hash/HASH_GET_FIRST.h>

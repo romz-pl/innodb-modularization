@@ -443,6 +443,9 @@ typedef ib_id_t table_id_t;
 /** Tablespace identifier */
 typedef uint32_t space_id_t;
 
+/** Index identifier (unique within a tablespace). */
+typedef ib_id_t space_index_t;
+
 /** Row identifier (DB_ROW_ID, DATA_ROW_ID) */
 typedef ib_id_t row_id_t;
 
@@ -454,6 +457,7 @@ typedef ib_id_t roll_ptr_t;
 
 /** Undo number */
 typedef ib_id_t undo_no_t;
+
 
 #include <limits>
 

@@ -32,6 +32,7 @@ SET( INNODB_COMPONENT_LIBS
     # D
     #data_types
     #dict
+    #dict_types
 
     # E
     #error

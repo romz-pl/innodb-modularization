@@ -61,7 +61,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     buf_pool
-    memory
     PRIVATE
 )
 
