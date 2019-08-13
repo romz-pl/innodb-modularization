@@ -42,7 +42,7 @@ those functions in lock/ */
 #error Do not include lock0priv.h outside of the lock/ module
 #endif
 
-#include "dict0types.h"
+
 
 #include "trx0types.h"
 

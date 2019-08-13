@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1996 Heikki Tuuri
  ***********************************************************************/
 
+#include <innodb/dict_types/flags.h>
 #include <innodb/memory/mem_heap_dup.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/memory/mem_heap_zalloc.h>

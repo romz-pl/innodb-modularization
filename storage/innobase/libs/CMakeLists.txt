@@ -20,7 +20,6 @@ add_subdirectory( counter )
 add_subdirectory( cpu )
 
 add_subdirectory( data_types )
-add_subdirectory( dict )
 add_subdirectory( dict_types )
 add_subdirectory( disk )
 

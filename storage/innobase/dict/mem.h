@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+struct dict_col_t;
+
 /** Creates a table memory object.
  @return own: table object */
 dict_table_t *dict_mem_table_create(

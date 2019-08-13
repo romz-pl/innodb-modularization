@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include "dict0dict.h"
-#include "dict0types.h"
+
 #include "srv0srv.h"
 
 /** Set the persistent statistics flag for a given table. This is set only

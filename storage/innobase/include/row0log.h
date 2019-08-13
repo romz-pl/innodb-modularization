@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 #include <innodb/error/dberr_t.h>
 
-#include "dict0types.h"
+
 
 #include "que0types.h"
 
@@ -48,6 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 struct dfield_t;
 struct dtuple_t;
 class ut_stage_alter_t;
+struct dict_table_t;
 
 /** Allocate the row log for an index and flag the index
  for online creation.

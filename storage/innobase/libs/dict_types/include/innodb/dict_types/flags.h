@@ -33,3 +33,11 @@ prefix column longer than that. */
 
 /* The insert buffer tree itself is always located in space 0. */
 #define IBUF_SPACE_ID static_cast<space_id_t>(0)
+
+/** Prefix for tmp tables, adopted from sql/table.h */
+#define TEMP_FILE_PREFIX "#sql"
+#define TEMP_FILE_PREFIX_LENGTH 4
+#define TEMP_FILE_PREFIX_INNODB "#sql-ib"
+
+#define TEMP_TABLE_PREFIX "#sql"
+#define TEMP_TABLE_PATH_PREFIX "/" TEMP_TABLE_PREFIX

@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0buf.h"
 
-#include "dict0types.h"
+
 #include "gis0geo.h"
 
 

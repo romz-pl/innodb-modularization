@@ -40,12 +40,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "btr0types.h"
 #include "trx0types.h"
-#include "dict0types.h"
+
 
 #include "que0types.h"
 
 #include "row0types.h"
 #include "trx0types.h"
+
+struct dict_table_t;
+struct dict_add_v_col_t;
+struct dict_field_t;
 
 /** Gets the offset of the DB_TRX_ID field, in bytes relative to the origin of
  a clustered index record.

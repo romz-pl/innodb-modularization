@@ -1,7 +1,7 @@
 #include <innodb/clone/is_ddl_temp_table.h>
 
 #include <innodb/tablespace/fil_node_t.h>
-#include <innodb/dict/flags.h>
+#include <innodb/dict_types/flags.h>
 
 /** Check if the tablespace file is temporary file created by DDL
 @param[in]	node	file node

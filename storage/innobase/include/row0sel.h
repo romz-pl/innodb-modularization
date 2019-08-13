@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "trx0types.h"
 #include "dict0stats.h"
-#include "dict0types.h"
+
 #include "pars0sym.h"
 #include "que0types.h"
 #include "read0types.h"

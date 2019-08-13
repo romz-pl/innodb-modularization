@@ -48,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0types.h"
 
 #include <innodb/error/dberr_t.h>
-#include "dict0types.h"
+
 #include "fts0fts.h"
 #include "gis0type.h"
 #include "lob0undo.h"

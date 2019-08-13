@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0bulk.h"
 #include "btr0types.h"
 #include "trx0types.h"
-#include "dict0types.h"
+
 #include "fts0fts.h"
 #include "fts0priv.h"
 #include "fts0types.h"

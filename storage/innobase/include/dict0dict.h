@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/data_types/flags.h>
 #include <innodb/dict_types/dict_err_ignore_t.h>
 #include <innodb/dict_types/DictSysMutex.h>
 #include <innodb/hash/hash_table_t.h>
@@ -56,7 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict/dict.h"
 #include "dict0mem.h"
-#include "dict0types.h"
+
 #include "fsp0fsp.h"
 
 
@@ -68,6 +69,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0types.h"
 
 #include <innodb/random/random.h>
+
+struct dict_sys_t;
 
 #define DICT_HEAP_SIZE                   \
   100 /*!< initial memory heap size when \

@@ -69,7 +69,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "dict0load.h"
 #include "dict0mem.h"
-#include "dict0types.h"
+
 
 #include "fts0opt.h"
 #include "fts0priv.h"

@@ -37,11 +37,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "sql/mdl.h"
 
-#include "dict0types.h"
+
 #include "pars0types.h"
 #include "que0types.h"
 #include "row0types.h"
 #include "usr0types.h"
+
+struct dict_table_t;
 
 /** Creates a symbol table for a single stored procedure or query.
  @return own: symbol table */

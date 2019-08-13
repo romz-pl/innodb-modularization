@@ -38,9 +38,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/memory/mem_heap_t.h>
 #include <innodb/error/dberr_t.h>
 
-#include "dict0types.h"
+
 
 #include "trx0types.h"
+
+struct dict_table_t;
 
 enum dict_stats_upd_option_t {
   DICT_STATS_RECALC_PERSISTENT, /* (re) calculate the

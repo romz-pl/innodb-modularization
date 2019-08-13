@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "dict0types.h"        /* index_id_t, DICT_IBUF_ID_MIN */
+        /* index_id_t, DICT_IBUF_ID_MIN */
       /* srv_tmp_space */
 #include "ibuf0ibuf.h"         /* IBUF_SPACE_ID */
 #include "ut0lock_free_hash.h" /* ut_lock_free_hash_t */

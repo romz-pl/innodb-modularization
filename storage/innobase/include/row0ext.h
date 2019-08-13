@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/memory/mem_heap_t.h>
 #include <innodb/print/ut_print_buf.h>
 
-#include "dict0types.h"
+
 
 #include <innodb/disk/page_size_t.h>
 #include "row0types.h"

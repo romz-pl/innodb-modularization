@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include "dict0types.h"
+
 #include "pars0sym.h"
 #include "que0types.h"
 #include "row0sel.h"

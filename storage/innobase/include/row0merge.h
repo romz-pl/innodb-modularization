@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "btr0types.h"
 #include "trx0types.h"
-#include "dict0types.h"
+
 #include "lock0types.h"
 
 #include "que0types.h"

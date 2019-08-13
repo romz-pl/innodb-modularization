@@ -111,7 +111,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/undo_space_name.h>
 #include <innodb/log_types/recv_recovery_on.h>
 
-#include "dict0types.h"
+
 #include <innodb/disk/flags.h>
 #include "log0recv.h"
 #include <innodb/machine/data.h>
@@ -128,6 +128,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 struct buf_block_t;
 struct mtr_t;
+struct dict_table_t;
 
 
 #ifdef UNIV_HOTBACKUP

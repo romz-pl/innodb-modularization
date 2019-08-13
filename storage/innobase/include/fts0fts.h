@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 
 
-#include "dict0types.h"
+
 #include "ft_global.h"
 
 

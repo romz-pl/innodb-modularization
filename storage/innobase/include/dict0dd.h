@@ -34,7 +34,7 @@ Data dictionary interface */
 
 #include "dict0dict.h"
 #include "dict0mem.h"
-#include "dict0types.h"
+
 
 #ifndef UNIV_HOTBACKUP
 #include "dd/cache/dictionary_client.h"

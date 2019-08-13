@@ -51,7 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0pcur.h"
 #include "dict0priv.h"
 #include "dict0stats.h"
-#include "dict0types.h"
+
 #include "fts0fts.h"
 #include "fts0plugin.h"
 #include "fts0priv.h"

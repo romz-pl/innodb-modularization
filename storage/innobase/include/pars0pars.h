@@ -43,6 +43,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "usr0types.h"
 #include "ut0vec.h"
 
+struct tab_node_t;
+struct ind_node_t;
+
 /** Type of the user functions. The first argument is always InnoDB-supplied
 and varies in type, while 'user_arg' is a user-supplied argument. The
 meaning of the return type also varies. See the individual use cases, e.g.
