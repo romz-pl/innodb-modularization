@@ -7,14 +7,15 @@
 #include <innodb/memory/mem_heap_t.h>
 #include <innodb/univ/page_cur_mode_t.h>
 #include <innodb/gis_type/rtr_mbr_t.h>
+#include <innodb/gis_type/rtr_node_path_t.h>
 
-struct rtr_node_path_t;
-struct matched_rec_t;
-struct buf_block_t;
-struct que_thr_t;
+
 struct btr_cur_t;
+struct buf_block_t;
 struct dict_index_t;
 struct dtuple_t;
+struct matched_rec_t;
+struct que_thr_t;
 
 /** Vectors holding the matching internal pages/nodes and leaf records */
 typedef struct rtr_info {

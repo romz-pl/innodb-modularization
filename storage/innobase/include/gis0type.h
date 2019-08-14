@@ -71,7 +71,7 @@ struct dtuple_t;
 
 
 /* Structure for matched records on the leaf page */
-typedef struct matched_rec {
+struct matched_rec_t {
   byte *bufp; /*!< aligned buffer point */
   byte rec_buf[UNIV_PAGE_SIZE_MAX * 2];
   /*!< buffer used to copy matching rec */
@@ -84,7 +84,7 @@ typedef struct matched_rec {
                                 or this search is valid (page not
                                 dropped) */
   bool locked;                  /*!< whether these recs locked */
-} matched_rec_t;
+};
 
 
 #endif /*!< gis0rtree.h */

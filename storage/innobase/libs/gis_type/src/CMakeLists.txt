@@ -2,7 +2,6 @@ set( LIB_NAME gis_type )
 
 add_library( ${LIB_NAME} STATIC
     flags.cpp
-    matched_rec_t.cpp
     node_seq_t.cpp
     node_visit_t.cpp
     rtr_info_active.cpp
