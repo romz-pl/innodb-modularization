@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Returns the offset of n - 1th field end if the record is stored in the
  2-byte offsets form. If the field is SQL null, the flag is ORed in the returned

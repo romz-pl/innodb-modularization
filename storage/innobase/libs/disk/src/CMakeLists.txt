@@ -8,7 +8,6 @@ add_library( ${LIB_NAME} STATIC
     fil_page_set_type.cpp
     fil_page_type_is_index.cpp
     flags.cpp
-    page_no_t.cpp
     page_size_t.cpp
     page_t.cpp
     page_type_t.cpp

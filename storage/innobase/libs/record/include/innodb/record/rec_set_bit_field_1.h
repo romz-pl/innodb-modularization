@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Sets a bit field within 1 byte. */
 void rec_set_bit_field_1(

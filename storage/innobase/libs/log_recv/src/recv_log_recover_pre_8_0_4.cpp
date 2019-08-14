@@ -1,6 +1,6 @@
 #include <innodb/log_recv/recv_log_recover_pre_8_0_4.h>
 
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/log_files/log_files_real_offset_for_lsn.h>
 #include <innodb/disk/univ_page_size.h>
 #include <innodb/tablespace/fil_redo_io.h>

@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Returns nonzero if the field is stored off-page.
  @retval 0 if the field is stored in-page

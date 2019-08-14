@@ -93,7 +93,6 @@ add_library( ${LIB_NAME} STATIC
     rec_set_nth_field_null_bit.cpp
     rec_set_nth_field_sql_null.cpp
     rec_set_status.cpp
-    rec_t.cpp
     rec_validate.cpp
     rec_validate_old.cpp
     rec_set_n_owned_new.cpp

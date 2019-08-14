@@ -3,6 +3,9 @@ set( LIB_NAME univ )
 add_library( ${LIB_NAME} STATIC
     univ.cpp
     call_destructor.cpp
+    page_cur_mode_t.cpp
+    page_no_t.cpp
+    rec_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

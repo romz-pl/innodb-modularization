@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Returns the heap number of a record.
  @return heap number */

@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** TRUE if the record is the infimum record on a page.
  @return true if the infimum record */

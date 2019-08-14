@@ -75,7 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/fsp_header_get_server_version.h>
 #include <innodb/tablespace/fsp_header_get_space_version.h>
 #include <innodb/tablespace/xdes_state_t.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/tablespace/fsp_get_extent_size_in_pages.h>
 #include <innodb/tablespace/fsp_init.h>
 #include <innodb/tablespace/fsp_get_pages_to_extend_ibd.h>

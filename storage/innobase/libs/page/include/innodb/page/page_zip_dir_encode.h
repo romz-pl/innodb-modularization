@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/disk/page_t.h>
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 void page_zip_dir_encode(
     const page_t *page, /*!< in: compact page */

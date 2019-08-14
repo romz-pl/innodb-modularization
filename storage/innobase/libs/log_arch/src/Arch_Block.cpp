@@ -6,7 +6,7 @@
 #include <innodb/crc32/crc32.h>
 #include <innodb/logger/warn.h>
 #include <innodb/log_arch/arch_page_sys.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/buf_page/buf_page_t.h>
 
 uint Arch_Block::get_file_index(uint64_t block_num) {

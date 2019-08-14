@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/allocator/ut_free.h>
 
 #include <list>

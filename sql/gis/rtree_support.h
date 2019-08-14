@@ -27,6 +27,7 @@
 ///
 /// This file declares a set of functions that storage engines can call to do
 /// geometrical operations.
+///
 
 #include "my_inttypes.h"  // uchar, uint
 #include "sql/gis/srid.h"
@@ -35,17 +36,7 @@ namespace dd {
 class Spatial_reference_system;
 }
 
-/// In memory representation of a minimum bounding rectangle
-typedef struct rtr_mbr {
-  /// minimum on x
-  double xmin;
-  /// maximum on x
-  double xmax;
-  /// minimum on y
-  double ymin;
-  /// maximum on y
-  double ymax;
-} rtr_mbr_t;
+#include <innodb/gis_type/rtr_mbr_t.h>
 
 /// Fetches a copy of the dictionary entry for a spatial reference system.
 ///

@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/allocator/UT_DELETE.h>
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 struct dict_index_t;
 struct dict_table_t;

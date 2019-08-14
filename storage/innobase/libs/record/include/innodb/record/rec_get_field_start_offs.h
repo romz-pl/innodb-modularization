@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** The following function is used to read the offset of the start of a data
  field in the record. The start of an SQL null field is the end offset of the

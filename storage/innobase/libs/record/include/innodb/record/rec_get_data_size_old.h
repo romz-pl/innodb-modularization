@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** The following function returns the data size of an old-style physical
  record, that is the sum of field lengths. SQL null fields

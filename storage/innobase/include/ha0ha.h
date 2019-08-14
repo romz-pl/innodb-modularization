@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/hash/hash_table_t.h>
 #include <innodb/disk/page_t.h>
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 
 

@@ -5,7 +5,7 @@
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 #include <stdio.h>
 

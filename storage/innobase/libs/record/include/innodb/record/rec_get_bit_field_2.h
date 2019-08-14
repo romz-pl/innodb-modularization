@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Gets a bit field from within 2 bytes. */
 uint16_t rec_get_bit_field_2(

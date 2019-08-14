@@ -5,7 +5,7 @@
 
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
 #include "sql/dd/object_id.h"
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include "mysql_version.h"
 
 #include <limits>

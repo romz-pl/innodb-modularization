@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/page/page_cur_mode_t.h>
+#include <innodb/univ/page_cur_mode_t.h>
 
 #include "sql/gis/rtree_support.h"
 

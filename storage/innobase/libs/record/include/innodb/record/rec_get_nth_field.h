@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 #include <innodb/record/rec_get_nth_field_offs.h>
 
 #ifdef UNIV_DEBUG

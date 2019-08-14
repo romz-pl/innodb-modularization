@@ -6,7 +6,7 @@
 #include <innodb/io/Compression.h>
 #include <innodb/io/Encryption.h>
 #include <innodb/lst/lst.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/sync_rw/rw_lock_t.h>
 #include <innodb/tablespace/encryption_op_type.h>
 #include <innodb/tablespace/fil_node_t.h>

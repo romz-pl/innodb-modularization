@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 rec_t *rec_copy_prefix_to_buf_old(
     const rec_t *rec, /*!< in: physical record */

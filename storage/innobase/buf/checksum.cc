@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_recv/recv_lsn_checks_on.h>
 #include <innodb/log_types/log_get_lsn.h>
 #include <innodb/tablespace/fil_space_get.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/tablespace/fil_space_t.h>
 #include <innodb/page/page_id_t.h>
 

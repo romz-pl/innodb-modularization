@@ -31,6 +31,7 @@ target_link_libraries(
     PUBLIC
     data_types
     dict_types
+    gis_type
     sync_rw
     PRIVATE
 )

@@ -4,7 +4,7 @@
 
 #include <innodb/log_recv/recv_dblwr_t.h>
 #include <innodb/buf_page/buf_flush_t.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/log_recv/MetadataRecover.h>
 #include <innodb/log_recv/recv_addr_t.h>
 #include <innodb/memory/mem_heap_t.h>

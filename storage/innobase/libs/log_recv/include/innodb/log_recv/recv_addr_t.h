@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/log_recv/recv_t.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/log_recv/recv_addr_state.h>
 #include <innodb/lst/lst.h>
 

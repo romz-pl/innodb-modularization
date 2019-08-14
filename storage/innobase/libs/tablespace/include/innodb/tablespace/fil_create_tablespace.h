@@ -4,7 +4,7 @@
 
 
 #include <innodb/tablespace/fil_type_t.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/error/dberr_t.h>
 
 dberr_t fil_create_tablespace(space_id_t space_id, const char *name,

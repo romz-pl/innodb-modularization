@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Returns the base extra size of a physical record.  This is the
  size of the fixed header, independent of the record size.

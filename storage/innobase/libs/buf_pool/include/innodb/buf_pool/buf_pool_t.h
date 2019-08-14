@@ -15,7 +15,7 @@
 #include <innodb/buf_pool/buf_pool_stat_t.h>
 #include <innodb/buf_page/flags.h>
 #include <innodb/lst/lst.h>
-#include <innodb/disk/page_no_t.h>
+#include <innodb/univ/page_no_t.h>
 #include <innodb/sync_event/os_event_t.h>
 
 

@@ -29,6 +29,8 @@ add_subdirectory( enum )
 
 add_subdirectory( formatting )
 
+add_subdirectory( gis_type )
+
 add_subdirectory( hash )
 
 add_subdirectory( io )

@@ -50,7 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/string/ut_strcmp.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 #include <innodb/dict_types/id_name_t.h>
 #include <innodb/dict_types/table_name_t.h>
 #include <innodb/data_types/dtype_get_max_size_low.h>

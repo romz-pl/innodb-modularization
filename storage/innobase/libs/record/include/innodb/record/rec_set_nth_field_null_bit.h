@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Sets the value of the ith field SQL null bit of an old-style record. */
 void rec_set_nth_field_null_bit(rec_t *rec, /*!< in: record */

@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** This is used to modify the value of an already existing field in a record.
  The previous value must have exactly the same size as the new value. If len

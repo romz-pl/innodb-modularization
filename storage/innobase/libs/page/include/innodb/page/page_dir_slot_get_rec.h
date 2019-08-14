@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/page/page_dir_slot_t.h>
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 /** Gets the record pointed to by a directory slot.
  @return pointer to record */

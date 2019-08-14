@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 #include <innodb/error/dberr_t.h>
-#include <innodb/record/rec_t.h>
+#include <innodb/univ/rec_t.h>
 
 #include "ha_prototypes.h"
 

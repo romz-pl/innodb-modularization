@@ -7,7 +7,6 @@ add_library( ${LIB_NAME} STATIC
     infimum_data.cpp
     infimum_extra.cpp
     page_align.cpp
-    page_cur_mode_t.cpp
     page_dir_calc_reserved_space.cpp
     page_dir_find_owner_slot.cpp
     page_dir_get_n_heap.cpp
