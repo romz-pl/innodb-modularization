@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/lock_types/lock_mode.h>
 #include <innodb/dict_mem/flags.h>
 #include <innodb/data_types/flags.h>
 #include <innodb/dict_types/index_id_t.h>
@@ -71,7 +72,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "row0types.h"
 #ifndef UNIV_HOTBACKUP
-#include "lock0types.h"
+
+#define lock_t ib_lock_t
+struct lock_t;
+struct lock_sys_t;
+struct lock_table_t;
+
 #include "que0types.h"
 #endif /* !UNIV_HOTBACKUP */
 

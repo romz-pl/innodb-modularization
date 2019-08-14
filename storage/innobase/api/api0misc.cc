@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  3/20/2011 Jimmy Yang extracted from Embedded InnoDB
  *******************************************************/
 
+#include <innodb/lock_types/select_mode.h>
+
 #include "api0misc.h"
 #include "dict0dict.h"
 #include "dict0mem.h"

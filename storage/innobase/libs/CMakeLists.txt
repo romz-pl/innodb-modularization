@@ -36,6 +36,8 @@ add_subdirectory( hash )
 add_subdirectory( io )
 add_subdirectory( ioasync )
 
+add_subdirectory( lock_types )
+
 add_subdirectory( log_arch )
 add_subdirectory( log_buffer )
 add_subdirectory( log_block )

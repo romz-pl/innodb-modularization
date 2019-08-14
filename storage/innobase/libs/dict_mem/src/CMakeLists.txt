@@ -48,6 +48,7 @@ target_link_libraries(
     data_types
     dict_types
     gis_type
+    lock_types
     string
     sync_rw
     PRIVATE

@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/lock_types/select_mode.h>
+
 #include "btr0cur.h"
 #include "btr0types.h"
 

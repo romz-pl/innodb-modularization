@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/lock_types/select_mode.h>
+
 #ifndef UNIV_HOTBACKUP
 #include "ha_prototypes.h"
 #endif /* !UNIV_HOTBACKUP */
@@ -52,7 +54,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fts0fts.h"
 #include "gis0type.h"
 #include "lob0undo.h"
-#include "lock0types.h"
+
+#define lock_t ib_lock_t
+struct lock_t;
+struct lock_sys_t;
+struct lock_table_t;
 
 #include "my_compiler.h"
 #include "my_inttypes.h"

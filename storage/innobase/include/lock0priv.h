@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/lock_types/lock_mode_string.h>
+
 #ifndef LOCK_MODULE_IMPLEMENTATION
 /* If you need to access members of the structures defined in this
 file, please write appropriate functions that retrieve them and put
