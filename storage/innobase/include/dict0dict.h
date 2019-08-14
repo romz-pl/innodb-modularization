@@ -45,6 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_format_t.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/dict_sys_t_is_reserved.h>
+#include <innodb/dict_mem/dict_foreign_print.h>
 
 
 #include "buf0flu.h"

@@ -14,10 +14,11 @@
 #include <innodb/sync_rw/rw_lock_t.h>
 
 #include "include/mysql/plugin_ftparser.h"
+#include "sql/sql_const.h" /* MAX_KEY_LENGTH */
 
 struct dict_table_t;
 struct dict_field_t;
-struct last_ops_cur_t;
+class last_ops_cur_t;
 struct btr_search_t;
 struct row_log_t;
 struct trx_t;
