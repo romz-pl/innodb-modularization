@@ -1,30 +1,30 @@
 set( LIB_NAME dict_mem )
 
 add_library( ${LIB_NAME} STATIC
-    flags.cpp
+    dict_add_v_col_t.cpp
     dict_col_default_t.cpp
     dict_col_t.cpp
-    dict_v_idx_t.cpp
-    dict_v_idx_list.cpp
-    dict_v_col_t.cpp
-    dict_add_v_col_t.cpp
-    dict_s_col_t.cpp
-    dict_s_col_list.cpp
     dict_field_t.cpp
-    os_once.cpp
-    zip_pad_info_t.cpp
-    rec_cache_t.cpp
-    last_ops_cur_t.cpp
-    dict_index_t.cpp
-    online_index_status.cpp
-    dict_vcol_set.cpp
-    dict_foreign_t.cpp
-    dict_foreign_print.cpp
     dict_foreign_compare.cpp
-    dict_foreign_with_index.cpp
     dict_foreign_different_tables.cpp
     dict_foreign_matches_id.cpp
+    dict_foreign_print.cpp
     dict_foreign_set.cpp
+    dict_foreign_t.cpp
+    dict_foreign_with_index.cpp
+    dict_index_t.cpp
+    dict_s_col_list.cpp
+    dict_s_col_t.cpp
+    dict_v_col_t.cpp
+    dict_v_idx_list.cpp
+    dict_v_idx_t.cpp
+    dict_vcol_set.cpp
+    flags.cpp
+    last_ops_cur_t.cpp
+    online_index_status.cpp
+    os_once.cpp
+    rec_cache_t.cpp
+    zip_pad_info_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
