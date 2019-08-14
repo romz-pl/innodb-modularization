@@ -293,3 +293,18 @@ be REC_VERSION_56_MAX_INDEX_COL_LEN (3072) bytes */
 
 /** Amount by which padding is increased. */
 #define ZIP_PAD_INCR (128)
+
+
+
+
+
+/** The flags for ON_UPDATE and ON_DELETE can be ORed; the default is that
+a foreign key constraint is enforced, therefore RESTRICT just means no flag */
+/* @{ */
+#define DICT_FOREIGN_ON_DELETE_CASCADE 1    /*!< ON DELETE CASCADE */
+#define DICT_FOREIGN_ON_DELETE_SET_NULL 2   /*!< ON DELETE SET NULL */
+#define DICT_FOREIGN_ON_UPDATE_CASCADE 4    /*!< ON UPDATE CASCADE */
+#define DICT_FOREIGN_ON_UPDATE_SET_NULL 8   /*!< ON UPDATE SET NULL */
+#define DICT_FOREIGN_ON_DELETE_NO_ACTION 16 /*!< ON DELETE NO ACTION */
+#define DICT_FOREIGN_ON_UPDATE_NO_ACTION 32 /*!< ON UPDATE NO ACTION */
+/* @} */

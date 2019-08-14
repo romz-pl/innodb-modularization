@@ -25,6 +25,13 @@ add_library( ${LIB_NAME} STATIC
     os_once.cpp
     rec_cache_t.cpp
     zip_pad_info_t.cpp
+    dict_foreign_not_exists.cpp
+    dict_foreign_set_free.cpp
+    dict_foreign_free.cpp
+    dict_foreign_set_validate.cpp
+    dict_vcol_templ_t.cpp
+    table_dirty_status.cpp
+    temp_prebuilt_vec.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

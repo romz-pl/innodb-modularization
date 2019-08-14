@@ -2,6 +2,8 @@
 
 #include <innodb/univ/univ.h>
 
+#include <iosfwd>
+
 /** SQL identifier name wrapper for pretty-printing */
 class id_name_t {
  public:
@@ -30,3 +32,10 @@ class id_name_t {
   /** The name in internal representation */
   const char *m_name;
 };
+
+
+/** Display an identifier.
+@param[in,out]	s	output stream
+@param[in]	id_name	SQL identifier (other than table name)
+@return the output stream */
+std::ostream &operator<<(std::ostream &s, const id_name_t &id_name);

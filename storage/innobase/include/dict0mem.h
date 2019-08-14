@@ -287,40 +287,14 @@ class Spatial_reference_system;
 #include <innodb/dict_mem/dict_foreign_different_tables.h>
 #include <innodb/dict_mem/dict_foreign_matches_id.h>
 #include <innodb/dict_mem/dict_foreign_set.h>
+#include <innodb/dict_mem/dict_foreign_not_exists.h>
+#include <innodb/dict_mem/dict_foreign_set_free.h>
+#include <innodb/dict_mem/dict_foreign_set_validate.h>
+#include <innodb/dict_mem/dict_vcol_templ_t.h>
+#include <innodb/dict_mem/table_dirty_status.h>
+#include <innodb/dict_mem/temp_prebuilt_vec.h>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/** Function object to check if a foreign key object is there
-in the given foreign key set or not.  It returns true if the
-foreign key is not found, false otherwise */
-struct dict_foreign_not_exists {
-  dict_foreign_not_exists(const dict_foreign_set &obj_) : m_foreigns(obj_) {}
-
-  /* Return true if the given foreign key is not found */
-  bool operator()(dict_foreign_t *const &foreign) const {
-    return (m_foreigns.find(foreign) == m_foreigns.end());
-  }
-
- private:
-  const dict_foreign_set &m_foreigns;
-};
-
-/** Validate the search order in the foreign key set.
-@param[in]	fk_set	the foreign key set to be validated
-@return true if search order is fine in the set, false otherwise. */
-bool dict_foreign_set_validate(const dict_foreign_set &fk_set);
 
 /** Validate the search order in the foreign key sets of the table
 (foreign_set and referenced_set).
@@ -328,55 +302,8 @@ bool dict_foreign_set_validate(const dict_foreign_set &fk_set);
 @return true if foreign key sets are fine, false otherwise. */
 bool dict_foreign_set_validate(const dict_table_t &table);
 
-/** Frees a foreign key struct. */
-inline void dict_foreign_free(
-    dict_foreign_t *foreign) /*!< in, own: foreign key struct */
-{
-  if (foreign->v_cols != NULL) {
-    UT_DELETE(foreign->v_cols);
-  }
 
-  mem_heap_free(foreign->heap);
-}
 
-/** The destructor will free all the foreign key constraints in the set
-by calling dict_foreign_free() on each of the foreign key constraints.
-This is used to free the allocated memory when a local set goes out
-of scope. */
-struct dict_foreign_set_free {
-  dict_foreign_set_free(const dict_foreign_set &foreign_set)
-      : m_foreign_set(foreign_set) {}
-
-  ~dict_foreign_set_free() {
-    std::for_each(m_foreign_set.begin(), m_foreign_set.end(),
-                  dict_foreign_free);
-  }
-
-  const dict_foreign_set &m_foreign_set;
-};
-
-/** The flags for ON_UPDATE and ON_DELETE can be ORed; the default is that
-a foreign key constraint is enforced, therefore RESTRICT just means no flag */
-/* @{ */
-#define DICT_FOREIGN_ON_DELETE_CASCADE 1    /*!< ON DELETE CASCADE */
-#define DICT_FOREIGN_ON_DELETE_SET_NULL 2   /*!< ON DELETE SET NULL */
-#define DICT_FOREIGN_ON_UPDATE_CASCADE 4    /*!< ON UPDATE CASCADE */
-#define DICT_FOREIGN_ON_UPDATE_SET_NULL 8   /*!< ON UPDATE SET NULL */
-#define DICT_FOREIGN_ON_DELETE_NO_ACTION 16 /*!< ON DELETE NO ACTION */
-#define DICT_FOREIGN_ON_UPDATE_NO_ACTION 32 /*!< ON UPDATE NO ACTION */
-/* @} */
-
-/** Display an identifier.
-@param[in,out]	s	output stream
-@param[in]	id_name	SQL identifier (other than table name)
-@return the output stream */
-std::ostream &operator<<(std::ostream &s, const id_name_t &id_name);
-
-/** Display a table name.
-@param[in,out]	s		output stream
-@param[in]	table_name	table name
-@return the output stream */
-std::ostream &operator<<(std::ostream &s, const table_name_t &table_name);
 
 #ifndef UNIV_HOTBACKUP
 /** List of locks that different transactions have acquired on a table. This
@@ -390,63 +317,10 @@ typedef ut_list_base<lock_t, ut_list_node<lock_t> lock_table_t::*>
 /** mysql template structure defined in row0mysql.cc */
 struct mysql_row_templ_t;
 
-/** Structure defines template related to virtual columns and
-their base columns */
-struct dict_vcol_templ_t {
-  /** number of regular columns */
-  ulint n_col;
 
-  /** number of virtual columns */
-  ulint n_v_col;
 
-  /** array of templates for virtual col and their base columns */
-  mysql_row_templ_t **vtempl;
 
-  /** table's database name */
-  std::string db_name;
 
-  /** table name */
-  std::string tb_name;
-
-  /** share->table_name */
-  std::string share_name;
-
-  /** MySQL record length */
-  ulint rec_len;
-
-  /** default column value if any */
-  byte *default_rec;
-};
-
-/** The dirty status of tables, used to indicate if a table has some
-dynamic metadata changed to be written back */
-enum table_dirty_status {
-  /** Some persistent metadata is now dirty in memory, need to be
-  written back to DDTableBuffer table and(or directly to) DD table.
-  There could be some exceptions, when it's marked as dirty, but
-  the metadata has already been written back to DDTableBuffer.
-  For example, if a corrupted index is found and marked as corrupted,
-  then it gets dropped. At this time, the dirty_status is still of
-  this dirty value. Also a concurrent checkpoint make this bit
-  out-of-date for other working threads, which still think the
-  status is dirty and write-back is necessary.
-  There could be either one row or no row for this table in
-  DDTableBuffer table */
-  METADATA_DIRTY = 0,
-  /** Some persistent metadata is buffered in DDTableBuffer table,
-  need to be written back to DD table. There is must be one row in
-  DDTableBuffer table for this table */
-  METADATA_BUFFERED,
-  /** All persistent metadata are up to date. There is no row
-  for this table in DDTableBuffer table */
-  METADATA_CLEAN
-};
-
-#ifndef UNIV_HOTBACKUP
-/** A vector to collect prebuilt from different readers working on the same
-temp table */
-typedef std::vector<row_prebuilt_t *> temp_prebuilt_vec;
-#endif /* !UNIV_HOTBACKUP */
 
 /** Data structure for a database table.  Most fields will be
 initialized to 0, NULL or FALSE in dict_mem_table_create(). */
