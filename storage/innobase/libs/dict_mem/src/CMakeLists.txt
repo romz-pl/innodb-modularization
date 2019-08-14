@@ -13,6 +13,9 @@ add_library( ${LIB_NAME} STATIC
     dict_field_t.cpp
     os_once.cpp
     zip_pad_info_t.cpp
+    rec_cache_t.cpp
+    last_ops_cur_t.cpp
+    dict_index_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -28,6 +31,7 @@ target_link_libraries(
     PUBLIC
     data_types
     dict_types
+    sync_rw
     PRIVATE
 )
 
