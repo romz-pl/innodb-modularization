@@ -40,15 +40,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dfield_set_null.h>
 
 #include "current_thd.h"
-
 #include "pars0sym.h"
-
 #include "btr0types.h"
-#include "trx0types.h"
-
 #include "dict0dd.h"
 #include "eval0eval.h"
-
 #include "pars0grm.h"
 #include "pars0pars.h"
 #include "que0que.h"

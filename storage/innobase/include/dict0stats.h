@@ -39,9 +39,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/error/dberr_t.h>
 
 
-
-#include "trx0types.h"
-
 struct dict_table_t;
 
 enum dict_stats_upd_option_t {

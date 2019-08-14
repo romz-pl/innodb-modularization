@@ -35,10 +35,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_types/trx_rsegf_t.h>
+#include <innodb/trx_types/trx_rsegsf_t.h>
+
 #include <vector>
 #include "fut0lst.h"
 #include "trx0sys.h"
-#include "trx0types.h"
 
 /** Gets a rollback segment header.
 @param[in]	space		space where placed

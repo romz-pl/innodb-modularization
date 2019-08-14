@@ -45,9 +45,6 @@ those functions in lock/ */
 #endif
 
 
-
-#include "trx0types.h"
-
 #include <utility>
 
 /** A table lock */

@@ -34,12 +34,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define read0types_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/formatting/formatting.h>
 #include <innodb/allocator/UT_DELETE_ARRAY.h>
+#include <innodb/trx_types/trx_ids_t.h>
 
 #include <algorithm>
 #include "dict0mem.h"
-
-#include "trx0types.h"
 
 // Friend declaration
 class MVCC;

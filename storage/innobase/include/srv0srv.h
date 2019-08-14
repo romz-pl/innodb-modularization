@@ -108,7 +108,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "que0types.h"
 #include "srv0conc.h"
-#include "trx0types.h"
 #include <innodb/counter/counter.h>
 #include <innodb/log_write/srv_stats_t.h>
 

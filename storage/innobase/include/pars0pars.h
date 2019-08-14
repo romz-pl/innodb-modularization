@@ -39,10 +39,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 #include "row0mysql.h"
 #include "row0types.h"
-#include "trx0types.h"
 #include "usr0types.h"
 #include "ut0vec.h"
 
+struct roll_node_t;
 struct tab_node_t;
 struct ind_node_t;
 

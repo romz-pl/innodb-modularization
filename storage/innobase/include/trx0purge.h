@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define trx0purge_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/trx_types/PQMutex.h>
 #include <innodb/allocator/UT_NEW_NOKEY.h>
 
 #include "fil0fil.h"
@@ -42,11 +44,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 #include "read0types.h"
 #include "trx0sys.h"
-#include "trx0types.h"
 #include "usr0sess.h"
 #ifdef UNIV_HOTBACKUP
 #include "trx0sys.h"
 #endif /* UNIV_HOTBACKUP */
+
+struct trx_purge_t;
 
 /** The global data structure coordinating a purge */
 extern trx_purge_t *purge_sys;

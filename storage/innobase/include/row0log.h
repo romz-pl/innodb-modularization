@@ -43,8 +43,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 
 #include "row0types.h"
-#include "trx0types.h"
 
+struct trx_t;
 struct dfield_t;
 struct dtuple_t;
 class ut_stage_alter_t;

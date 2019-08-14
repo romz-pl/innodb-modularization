@@ -36,11 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include "btr0types.h"
-#include "trx0types.h"
-
 #include "que0types.h"
 #include "row0types.h"
-#include "trx0types.h"
 
 /** Checks if foreign key constraint fails for an index entry. Sets shared locks
  which lock either the success or the failure of the constraint. NOTE that

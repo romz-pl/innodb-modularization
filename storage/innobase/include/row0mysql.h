@@ -47,7 +47,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0pcur.h"
 #include "btr0types.h"
-#include "trx0types.h"
 
 #include <innodb/error/dberr_t.h>
 
@@ -67,7 +66,6 @@ struct lock_table_t;
 #include "row0types.h"
 #include "sess0sess.h"
 #include "sql_cmd.h"
-#include "trx0types.h"
 
 class THD;
 class ha_innobase;

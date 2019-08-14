@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include "btr0types.h"
-#include "trx0types.h"
 #include "gis0type.h"
 
 #include "page0page.h"

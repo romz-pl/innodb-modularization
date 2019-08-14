@@ -54,7 +54,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <deque>
 #include "btr0types.h"
-#include "trx0types.h"
 
 #include "dict/dict.h"
 #include "dict0mem.h"
@@ -67,7 +66,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0types.h"
 #include "sql/dd/object_id.h"
 
-#include "trx0types.h"
 
 #include <innodb/random/random.h>
 

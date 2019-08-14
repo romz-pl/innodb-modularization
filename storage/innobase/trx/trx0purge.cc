@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_types/trx_usegf_t.h>
 #include <innodb/clone/clone_mark_abort.h>
 #include <innodb/clone/clone_mark_active.h>
 #include <innodb/sync_os/pfs.h>

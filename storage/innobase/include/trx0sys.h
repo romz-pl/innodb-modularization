@@ -35,6 +35,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_types/TrxIdSet.h>
+#include <innodb/trx_types/TrxSysMutex.h>
+#include <innodb/trx_types/trx_sysf_t.h>
+#include <innodb/trx_types/purge_pq_t.h>
+#include <innodb/trx_types/Rsegs.h>
 #include <innodb/tablespace/Space_Ids.h>
 #include <innodb/tablespace/trx_sys_undo_spaces.h>
 #include <innodb/tablespace/consts.h>
@@ -42,7 +47,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0buf.h"
 #include "fil0fil.h"
-#include "trx0types.h"
 #ifndef UNIV_HOTBACKUP
 
 
@@ -58,6 +62,7 @@ typedef UT_LIST_BASE_NODE_T(trx_t) trx_ut_list_t;
 // Forward declaration
 class MVCC;
 class ReadView;
+struct trx_sys_t;
 
 /** The transaction system */
 extern trx_sys_t *trx_sys;

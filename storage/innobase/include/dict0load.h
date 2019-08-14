@@ -43,8 +43,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "fil0fil.h"
 
-#include "trx0types.h"
-
 
 #include <deque>
 

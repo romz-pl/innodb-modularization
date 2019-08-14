@@ -35,6 +35,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_types/trx_savept_t.h>
+#include <innodb/trx_types/UndoMutex.h>
+#include <innodb/trx_types/TrxMutex.h>
+#include <innodb/trx_types/trx_que_t.h>
+#include <innodb/trx_types/trx_state_t.h>
+#include <innodb/trx_types/trx_dict_op_t.h>
 #include <innodb/lock_types/trx_lock_list_t.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
@@ -44,9 +50,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <set>
 
 #include "ha_prototypes.h"
-
-
-#include "trx0types.h"
 
 #define lock_t ib_lock_t
 struct lock_t;
@@ -63,6 +66,11 @@ struct lock_table_t;
 #include "fts0fts.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "srv0srv.h"
+
+struct trx_undo_t;
+struct trx_rseg_t;
+struct trx_named_savept_t;
+struct commit_node_t;
 
 // Forward declaration
 struct mtr_t;

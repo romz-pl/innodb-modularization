@@ -68,7 +68,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 
 #include "btr0types.h"
-#include "trx0types.h"
 #include "handler0alter.h"
 #include "lob0lob.h"
 #include "que0que.h"

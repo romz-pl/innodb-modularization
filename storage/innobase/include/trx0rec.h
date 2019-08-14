@@ -35,15 +35,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_types/trx_undo_rec_t.h>
+
 #include "btr0types.h"
-#include "trx0types.h"
 
 #include "lob0undo.h"
 
 
 #include "row0log.h"
 #include "row0types.h"
-#include "trx0types.h"
 
 #ifndef UNIV_HOTBACKUP
 #include "que0types.h"

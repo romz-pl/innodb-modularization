@@ -36,11 +36,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include "btr0types.h"
-#include "trx0types.h"
 #include "que0types.h"
 #include "rem0rec.h"
 #include "srv0srv.h"
-#include "trx0types.h"
 #include "usr0types.h"
 
 

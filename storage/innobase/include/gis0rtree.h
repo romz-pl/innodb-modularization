@@ -49,7 +49,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 
 #include "row0types.h"
-#include "trx0types.h"
 #include "ut0vec.h"
 #include "ut0wqueue.h"
 

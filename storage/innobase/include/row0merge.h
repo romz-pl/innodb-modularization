@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0types.h"
 #include "btr0types.h"
-#include "trx0types.h"
 
 #define lock_t ib_lock_t
 struct lock_t;
@@ -49,7 +48,6 @@ struct lock_table_t;
 
 #include "row0mysql.h"
 #include "srv0srv.h"
-#include "trx0types.h"
 #include "ut0stage.h"
 
 // Forward declaration

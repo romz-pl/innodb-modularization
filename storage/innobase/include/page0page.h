@@ -85,7 +85,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "buf0buf.h"
 #include "btr0types.h"
-#include "trx0types.h"
 #include "dict0dict.h"
 #include "fil0fil.h"
 #include "fsp0fsp.h"

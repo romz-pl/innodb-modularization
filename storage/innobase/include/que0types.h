@@ -38,7 +38,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dfield_t.h>
 
 #include "btr0types.h"
-#include "trx0types.h"
 
 
 /* Pseudotype for all graph nodes */

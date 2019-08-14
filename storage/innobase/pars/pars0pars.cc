@@ -47,8 +47,6 @@ on 1/27/1998 */
 #include "ha_prototypes.h"
 
 #include "btr0types.h"
-#include "trx0types.h"
-
 #include "dict0crea.h"
 #include "dict0dd.h"
 #include "dict0dict.h"

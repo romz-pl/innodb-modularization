@@ -37,9 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-
-#include "trx0types.h"
-
 class PSI_server_data_lock_container;
 
 /** The maximum amount of memory that can be consumed by innodb_trx,

@@ -36,12 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include "btr0types.h"
-#include "trx0types.h"
-
-
 #include "que0types.h"
 #include "row0types.h"
-#include "trx0types.h"
 
 /** Undoes a modify operation on a row of a table.
  @return DB_SUCCESS or error code */

@@ -35,14 +35,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_types/trx_undo_rec_t.h>
 
 #include "trx0sys.h"
 #include "trx0trx.h"
-#include "trx0types.h"
-
 #ifdef UNIV_HOTBACKUP
 #include "que0que.h"
 #endif /* UNIV_HOTBACKUP */
+
+struct roll_node_t;
 
 extern bool trx_rollback_or_clean_is_active;
 

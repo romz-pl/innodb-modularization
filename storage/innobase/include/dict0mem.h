@@ -82,8 +82,6 @@ struct lock_table_t;
 #endif /* !UNIV_HOTBACKUP */
 
 
-#include "trx0types.h"
-
 #include <innodb/random/random.h>
 #ifndef UNIV_HOTBACKUP
 #include "fts0fts.h"

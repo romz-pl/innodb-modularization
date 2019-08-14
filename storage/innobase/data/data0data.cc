@@ -50,7 +50,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <new>
 
 #include "btr0types.h"
-#include "trx0types.h"
 
 #ifndef UNIV_HOTBACKUP
 #include "row0upd.h"

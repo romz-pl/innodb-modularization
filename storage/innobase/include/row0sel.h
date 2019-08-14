@@ -37,7 +37,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0pcur.h"
 #include "btr0types.h"
-#include "trx0types.h"
 #include "dict0stats.h"
 
 #include "pars0sym.h"
@@ -45,7 +44,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "read0types.h"
 #include "row0mysql.h"
 #include "row0types.h"
-#include "trx0types.h"
 
 /** Creates a select node struct.
  @return own: select node struct */

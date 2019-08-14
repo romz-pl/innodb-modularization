@@ -38,12 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/error/dberr_t.h>
 
 #include "btr0types.h"
-#include "trx0types.h"
-
-
 #include "que0types.h"
 #include "row0types.h"
-#include "trx0types.h"
 
 /** Undoes a fresh insert of a row to a table. A fresh insert means that
  the same clustered index unique key did not have any record, even delete

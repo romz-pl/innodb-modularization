@@ -57,7 +57,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "page/zipdecompress.h"
 #include "srv0srv.h"
-#include "trx0types.h"
 #include <innodb/crc32/crc32.h>
 
 

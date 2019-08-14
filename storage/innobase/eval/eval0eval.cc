@@ -38,10 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dfield_is_null.h>
 
 #include "eval0eval.h"
-
 #include "btr0types.h"
-#include "trx0types.h"
-
 #include "rem0cmp.h"
 #include "row0sel.h"
 

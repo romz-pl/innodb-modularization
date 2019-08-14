@@ -39,7 +39,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <my_sys.h>
 #include "btr0types.h"
-#include "trx0types.h"
 
 #include "dict0dict.h"
 #include "ha_prototypes.h"

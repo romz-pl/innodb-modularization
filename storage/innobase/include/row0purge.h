@@ -35,17 +35,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_types/trx_undo_rec_t.h>
 #include <innodb/memory/mem_heap_allocator.h>
 
 #include "btr0pcur.h"
 #include "btr0types.h"
 #include "btr0types.h"
-#include "trx0types.h"
 
 #include "que0types.h"
 #include "row0types.h"
-#include "trx0types.h"
 #include "ut0vec.h"
+
+struct trx_rseg_t;
 
 /** Create a purge node to a query graph.
 @param[in]	parent	parent node, i.e., a thr node

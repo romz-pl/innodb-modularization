@@ -2,7 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
-
+#include <innodb/trx_types/flags.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
 #include "sql/dd/object_id.h"
 #include <innodb/univ/page_no_t.h>
@@ -93,10 +93,7 @@ every XDES_DESCRIBED_PER_PAGE pages in every tablespace. */
     /* The ibuf tree root page number in
     tablespace 0; its fseg inode is on the page
     number FSP_FIRST_INODE_PAGE_NO */
-#define FSP_TRX_SYS_PAGE_NO \
-  5 /*!< transaction        \
-    system header, in       \
-    tablespace 0 */
+
 #define FSP_FIRST_RSEG_PAGE_NO  \
   6 /*!< first rollback segment \
     page, in tablespace 0 */
