@@ -1,10 +1,13 @@
 set( LIB_NAME lock_priv )
 
 add_library( ${LIB_NAME} STATIC
-    lock_table_t.cpp
-    lock_rec_t.cpp
-    lock_t.cpp
     flags.cpp
+    lock_compatibility_matrix.cpp
+    lock_rec_req_status.cpp
+    lock_rec_t.cpp
+    lock_strength_matrix.cpp
+    lock_t.cpp
+    lock_table_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
