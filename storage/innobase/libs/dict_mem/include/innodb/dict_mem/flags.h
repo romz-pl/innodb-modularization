@@ -329,3 +329,9 @@ const space_id_t SYSTEM_TABLE_SPACE = TRX_SYS_SPACE;
 
 /** Identifies generated InnoDB foreign key names */
 static char dict_ibfk[] = "_ibfk_";
+
+
+
+/** The number of fields in the nonleaf page of spatial index, except
+the page no field. */
+#define DICT_INDEX_SPATIAL_NODEPTR_SIZE 1

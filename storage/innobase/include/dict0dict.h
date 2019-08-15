@@ -42,13 +42,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/hash/hash_table_t.h>
 #include <innodb/hash/HASH_GET_NEXT.h>
 #include <innodb/hash/HASH_GET_FIRST.h>
-#include <innodb/record/rec_format_t.h>
+#include <innodb/dict_mem/rec_format_t.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/dict_sys_t_is_reserved.h>
 #include <innodb/dict_mem/dict_foreign_print.h>
 #include <innodb/dict_mem/dict_table_get_nth_v_col.h>
 #include <innodb/dict_mem/dict_sys_t.h>
 #include <innodb/dict_mem/dict_get_db_name_len.h>
+#include <innodb/dict_mem/dict_table_get_n_tot_u_cols.h>
 
 #include "buf0flu.h"
 
@@ -514,8 +515,6 @@ ulint dict_index_is_sec_or_ibuf(const dict_index_t *index) /*!< in: index */
 @return number of FTS indexes */
 ulint dict_table_get_all_fts_indexes(dict_table_t *table, ib_vector_t *indexes);
 
-UNIV_INLINE
-ulint dict_table_get_n_tot_u_cols(const dict_table_t *table);
 
 /** Gets the number of virtual columns in a table in the dictionary cache.
 @param[in]	table	the table to check
@@ -745,9 +744,7 @@ ulint dict_index_get_n_unique_in_tree(
                                of index (in the dictionary cache) */
     MY_ATTRIBUTE((warn_unused_result));
 
-/** The number of fields in the nonleaf page of spatial index, except
-the page no field. */
-#define DICT_INDEX_SPATIAL_NODEPTR_SIZE 1
+
 /**
 Gets the number of fields on nonleaf page level in the internal representation
 of an index which uniquely determine the position of an index entry in the

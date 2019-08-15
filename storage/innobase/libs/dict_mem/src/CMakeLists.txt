@@ -1,78 +1,113 @@
 set( LIB_NAME dict_mem )
 
 add_library( ${LIB_NAME} STATIC
+    AutoIncPersister.cpp
+    CorruptedIndexPersister.cpp
+    PersistentTableMetadata.cpp
+    Persister.cpp
+    Persisters.cpp
+    corrupted_ids_t.cpp
+    dict_add_col_name.cpp
     dict_add_v_col_t.cpp
     dict_col_default_t.cpp
+    dict_col_get_clust_pos.cpp
+    dict_col_get_index_pos.cpp
+    dict_col_get_no.cpp
     dict_col_t.cpp
     dict_field_t.cpp
+    dict_foreign_add_to_referenced_table.cpp
     dict_foreign_compare.cpp
     dict_foreign_different_tables.cpp
+    dict_foreign_free.cpp
     dict_foreign_matches_id.cpp
+    dict_foreign_not_exists.cpp
     dict_foreign_print.cpp
     dict_foreign_set.cpp
+    dict_foreign_set_free.cpp
+    dict_foreign_set_validate.cpp
     dict_foreign_t.cpp
     dict_foreign_with_index.cpp
+    dict_get_db_name_len.cpp
+    dict_index_get_lock.cpp
+    dict_index_get_n_fields.cpp
+    dict_index_get_n_ordering_defined_by_user.cpp
+    dict_index_get_n_unique.cpp
+    dict_index_get_n_unique_in_tree.cpp
+    dict_index_get_n_unique_in_tree_nonleaf.cpp
+    dict_index_get_online_status.cpp
+    dict_index_get_page.cpp
+    dict_index_get_space.cpp
+    dict_index_get_space_reserve.cpp
+    dict_index_has_desc.cpp
+    dict_index_has_virtual.cpp
+    dict_index_is_auto_gen_clust.cpp
+    dict_index_is_ibuf.cpp
+    dict_index_is_sec_or_ibuf.cpp
+    dict_index_is_spatial.cpp
+    dict_index_is_unique.cpp
+    dict_index_set_online_status.cpp
+    dict_index_set_space.cpp
     dict_index_t.cpp
+    dict_index_zip_pad_mutex_create_lazy.cpp
+    dict_index_zip_pad_mutex_destroy.cpp
+    dict_index_zip_pad_unlock.cpp
+    dict_mem_fill_column_struct.cpp
+    dict_mem_table_add_col.cpp
+    dict_mem_table_add_s_col.cpp
+    dict_mem_table_add_v_col.cpp
+    dict_remove_db_name.cpp
     dict_s_col_list.cpp
     dict_s_col_t.cpp
+    dict_sys_t.cpp
+    dict_sys_tables_type_to_tf.cpp
+    dict_sys_tables_type_validate.cpp
+    dict_table_autoinc_create_lazy.cpp
+    dict_table_autoinc_destroy.cpp
+    dict_table_autoinc_own.cpp
+    dict_table_get_highest_foreign_id.cpp
+    dict_table_get_n_rows.cpp
+    dict_table_get_n_tot_u_cols.cpp
+    dict_table_get_n_v_cols.cpp
+    dict_table_get_nth_v_col.cpp
+    dict_table_get_sys_col_no.cpp
+    dict_table_has_atomic_blobs.cpp
+    dict_table_has_fts_index.cpp
+    dict_table_has_indexed_v_cols.cpp
+    dict_table_is_comp.cpp
+    dict_table_is_compressed_temporary.cpp
+    dict_table_mutex_create_lazy.cpp
+    dict_table_mutex_destroy.cpp
+    dict_table_n_rows_dec.cpp
+    dict_table_n_rows_inc.cpp
+    dict_table_op_t.cpp
+    dict_table_page_size.cpp
+    dict_table_t.cpp
+    dict_table_x_lock_indexes.cpp
+    dict_table_x_unlock_indexes.cpp
+    dict_tf2_is_valid.cpp
+    dict_tf_get_page_size.cpp
+    dict_tf_get_rec_format.cpp
+    dict_tf_init.cpp
+    dict_tf_is_valid.cpp
+    dict_tf_set.cpp
+    dict_tf_to_sys_tables_type.cpp
     dict_v_col_t.cpp
     dict_v_idx_list.cpp
     dict_v_idx_t.cpp
     dict_vcol_set.cpp
+    dict_vcol_templ_t.cpp
     flags.cpp
     last_ops_cur_t.cpp
+    lock_table_lock_list_init.cpp
     online_index_status.cpp
     os_once.cpp
-    rec_cache_t.cpp
-    zip_pad_info_t.cpp
-    dict_foreign_not_exists.cpp
-    dict_foreign_set_free.cpp
-    dict_foreign_free.cpp
-    dict_foreign_set_validate.cpp
-    dict_vcol_templ_t.cpp
-    table_dirty_status.cpp
-    temp_prebuilt_vec.cpp
-    table_lock_list_t.cpp
-    dict_table_t.cpp
     persistent_type_t.cpp
-    corrupted_ids_t.cpp
-    PersistentTableMetadata.cpp
-    Persister.cpp
-    CorruptedIndexPersister.cpp
-    AutoIncPersister.cpp
-    Persisters.cpp
-    lock_table_lock_list_init.cpp
-    dict_foreign_add_to_referenced_table.cpp
-    dict_table_mutex_create_lazy.cpp
-    dict_table_mutex_destroy.cpp
-    dict_table_autoinc_destroy.cpp
-    dict_table_autoinc_create_lazy.cpp
-    dict_index_zip_pad_mutex_create_lazy.cpp
-    dict_index_zip_pad_mutex_destroy.cpp
-    dict_index_zip_pad_unlock.cpp
-    dict_table_autoinc_own.cpp
-    dict_mem_table_add_v_col.cpp
-    dict_add_col_name.cpp
-    dict_mem_fill_column_struct.cpp
-    dict_mem_table_add_col.cpp
-    dict_table_get_nth_v_col.cpp
-    dict_mem_table_add_s_col.cpp
-    dict_index_get_n_fields.cpp
-    dict_sys_t.cpp
-    dict_get_db_name_len.cpp
-    dict_table_get_highest_foreign_id.cpp
-    dict_remove_db_name.cpp
-    dict_table_op_t.cpp
-    dict_col_get_no.cpp
-    dict_col_get_clust_pos.cpp
-    dict_col_get_index_pos.cpp
-    dict_index_has_desc.cpp
-    dict_index_is_auto_gen_clust.cpp
-    dict_index_is_unique.cpp
-    dict_index_is_spatial.cpp
-    dict_index_has_virtual.cpp
-    dict_index_is_ibuf.cpp
-    dict_index_is_sec_or_ibuf.cpp
+    rec_cache_t.cpp
+    rec_format_t.cpp
+    table_dirty_status.cpp
+    table_lock_list_t.cpp
+    temp_prebuilt_vec.cpp
+    zip_pad_info_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

@@ -15,7 +15,6 @@ add_library( ${LIB_NAME} STATIC
     rec_copy.cpp
     rec_copy_prefix_to_buf_old.cpp
     rec_field_not_null_not_add_col_def.cpp
-    rec_format_t.cpp
     rec_get_1byte_offs_flag.cpp
     rec_get_bit_field_1.cpp
     rec_get_bit_field_2.cpp
