@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#define lock_t ib_lock_t
+
 struct lock_t;
 struct lock_sys_t;
 struct lock_table_t;

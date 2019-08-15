@@ -38,6 +38,7 @@ external tools. */
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/data_types/dtype_get_mblen.h>
 #include <innodb/string/mem_strdup.h>
+#include <innodb/dict_mem/lock_table_lock_list_init.h>
 
 #include <new>
 
@@ -210,7 +211,7 @@ dict_table_t *dict_mem_table_create(
   dict_table_stats_latch_create(table, true);
 
   table->autoinc_lock =
-      static_cast<ib_lock_t *>(mem_heap_alloc(heap, lock_get_size()));
+      static_cast<lock_t *>(mem_heap_alloc(heap, lock_get_size()));
 
   /* lazy creation of table autoinc latch */
   dict_table_autoinc_create_lazy(table);

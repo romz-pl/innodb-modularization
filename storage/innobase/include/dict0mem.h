@@ -115,7 +115,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0types.h"
 #ifndef UNIV_HOTBACKUP
 
-#define lock_t ib_lock_t
+
 struct lock_t;
 struct lock_sys_t;
 struct lock_table_t;

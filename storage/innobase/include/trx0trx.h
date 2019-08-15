@@ -51,7 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ha_prototypes.h"
 
-#define lock_t ib_lock_t
+
 struct lock_t;
 struct lock_sys_t;
 struct lock_table_t;
@@ -538,7 +538,7 @@ transaction pool.
 #endif /* UNIV_DEBUG */
 #endif /* !UNIV_HOTBACKUP */
 
-typedef std::vector<ib_lock_t *, ut_allocator<ib_lock_t *>> lock_pool_t;
+typedef std::vector<lock_t *, ut_allocator<lock_t *>> lock_pool_t;
 
 /** Latching protocol for trx_lock_t::que_state.  trx_lock_t::que_state
  captures the state of the query thread during the execution of a query.

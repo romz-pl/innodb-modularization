@@ -97,13 +97,13 @@ bool innobase_deadlock_detect = true;
 static const ulint REC_LOCK_CACHE = 8;
 
 /** Maximum record lock size in bytes */
-static const ulint REC_LOCK_SIZE = sizeof(ib_lock_t) + 256;
+static const ulint REC_LOCK_SIZE = sizeof(lock_t) + 256;
 
 /** Total number of cached table locks */
 static const ulint TABLE_LOCK_CACHE = 8;
 
 /** Size in bytes, of the table lock instance */
-static const ulint TABLE_LOCK_SIZE = sizeof(ib_lock_t);
+static const ulint TABLE_LOCK_SIZE = sizeof(lock_t);
 
 /** Switch to CATS if the number of threads waiting is above this threshold. */
 static const int LOCK_CATS_THRESHOLD = 32;
@@ -7216,13 +7216,13 @@ void lock_trx_alloc_locks(trx_t *trx) {
   at index 0. */
 
   for (ulint i = 0; i < REC_LOCK_CACHE; ++i, ptr += REC_LOCK_SIZE) {
-    trx->lock.rec_pool.push_back(reinterpret_cast<ib_lock_t *>(ptr));
+    trx->lock.rec_pool.push_back(reinterpret_cast<lock_t *>(ptr));
   }
 
   sz = TABLE_LOCK_SIZE * TABLE_LOCK_CACHE;
   ptr = reinterpret_cast<byte *>(ut_malloc_nokey(sz));
 
   for (ulint i = 0; i < TABLE_LOCK_CACHE; ++i, ptr += TABLE_LOCK_SIZE) {
-    trx->lock.table_pool.push_back(reinterpret_cast<ib_lock_t *>(ptr));
+    trx->lock.table_pool.push_back(reinterpret_cast<lock_t *>(ptr));
   }
 }

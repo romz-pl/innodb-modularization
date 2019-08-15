@@ -4,7 +4,7 @@
 
 #include <innodb/lst/lst.h>
 
-#define lock_t ib_lock_t
+
 
 struct lock_t;
 
