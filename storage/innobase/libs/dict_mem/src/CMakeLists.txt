@@ -51,6 +51,12 @@ add_library( ${LIB_NAME} STATIC
     dict_index_zip_pad_mutex_destroy.cpp
     dict_index_zip_pad_unlock.cpp
     dict_table_autoinc_own.cpp
+    dict_mem_table_add_v_col.cpp
+    dict_add_col_name.cpp
+    dict_mem_fill_column_struct.cpp
+    dict_mem_table_add_col.cpp
+    dict_table_get_nth_v_col.cpp
+    dict_mem_table_add_s_col.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

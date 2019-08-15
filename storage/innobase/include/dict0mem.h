@@ -99,6 +99,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/dict_mem/dict_index_zip_pad_mutex_destroy.h>
 #include <innodb/dict_mem/dict_index_zip_pad_unlock.h>
 #include <innodb/dict_mem/dict_table_autoinc_own.h>
+#include <innodb/dict_mem/dict_mem_table_add_v_col.h>
+#include <innodb/dict_mem/dict_mem_table_add_s_col.h>
 
 #include "buf0flu.h"
 
@@ -148,29 +150,8 @@ struct ib_rbt_t;
 struct dict_foreign_t;
 
 
-/** Adds a virtual column definition to a table.
-@param[in,out]	table		table
-@param[in]	heap		temporary memory heap, or NULL. It is
-                                used to store name when we have not finished
-                                adding all columns. When all columns are
-                                added, the whole name will copy to memory from
-                                table->heap
-@param[in]	name		column name
-@param[in]	mtype		main datatype
-@param[in]	prtype		precise type
-@param[in]	len		length
-@param[in]	pos		position in a table
-@param[in]	num_base	number of base columns
-@return the virtual column definition */
-dict_v_col_t *dict_mem_table_add_v_col(dict_table_t *table, mem_heap_t *heap,
-                                       const char *name, ulint mtype,
-                                       ulint prtype, ulint len, ulint pos,
-                                       ulint num_base);
 
-/** Adds a stored column definition to a table.
-@param[in,out]	table		table
-@param[in]	num_base	number of base columns. */
-void dict_mem_table_add_s_col(dict_table_t *table, ulint num_base);
+
 
 /** Renames a column of a table in the data dictionary cache. */
 void dict_mem_table_col_rename(dict_table_t *table, /*!< in/out: table */
