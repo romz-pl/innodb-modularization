@@ -36,24 +36,24 @@ struct dict_table_t {
 
   /** Get reference count.
   @return current value of n_ref_count */
-  inline uint64_t get_ref_count() const;
+  uint64_t get_ref_count() const;
 
   /** Acquire the table handle. */
-  inline void acquire();
+  void acquire();
 
   /** Acquire the table handle, with lock() and unlock() the table.
   This function needs to be called for opening table when the table
   is in memory and later the stats information would be initialized */
-  inline void acquire_with_lock();
+  void acquire_with_lock();
 
   /** Release the table handle. */
-  inline void release();
+  void release();
 
   /** Lock the table handle. */
-  inline void lock();
+  void lock();
 
   /** Unlock the table handle. */
-  inline void unlock();
+  void unlock();
 
 #ifndef UNIV_HOTBACKUP
   /** Mutex of the table for concurrency access. */
@@ -698,8 +698,8 @@ detect this and will eventually quit sooner. */
 
   /* GAP locks are skipped for DD tables and SDI tables
   @return true if table is DD table or SDI table, else false */
-  inline bool skip_gap_locks() const;
+  bool skip_gap_locks() const;
 
   /** Determine if the table can support instant ADD COLUMN */
-  inline bool support_instant_add() const;
+  bool support_instant_add() const;
 };

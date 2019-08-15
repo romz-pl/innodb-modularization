@@ -27,7 +27,9 @@ add_library( ${LIB_NAME} STATIC
     dict_foreign_set_validate.cpp
     dict_foreign_t.cpp
     dict_foreign_with_index.cpp
+    dict_free_vc_templ.cpp
     dict_get_db_name_len.cpp
+    dict_index_contains_col_or_prefix.cpp
     dict_index_get_lock.cpp
     dict_index_get_n_fields.cpp
     dict_index_get_n_ordering_defined_by_user.cpp
@@ -42,6 +44,8 @@ add_library( ${LIB_NAME} STATIC
     dict_index_has_virtual.cpp
     dict_index_is_auto_gen_clust.cpp
     dict_index_is_ibuf.cpp
+    dict_index_is_online_ddl.cpp
+    dict_index_is_sdi.cpp
     dict_index_is_sec_or_ibuf.cpp
     dict_index_is_spatial.cpp
     dict_index_is_unique.cpp
@@ -51,36 +55,70 @@ add_library( ${LIB_NAME} STATIC
     dict_index_zip_pad_mutex_create_lazy.cpp
     dict_index_zip_pad_mutex_destroy.cpp
     dict_index_zip_pad_unlock.cpp
+    dict_lru_find_table.cpp
+    dict_max_field_len_store_undo.cpp
+    dict_max_v_field_len_store_undo.cpp
     dict_mem_fill_column_struct.cpp
     dict_mem_table_add_col.cpp
     dict_mem_table_add_s_col.cpp
     dict_mem_table_add_v_col.cpp
+    dict_non_lru_find_table.cpp
     dict_remove_db_name.cpp
     dict_s_col_list.cpp
     dict_s_col_t.cpp
+    dict_sdi_get_index_id.cpp
+    dict_sdi_get_space_id.cpp
+    dict_sdi_get_table_id.cpp
+    dict_sys.cpp
     dict_sys_t.cpp
     dict_sys_tables_type_to_tf.cpp
     dict_sys_tables_type_validate.cpp
+    dict_table_allow_eviction.cpp
     dict_table_autoinc_create_lazy.cpp
     dict_table_autoinc_destroy.cpp
     dict_table_autoinc_own.cpp
+    dict_table_autoinc_persisted_update.cpp
+    dict_table_autoinc_set_col_pos.cpp
+    dict_table_ddl_acquire.cpp
+    dict_table_ddl_release.cpp
+    dict_table_decode_n_col.cpp
+    dict_table_encode_n_col.cpp
+    dict_table_get_curr_table_sess_trx_id.cpp
     dict_table_get_highest_foreign_id.cpp
+    dict_table_get_index_on_first_col.cpp
     dict_table_get_n_rows.cpp
     dict_table_get_n_tot_u_cols.cpp
     dict_table_get_n_v_cols.cpp
+    dict_table_get_next_table_sess_row_id.cpp
+    dict_table_get_next_table_sess_trx_id.cpp
+    dict_table_get_nth_col_pos.cpp
     dict_table_get_nth_v_col.cpp
     dict_table_get_sys_col_no.cpp
     dict_table_has_atomic_blobs.cpp
+    dict_table_has_autoinc_col.cpp
     dict_table_has_fts_index.cpp
     dict_table_has_indexed_v_cols.cpp
+    dict_table_have_virtual_index.cpp
     dict_table_is_comp.cpp
     dict_table_is_compressed_temporary.cpp
+    dict_table_is_discarded.cpp
+    dict_table_is_fts_column.cpp
+    dict_table_is_fts_column.cpp
+    dict_table_is_locking_disabled.cpp
+    dict_table_is_partition.cpp
+    dict_table_is_sdi.cpp
+    dict_table_is_table_buffer.cpp
+    dict_table_move_from_lru_to_non_lru.cpp
+    dict_table_move_from_non_lru_to_lru.cpp
+    dict_table_mutex_alloc.cpp
     dict_table_mutex_create_lazy.cpp
     dict_table_mutex_destroy.cpp
+    dict_table_mysql_pos_to_innodb.cpp
     dict_table_n_rows_dec.cpp
     dict_table_n_rows_inc.cpp
     dict_table_op_t.cpp
     dict_table_page_size.cpp
+    dict_table_prevent_eviction.cpp
     dict_table_t.cpp
     dict_table_x_lock_indexes.cpp
     dict_table_x_unlock_indexes.cpp
@@ -97,7 +135,6 @@ add_library( ${LIB_NAME} STATIC
     dict_vcol_set.cpp
     dict_vcol_templ_t.cpp
     flags.cpp
-    last_ops_cur_t.cpp
     lock_table_lock_list_init.cpp
     online_index_status.cpp
     os_once.cpp
@@ -108,21 +145,6 @@ add_library( ${LIB_NAME} STATIC
     table_lock_list_t.cpp
     temp_prebuilt_vec.cpp
     zip_pad_info_t.cpp
-    dict_index_is_online_ddl.cpp
-    dict_table_is_fts_column.cpp
-    dict_index_contains_col_or_prefix.cpp
-    dict_table_is_fts_column.cpp
-    dict_max_field_len_store_undo.cpp
-    dict_max_v_field_len_store_undo.cpp
-    dict_lru_find_table.cpp
-    dict_table_move_from_lru_to_non_lru.cpp
-    dict_table_prevent_eviction.cpp
-    dict_non_lru_find_table.cpp
-    dict_table_move_from_non_lru_to_lru.cpp
-    dict_sys.cpp
-    dict_table_allow_eviction.cpp
-    dict_table_ddl_acquire.cpp
-    dict_table_ddl_release.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

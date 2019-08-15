@@ -4,7 +4,6 @@
 
 #include <innodb/trx_types/flags.h>
 #include <innodb/bit/UT_BITS_IN_BYTES.h>
-#include "sql/dd/object_id.h"
 #include <innodb/univ/page_no_t.h>
 #include "mysql_version.h"
 #include <innodb/dict_mem/flags.h>
@@ -362,61 +361,7 @@ pages are allocated from the space */
 
 
 
-/** Max number of rollback segments: the number of segment specification slots
-in the transaction system array; rollback segment id must fit in one (signed)
-byte, therefore 128; each slot is currently 8 bytes in size. If you want
-to raise the level to 256 then you will need to fix some assertions that
-impose the 7 bit restriction. e.g., mach_write_to_3() */
-#define TRX_SYS_N_RSEGS 128
 
-/** Minimum and Maximum number of implicit undo tablespaces.  This kind
-of undo tablespace is always created and found in --innodb-undo-directory. */
-#define FSP_MIN_UNDO_TABLESPACES 2
-#define FSP_MAX_UNDO_TABLESPACES (TRX_SYS_N_RSEGS - 1)
-#define FSP_IMPLICIT_UNDO_TABLESPACES 2
-#define FSP_MAX_ROLLBACK_SEGMENTS (TRX_SYS_N_RSEGS)
-
-
-/** The first ID of the redo log pseudo-tablespace */
-constexpr space_id_t dict_sys_t_s_log_space_first_id = 0xFFFFFFF0UL;
-
-/** Use maximum UINT value to indicate invalid space ID. */
-constexpr space_id_t dict_sys_t_s_invalid_space_id = 0xFFFFFFFF;
-
-/** The data dictionary tablespace ID. */
-constexpr space_id_t dict_sys_t_s_space_id = 0xFFFFFFFE;
-
-/** The innodb_temporary tablespace ID. */
-constexpr space_id_t dict_sys_t_s_temp_space_id = 0xFFFFFFFD;
-
-/** The number of space IDs dedicated to each undo tablespace */
-constexpr space_id_t dict_sys_t_undo_space_id_range = 512;
-
-/** The lowest undo tablespace ID. */
-constexpr space_id_t dict_sys_t_s_min_undo_space_id =
-    dict_sys_t_s_log_space_first_id - (FSP_MAX_UNDO_TABLESPACES * dict_sys_t_undo_space_id_range);
-
-/** The highest undo  tablespace ID. */
-constexpr space_id_t dict_sys_t_s_max_undo_space_id = dict_sys_t_s_log_space_first_id - 1;
-
-/** The first reserved tablespace ID */
-constexpr space_id_t dict_sys_t_s_reserved_space_id = dict_sys_t_s_min_undo_space_id;
-
-/** Leave 1K space_ids and start space_ids for temporary
-general tablespaces (total 400K space_ids)*/
-constexpr space_id_t dict_sys_t_s_max_temp_space_id = dict_sys_t_s_reserved_space_id - 1000;
-
-/** Lowest temporary general space id */
-constexpr space_id_t dict_sys_t_s_min_temp_space_id = dict_sys_t_s_reserved_space_id - 1000 - 400000;
-
-/** The dd::Tablespace::id of the dictionary tablespace. */
-constexpr dd::Object_id dict_sys_t_s_dd_space_id = 1;
-
-/** The dd::Tablespace::id of innodb_system. */
-constexpr dd::Object_id dict_sys_t_s_dd_sys_space_id = 2;
-
-/** The dd::Tablespace::id of innodb_temporary. */
-constexpr dd::Object_id dict_sys_t_s_dd_temp_space_id = 3;
 
 
 

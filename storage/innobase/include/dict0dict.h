@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_mem/dict_table_autoinc_set_col_pos.h>
+#include <innodb/dict_mem/dict_table_mysql_pos_to_innodb.h>
 #include <innodb/dict_mem/dict_sys.h>
 #include <innodb/dict_mem/dict_table_move_from_non_lru_to_lru.h>
 #include <innodb/dict_mem/dict_table_move_from_lru_to_non_lru.h>
@@ -141,46 +143,15 @@ void dict_table_persist_to_dd_table_buffer(dict_table_t *table);
 void dict_table_read_dynamic_metadata(const byte *buffer, ulint size,
                                       PersistentTableMetadata *metadata);
 
-/** Determine bytes of column prefix to be stored in the undo log. Please
- note that if !dict_table_has_atomic_blobs(table), no prefix
- needs to be stored in the undo log.
- @return bytes of column prefix to be stored in the undo log */
-UNIV_INLINE
-ulint dict_max_field_len_store_undo(
-    dict_table_t *table,   /*!< in: table */
-    const dict_col_t *col) /*!< in: column which index prefix
-                           is based on */
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Determine maximum bytes of a virtual column need to be stored
-in the undo log.
-@param[in]	table		dict_table_t for the table
-@param[in]	col_no		virtual column number
-@return maximum bytes of virtual column to be stored in the undo log */
-UNIV_INLINE
-ulint dict_max_v_field_len_store_undo(dict_table_t *table, ulint col_no);
+
 
 #endif /* !UNIV_HOTBACKUP */
-/** Gets the column number.
- @return col->ind, table column position (starting from 0) */
-UNIV_INLINE
-ulint dict_col_get_no(const dict_col_t *col) /*!< in: column */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Gets the column position in the clustered index. */
-UNIV_INLINE
-ulint dict_col_get_clust_pos(
-    const dict_col_t *col,           /*!< in: table column */
-    const dict_index_t *clust_index) /*!< in: clustered index */
-    MY_ATTRIBUTE((warn_unused_result));
+
+
 
 #ifndef UNIV_HOTBACKUP
-/** Gets the column position in the given index.
-@param[in]	col	table column
-@param[in]	index	index to be searched for column
-@return position of column in the given index. */
-UNIV_INLINE
-ulint dict_col_get_index_pos(const dict_col_t *col, const dict_index_t *index)
-    MY_ATTRIBUTE((nonnull, warn_unused_result));
+
 
 /** If the given column name is reserved for InnoDB system columns, return
  TRUE.
@@ -781,18 +752,9 @@ ulint dict_index_get_nth_field_pos(
     const dict_index_t *index2, /*!< in: index */
     ulint n)                    /*!< in: field number in index2 */
     MY_ATTRIBUTE((warn_unused_result));
-/** Looks for non-virtual column n position in the clustered index.
- @return position in internal representation of the clustered index */
-ulint dict_table_get_nth_col_pos(const dict_table_t *table, /*!< in: table */
-                                 ulint n) /*!< in: column number */
-    MY_ATTRIBUTE((warn_unused_result));
 
-/** Get the innodb column position for a non-virtual column according to
-its original MySQL table position n
-@param[in]	table	table
-@param[in]	n	MySQL column position
-@return column position in InnoDB */
-ulint dict_table_mysql_pos_to_innodb(const dict_table_t *table, ulint n);
+
+
 
 /** Copies types of fields contained in index to tuple. */
 void dict_index_copy_types(dtuple_t *tuple,           /*!< in/out: data tuple */
