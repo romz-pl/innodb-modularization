@@ -145,6 +145,22 @@ add_library( ${LIB_NAME} STATIC
     table_lock_list_t.cpp
     temp_prebuilt_vec.cpp
     zip_pad_info_t.cpp
+    dict_col_name_is_reserved.cpp
+    dict_table_autoinc_lock.cpp
+    dict_table_autoinc_alloc.cpp
+    dict_table_autoinc_initialize.cpp
+    dict_table_autoinc_read.cpp
+    dict_table_autoinc_update_if_greater.cpp
+    dict_table_autoinc_unlock.cpp
+    dict_table_add_system_columns.cpp
+    dict_table_set_big_rows.cpp
+    dict_lru_validate.cpp
+    dict_table_add_to_cache.cpp
+    dict_table_change_id_in_cache.cpp
+    dict_foreign_remove_from_cache.cpp
+    dict_foreign_find.cpp
+    dict_table_check_if_in_cache_low.cpp
+    dict_foreign_error_report_low.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

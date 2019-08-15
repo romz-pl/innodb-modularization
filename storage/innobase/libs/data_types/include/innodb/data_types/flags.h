@@ -137,6 +137,12 @@ constexpr size_t DATA_ROLL_PTR = 2;
 
 static_assert(DATA_TRX_ID + 1 == DATA_ROLL_PTR, "DATA_TRX_ID value invalid!");
 
+/** Transaction ID type size in bytes. */
+constexpr size_t DATA_TRX_ID_LEN = 6;
+
+/** Rollback data pointer type size in bytes. */
+constexpr size_t DATA_ROLL_PTR_LEN = 7;
+
 
 #define DATA_N_SYS_COLS 3 /* number of system columns defined above */
 

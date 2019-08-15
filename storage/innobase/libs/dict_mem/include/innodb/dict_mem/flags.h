@@ -408,3 +408,7 @@ constexpr dd::Object_id dict_sys_t_s_dd_sys_space_id = 2;
 /** The dd::Tablespace::id of innodb_temporary. */
 constexpr dd::Object_id dict_sys_t_s_dd_temp_space_id = 3;
 
+
+
+
+#define BIG_ROW_SIZE 1024

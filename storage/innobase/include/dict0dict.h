@@ -143,55 +143,19 @@ void dict_table_persist_to_dd_table_buffer(dict_table_t *table);
 void dict_table_read_dynamic_metadata(const byte *buffer, ulint size,
                                       PersistentTableMetadata *metadata);
 
-
-
-
 #endif /* !UNIV_HOTBACKUP */
 
 
 
+#include <innodb/dict_mem/dict_col_name_is_reserved.h>
+#include <innodb/dict_mem/dict_table_autoinc_lock.h>
+#include <innodb/dict_mem/dict_table_autoinc_initialize.h>
+#include <innodb/dict_mem/dict_table_autoinc_read.h>
+#include <innodb/dict_mem/dict_table_autoinc_update_if_greater.h>
+#include <innodb/dict_mem/dict_table_autoinc_unlock.h>
+#include <innodb/dict_mem/dict_table_add_system_columns.h>
+
 #ifndef UNIV_HOTBACKUP
-
-
-/** If the given column name is reserved for InnoDB system columns, return
- TRUE.
- @return true if name is reserved */
-ibool dict_col_name_is_reserved(const char *name) /*!< in: column name */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Acquire the autoinc lock. */
-void dict_table_autoinc_lock(dict_table_t *table); /*!< in/out: table */
-
-/** Unconditionally set the autoinc counter. */
-void dict_table_autoinc_initialize(
-    dict_table_t *table, /*!< in/out: table */
-    ib_uint64_t value);  /*!< in: next value to assign to a row */
-/** Reads the next autoinc value (== autoinc counter value), 0 if not yet
- initialized.
- @return value for a new row, or 0 */
-ib_uint64_t dict_table_autoinc_read(const dict_table_t *table) /*!< in: table */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Updates the autoinc counter if the value supplied is greater than the
- current value. */
-void dict_table_autoinc_update_if_greater(
-
-    dict_table_t *table, /*!< in/out: table */
-    ib_uint64_t value);  /*!< in: value which was assigned to a row */
-/** Release the autoinc lock. */
-void dict_table_autoinc_unlock(dict_table_t *table); /*!< in/out: table */
-
-/** Update the persisted autoinc counter to specified one, we should hold
-autoinc_persisted_mutex.
-@param[in,out]	table	table
-@param[in]	autoinc	set autoinc_persisted to this value */
-UNIV_INLINE
-void dict_table_autoinc_persisted_update(dict_table_t *table,
-                                         ib_uint64_t autoinc);
-
-/** Set the column position of autoinc column in clustered index for a table.
-@param[in]	table	table
-@param[in]	pos	column position in table definition */
-UNIV_INLINE
-void dict_table_autoinc_set_col_pos(dict_table_t *table, ulint pos);
 
 /** Write redo logs for autoinc counter that is to be inserted, or to
 update some existing smaller one to bigger.
@@ -200,27 +164,19 @@ update some existing smaller one to bigger.
 @param[in,out]	mtr	mini-transaction */
 void dict_table_autoinc_log(dict_table_t *table, uint64_t value, mtr_t *mtr);
 
-/** Check if a table has an autoinc counter column.
-@param[in]	table	table
-@return true if there is an autoinc column in the table, otherwise false. */
-UNIV_INLINE
-bool dict_table_has_autoinc_col(const dict_table_t *table);
-
 #endif /* !UNIV_HOTBACKUP */
-/** Adds system columns to a table object. */
-void dict_table_add_system_columns(dict_table_t *table, /*!< in/out: table */
-                                   mem_heap_t *heap); /*!< in: temporary heap */
+
+
+#include <innodb/dict_mem/dict_table_set_big_rows.h>
+#include <innodb/dict_mem/dict_table_add_to_cache.h>
+#include <innodb/dict_mem/dict_table_change_id_in_cache.h>
+#include <innodb/dict_mem/dict_foreign_remove_from_cache.h>
+#include <innodb/dict_mem/dict_foreign_find.h>
+#include <innodb/dict_mem/dict_foreign_error_report_low.h>
+
 #ifndef UNIV_HOTBACKUP
-/** Mark if table has big rows.
-@param[in,out]	table	table handler */
-void dict_table_set_big_rows(dict_table_t *table) MY_ATTRIBUTE((nonnull));
-/** Adds a table object to the dictionary cache.
-@param[in]	table		table
-@param[in]	can_be_evicted	true if can be evicted
-@param[in]	heap		temporary heap
-*/
-void dict_table_add_to_cache(dict_table_t *table, ibool can_be_evicted,
-                             mem_heap_t *heap);
+
+
 
 /** Removes a table object from the dictionary cache. */
 void dict_table_remove_from_cache(dict_table_t *table); /*!< in, own: table */
@@ -254,14 +210,8 @@ dberr_t dict_table_rename_in_cache(dict_table_t *table,  /*!< in/out: table */
 be accessed by the caller afterwards */
 void dict_index_remove_from_cache(dict_table_t *table, dict_index_t *index);
 
-/** Change the id of a table object in the dictionary cache. This is used in
- DISCARD TABLESPACE. */
-void dict_table_change_id_in_cache(
-    dict_table_t *table, /*!< in/out: table object already in cache */
-    table_id_t new_id);  /*!< in: new id to set */
-/** Removes a foreign constraint struct from the dictionary cache. */
-void dict_foreign_remove_from_cache(
-    dict_foreign_t *foreign); /*!< in, own: foreign constraint */
+
+
 /** Adds a foreign key constraint object to the dictionary cache. May free
  the object if there already is an object with the same identifier in.
  At least one of foreign table or referenced table must already be in
@@ -656,7 +606,7 @@ ulint dict_make_room_in_cache(
     ulint max_tables, /*!< in: max tables allowed in cache */
     ulint pct_check); /*!< in: max percent to check */
 
-#define BIG_ROW_SIZE 1024
+
 
 /** Adds an index to the dictionary cache.
 @param[in]	table	table on which the index is

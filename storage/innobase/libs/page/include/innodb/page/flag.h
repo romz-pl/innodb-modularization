@@ -23,11 +23,7 @@
  * Page ZIP Flags
  */
 
-/** Transaction ID type size in bytes. */
-constexpr size_t DATA_TRX_ID_LEN = 6;
 
-/** Rollback data pointer type size in bytes. */
-constexpr size_t DATA_ROLL_PTR_LEN = 7;
 
 
 /** Size of an compressed page directory entry */

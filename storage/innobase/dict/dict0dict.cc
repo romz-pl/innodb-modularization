@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/dict_mem/dict_lru_validate.h>
 #include <innodb/dict_types/flags.h>
 #include <innodb/data_types/dfield_copy.h>
 #include <innodb/data_types/dfield_data_is_binary_equal.h>
@@ -100,10 +101,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #endif /* !UNIV_HOTBACKUP */
 
-#ifdef UNIV_HOTBACKUP
-#define dict_lru_validate(x) (true)
 
-#endif /* UNIV_HOTBACKUP */
 
 /** dummy index for ROW_FORMAT=REDUNDANT supremum and infimum records */
 dict_index_t *dict_ind_redundant;
@@ -279,13 +277,7 @@ static void dict_table_remove_from_cache_low(
     dict_table_t *table, /*!< in, own: table */
     ibool lru_evict);    /*!< in: TRUE if evicting from LRU */
 
-#ifdef UNIV_DEBUG
-/** Validate the dictionary table LRU list.
- @return true if validate OK */
-static ibool dict_lru_validate(void);
 
-
-#endif                               /* UNIV_DEBUG */
 
 /* Stream for storing detailed information about the latest foreign key
 and unique key errors. Only created if !srv_read_only_mode */
@@ -718,20 +710,7 @@ dict_v_col_t *dict_table_get_nth_v_col_mysql(const dict_table_t *table,
   return (dict_table_get_nth_v_col(table, i));
 }
 
-/** Allocate and init the autoinc latch of a given table.
-This function must not be called concurrently on the same table object.
-@param[in,out]	table_void	table whose autoinc latch to create */
-static void dict_table_autoinc_alloc(void *table_void) {
-  dict_table_t *table = static_cast<dict_table_t *>(table_void);
 
-  table->autoinc_mutex = UT_NEW_NOKEY(ib_mutex_t());
-  ut_a(table->autoinc_mutex != nullptr);
-  mutex_create(LATCH_ID_AUTOINC, table->autoinc_mutex);
-
-  table->autoinc_persisted_mutex = UT_NEW_NOKEY(ib_mutex_t());
-  ut_a(table->autoinc_persisted_mutex != nullptr);
-  mutex_create(LATCH_ID_PERSIST_AUTOINC, table->autoinc_persisted_mutex);
-}
 
 /** Allocate and init the zip_pad_mutex of a given index.
 This function must not be called concurrently on the same index object.
@@ -743,14 +722,7 @@ static void dict_index_zip_pad_alloc(void *index_void) {
   mutex_create(LATCH_ID_ZIP_PAD_MUTEX, index->zip_pad.mutex);
 }
 
-/** Acquire the autoinc lock. */
-void dict_table_autoinc_lock(dict_table_t *table) /*!< in/out: table */
-{
-  os_once::do_or_wait_for_done(&table->autoinc_mutex_created,
-                               dict_table_autoinc_alloc, table);
 
-  mutex_enter(table->autoinc_mutex);
-}
 
 /** Acquire the zip_pad_mutex latch.
 @param[in,out]	index	the index whose zip_pad_mutex to acquire.*/
@@ -761,15 +733,7 @@ static void dict_index_zip_pad_lock(dict_index_t *index) {
   mutex_enter(index->zip_pad.mutex);
 }
 
-/** Unconditionally set the autoinc counter. */
-void dict_table_autoinc_initialize(
-    dict_table_t *table, /*!< in/out: table */
-    ib_uint64_t value)   /*!< in: next value to assign to a row */
-{
-  ut_ad(dict_table_autoinc_own(table));
 
-  table->autoinc = value;
-}
 
 /** Write redo logs for autoinc counter that is to be inserted, or to
 update some existing smaller one to bigger.
@@ -843,35 +807,11 @@ ulint dict_table_get_all_fts_indexes(dict_table_t *table,
   return (ib_vector_size(indexes));
 }
 
-/** Reads the next autoinc value (== autoinc counter value), 0 if not yet
- initialized.
- @return value for a new row, or 0 */
-ib_uint64_t dict_table_autoinc_read(const dict_table_t *table) /*!< in: table */
-{
-  ut_ad(dict_table_autoinc_own(table));
 
-  return (table->autoinc);
-}
 
-/** Updates the autoinc counter if the value supplied is greater than the
- current value. */
-void dict_table_autoinc_update_if_greater(
 
-    dict_table_t *table, /*!< in/out: table */
-    ib_uint64_t value)   /*!< in: value which was assigned to a row */
-{
-  ut_ad(dict_table_autoinc_own(table));
 
-  if (value > table->autoinc) {
-    table->autoinc = value;
-  }
-}
 
-/** Release the autoinc lock. */
-void dict_table_autoinc_unlock(dict_table_t *table) /*!< in/out: table */
-{
-  mutex_exit(table->autoinc_mutex);
-}
 
 
 /** Looks for a matching field in an index. The column has to be the same. The
@@ -1075,136 +1015,10 @@ dict_table_t *dict_table_open_on_name(
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Adds system columns to a table object. */
-void dict_table_add_system_columns(dict_table_t *table, /*!< in/out: table */
-                                   mem_heap_t *heap) /*!< in: temporary heap */
-{
-  ut_ad(table);
-  ut_ad(table->n_def == (table->n_cols - table->get_n_sys_cols()));
-  ut_ad(table->magic_n == DICT_TABLE_MAGIC_N);
-  ut_ad(!table->cached);
-
-  /* NOTE: the system columns MUST be added in the following order
-  (so that they can be indexed by the numerical value of DATA_ROW_ID,
-  etc.) and as the last columns of the table memory object.
-  The clustered index will not always physically contain all system
-  columns.
-  Intrinsic table don't need DB_ROLL_PTR as UNDO logging is turned off
-  for these tables. */
-
-  dict_mem_table_add_col(table, heap, "DB_ROW_ID", DATA_SYS,
-                         DATA_ROW_ID | DATA_NOT_NULL, DATA_ROW_ID_LEN);
-
-  dict_mem_table_add_col(table, heap, "DB_TRX_ID", DATA_SYS,
-                         DATA_TRX_ID | DATA_NOT_NULL, DATA_TRX_ID_LEN);
-
-  if (!table->is_intrinsic()) {
-    dict_mem_table_add_col(table, heap, "DB_ROLL_PTR", DATA_SYS,
-                           DATA_ROLL_PTR | DATA_NOT_NULL, DATA_ROLL_PTR_LEN);
-
-    /* This check reminds that if a new system column is added to
-    the program, it should be dealt with here */
-  }
-}
 
 #ifndef UNIV_HOTBACKUP
-/** Mark if table has big rows.
-@param[in,out]	table	table handler */
-void dict_table_set_big_rows(dict_table_t *table) {
-  ulint row_len = 0;
-  for (ulint i = 0; i < table->n_def; i++) {
-    ulint col_len = table->get_col(i)->get_max_size();
 
-    row_len += col_len;
 
-    /* If we have a single unbounded field, or several gigantic
-    fields, mark the maximum row size as BIG_ROW_SIZE. */
-    if (row_len >= BIG_ROW_SIZE || col_len >= BIG_ROW_SIZE) {
-      row_len = BIG_ROW_SIZE;
-
-      break;
-    }
-  }
-
-  table->big_rows = (row_len >= BIG_ROW_SIZE) ? TRUE : FALSE;
-}
-
-/** Adds a table object to the dictionary cache.
-@param[in,out]	table		table
-@param[in]	can_be_evicted	true if can be evicted
-@param[in,out]	heap		temporary heap
-*/
-void dict_table_add_to_cache(dict_table_t *table, ibool can_be_evicted,
-                             mem_heap_t *heap) {
-  ulint fold;
-  ulint id_fold;
-
-  ut_ad(dict_lru_validate());
-  ut_ad(mutex_own(&dict_sys->mutex));
-
-  table->cached = true;
-
-  fold = ut_fold_string(table->name.m_name);
-  id_fold = ut_fold_ull(table->id);
-
-  dict_table_set_big_rows(table);
-
-  /* Look for a table with the same name: error if such exists */
-  {
-    dict_table_t *table2;
-    HASH_SEARCH(name_hash, dict_sys->table_hash, fold, dict_table_t *, table2,
-                ut_ad(table2->cached),
-                !strcmp(table2->name.m_name, table->name.m_name));
-    ut_a(table2 == NULL);
-
-#ifdef UNIV_DEBUG
-    /* Look for the same table pointer with a different name */
-    HASH_SEARCH_ALL(name_hash, dict_sys->table_hash, dict_table_t *, table2,
-                    ut_ad(table2->cached), table2 == table);
-    ut_ad(table2 == NULL);
-#endif /* UNIV_DEBUG */
-  }
-
-  /* Look for a table with the same id: error if such exists */
-  {
-    dict_table_t *table2;
-    HASH_SEARCH(id_hash, dict_sys->table_id_hash, id_fold, dict_table_t *,
-                table2, ut_ad(table2->cached), table2->id == table->id);
-    ut_a(table2 == NULL);
-
-#ifdef UNIV_DEBUG
-    /* Look for the same table pointer with a different id */
-    HASH_SEARCH_ALL(id_hash, dict_sys->table_id_hash, dict_table_t *, table2,
-                    ut_ad(table2->cached), table2 == table);
-    ut_ad(table2 == NULL);
-#endif /* UNIV_DEBUG */
-  }
-
-  /* Add table to hash table of tables */
-  HASH_INSERT(dict_table_t, name_hash, dict_sys->table_hash, fold, table);
-
-  /* Add table to hash table of tables based on table id */
-  HASH_INSERT(dict_table_t, id_hash, dict_sys->table_id_hash, id_fold, table);
-
-  table->can_be_evicted = can_be_evicted;
-
-  if (table->can_be_evicted) {
-    UT_LIST_ADD_FIRST(dict_sys->table_LRU, table);
-  } else {
-    UT_LIST_ADD_FIRST(dict_sys->table_non_LRU, table);
-  }
-
-  ut_ad(dict_lru_validate());
-
-  table->dirty_status.store(METADATA_CLEAN);
-
-  dict_sys->size +=
-      mem_heap_get_size(table->heap) + strlen(table->name.m_name) + 1;
-  DBUG_EXECUTE_IF(
-      "dd_upgrade", if (srv_is_upgrade_mode && srv_upgrade_old_undo_found) {
-        ib::info(ER_IB_MSG_176) << "Adding table to cache: " << table->name;
-      });
-}
 
 /** Test whether a table can be evicted from the LRU cache.
  @return true if table can be evicted. */
@@ -1765,26 +1579,7 @@ dberr_t dict_table_rename_in_cache(
   return (DB_SUCCESS);
 }
 
-/** Change the id of a table object in the dictionary cache. This is used in
- DISCARD TABLESPACE. */
-void dict_table_change_id_in_cache(
-    dict_table_t *table, /*!< in/out: table object already in cache */
-    table_id_t new_id)   /*!< in: new id to set */
-{
-  ut_ad(table);
-  ut_ad(mutex_own(&dict_sys->mutex));
-  ut_ad(table->magic_n == DICT_TABLE_MAGIC_N);
 
-  /* Remove the table from the hash table of id's */
-
-  HASH_DELETE(dict_table_t, id_hash, dict_sys->table_id_hash,
-              ut_fold_ull(table->id), table);
-  table->id = new_id;
-
-  /* Add the table back to the hash table */
-  HASH_INSERT(dict_table_t, id_hash, dict_sys->table_id_hash,
-              ut_fold_ull(table->id), table);
-}
 
 /** Removes a table object from the dictionary cache. */
 static void dict_table_remove_from_cache_low(
@@ -1928,30 +1723,7 @@ void dict_table_remove_from_cache_debug(dict_table_t *table, bool lru_evict) {
 }
 #endif /* UNIV_DEBUG */
 
-/** If the given column name is reserved for InnoDB system columns, return
- TRUE.
- @return true if name is reserved */
-ibool dict_col_name_is_reserved(const char *name) /*!< in: column name */
-{
-/* This check reminds that if a new system column is added to
-the program, it should be dealt with here. */
-#if DATA_N_SYS_COLS != 3
-#error "DATA_N_SYS_COLS != 3"
-#endif
 
-  static const char *reserved_names[] = {"DB_ROW_ID", "DB_TRX_ID",
-                                         "DB_ROLL_PTR"};
-
-  ulint i;
-
-  for (i = 0; i < UT_ARR_SIZE(reserved_names); i++) {
-    if (innobase_strcasecmp(name, reserved_names[i]) == 0) {
-      return (TRUE);
-    }
-  }
-
-  return (FALSE);
-}
 
 /** Return maximum size of the node pointer record.
  @return maximum size of the record in bytes */
@@ -3061,50 +2833,9 @@ ibool dict_table_is_referenced_by_foreign_key(
   return (!table->referenced_set.empty());
 }
 
-/** Removes a foreign constraint struct from the dictionary cache. */
-void dict_foreign_remove_from_cache(
-    dict_foreign_t *foreign) /*!< in, own: foreign constraint */
-{
-  ut_ad(mutex_own(&dict_sys->mutex));
-  ut_a(foreign);
 
-  if (foreign->referenced_table != NULL) {
-    foreign->referenced_table->referenced_set.erase(foreign);
-  }
 
-  if (foreign->foreign_table != NULL) {
-    foreign->foreign_table->foreign_set.erase(foreign);
-  }
 
-  dict_foreign_free(foreign);
-}
-
-/** Looks for the foreign constraint from the foreign and referenced lists
- of a table.
- @return foreign constraint */
-static dict_foreign_t *dict_foreign_find(
-    dict_table_t *table,     /*!< in: table object */
-    dict_foreign_t *foreign) /*!< in: foreign constraint */
-{
-  ut_ad(mutex_own(&dict_sys->mutex));
-
-  ut_ad(dict_foreign_set_validate(table->foreign_set));
-  ut_ad(dict_foreign_set_validate(table->referenced_set));
-
-  dict_foreign_set::iterator it = table->foreign_set.find(foreign);
-
-  if (it != table->foreign_set.end()) {
-    return (*it);
-  }
-
-  it = table->referenced_set.find(foreign);
-
-  if (it != table->referenced_set.end()) {
-    return (*it);
-  }
-
-  return (NULL);
-}
 
 /** Tries to find an index whose first fields are the columns in the array,
  in the same order and is not marked for deletion and is not the same
@@ -3153,15 +2884,7 @@ NOT NULL */
   return (NULL);
 }
 
-/** Report an error in a foreign key definition. */
-static void dict_foreign_error_report_low(
-    FILE *file,       /*!< in: output stream */
-    const char *name) /*!< in: table name */
-{
-  rewind(file);
-  ut_print_timestamp(file);
-  fprintf(file, " Error in foreign key constraint of table %s:\n", name);
-}
+
 
 /** Report an error in a foreign key definition. */
 static void dict_foreign_error_report(
@@ -5789,31 +5512,7 @@ void dict_close(void) {
   dict_sys = NULL;
 }
 
-#ifdef UNIV_DEBUG
-/** Validate the dictionary table LRU list.
- @return true if valid */
-static ibool dict_lru_validate(void) {
-  dict_table_t *table;
 
-  ut_ad(mutex_own(&dict_sys->mutex));
-
-  for (table = UT_LIST_GET_FIRST(dict_sys->table_LRU); table != NULL;
-       table = UT_LIST_GET_NEXT(table_LRU, table)) {
-    ut_a(table->can_be_evicted);
-  }
-
-  for (table = UT_LIST_GET_FIRST(dict_sys->table_non_LRU); table != NULL;
-       table = UT_LIST_GET_NEXT(table_LRU, table)) {
-    ut_a(!table->can_be_evicted);
-  }
-
-  return (TRUE);
-}
-
-
-
-
-#endif /* UNIV_DEBUG */
 /** Check an index to see whether its first fields are the columns in the array,
  in the same order and is not marked for deletion and is not the same
  as types_idx.
