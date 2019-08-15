@@ -32,6 +32,25 @@ add_library( ${LIB_NAME} STATIC
     dict_vcol_templ_t.cpp
     table_dirty_status.cpp
     temp_prebuilt_vec.cpp
+    table_lock_list_t.cpp
+    dict_table_t.cpp
+    persistent_type_t.cpp
+    corrupted_ids_t.cpp
+    PersistentTableMetadata.cpp
+    Persister.cpp
+    CorruptedIndexPersister.cpp
+    AutoIncPersister.cpp
+    Persisters.cpp
+    lock_table_lock_list_init.cpp
+    dict_foreign_add_to_referenced_table.cpp
+    dict_table_mutex_create_lazy.cpp
+    dict_table_mutex_destroy.cpp
+    dict_table_autoinc_destroy.cpp
+    dict_table_autoinc_create_lazy.cpp
+    dict_index_zip_pad_mutex_create_lazy.cpp
+    dict_index_zip_pad_mutex_destroy.cpp
+    dict_index_zip_pad_unlock.cpp
+    dict_table_autoinc_own.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
