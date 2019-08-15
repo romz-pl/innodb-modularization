@@ -323,20 +323,9 @@ dict_index_t *dict_foreign_find_index(
     NOT NULL */
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Returns a virtual column's name.
-@param[in]	table		table object
-@param[in]	col_nr		virtual column number(nth virtual column)
-@return column name. */
-const char *dict_table_get_v_col_name(const dict_table_t *table, ulint col_nr);
+#include <innodb/dict_mem/dict_table_get_v_col_name.h>
+#include <innodb/dict_mem/dict_table_has_column.h>
 
-/** Check if the table has a given column.
-@param[in]	table		table object
-@param[in]	col_name	column name
-@param[in]	col_nr		column number guessed, 0 as default
-@return column number if the table has the specified column,
-otherwise table->n_def */
-ulint dict_table_has_column(const dict_table_t *table, const char *col_name,
-                            ulint col_nr = 0);
 
 /** Outputs info on foreign keys of a table. */
 void dict_print_info_on_foreign_keys(
@@ -380,94 +369,11 @@ bool dict_foreign_qualify_index(
     NOT NULL */
     MY_ATTRIBUTE((warn_unused_result));
 
-/* Skip corrupted index */
-#define dict_table_skip_corrupt_index(index) \
-  while (index && index->is_corrupted()) {   \
-    index = index->next();                   \
-  }
-
-/* Get the next non-corrupt index */
-#define dict_table_next_uncorrupted_index(index) \
-  do {                                           \
-    index = index->next();                       \
-    dict_table_skip_corrupt_index(index);        \
-  } while (0)
-
-/** Check if index is auto-generated clustered index.
-@param[in]	index	index
-
-@return true if index is auto-generated clustered index. */
-UNIV_INLINE
-bool dict_index_is_auto_gen_clust(const dict_index_t *index);
-
-/** Check whether the index is unique.
- @return nonzero for unique index, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_unique(const dict_index_t *index) /*!< in: index */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Check whether the index is a Spatial Index.
- @return	nonzero for Spatial Index, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_spatial(const dict_index_t *index) /*!< in: index */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Check whether the index contains a virtual column.
-@param[in]	index	index
-@return	nonzero for index on virtual column, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_has_virtual(const dict_index_t *index);
-/** Check whether the index is the insert buffer tree.
- @return nonzero for insert buffer, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_ibuf(const dict_index_t *index) /*!< in: index */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Check whether the index consists of descending columns only.
-@param[in]	index  index tree
-@retval true if index has any descending column
-@retval false if index has only ascending columns */
-UNIV_INLINE
-bool dict_index_has_desc(const dict_index_t *index)
-    MY_ATTRIBUTE((warn_unused_result));
-/** Check whether the index is a secondary index or the insert buffer tree.
- @return nonzero for insert buffer, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_sec_or_ibuf(const dict_index_t *index) /*!< in: index */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Get all the FTS indexes on a table.
-@param[in]	table	table
-@param[out]	indexes	all FTS indexes on this table
-@return number of FTS indexes */
-ulint dict_table_get_all_fts_indexes(dict_table_t *table, ib_vector_t *indexes);
-
-
-/** Gets the number of virtual columns in a table in the dictionary cache.
-@param[in]	table	the table to check
-@return number of virtual columns of a table */
-UNIV_INLINE
-ulint dict_table_get_n_v_cols(const dict_table_t *table);
-
-/** Check if a table has indexed virtual columns
-@param[in]	table	the table to check
-@return true is the table has indexed virtual columns */
-UNIV_INLINE
-bool dict_table_has_indexed_v_cols(const dict_table_t *table);
-
-/** Gets the approximately estimated number of rows in the table.
- @return estimated number of rows */
-UNIV_INLINE
-ib_uint64_t dict_table_get_n_rows(const dict_table_t *table) /*!< in: table */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Increment the number of rows in the table by one.
- Notice that this operation is not protected by any latch, the number is
- approximate. */
-UNIV_INLINE
-void dict_table_n_rows_inc(dict_table_t *table); /*!< in/out: table */
-/** Decrement the number of rows in the table by one.
- Notice that this operation is not protected by any latch, the number is
- approximate. */
-UNIV_INLINE
-void dict_table_n_rows_dec(dict_table_t *table); /*!< in/out: table */
+#include <innodb/dict_mem/dict_table_skip_corrupt_index.h>
+#include <innodb/dict_mem/dict_table_next_uncorrupted_index.h>
+#include <innodb/dict_mem/dict_table_get_all_fts_indexes.h>
+#include <innodb/dict_mem/dict_table_extent_size.h>
+#include <innodb/dict_mem/dict_table_col_in_clustered_key.h>
 
 /** Get nth virtual column
 @param[in]	table	target table
@@ -477,45 +383,11 @@ dict_v_col_t *dict_table_get_nth_v_col_mysql(const dict_table_t *table,
                                              ulint col_nr);
 
 
-/** Gets the given system column number of a table.
- @return column number */
-UNIV_INLINE
-ulint dict_table_get_sys_col_no(const dict_table_t *table, /*!< in: table */
-                                ulint sys) /*!< in: DATA_ROW_ID, ... */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Check whether the table uses the compact page format.
- @return true if table uses the compact page format */
-UNIV_INLINE
-ibool dict_table_is_comp(const dict_table_t *table) /*!< in: table */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Determine if a table uses atomic BLOBs (no locally stored prefix).
-@param[in]	table	InnoDB table
-@return whether BLOBs are atomic */
-UNIV_INLINE
-bool dict_table_has_atomic_blobs(const dict_table_t *table)
-    MY_ATTRIBUTE((warn_unused_result));
 
 #ifndef UNIV_HOTBACKUP
-/** Set the various values in a dict_table_t::flags pointer.
-@param[in,out]	flags		Pointer to a 4 byte Table Flags
-@param[in]	format		File Format
-@param[in]	zip_ssize	Zip Shift Size
-@param[in]	use_data_dir	Table uses DATA DIRECTORY
-@param[in]	shared_space	Table uses a General Shared Tablespace */
-UNIV_INLINE
-void dict_tf_set(uint32_t *flags, rec_format_t format, ulint zip_ssize,
-                 bool use_data_dir, bool shared_space);
 
-/** Initialize a dict_table_t::flags pointer.
-@param[in]	compact		Table uses Compact or greater
-@param[in]	zip_ssize	Zip Shift Size (log 2 minus 9)
-@param[in]	atomic_blobs	Table uses Compressed or Dynamic
-@param[in]	data_dir	Table uses DATA DIRECTORY
-@param[in]	shared_space	Table uses a General Shared Tablespace */
-UNIV_INLINE
-uint32_t dict_tf_init(bool compact, ulint zip_ssize, bool atomic_blobs,
-                      bool data_dir, bool shared_space);
+
+
 
 /** Convert a 32 bit integer table flags to the 32 bit FSP Flags.
 Fsp Flags are written into the tablespace header at the offset
@@ -538,41 +410,9 @@ UNIV_INLINE
 const page_size_t dict_tf_get_page_size(uint32_t flags) MY_ATTRIBUTE((const));
 #endif /* !UNIV_HOTBACKUP */
 
-/** Determine the extent size (in pages) for the given table
-@param[in]	table	the table whose extent size is being
-                        calculated.
-@return extent size in pages (256, 128 or 64) */
-page_no_t dict_table_extent_size(const dict_table_t *table);
 
-/** Get the table page size.
-@param[in]	table	table
-@return compressed page size, or 0 if not compressed */
-UNIV_INLINE
-const page_size_t dict_table_page_size(const dict_table_t *table)
-    MY_ATTRIBUTE((warn_unused_result));
 
-#ifndef UNIV_HOTBACKUP
-/** Obtain exclusive locks on all index trees of the table. This is to prevent
- accessing index trees while InnoDB is updating internal metadata for
- operations such as FLUSH TABLES. */
-UNIV_INLINE
-void dict_table_x_lock_indexes(dict_table_t *table); /*!< in: table */
-/** Release the exclusive locks on all index tree. */
-UNIV_INLINE
-void dict_table_x_unlock_indexes(dict_table_t *table); /*!< in: table */
-#endif                                                 /* !UNIV_HOTBACKUP */
-/** Checks if a column is in the ordering columns of the clustered index of a
- table. Column prefixes are treated like whole columns.
- @return true if the column, or its prefix, is in the clustered key */
-ibool dict_table_col_in_clustered_key(
-    const dict_table_t *table, /*!< in: table */
-    ulint n)                   /*!< in: column number */
-    MY_ATTRIBUTE((warn_unused_result));
-/** Check if the table has an FTS index.
- @return true if table has an FTS index */
-UNIV_INLINE
-ibool dict_table_has_fts_index(dict_table_t *table) /*!< in: table */
-    MY_ATTRIBUTE((warn_unused_result));
+
 /** Copies types of virtual columns contained in table to tuple and sets all
 fields of the tuple to the SQL NULL value.  This function should
 be called right after dtuple_create().

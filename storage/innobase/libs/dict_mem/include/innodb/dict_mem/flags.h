@@ -412,3 +412,22 @@ constexpr dd::Object_id dict_sys_t_s_dd_temp_space_id = 3;
 
 
 #define BIG_ROW_SIZE 1024
+
+
+
+
+/** File space extent size in pages
+page size | file space extent size
+----------+-----------------------
+   4 KiB  | 256 pages = 1 MiB
+   8 KiB  | 128 pages = 1 MiB
+  16 KiB  |  64 pages = 1 MiB
+  32 KiB  |  64 pages = 2 MiB
+  64 KiB  |  64 pages = 4 MiB
+*/
+#define FSP_EXTENT_SIZE                                                 \
+  static_cast<page_no_t>(                                               \
+      ((UNIV_PAGE_SIZE <= (16384)                                       \
+            ? (1048576 / UNIV_PAGE_SIZE)                                \
+            : ((UNIV_PAGE_SIZE <= (32768)) ? (2097152 / UNIV_PAGE_SIZE) \
+                                           : (4194304 / UNIV_PAGE_SIZE)))))

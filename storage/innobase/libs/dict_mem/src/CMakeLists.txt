@@ -161,6 +161,13 @@ add_library( ${LIB_NAME} STATIC
     dict_foreign_find.cpp
     dict_table_check_if_in_cache_low.cpp
     dict_foreign_error_report_low.cpp
+    dict_table_get_v_col_name.cpp
+    dict_table_has_column.cpp
+    dict_table_skip_corrupt_index.cpp
+    dict_table_next_uncorrupted_index.cpp
+    dict_table_get_all_fts_indexes.cpp
+    dict_table_extent_size.cpp
+    dict_table_col_in_clustered_key.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

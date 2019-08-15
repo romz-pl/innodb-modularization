@@ -597,61 +597,9 @@ void dict_table_close_and_drop(
   row_merge_drop_table(trx, table);
 }
 
-/** Check if the table has a given (non_virtual) column.
-@param[in]	table		table object
-@param[in]	col_name	column name
-@param[in]	col_nr		column number guessed, 0 as default
-@return column number if the table has the specified column,
-otherwise table->n_def */
-ulint dict_table_has_column(const dict_table_t *table, const char *col_name,
-                            ulint col_nr) {
-  ulint col_max = table->n_def;
 
-  ut_ad(table);
-  ut_ad(col_name);
-  ut_ad(table->magic_n == DICT_TABLE_MAGIC_N);
 
-  if (col_nr < col_max &&
-      innobase_strcasecmp(col_name, table->get_col_name(col_nr)) == 0) {
-    return (col_nr);
-  }
 
-  /** The order of column may changed, check it with other columns */
-  for (ulint i = 0; i < col_max; i++) {
-    if (i != col_nr &&
-        innobase_strcasecmp(col_name, table->get_col_name(i)) == 0) {
-      return (i);
-    }
-  }
-
-  return (col_max);
-}
-
-/** Returns a virtual column's name.
-@param[in]	table	target table
-@param[in]	col_nr	virtual column number (nth virtual column)
-@return column name or NULL if column number out of range. */
-const char *dict_table_get_v_col_name(const dict_table_t *table, ulint col_nr) {
-  const char *s;
-
-  ut_ad(table);
-  ut_ad(col_nr < table->n_v_def);
-  ut_ad(table->magic_n == DICT_TABLE_MAGIC_N);
-
-  if (col_nr >= table->n_v_def) {
-    return (NULL);
-  }
-
-  s = table->v_col_names;
-
-  if (s != NULL) {
-    for (ulint i = 0; i < col_nr; i++) {
-      s += strlen(s) + 1;
-    }
-  }
-
-  return (s);
-}
 
 /** Search virtual column's position in InnoDB according to its position
 in original table's position
@@ -788,24 +736,6 @@ void dict_table_autoinc_log(dict_table_t *table, uint64_t value, mtr_t *mtr) {
   }
 }
 
-/** Get all the FTS indexes on a table.
-@param[in]	table	table
-@param[out]	indexes	all FTS indexes on this table
-@return number of FTS indexes */
-ulint dict_table_get_all_fts_indexes(dict_table_t *table,
-                                     ib_vector_t *indexes) {
-  dict_index_t *index;
-
-  ut_a(ib_vector_size(indexes) == 0);
-
-  for (index = table->first_index(); index; index = index->next()) {
-    if (index->type == DICT_FTS) {
-      ib_vector_push(indexes, &index);
-    }
-  }
-
-  return (ib_vector_size(indexes));
-}
 
 
 
@@ -867,37 +797,6 @@ ulint dict_index_get_nth_field_pos(
 
 
 
-/** Checks if a column is in the ordering columns of the clustered index of a
- table. Column prefixes are treated like whole columns.
- @return true if the column, or its prefix, is in the clustered key */
-ibool dict_table_col_in_clustered_key(
-    const dict_table_t *table, /*!< in: table */
-    ulint n)                   /*!< in: column number */
-{
-  const dict_index_t *index;
-  const dict_field_t *field;
-  const dict_col_t *col;
-  ulint pos;
-  ulint n_fields;
-
-  ut_ad(table);
-
-  col = table->get_col(n);
-
-  index = table->first_index();
-
-  n_fields = dict_index_get_n_unique(index);
-
-  for (pos = 0; pos < n_fields; pos++) {
-    field = index->get_field(pos);
-
-    if (col == field->col) {
-      return (TRUE);
-    }
-  }
-
-  return (FALSE);
-}
 #endif /* !UNIV_HOTBACKUP */
 
 /** Inits the data dictionary module. */
@@ -5774,50 +5673,6 @@ const char *dict_tf_to_row_format_string(
   ut_error;
 }
 
-/** Determine the extent size (in pages) for the given table
-@param[in]	table	the table whose extent size is being
-                        calculated.
-@return extent size in pages (256, 128 or 64) */
-page_no_t dict_table_extent_size(const dict_table_t *table) {
-  const ulint mb_1 = 1024 * 1024;
-  const ulint mb_2 = 2 * mb_1;
-  const ulint mb_4 = 4 * mb_1;
-
-  page_size_t page_size = dict_table_page_size(table);
-  page_no_t pages_in_extent = FSP_EXTENT_SIZE;
-
-  if (page_size.is_compressed()) {
-    ulint disk_page_size = page_size.physical();
-
-    switch (disk_page_size) {
-      case 1024:
-        pages_in_extent = mb_1 / 1024;
-        break;
-      case 2048:
-        pages_in_extent = mb_1 / 2048;
-        break;
-      case 4096:
-        pages_in_extent = mb_1 / 4096;
-        break;
-      case 8192:
-        pages_in_extent = mb_1 / 8192;
-        break;
-      case 16384:
-        pages_in_extent = mb_1 / 16384;
-        break;
-      case 32768:
-        pages_in_extent = mb_2 / 32768;
-        break;
-      case 65536:
-        pages_in_extent = mb_4 / 65536;
-        break;
-      default:
-        ut_ad(0);
-    }
-  }
-
-  return (pages_in_extent);
-}
 
 /** Default constructor */
 DDTableBuffer::DDTableBuffer() {
