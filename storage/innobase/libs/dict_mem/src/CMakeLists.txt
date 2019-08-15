@@ -187,6 +187,11 @@ add_library( ${LIB_NAME} STATIC
     dict_tables_have_same_db.cpp
     dict_table_get_index_on_name.cpp
     dict_move_to_mru.cpp
+    dict_index_find_cols.cpp
+    dict_get_v_col_pos.cpp
+    dict_get_v_col_mysql_pos.cpp
+    dict_create_v_col_pos.cpp
+    dict_mem_fill_index_struct.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

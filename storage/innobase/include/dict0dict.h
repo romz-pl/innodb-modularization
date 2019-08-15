@@ -100,6 +100,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/random/random.h>
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/dict_sys_t_is_reserved.h>
+#include <innodb/dict_mem/dict_create_v_col_pos.h>
+#include <innodb/dict_mem/dict_get_v_col_mysql_pos.h>
+#include <innodb/dict_mem/dict_get_v_col_pos.h>
 
 #include "buf0flu.h"
 #include <set>

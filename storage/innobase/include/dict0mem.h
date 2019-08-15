@@ -101,6 +101,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/dict_mem/dict_table_autoinc_own.h>
 #include <innodb/dict_mem/dict_mem_table_add_v_col.h>
 #include <innodb/dict_mem/dict_mem_table_add_s_col.h>
+#include <innodb/dict_mem/dict_mem_fill_index_struct.h>
+#include <innodb/memory/mem_heap_strdup.h>
+
+
+#include "dict0mem.h"
+#include "fil0fil.h"
 
 #include "buf0flu.h"
 
@@ -161,21 +167,7 @@ void dict_mem_table_col_rename(dict_table_t *table, /*!< in/out: table */
                                bool is_virtual);
 /*!< in: if this is a virtual column */
 
-/** This function poplulates a dict_index_t index memory structure with
-supplied information.
-@param[out]	index		index to be filled
-@param[in]	heap		memory heap
-@param[in]	table_name	table name
-@param[in]	index_name	index name
-@param[in]	space		space where the index tree is placed, the
-                                clustered type ignored if the index is of the
-                                clustered type
-@param[in]	type		DICT_UNIQUE, DICT_CLUSTERED, ... ORed
-@param[in]	n_fields	number of fields */
-UNIV_INLINE
-void dict_mem_fill_index_struct(dict_index_t *index, mem_heap_t *heap,
-                                const char *table_name, const char *index_name,
-                                ulint space, ulint type, ulint n_fields);
+
 
 /** Frees an index memory object. */
 void dict_mem_index_free(dict_index_t *index); /*!< in: index */
@@ -315,11 +307,5 @@ struct mysql_row_templ_t;
 
 
 
-
-
-
-
-
-#include "dict0mem.ic"
 
 #endif /* dict0mem_h */
