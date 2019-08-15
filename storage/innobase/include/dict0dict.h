@@ -753,15 +753,7 @@ dberr_t dict_index_add_to_cache_w_vcol(dict_table_t *table, dict_index_t *index,
                                        page_no_t page_no, ibool strict)
     MY_ATTRIBUTE((warn_unused_result));
 #endif /* !UNIV_HOTBACKUP */
-/** Gets the number of fields in the internal representation of an index,
- including fields added by the dictionary system.
- @return number of fields */
-UNIV_INLINE
-ulint dict_index_get_n_fields(
-    const dict_index_t *index) /*!< in: an internal
-                               representation of index (in
-                               the dictionary cache) */
-    MY_ATTRIBUTE((warn_unused_result));
+
 /** Gets the number of fields in the internal representation of an index
  that uniquely determine the position of an index entry in the index, if
  we do not take multiversioning into account: in the B-tree use the value

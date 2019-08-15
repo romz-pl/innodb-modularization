@@ -57,6 +57,7 @@ add_library( ${LIB_NAME} STATIC
     dict_mem_table_add_col.cpp
     dict_table_get_nth_v_col.cpp
     dict_mem_table_add_s_col.cpp
+    dict_index_get_n_fields.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
