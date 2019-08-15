@@ -1,5 +1,6 @@
 #include <innodb/tablespace/Fil_shard.h>
 
+#include <innodb/dict_mem/flags.h>
 #include <innodb/tablespace/fsp_is_session_temporary.h>
 #include <innodb/tablespace/fsp_is_global_temporary.h>
 #include <innodb/tablespace/fsp_is_system_tablespace.h>

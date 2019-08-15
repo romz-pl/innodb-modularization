@@ -36,6 +36,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/disk/univ_page_size.h>
 #include <innodb/record/flag.h>
 #include <innodb/dict_mem/dict_index_get_n_fields.h>
+#include <innodb/dict_mem/dict_col_get_no.h>
+#include <innodb/dict_mem/dict_col_get_clust_pos.h>
+#include <innodb/dict_mem/dict_col_get_index_pos.h>
+#include <innodb/dict_mem/dict_index_has_desc.h>
+#include <innodb/dict_mem/dict_index_is_auto_gen_clust.h>
+#include <innodb/dict_mem/dict_index_is_unique.h>
+#include <innodb/dict_mem/dict_index_is_spatial.h>
+#include <innodb/dict_mem/dict_index_has_virtual.h>
+#include <innodb/dict_mem/dict_index_is_ibuf.h>
+#include <innodb/dict_mem/dict_index_is_sec_or_ibuf.h>
+
 
 #include "buf0flu.h"
 
@@ -46,144 +57,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 
 
-/** Gets the column number.
- @return col->ind, table column position (starting from 0) */
-UNIV_INLINE
-ulint dict_col_get_no(const dict_col_t *col) /*!< in: column */
-{
-  ut_ad(col);
 
-  return (col->ind);
-}
 
-/** Gets the column position in the clustered index. */
-UNIV_INLINE
-ulint dict_col_get_clust_pos(
-    const dict_col_t *col,           /*!< in: table column */
-    const dict_index_t *clust_index) /*!< in: clustered index */
-{
-  ulint i;
 
-  ut_ad(col);
-  ut_ad(clust_index);
-  ut_ad(clust_index->is_clustered());
 
-  for (i = 0; i < clust_index->n_def; i++) {
-    const dict_field_t *field = &clust_index->fields[i];
 
-    if (!field->prefix_len && field->col == col) {
-      return (i);
-    }
-  }
 
-  return (ULINT_UNDEFINED);
-}
 
-/** Gets the column position in the given index.
-@param[in]	col	table column
-@param[in]	index	index to be searched for column
-@return position of column in the given index. */
-UNIV_INLINE
-ulint dict_col_get_index_pos(const dict_col_t *col, const dict_index_t *index) {
-  ulint i;
 
-  for (i = 0; i < index->n_def; i++) {
-    const dict_field_t *field = &index->fields[i];
-
-    if (!field->prefix_len && field->col == col) {
-      return (i);
-    }
-  }
-
-  return (ULINT_UNDEFINED);
-}
-
-/** Check whether the index consists of descending columns only.
-@param[in]	index  index tree
-@retval true if index has any descending column
-@retval false if index has only ascending columns */
-UNIV_INLINE
-bool dict_index_has_desc(const dict_index_t *index) {
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  for (ulint i = 0; i < index->n_def; i++) {
-    const dict_field_t *field = &index->fields[i];
-
-    if (!field->is_ascending) {
-      return (true);
-    }
-  }
-
-  return (false);
-}
-
-/** Check if index is auto-generated clustered index.
-@param[in]	index	index
-
-@return true if index is auto-generated clustered index. */
-UNIV_INLINE
-bool dict_index_is_auto_gen_clust(const dict_index_t *index) {
-  return (index->type == DICT_CLUSTERED);
-}
-
-/** Check whether the index is unique.
- @return nonzero for unique index, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_unique(const dict_index_t *index) /*!< in: index */
-{
-  ut_ad(index);
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  return (index->type & DICT_UNIQUE);
-}
-
-/** Check whether the index is a Spatial Index.
- @return	nonzero for Spatial Index, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_spatial(const dict_index_t *index) /*!< in: index */
-{
-  ut_ad(index);
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  return (index->type & DICT_SPATIAL);
-}
-
-/** Check whether the index contains a virtual column
-@param[in]	index	index
-@return	nonzero for the index has virtual column, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_has_virtual(const dict_index_t *index) {
-  ut_ad(index);
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  return (index->type & DICT_VIRTUAL);
-}
-
-/** Check whether the index is the insert buffer tree.
- @return nonzero for insert buffer, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_ibuf(const dict_index_t *index) /*!< in: index */
-{
-  ut_ad(index);
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  return (index->type & DICT_IBUF);
-}
-
-/** Check whether the index is a secondary index or the insert buffer tree.
- @return nonzero for insert buffer, zero for other indexes */
-UNIV_INLINE
-ulint dict_index_is_sec_or_ibuf(const dict_index_t *index) /*!< in: index */
-{
-  ulint type;
-
-  ut_ad(index);
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  type = index->type;
-
-  return (!(type & DICT_CLUSTERED) || (type & DICT_IBUF));
-}
 
 /** Gets the number of user-defined virtual and non-virtual columns in a table
 in the dictionary cache.

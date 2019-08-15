@@ -58,6 +58,21 @@ add_library( ${LIB_NAME} STATIC
     dict_table_get_nth_v_col.cpp
     dict_mem_table_add_s_col.cpp
     dict_index_get_n_fields.cpp
+    dict_sys_t.cpp
+    dict_get_db_name_len.cpp
+    dict_table_get_highest_foreign_id.cpp
+    dict_remove_db_name.cpp
+    dict_table_op_t.cpp
+    dict_col_get_no.cpp
+    dict_col_get_clust_pos.cpp
+    dict_col_get_index_pos.cpp
+    dict_index_has_desc.cpp
+    dict_index_is_auto_gen_clust.cpp
+    dict_index_is_unique.cpp
+    dict_index_is_spatial.cpp
+    dict_index_has_virtual.cpp
+    dict_index_is_ibuf.cpp
+    dict_index_is_sec_or_ibuf.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

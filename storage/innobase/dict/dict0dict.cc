@@ -227,8 +227,7 @@ ulong zip_pad_max = 50;
       hash table fixed size in bytes */
 
 #ifndef UNIV_HOTBACKUP
-/** Identifies generated InnoDB foreign key names */
-static char dict_ibfk[] = "_ibfk_";
+
 
 /** Array to store table_ids of INNODB_SYS_* TABLES */
 static table_id_t dict_sys_table_id[SYS_NUM_SYSTEM_TABLES];
@@ -318,31 +317,10 @@ ibool dict_tables_have_same_db(
   return (FALSE);
 }
 
-/** Return the end of table name where we have removed dbname and '/'.
- @return table name */
-const char *dict_remove_db_name(
-    const char *name) /*!< in: table name in the form
-                      dbname '/' tablename */
-{
-  const char *s = strchr(name, '/');
-  ut_a(s);
 
-  return (s + 1);
-}
 #endif /* !UNIV_HOTBACKUP */
 
-/** Get the database name length in a table name.
- @return database name length */
-ulint dict_get_db_name_len(const char *name) /*!< in: table name in the form
-                                             dbname '/' tablename */
-{
-  const char *s;
-  s = strchr(name, '/');
-  if (s == nullptr) {
-    return (0);
-  }
-  return (s - name);
-}
+
 
 #ifndef UNIV_HOTBACKUP
 /** Reserves the dictionary system mutex for MySQL. */
@@ -3944,54 +3922,6 @@ static char *dict_strip_comments(
   }
 }
 
-/** Finds the highest [number] for foreign key constraints of the table. Looks
- only at the >= 4.0.18-format id's, which are of the form
- databasename/tablename_ibfk_[number].
- @return highest number, 0 if table has no new format foreign key constraints */
-ulint dict_table_get_highest_foreign_id(
-    dict_table_t *table) /*!< in: table in the dictionary memory cache */
-{
-  dict_foreign_t *foreign;
-  char *endp;
-  ulint biggest_id = 0;
-  ulint id;
-  ulint len;
-
-  DBUG_ENTER("dict_table_get_highest_foreign_id");
-
-  ut_a(table);
-
-  len = ut_strlen(table->name.m_name);
-
-  for (dict_foreign_set::iterator it = table->foreign_set.begin();
-       it != table->foreign_set.end(); ++it) {
-    foreign = *it;
-
-    if (ut_strlen(foreign->id) > ((sizeof dict_ibfk) - 1) + len &&
-        0 == ut_memcmp(foreign->id, table->name.m_name, len) &&
-        0 == ut_memcmp(foreign->id + len, dict_ibfk, (sizeof dict_ibfk) - 1) &&
-        foreign->id[len + ((sizeof dict_ibfk) - 1)] != '0') {
-      /* It is of the >= 4.0.18 format */
-
-      id = strtoul(foreign->id + len + ((sizeof dict_ibfk) - 1), &endp, 10);
-      if (*endp == '\0') {
-        ut_a(id != biggest_id);
-
-        if (id > biggest_id) {
-          biggest_id = id;
-        }
-      }
-    }
-  }
-
-  ulint size = table->foreign_set.size();
-
-  biggest_id = (size > biggest_id) ? size : biggest_id;
-
-  DBUG_PRINT("dict_table_get_highest_foreign_id", ("id: %lu", biggest_id));
-
-  DBUG_RETURN(biggest_id);
-}
 
 /** Reports a simple foreign key create clause syntax error. */
 static void dict_foreign_report_syntax_err(

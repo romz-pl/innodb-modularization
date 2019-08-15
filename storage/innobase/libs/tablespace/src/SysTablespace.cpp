@@ -13,7 +13,7 @@
 // #include <innodb/tablespace/fil_space_create.h>
 #include <innodb/tablespace/fil_type_t.h>
 #include <innodb/tablespace/fil_space_t.h>
-
+#include <innodb/dict_mem/flags.h>
 
 #include "sql/mysqld.h"
 

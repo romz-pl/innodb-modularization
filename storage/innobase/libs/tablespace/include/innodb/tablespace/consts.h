@@ -7,6 +7,7 @@
 #include "sql/dd/object_id.h"
 #include <innodb/univ/page_no_t.h>
 #include "mysql_version.h"
+#include <innodb/dict_mem/flags.h>
 
 #include <limits>
 
@@ -49,8 +50,7 @@ constexpr size_t FIL_SPACE_MAGIC_N = 89472;
 /** Value of fil_node_t::magic_n */
 constexpr size_t FIL_NODE_MAGIC_N = 89389;
 
-/** Space id of the transaction system page (the system tablespace) */
-static const space_id_t TRX_SYS_SPACE = 0;
+
 
 /** Initial size of a single-table tablespace in pages */
 constexpr size_t FIL_IBD_FILE_INITIAL_SIZE = 7;
