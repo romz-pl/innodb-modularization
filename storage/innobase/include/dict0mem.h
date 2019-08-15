@@ -103,44 +103,27 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/dict_mem/dict_mem_table_add_s_col.h>
 #include <innodb/dict_mem/dict_mem_fill_index_struct.h>
 #include <innodb/memory/mem_heap_strdup.h>
-
+#include <innodb/dict_mem/dict_mem_table_col_rename_low.h>
+#include <innodb/dict_mem/dict_mem_table_col_rename.h>
+#include <innodb/dict_mem/dict_mem_index_free.h>
+#include <innodb/dict_mem/dict_mem_foreign_create.h>
+#include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_fill_vcol_set_for_base_col.h>
+#include <innodb/dict_mem/dict_mem_fill_vcol_from_v_indexes.h>
+#include <innodb/dict_mem/dict_mem_fill_vcol_has_index.h>
+#include <innodb/dict_mem/dict_mem_table_fill_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_table_free_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_create_temporary_tablename.h>
+#include <innodb/dict_mem/dict_mem_init.h>
+#include <innodb/random/random.h>
+#include <innodb/dict_mem/os_once.h>
 
 #include "dict0mem.h"
 #include "fil0fil.h"
-
 #include "buf0flu.h"
-
 #include "sql/dd/object_id.h"
 #include "sql/dd/types/column.h"
-#ifdef UNIV_HOTBACKUP
-#include "sql/dd/types/spatial_reference_system.h"
-#endif /* UNIV_HOTBACKUP */
-#include "btr0types.h"
-
-
-
-
-#include "row0types.h"
-#ifndef UNIV_HOTBACKUP
-
-
-struct lock_t;
-struct lock_sys_t;
-struct lock_table_t;
-
-#include "que0types.h"
-#endif /* !UNIV_HOTBACKUP */
-
-
-#include <innodb/random/random.h>
-#ifndef UNIV_HOTBACKUP
-#include "fts0fts.h"
-#endif /* !UNIV_HOTBACKUP */
-#include "buf0buf.h"
-#include "gis0type.h"
-#ifndef UNIV_HOTBACKUP
-#include <innodb/dict_mem/os_once.h>
-#endif /* !UNIV_HOTBACKUP */
 #include "dict/mem.h"
 
 #include "sql/sql_const.h" /* MAX_KEY_LENGTH */
@@ -151,81 +134,43 @@ struct lock_table_t;
 #include <set>
 #include <vector>
 
-/* Forward declaration. */
+
+namespace dd {
+class Spatial_reference_system;
+}
+
+
+/** mysql template structure defined in row0mysql.cc */
+struct mysql_row_templ_t;
+struct lock_t;
+struct lock_sys_t;
+struct lock_table_t;
 struct ib_rbt_t;
 struct dict_foreign_t;
 
+#ifdef UNIV_HOTBACKUP
+#include "sql/dd/types/spatial_reference_system.h"
+#endif /* UNIV_HOTBACKUP */
+
+
+#include "btr0types.h"
+#include "row0types.h"
+#include "buf0buf.h"
+#include "gis0type.h"
+
+
+#ifndef UNIV_HOTBACKUP
+
+#include "que0types.h"
+
+#endif /* !UNIV_HOTBACKUP */
 
 
 
 
-/** Renames a column of a table in the data dictionary cache. */
-void dict_mem_table_col_rename(dict_table_t *table, /*!< in/out: table */
-                               ulint nth_col,       /*!< in: column index */
-                               const char *from,    /*!< in: old column name */
-                               const char *to,      /*!< in: new column name */
-                               bool is_virtual);
-/*!< in: if this is a virtual column */
-
-
-
-/** Frees an index memory object. */
-void dict_mem_index_free(dict_index_t *index); /*!< in: index */
-/** Creates and initializes a foreign constraint memory object.
- @return own: foreign constraint struct */
-dict_foreign_t *dict_mem_foreign_create(void);
-
-/** Sets the foreign_table_name_lookup pointer based on the value of
- lower_case_table_names.  If that is 0 or 1, foreign_table_name_lookup
- will point to foreign_table_name.  If 2, then another string is
- allocated from the heap and set to lower case. */
-void dict_mem_foreign_table_name_lookup_set(
-    dict_foreign_t *foreign, /*!< in/out: foreign struct */
-    ibool do_alloc);         /*!< in: is an alloc needed */
-
-/** Sets the referenced_table_name_lookup pointer based on the value of
- lower_case_table_names.  If that is 0 or 1, referenced_table_name_lookup
- will point to referenced_table_name.  If 2, then another string is
- allocated from the heap and set to lower case. */
-void dict_mem_referenced_table_name_lookup_set(
-    dict_foreign_t *foreign, /*!< in/out: foreign struct */
-    ibool do_alloc);         /*!< in: is an alloc needed */
-
-/** Fills the dependent virtual columns in a set.
-Reason for being dependent are
-1) FK can be present on base column of virtual columns
-2) FK can be present on column which is a part of virtual index
-@param[in,out]	foreign	foreign key information. */
-void dict_mem_foreign_fill_vcol_set(dict_foreign_t *foreign);
-
-/** Fill virtual columns set in each fk constraint present in the table.
-@param[in,out]	table	innodb table object. */
-void dict_mem_table_fill_foreign_vcol_set(dict_table_t *table);
-
-/** Free the vcol_set from all foreign key constraint on the table.
-@param[in,out]	table	innodb table object. */
-void dict_mem_table_free_foreign_vcol_set(dict_table_t *table);
-
-/** Create a temporary tablename like "#sql-ibtid-inc" where
-  tid = the Table ID
-  inc = a randomly initialized number that is incremented for each file
-The table ID is a 64 bit integer, can use up to 20 digits, and is
-initialized at bootstrap. The second number is 32 bits, can use up to 10
-digits, and is initialized at startup to a randomly distributed number.
-It is hoped that the combination of these two numbers will provide a
-reasonably unique temporary file name.
-@param[in]	heap	A memory heap
-@param[in]	dbtab	Table name in the form database/table name
-@param[in]	id	Table id
-@return A unique temporary tablename suitable for InnoDB use */
-char *dict_mem_create_temporary_tablename(mem_heap_t *heap, const char *dbtab,
-                                          table_id_t id);
-
-/** Initialize dict memory variables */
-void dict_mem_init(void);
-
-
-
+#ifndef UNIV_HOTBACKUP
+#include "fts0fts.h"
+#endif /* !UNIV_HOTBACKUP */
 
 
 
@@ -278,33 +223,6 @@ class last_ops_cur_t {
   remain valid. Will be re-cached on post-split insert. */
   bool invalid;
 };
-
-/** "GEN_CLUST_INDEX" is the name reserved for InnoDB default
-system clustered index when there is no primary key. */
-const char innobase_index_reserve_name[] = "GEN_CLUST_INDEX";
-
-namespace dd {
-class Spatial_reference_system;
-}
-
-
-
-
-
-/** Validate the search order in the foreign key sets of the table
-(foreign_set and referenced_set).
-@param[in]	table	table whose foreign key sets are to be validated
-@return true if foreign key sets are fine, false otherwise. */
-bool dict_foreign_set_validate(const dict_table_t &table);
-
-
-
-
-
-
-/** mysql template structure defined in row0mysql.cc */
-struct mysql_row_templ_t;
-
 
 
 

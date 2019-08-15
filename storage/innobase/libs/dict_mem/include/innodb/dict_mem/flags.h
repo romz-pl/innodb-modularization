@@ -452,3 +452,9 @@ This is used only after instant ADD COLUMN. */
 has a much lower limit on the number of columns allowed in a foreign key
 constraint */
 #define MAX_NUM_FK_COLUMNS 500
+
+
+/** "GEN_CLUST_INDEX" is the name reserved for InnoDB default
+system clustered index when there is no primary key. */
+const char innobase_index_reserve_name[] = "GEN_CLUST_INDEX";
+

@@ -15,6 +15,7 @@ add_library( ${LIB_NAME} STATIC
     dict_col_get_no.cpp
     dict_col_name_is_reserved.cpp
     dict_col_t.cpp
+    dict_create_v_col_pos.cpp
     dict_field_t.cpp
     dict_foreign_add_to_referenced_table.cpp
     dict_foreign_compare.cpp
@@ -33,10 +34,13 @@ add_library( ${LIB_NAME} STATIC
     dict_foreign_with_index.cpp
     dict_free_vc_templ.cpp
     dict_get_db_name_len.cpp
+    dict_get_v_col_mysql_pos.cpp
+    dict_get_v_col_pos.cpp
     dict_index_calc_min_rec_len.cpp
     dict_index_contains_col_or_prefix.cpp
     dict_index_copy_types.cpp
     dict_index_find.cpp
+    dict_index_find_cols.cpp
     dict_index_get_lock.cpp
     dict_index_get_n_fields.cpp
     dict_index_get_n_ordering_defined_by_user.cpp
@@ -68,10 +72,26 @@ add_library( ${LIB_NAME} STATIC
     dict_lru_validate.cpp
     dict_max_field_len_store_undo.cpp
     dict_max_v_field_len_store_undo.cpp
+    dict_mem_create_temporary_tablename.cpp
     dict_mem_fill_column_struct.cpp
+    dict_mem_fill_index_struct.cpp
+    dict_mem_fill_vcol_from_v_indexes.cpp
+    dict_mem_fill_vcol_has_index.cpp
+    dict_mem_fill_vcol_set_for_base_col.cpp
+    dict_mem_foreign_create.cpp
+    dict_mem_foreign_fill_vcol_set.cpp
+    dict_mem_foreign_table_name_lookup_set.cpp
+    dict_mem_index_free.cpp
+    dict_mem_init.cpp
+    dict_mem_referenced_table_name_lookup_set.cpp
     dict_mem_table_add_col.cpp
     dict_mem_table_add_s_col.cpp
     dict_mem_table_add_v_col.cpp
+    dict_mem_table_col_rename.cpp
+    dict_mem_table_col_rename_low.cpp
+    dict_mem_table_fill_foreign_vcol_set.cpp
+    dict_mem_table_free_foreign_vcol_set.cpp
+    dict_move_to_mru.cpp
     dict_mutex_enter_for_mysql.cpp
     dict_mutex_exit_for_mysql.cpp
     dict_non_lru_find_table.cpp
@@ -114,6 +134,7 @@ add_library( ${LIB_NAME} STATIC
     dict_table_get_curr_table_sess_trx_id.cpp
     dict_table_get_highest_foreign_id.cpp
     dict_table_get_index_on_first_col.cpp
+    dict_table_get_index_on_name.cpp
     dict_table_get_n_rows.cpp
     dict_table_get_n_tot_u_cols.cpp
     dict_table_get_n_v_cols.cpp
@@ -161,6 +182,8 @@ add_library( ${LIB_NAME} STATIC
     dict_table_t.cpp
     dict_table_x_lock_indexes.cpp
     dict_table_x_unlock_indexes.cpp
+    dict_tables_have_same_db.cpp
+    dict_temp_file_num.cpp
     dict_tf2_is_valid.cpp
     dict_tf_get_page_size.cpp
     dict_tf_get_rec_format.cpp
@@ -184,14 +207,6 @@ add_library( ${LIB_NAME} STATIC
     table_lock_list_t.cpp
     temp_prebuilt_vec.cpp
     zip_pad_info_t.cpp
-    dict_tables_have_same_db.cpp
-    dict_table_get_index_on_name.cpp
-    dict_move_to_mru.cpp
-    dict_index_find_cols.cpp
-    dict_get_v_col_pos.cpp
-    dict_get_v_col_mysql_pos.cpp
-    dict_create_v_col_pos.cpp
-    dict_mem_fill_index_struct.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -206,6 +221,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     bit
+    crc32
     data_types
     dict_types
     gis_type
