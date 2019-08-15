@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.
 */
 
+#include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/time/ut_time_us.h>

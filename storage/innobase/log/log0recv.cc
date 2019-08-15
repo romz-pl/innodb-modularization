@@ -31,6 +31,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include "dict/mem.h"
+#include <innodb/dict_mem/Persister.h>
+#include <innodb/dict_mem/PersistentTableMetadata.h>
+#include <innodb/dict_mem/dict_mem_index_free.h>
 #include <innodb/log_recv/recv_log_recover_pre_8_0_4.h>
 #include <innodb/log_recv/recv_sys_empty_hash.h>
 #include <innodb/log_recv/recv_read_in_area.h>

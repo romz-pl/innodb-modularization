@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Historical note: Innobase executed its first SQL string (CREATE TABLE)
 on 1/27/1998 */
 
+#include <innodb/sync_mutex/mutex_free.h>
+#include <innodb/memory/mem_heap_strdup.h>
 #include <innodb/memory/mem_heap_dup.h>
 #include <innodb/data_types/dtype_set.h>
 #include <innodb/data_types/dtype_copy.h>
@@ -50,7 +52,7 @@ on 1/27/1998 */
 #include "dict0crea.h"
 #include "dict0dd.h"
 #include "dict0dict.h"
-#include "dict0mem.h"
+
 #include "eval0eval.h"
 #include "ha_prototypes.h"
 #include "lock0lock.h"

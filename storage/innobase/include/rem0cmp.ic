@@ -41,6 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <mysql_com.h>
 
+#include "fts0fts.h"
 #include "field_types.h"  // enum_field_types
 
 /** Compare two data fields.

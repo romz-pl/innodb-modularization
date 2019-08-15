@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <sql_thd_internal_api.h>
-#include "dict0mem.h"
+
 #include "srv0tmp.h"
 #include "trx0trx.h"
 

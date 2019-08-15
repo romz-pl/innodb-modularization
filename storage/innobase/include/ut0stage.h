@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <math.h>
 #include <algorithm>
 
-#include "dict0mem.h"              /* dict_index_t */
+              /* dict_index_t */
 #include "mysql/psi/mysql_stage.h" /* mysql_stage_inc_work_completed */
 #include "row0log.h"               /* row_log_estimate_work() */
 #include "srv0srv.h"               /* ut_stage_alter_t */

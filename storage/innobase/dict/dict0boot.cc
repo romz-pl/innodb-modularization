@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/memory/mem_heap_empty.h>
 
+#include "dict/mem.h"
 #include "dict0boot.h"
 #include "btr0btr.h"
 #include "buf0flu.h"

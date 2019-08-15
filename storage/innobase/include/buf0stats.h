@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_types/index_id_t.h>
+
         /* index_id_t, DICT_IBUF_ID_MIN */
       /* srv_tmp_space */
 #include "ibuf0ibuf.h"         /* IBUF_SPACE_ID */

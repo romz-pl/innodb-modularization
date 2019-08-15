@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/dict_mem/dict_foreign_with_index.h>
 #include <innodb/data_types/dfield_copy.h>
 #include <innodb/data_types/dfield_data_is_binary_equal.h>
 #include <innodb/data_types/dfield_data_is_binary_equal.h>

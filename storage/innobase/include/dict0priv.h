@@ -35,18 +35,51 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_mem/dict_table_check_if_in_cache_low.h>
+#include <innodb/hash/HASH_SEARCH.h>
+
+#include "dict0dict.h"
+#include "dict0load.h"
+
 /** Gets a table; loads it to the dictionary cache if necessary. A low-level
  function. Note: Not to be called from outside dict0*c functions.
  @return table, NULL if not found */
 UNIV_INLINE
 dict_table_t *dict_table_get_low(const char *table_name); /*!< in: table name */
 
-/** Checks if a table is in the dictionary cache.
+
+
+/** Gets a table; loads it to the dictionary cache if necessary. A low-level
+ function.
  @return table, NULL if not found */
 UNIV_INLINE
-dict_table_t *dict_table_check_if_in_cache_low(
-    const char *table_name); /*!< in: table name */
+dict_table_t *dict_table_get_low(const char *table_name) /*!< in: table name */
+{
+  dict_table_t *table;
 
-#include "dict0priv.ic"
+  ut_ad(table_name);
+  ut_ad(mutex_own(&dict_sys->mutex));
+
+  table = dict_table_check_if_in_cache_low(table_name);
+
+  if (table && table->is_corrupted()) {
+    ib::error error(ER_IB_MSG_1229);
+    error << "Table " << table->name << "is corrupted";
+    if (srv_load_corrupted) {
+      error << ", but innodb_force_load_corrupted is set";
+    } else {
+      return (NULL);
+    }
+  }
+
+  if (table == NULL) {
+    table = dict_load_table(table_name, true, DICT_ERR_IGNORE_NONE);
+  }
+
+  ut_ad(!table || table->cached);
+
+  return (table);
+}
+
 
 #endif /* dict0priv.h */

@@ -112,6 +112,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0load.h"
 #include "fsp0fsp.h"
 #include "srv0srv.h"
+#include "dict0last_ops_cur_t.h"
 
 
 /** Check if the table is in a shared tablespace (System or General).

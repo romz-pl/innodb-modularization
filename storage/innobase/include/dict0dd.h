@@ -33,7 +33,7 @@ Data dictionary interface */
 #include <innodb/univ/univ.h>
 
 #include "dict0dict.h"
-#include "dict0mem.h"
+
 
 
 #ifndef UNIV_HOTBACKUP

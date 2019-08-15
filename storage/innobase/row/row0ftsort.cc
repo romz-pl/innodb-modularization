@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include "dict/mem.h"
+#include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dfield_is_ext.h>
 #include <innodb/data_types/dfield_dup.h>

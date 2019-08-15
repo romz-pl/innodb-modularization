@@ -42,6 +42,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <innodb/dict_types/index_id_t.h>
+#include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/buf_calc/buf_calc_page_old_checksum.h>
 #include <innodb/buf_calc/buf_calc_page_new_checksum.h>
 #include <innodb/buf_calc/buf_calc_page_crc32.h>

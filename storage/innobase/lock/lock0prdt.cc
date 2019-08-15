@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0btr.h"
 #include "dict0boot.h"
-#include "dict0mem.h"
+
 #include "ha_prototypes.h"
 #include "lock0lock.h"
 #include "lock0prdt.h"

@@ -34,6 +34,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define fts0fts_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/dict_mem/dict_index_t.h>
+#include <innodb/sync_mutex/ib_mutex_t.h>
 #include <innodb/error/dberr_t.h>
 #include <innodb/univ/rec_t.h>
 
@@ -51,6 +54,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/rbt/rbt.h>
 #include <innodb/vector/vector.h>
 #include "ut0wqueue.h"
+
+#include <vector>
 
 struct dfield_t;
 struct dtuple_t;

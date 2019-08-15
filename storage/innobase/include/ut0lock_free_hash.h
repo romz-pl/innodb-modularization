@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/allocator/ut_malloc.h>
 #include <innodb/allocator/UT_DELETE_ARRAY.h>
 #include <innodb/math/ut_is_2pow.h>

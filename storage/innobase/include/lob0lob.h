@@ -36,7 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <my_dbug.h>
 #include "btr0pcur.h"
-#include "dict0mem.h"
+
 #include "page0page.h"
 #include "row0log.h"
 

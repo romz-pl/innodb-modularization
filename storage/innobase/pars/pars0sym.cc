@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/15/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/mem_heap_strdup.h>
 #include <innodb/data_types/dtype_set.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/memory/mem_heap_dup.h>

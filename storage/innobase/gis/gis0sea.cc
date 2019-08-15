@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/mtr/mtr_memo_release.h>
 #include <innodb/mtr/mtr_set_savepoint.h>

@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "log0log.h"
 #include "buf0buf.h"
-#include "dict0mem.h"
+
 #include "ibuf0ibuf.h"
 #include "lock0lock.h"
 #include <innodb/machine/data.h>

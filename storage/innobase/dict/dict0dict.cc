@@ -33,6 +33,23 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include "dict/mem.h"
+#include <innodb/sync_mutex/mutex_free.h>
+#include <innodb/dict_mem/CorruptedIndexPersister.h>
+#include <innodb/dict_mem/AutoIncPersister.h>
+#include <innodb/dict_mem/PersistentTableMetadata.h>
+#include <innodb/dict_mem/dict_foreign_matches_id.h>
+#include <innodb/dict_mem/Persister.h>
+#include <innodb/dict_mem/dict_foreign_set_free.h>
+#include <innodb/dict_mem/Persisters.h>
+#include <innodb/dict_mem/PersistentTableMetadata.h>
+#include <innodb/dict_mem/dict_index_zip_pad_unlock.h>
+#include <innodb/dict_mem/dict_index_zip_pad_unlock.h>
+#include <innodb/dict_mem/dict_mem_foreign_create.h>
+#include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_index_free.h>
+#include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>
+#include <innodb/memory/mem_heap_strdup.h>
 #include <innodb/dict_mem/dict_lru_validate.h>
 #include <innodb/dict_types/flags.h>
 #include <innodb/data_types/dfield_copy.h>
@@ -125,7 +142,7 @@ extern uint ibuf_debug;
 #ifndef UNIV_HOTBACKUP
 #include "dict0dd.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "dict0mem.h"
+
 #include "dict0priv.h"
 #ifndef UNIV_HOTBACKUP
 #include "dict0stats.h"

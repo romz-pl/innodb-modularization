@@ -35,12 +35,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_types/table_name_t.h>
+#include <innodb/dict_types/index_id_t.h>
 #include <innodb/formatting/formatting.h>
 #include <innodb/allocator/UT_DELETE_ARRAY.h>
 #include <innodb/trx_types/trx_ids_t.h>
+#include <innodb/lst/lst.h>
+#include <innodb/trx_types/flags.h>
 
 #include <algorithm>
-#include "dict0mem.h"
+
 
 // Friend declaration
 class MVCC;

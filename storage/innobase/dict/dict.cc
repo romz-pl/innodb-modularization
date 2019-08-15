@@ -40,7 +40,7 @@ external tools. */
 #include <stddef.h>
 
 #include "dict0dict.h"
-#include "dict0mem.h"
+
 
 /** Adds a column to index.
 @param[in,out]	index		index

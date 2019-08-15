@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "api0misc.h"
 #include "dict0dict.h"
-#include "dict0mem.h"
+
 #include "ha_prototypes.h"
 #include "lock0lock.h"
 

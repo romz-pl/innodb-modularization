@@ -36,6 +36,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include "fts0fts.h"
+
+#include <innodb/dict_mem/dict_add_v_col_t.h>
+#include <innodb/dict_mem/Persisters.h>
 #include <innodb/data_types/flags.h>
 #include <innodb/dict_mem/dict_col_name_is_reserved.h>
 #include <innodb/dict_mem/dict_foreign_error_report_low.h>
@@ -109,7 +113,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <deque>
 #include "btr0types.h"
 #include "dict/dict.h"
-#include "dict0mem.h"
+
 #include "fsp0fsp.h"
 #include "row0types.h"
 #include "sql/dd/object_id.h"

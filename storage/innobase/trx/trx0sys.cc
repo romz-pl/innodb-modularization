@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/mtr/mtr_x_lock_space.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/logger/info.h>

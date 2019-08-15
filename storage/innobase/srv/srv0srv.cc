@@ -45,6 +45,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/8/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/sync_mutex/mutex_free.h>
+#include <innodb/dict_mem/dict_mem_init.h>
 #include <innodb/mtr/mtr_x_lock_space.h>
 #include <innodb/print/ut_print_timestamp.h>
 #include <innodb/buf_pool/buf_pool_stat_t.h>

@@ -35,6 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 other files in library. The code in this file is used to make a library for
 external tools. */
 
+#include "dict/mem.h"
+
+#include <innodb/dict_mem/dict_index_zip_pad_mutex_destroy.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/page/page_zip_dir_start_low.h>
 #include <innodb/record/rec_get_end.h>

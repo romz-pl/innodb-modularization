@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-08-21 Sunny Bains
  *******************************************************/
 
+#include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/sync_os/pfs.h>
 #include <innodb/sync_latch/create_tracker.h>
 #include <innodb/sync_latch/LATCH_ADD_MUTEX.h>

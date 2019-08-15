@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
-#include "dict0mem.h"
+
 #include "lock0iter.h"
 #include "lock0lock.h"
 #include "lock0priv.h"

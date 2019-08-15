@@ -40,6 +40,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "read0types.h"
 
+struct trx_t;
+
 /** The MVCC read view manager */
 class MVCC {
  public:

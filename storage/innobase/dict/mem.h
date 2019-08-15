@@ -41,6 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/dict_mem/dict_mem_table_add_col.h>
 
 struct dict_col_t;
+struct dict_index_t;
 
 /** Creates a table memory object.
  @return own: table object */

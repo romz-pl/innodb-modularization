@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/lock_types/lock_mode_string.h>
 #include <innodb/memory/mem_heap_dup.h>
 #include <innodb/mtr/mtr_start.h>
@@ -69,7 +70,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0btr.h"
 #include "current_thd.h"
 #include "dict0boot.h"
-#include "dict0mem.h"
+
 #include "ha_prototypes.h"
 #include "lock0lock.h"
 #include "lock0priv.h"

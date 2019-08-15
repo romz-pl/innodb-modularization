@@ -28,6 +28,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include "dict/mem.h"
+#include <innodb/dict_mem/dict_mem_table_col_rename.h>
+#include <innodb/dict_mem/dict_mem_table_add_v_col.h>
+#include <innodb/dict_mem/dict_mem_foreign_create.h>
+#include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_table_fill_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_table_free_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_create_temporary_tablename.h>
+#include <innodb/memory/mem_heap_strdup.h>
 #include <innodb/data_types/dtuple_create_with_vcol.h>
 #include <innodb/data_types/dfield_set_null.h>
 #include <innodb/data_types/dfield_is_null.h>

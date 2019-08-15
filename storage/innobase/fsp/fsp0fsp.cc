@@ -69,7 +69,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0log.h"
 #include "srv0srv.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "dict0mem.h"
+
 
 #include "srv0start.h"
 #include "trx0purge.h"

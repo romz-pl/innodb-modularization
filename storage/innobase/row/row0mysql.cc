@@ -31,6 +31,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include "dict/mem.h"
+#include <innodb/sync_mutex/mutex_free.h>
+#include <innodb/dict_mem/dict_foreign_different_tables.h>
+#include <innodb/dict_mem/dict_mem_index_free.h>
+#include <innodb/dict_mem/dict_mem_table_fill_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_table_free_foreign_vcol_set.h>
 #include <innodb/dict_types/flags.h>
 #include <innodb/data_types/dtuple_create_with_vcol.h>
 #include <innodb/data_types/dtuple_create.h>

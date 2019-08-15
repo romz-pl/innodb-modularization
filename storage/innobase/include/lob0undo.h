@@ -31,10 +31,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #define lob0undo_h
 
 #include <innodb/univ/univ.h>
+
+#include <innodb/allocator/UT_DELETE.h>
+#include <innodb/dict_mem/dict_index_t.h>
 #include <innodb/allocator/UT_NEW_NOKEY.h>
 
+
+
+#include <algorithm>
 #include <list>
-#include "dict0mem.h"
 
 
 namespace lob {

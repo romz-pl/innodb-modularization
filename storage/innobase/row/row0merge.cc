@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed by Sunny Bains and Marko Makela
  *******************************************************/
 
+#include "dict/mem.h"
+#include <innodb/dict_mem/dict_mem_index_free.h>
 #include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dfield_is_null.h>
 #include <innodb/data_types/dfield_dup.h>

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created December 2006 by Marko Makela
  *******************************************************/
 
+#include <innodb/dict_types/index_id_t.h>
 #include <innodb/hash/HASH_INSERT.h>
 #include <innodb/hash/HASH_SEARCH.h>
 #include <innodb/hash/HASH_DELETE.h>

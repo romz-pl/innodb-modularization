@@ -46,6 +46,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include "dict/mem.h"
+#include <innodb/dict_mem/PersistentTableMetadata.h>
+#include <innodb/dict_mem/dict_mem_create_temporary_tablename.h>
+#include <innodb/dict_mem/dict_mem_index_free.h>
+#include <innodb/dict_mem/dict_mem_table_add_v_col.h>
+#include <innodb/dict_mem/dict_mem_table_add_s_col.h>
+#include <innodb/memory/mem_heap_strdup.h>
 #include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dfield_dup.h>
 #include <innodb/data_types/dfield_copy.h>
@@ -258,6 +265,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+
+/** Percentage of compression failures that are allowed in a single
+round */
+extern ulong zip_failure_threshold_pct;
+
+/** Maximum percentage of a page that can be allowed as a pad to avoid
+compression failures */
+extern ulong zip_pad_max;
 
 #ifndef UNIV_HOTBACKUP
 /** Stop printing warnings, if the count exceeds this threshold. */

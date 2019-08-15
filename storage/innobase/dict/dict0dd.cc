@@ -27,6 +27,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** @file dict/dict0dd.cc
 Data dictionary interface */
 
+#include "dict/mem.h"
+#include <innodb/dict_mem/dict_mem_table_fill_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_table_free_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
+#include <innodb/memory/mem_heap_strdup.h>
+#include <innodb/dict_mem/dict_mem_foreign_create.h>
+#include <innodb/dict_mem/dict_mem_table_add_v_col.h>
+#include <innodb/dict_mem/dict_mem_table_add_s_col.h>
+#include <innodb/dict_mem/dict_mem_index_free.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/memory/mem_heap_strdupl.h>
@@ -52,7 +62,7 @@ Data dictionary interface */
 #include "dict0crea.h"
 #include "dict0dd.h"
 #include "dict0dict.h"
-#include "dict0mem.h"
+
 #include "dict0priv.h"
 #ifndef UNIV_HOTBACKUP
 #include "dict0stats.h"

@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <time.h>
 
+#include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/buf_calc/buf_calc_page_new_checksum.h>
 #include <innodb/buf_calc/buf_calc_page_old_checksum.h>
 #include <innodb/buf_calc/buf_calc_page_crc32.h>

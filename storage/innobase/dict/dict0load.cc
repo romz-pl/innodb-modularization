@@ -31,6 +31,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/24/1996 Heikki Tuuri
  *******************************************************/
 
+#include "dict/mem.h"
+#include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>
+#include <innodb/dict_mem/dict_mem_foreign_create.h>
+#include <innodb/dict_mem/dict_mem_table_fill_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_table_free_foreign_vcol_set.h>
+#include <innodb/dict_mem/dict_mem_index_free.h>
+#include <innodb/dict_mem/dict_mem_table_add_v_col.h>
+#include <innodb/dict_mem/dict_mem_fill_index_struct.h>
 #include <innodb/data_types/dtuple_create_from_mem.h>
 #include <innodb/data_types/DTUPLE_EST_ALLOC.h>
 #include <innodb/data_types/dfield_set_data.h>
@@ -66,7 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dd.h"
 #include "dict0dict.h"
 #include "dict0load.h"
-#include "dict0mem.h"
+
 #include "dict0priv.h"
 #include "dict0stats.h"
 

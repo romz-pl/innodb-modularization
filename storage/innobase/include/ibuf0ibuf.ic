@@ -31,7 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/mtr/mtr_start.h>
-
+#include <innodb/mtr/mtr_commit.h>
 
 #include "page0page.h"
 #include "page0zip.h"

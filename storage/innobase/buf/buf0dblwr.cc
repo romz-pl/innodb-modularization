@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
