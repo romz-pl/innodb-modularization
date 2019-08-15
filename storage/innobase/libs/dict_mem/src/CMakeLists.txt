@@ -108,6 +108,8 @@ add_library( ${LIB_NAME} STATIC
     table_lock_list_t.cpp
     temp_prebuilt_vec.cpp
     zip_pad_info_t.cpp
+    dict_index_is_online_ddl.cpp
+    dict_table_is_fts_column.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -126,6 +128,7 @@ target_link_libraries(
     gis_type
     lock_priv
     string
+    vector
     PRIVATE
 )
 

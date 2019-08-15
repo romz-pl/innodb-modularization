@@ -47,7 +47,7 @@ struct lock_table_t;
 #include "que0types.h"
 
 #include "srv0srv.h"
-#include "ut0vec.h"
+#include <innodb/vector/vector.h>
 #ifndef UNIV_HOTBACKUP
 #include "gis0rtree.h"
 #endif /* UNIV_HOTBACKUP */

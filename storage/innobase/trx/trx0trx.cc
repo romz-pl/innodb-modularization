@@ -70,7 +70,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0xa.h"
 #include "usr0sess.h"
 #include "ut0pool.h"
-#include "ut0vec.h"
+#include <innodb/vector/vector.h>
 
 
 #include "my_dbug.h"

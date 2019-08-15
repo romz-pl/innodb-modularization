@@ -59,7 +59,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "trx0roll.h"
 #include "usr0sess.h"
-#include "ut0vec.h"
+#include <innodb/vector/vector.h>
 
 /** Build a table definition without updating SYSTEM TABLES
 @param[in,out]	table	dict table object

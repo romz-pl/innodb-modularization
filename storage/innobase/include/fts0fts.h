@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "row0types.h"
 #include <innodb/rbt/rbt.h>
-#include "ut0vec.h"
+#include <innodb/vector/vector.h>
 #include "ut0wqueue.h"
 
 struct dfield_t;

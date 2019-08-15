@@ -85,5 +85,7 @@ add_subdirectory( trx_types )
 
 add_subdirectory( univ )
 
+add_subdirectory( vector )
+
 add_subdirectory( wait )
 

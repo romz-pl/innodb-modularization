@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/6/2006 Osku Salerma
  ************************************************************************/
 
-#include "ut0vec.h"
+#include <innodb/vector/vector.h>
 
 
 /********************************************************************

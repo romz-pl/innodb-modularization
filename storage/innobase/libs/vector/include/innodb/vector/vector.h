@@ -239,6 +239,6 @@ struct ib_vector_t {
   ulint sizeof_value;
 };
 
-#include "ut0vec.ic"
+#include <innodb/vector/vector.ic>
 
 #endif /* IB_VECTOR_H */
