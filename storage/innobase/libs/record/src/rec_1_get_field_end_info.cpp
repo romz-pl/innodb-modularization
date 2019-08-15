@@ -6,6 +6,7 @@
 #include <innodb/machine/data.h>
 #include <innodb/assert/assert.h>
 
+
 /** Returns the offset of nth field end if the record is stored in the 1-byte
  offsets form. If the field is SQL null, the flag is ORed in the returned
  value.

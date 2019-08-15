@@ -5,6 +5,7 @@
 #include <innodb/disk/page_size_t.h>
 #include <innodb/data_types/flags.h>
 #include <innodb/dict_types/flags.h>
+#include <innodb/dict_mem/flags.h>
 
 /* Compact flag ORed to the extra size returned by rec_get_offsets() */
 #define REC_OFFS_COMPACT ((ulint)1 << 31)
@@ -88,16 +89,7 @@ B-tree page that is the leftmost page on its level
 was inserted/updated after an instant ADD COLUMN. */
 #define REC_INFO_INSTANT_FLAG 0x80UL
 
-/* Number of extra bytes in an old-style record,
-in addition to the data and the offsets */
-#define REC_N_OLD_EXTRA_BYTES 6
-/* Number of extra bytes in a new-style record,
-in addition to the data and the offsets */
-#define REC_N_NEW_EXTRA_BYTES 5
-/* NUmber of extra bytes in a new-style temporary record,
-in addition to the data and the offsets.
-This is used only after instant ADD COLUMN. */
-#define REC_N_TMP_EXTRA_BYTES 1
+
 
 /* Record status values */
 #define REC_STATUS_ORDINARY 0

@@ -285,22 +285,7 @@ FILE *dict_foreign_err_file = NULL;
 /* mutex protecting the foreign and unique error buffers */
 ib_mutex_t dict_foreign_err_mutex;
 
-/** Checks if the database name in two table names is the same.
- @return true if same db name */
-ibool dict_tables_have_same_db(
-    const char *name1, /*!< in: table name in the form
-                       dbname '/' tablename */
-    const char *name2) /*!< in: table name in the form
-                       dbname '/' tablename */
-{
-  for (; *name1 == *name2; name1++, name2++) {
-    if (*name1 == '/') {
-      return (TRUE);
-    }
-    ut_a(*name1); /* the names must contain '/' */
-  }
-  return (FALSE);
-}
+
 
 
 #endif /* !UNIV_HOTBACKUP */
@@ -308,123 +293,21 @@ ibool dict_tables_have_same_db(
 
 
 #ifndef UNIV_HOTBACKUP
-/** Reserves the dictionary system mutex for MySQL. */
-void dict_mutex_enter_for_mysql(void) { mutex_enter(&dict_sys->mutex); }
 
-/** Releases the dictionary system mutex for MySQL. */
-void dict_mutex_exit_for_mysql(void) { mutex_exit(&dict_sys->mutex); }
 
-/** Allocate and init a dict_table_t's stats latch.
-This function must not be called concurrently on the same table object.
-@param[in,out]	table_void	table whose stats latch to create */
-static void dict_table_stats_latch_alloc(void *table_void) {
-  dict_table_t *table = static_cast<dict_table_t *>(table_void);
 
-  /* Note: rw_lock_create() will call the constructor */
 
-  table->stats_latch =
-      static_cast<rw_lock_t *>(ut_malloc_nokey(sizeof(rw_lock_t)));
 
-  ut_a(table->stats_latch != NULL);
 
-  rw_lock_create(dict_table_stats_key, table->stats_latch, SYNC_INDEX_TREE);
-}
 
-/** Deinit and free a dict_table_t's stats latch.
-This function must not be called concurrently on the same table object.
-@param[in,out]	table	table whose stats latch to free */
-static void dict_table_stats_latch_free(dict_table_t *table) {
-  rw_lock_free(table->stats_latch);
-  ut_free(table->stats_latch);
-}
 
-/** Create a dict_table_t's stats latch or delay for lazy creation.
-This function is only called from either single threaded environment
-or from a thread that has not shared the table object with other threads.
-@param[in,out]	table	table whose stats latch to create
-@param[in]	enabled	if false then the latch is disabled
-and dict_table_stats_lock()/unlock() become noop on this table. */
-void dict_table_stats_latch_create(dict_table_t *table, bool enabled) {
-  if (!enabled) {
-    table->stats_latch = NULL;
-    table->stats_latch_created = os_once::DONE;
-    return;
-  }
 
-  /* We create this lazily the first time it is used. */
-  table->stats_latch = NULL;
-  table->stats_latch_created = os_once::NEVER_DONE;
-}
 
-/** Destroy a dict_table_t's stats latch.
-This function is only called from either single threaded environment
-or from a thread that has not shared the table object with other threads.
-@param[in,out]	table	table whose stats latch to destroy */
-void dict_table_stats_latch_destroy(dict_table_t *table) {
-  if (table->stats_latch_created == os_once::DONE &&
-      table->stats_latch != NULL) {
-    dict_table_stats_latch_free(table);
-  }
-}
 
-/** Lock the appropriate latch to protect a given table's statistics.
-@param[in]	table		table whose stats to lock
-@param[in]	latch_mode	RW_S_LATCH or RW_X_LATCH */
-void dict_table_stats_lock(dict_table_t *table, ulint latch_mode) {
-  ut_ad(table != NULL);
-  ut_ad(table->magic_n == DICT_TABLE_MAGIC_N);
 
-  os_once::do_or_wait_for_done(&table->stats_latch_created,
-                               dict_table_stats_latch_alloc, table);
 
-  if (table->stats_latch == NULL) {
-    /* This is a dummy table object that is private in the current
-    thread and is not shared between multiple threads, thus we
-    skip any locking. */
-    return;
-  }
 
-  switch (latch_mode) {
-    case RW_S_LATCH:
-      rw_lock_s_lock(table->stats_latch);
-      break;
-    case RW_X_LATCH:
-      rw_lock_x_lock(table->stats_latch);
-      break;
-    case RW_NO_LATCH:
-      /* fall through */
-    default:
-      ut_error;
-  }
-}
 
-/** Unlock the latch that has been locked by dict_table_stats_lock().
-@param[in]	table		table whose stats to unlock
-@param[in]	latch_mode	RW_S_LATCH or RW_X_LATCH */
-void dict_table_stats_unlock(dict_table_t *table, ulint latch_mode) {
-  ut_ad(table != NULL);
-  ut_ad(table->magic_n == DICT_TABLE_MAGIC_N);
-
-  if (table->stats_latch == NULL) {
-    /* This is a dummy table object that is private in the current
-    thread and is not shared between multiple threads, thus we
-    skip any locking. */
-    return;
-  }
-
-  switch (latch_mode) {
-    case RW_S_LATCH:
-      rw_lock_s_unlock(table->stats_latch);
-      break;
-    case RW_X_LATCH:
-      rw_lock_x_unlock(table->stats_latch);
-      break;
-    case RW_NO_LATCH:
-      /* fall through */
-    default:
-      ut_error;
-  }
-}
 
 /** Try to drop any indexes after an aborted index creation.
  This can also be after a server kill during DROP INDEX. */
@@ -744,56 +627,6 @@ void dict_table_autoinc_log(dict_table_t *table, uint64_t value, mtr_t *mtr) {
 
 
 
-/** Looks for a matching field in an index. The column has to be the same. The
- column in index must be complete, or must contain a prefix longer than the
- column in index2. That is, we must be able to construct the prefix in index2
- from the prefix in index.
- @return position in internal representation of the index;
- ULINT_UNDEFINED if not contained */
-ulint dict_index_get_nth_field_pos(
-    const dict_index_t *index,  /*!< in: index from which to search */
-    const dict_index_t *index2, /*!< in: index */
-    ulint n)                    /*!< in: field number in index2 */
-{
-  const dict_field_t *field;
-  const dict_field_t *field2;
-  ulint n_fields;
-  ulint pos;
-
-  ut_ad(index);
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  field2 = index2->get_field(n);
-
-  n_fields = dict_index_get_n_fields(index);
-
-  /* Are we looking for a MBR (Minimum Bound Box) field of
-  a spatial index */
-  bool is_mbr_fld = (n == 0 && dict_index_is_spatial(index2));
-
-  for (pos = 0; pos < n_fields; pos++) {
-    field = index->get_field(pos);
-
-    /* The first field of a spatial index is a transformed
-    MBR (Minimum Bound Box) field made out of original column,
-    so its field->col still points to original cluster index
-    col, but the actual content is different. So we cannot
-    consider them equal if neither of them is MBR field */
-    if (pos == 0 && dict_index_is_spatial(index) && !is_mbr_fld) {
-      continue;
-    }
-
-    if (field->col == field2->col &&
-        (field->prefix_len == 0 || (field->prefix_len >= field2->prefix_len &&
-                                    field2->prefix_len != 0))) {
-      return (pos);
-    }
-  }
-
-  return (ULINT_UNDEFINED);
-}
-
-
 
 
 
@@ -831,21 +664,7 @@ void dict_init(void) {
 }
 
 #ifndef UNIV_HOTBACKUP
-/** Move to the most recently used segment of the LRU list. */
-void dict_move_to_mru(dict_table_t *table) /*!< in: table to move to MRU */
-{
-  ut_ad(mutex_own(&dict_sys->mutex));
-  ut_ad(dict_lru_validate());
-  ut_ad(dict_lru_find_table(table));
 
-  ut_a(table->can_be_evicted);
-
-  UT_LIST_REMOVE(dict_sys->table_LRU, table);
-
-  UT_LIST_ADD_FIRST(dict_sys->table_LRU, table);
-
-  ut_ad(dict_lru_validate());
-}
 
 /** Returns a table object and increment its open handle count.
  NOTE! This is a high-level function to be used mainly from outside the
@@ -1038,50 +857,10 @@ ulint dict_make_room_in_cache(
 
 
 
-/** Look up an index in a table.
-@param[in]	table	table
-@param[in]	id	index identifier
-@return index
-@retval NULL if not found */
-static const dict_index_t *dict_table_find_index_on_id(
-    const dict_table_t *table, const index_id_t &id) {
-  for (const dict_index_t *index = table->first_index(); index != NULL;
-       index = index->next()) {
-    if (index->space == id.m_space_id && index->id == id.m_index_id) {
-      return (index);
-    }
-  }
 
-  return (NULL);
-}
 
 #ifndef UNIV_HOTBACKUP
-/** Look up an index.
-@param[in]	id	index identifier
-@return index or NULL if not found */
-const dict_index_t *dict_index_find(const index_id_t &id) {
-  const dict_table_t *table;
 
-  ut_ad(mutex_own(&dict_sys->mutex));
-
-  for (table = UT_LIST_GET_FIRST(dict_sys->table_LRU); table != NULL;
-       table = UT_LIST_GET_NEXT(table_LRU, table)) {
-    const dict_index_t *index = dict_table_find_index_on_id(table, id);
-    if (index != NULL) {
-      return (index);
-    }
-  }
-
-  for (table = UT_LIST_GET_FIRST(dict_sys->table_non_LRU); table != NULL;
-       table = UT_LIST_GET_NEXT(table_LRU, table)) {
-    const dict_index_t *index = dict_table_find_index_on_id(table, id);
-    if (index != NULL) {
-      return (index);
-    }
-  }
-
-  return (NULL);
-}
 
 /** Function object to remove a foreign key constraint from the
 referenced_set of the referenced table.  The foreign key object is
@@ -1879,40 +1658,6 @@ dberr_t dict_index_add_to_cache(dict_table_t *table, dict_index_t *index,
   return (dict_index_add_to_cache_w_vcol(table, index, NULL, page_no, strict));
 }
 
-/** Clears the virtual column's index list before index is being freed.
-@param[in]  index   Index being freed */
-void dict_index_remove_from_v_col_list(dict_index_t *index) {
-  /* Index is not completely formed */
-  if (!index->cached) {
-    return;
-  }
-  if (dict_index_has_virtual(index)) {
-    const dict_col_t *col;
-    const dict_v_col_t *vcol;
-
-    for (ulint i = 0; i < dict_index_get_n_fields(index); i++) {
-      col = index->get_col(i);
-      if (col->is_virtual()) {
-        vcol = reinterpret_cast<const dict_v_col_t *>(col);
-        /* This could be NULL, when we do add
-        virtual column, add index together. We do not
-        need to track this virtual column's index */
-        if (vcol->v_indexes == NULL) {
-          continue;
-        }
-        dict_v_idx_list::iterator it;
-        for (it = vcol->v_indexes->begin(); it != vcol->v_indexes->end();
-             ++it) {
-          dict_v_idx_t v_index = *it;
-          if (v_index.index == index) {
-            vcol->v_indexes->erase(it);
-            break;
-          }
-        }
-      }
-    }
-  }
-}
 
 /** Adds an index to the dictionary cache, with possible indexing newly
 added column.
@@ -2354,73 +2099,8 @@ static void dict_index_copy(dict_index_t *index1, /*!< in: index to copy to */
   }
 }
 
-/** Copies types of fields contained in index to tuple. */
-void dict_index_copy_types(dtuple_t *tuple,           /*!< in/out: data tuple */
-                           const dict_index_t *index, /*!< in: index */
-                           ulint n_fields)            /*!< in: number of
-                                                      field types to copy */
-{
-  ulint i;
 
-  if (dict_index_is_ibuf(index)) {
-    dtuple_set_types_binary(tuple, n_fields);
 
-    return;
-  }
-
-  for (i = 0; i < n_fields; i++) {
-    const dict_field_t *ifield;
-    dtype_t *dfield_type;
-
-    ifield = index->get_field(i);
-    dfield_type = dfield_get_type(dtuple_get_nth_field(tuple, i));
-    ifield->col->copy_type(dfield_type);
-    if (dict_index_is_spatial(index) &&
-        DATA_GEOMETRY_MTYPE(dfield_type->mtype)) {
-      dfield_type->prtype |= DATA_GIS_MBR;
-    }
-  }
-}
-
-/** Copies types of virtual columns contained in table to tuple and sets all
-fields of the tuple to the SQL NULL value.  This function should
-be called right after dtuple_create().
-@param[in,out]	tuple	data tuple
-@param[in]	table	table
-*/
-void dict_table_copy_v_types(dtuple_t *tuple, const dict_table_t *table) {
-  /* tuple could have more virtual columns than existing table,
-  if we are calling this for creating index along with adding
-  virtual columns */
-  ulint n_fields =
-      std::min(dtuple_get_n_v_fields(tuple), static_cast<ulint>(table->n_v_def));
-
-  for (ulint i = 0; i < n_fields; i++) {
-    dfield_t *dfield = dtuple_get_nth_v_field(tuple, i);
-    dtype_t *dtype = dfield_get_type(dfield);
-
-    dfield_set_null(dfield);
-    dict_table_get_nth_v_col(table, i)->m_col.copy_type(dtype);
-  }
-}
-/** Copies types of columns contained in table to tuple and sets all
- fields of the tuple to the SQL NULL value.  This function should
- be called right after dtuple_create(). */
-void dict_table_copy_types(dtuple_t *tuple,           /*!< in/out: data tuple */
-                           const dict_table_t *table) /*!< in: table */
-{
-  ulint i;
-
-  for (i = 0; i < dtuple_get_n_fields(tuple); i++) {
-    dfield_t *dfield = dtuple_get_nth_field(tuple, i);
-    dtype_t *dtype = dfield_get_type(dfield);
-
-    dfield_set_null(dfield);
-    table->get_col(i)->copy_type(dtype);
-  }
-
-  dict_table_copy_v_types(tuple, table);
-}
 
 /********************************************************************
 Wait until all the background threads of the given table have exited, i.e.,
@@ -4379,49 +4059,6 @@ dtuple_t *dict_index_build_data_tuple(
   return (tuple);
 }
 
-/** Calculates the minimum record length in an index. */
-ulint dict_index_calc_min_rec_len(const dict_index_t *index) /*!< in: index */
-{
-  ulint sum = 0;
-  ulint i;
-  ulint comp = dict_table_is_comp(index->table);
-
-  if (comp) {
-    ulint nullable = 0;
-    sum = REC_N_NEW_EXTRA_BYTES;
-    for (i = 0; i < dict_index_get_n_fields(index); i++) {
-      const dict_col_t *col = index->get_col(i);
-      ulint size = col->get_fixed_size(comp);
-      sum += size;
-      if (!size) {
-        size = col->len;
-        sum += size < 128 ? 1 : 2;
-      }
-      if (!(col->prtype & DATA_NOT_NULL)) {
-        nullable++;
-      }
-    }
-
-    /* round the NULL flags up to full bytes */
-    sum += UT_BITS_IN_BYTES(nullable);
-
-    return (sum);
-  }
-
-  for (i = 0; i < dict_index_get_n_fields(index); i++) {
-    sum += index->get_col(i)->get_fixed_size(comp);
-  }
-
-  if (sum > 127) {
-    sum += 2 * dict_index_get_n_fields(index);
-  } else {
-    sum += dict_index_get_n_fields(index);
-  }
-
-  sum += REC_N_OLD_EXTRA_BYTES;
-
-  return (sum);
-}
 
 /** Outputs info on a foreign key of a table in a format suitable for
  CREATE TABLE. */
@@ -5104,29 +4741,7 @@ void dict_ind_free(void) {
   dict_mem_table_free(table);
 }
 
-/** Get an index by name.
-@param[in]	table		the table where to look for the index
-@param[in]	name		the index name to look for
-@param[in]	committed	true=search for committed,
-false=search for uncommitted
-@return index, NULL if does not exist */
-dict_index_t *dict_table_get_index_on_name(dict_table_t *table,
-                                           const char *name, bool committed) {
-  dict_index_t *index;
 
-  index = table->first_index();
-
-  while (index != NULL) {
-    if (index->is_committed() == committed &&
-        innobase_strcasecmp(index->name, name) == 0) {
-      return (index);
-    }
-
-    index = index->next();
-  }
-
-  return (NULL);
-}
 
 /** Replace the index passed in with another equivalent index in the
  foreign key lists of the table.

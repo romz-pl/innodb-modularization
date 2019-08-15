@@ -13,15 +13,19 @@ add_library( ${LIB_NAME} STATIC
     dict_col_get_clust_pos.cpp
     dict_col_get_index_pos.cpp
     dict_col_get_no.cpp
+    dict_col_name_is_reserved.cpp
     dict_col_t.cpp
     dict_field_t.cpp
     dict_foreign_add_to_referenced_table.cpp
     dict_foreign_compare.cpp
     dict_foreign_different_tables.cpp
+    dict_foreign_error_report_low.cpp
+    dict_foreign_find.cpp
     dict_foreign_free.cpp
     dict_foreign_matches_id.cpp
     dict_foreign_not_exists.cpp
     dict_foreign_print.cpp
+    dict_foreign_remove_from_cache.cpp
     dict_foreign_set.cpp
     dict_foreign_set_free.cpp
     dict_foreign_set_validate.cpp
@@ -29,13 +33,17 @@ add_library( ${LIB_NAME} STATIC
     dict_foreign_with_index.cpp
     dict_free_vc_templ.cpp
     dict_get_db_name_len.cpp
+    dict_index_calc_min_rec_len.cpp
     dict_index_contains_col_or_prefix.cpp
+    dict_index_copy_types.cpp
+    dict_index_find.cpp
     dict_index_get_lock.cpp
     dict_index_get_n_fields.cpp
     dict_index_get_n_ordering_defined_by_user.cpp
     dict_index_get_n_unique.cpp
     dict_index_get_n_unique_in_tree.cpp
     dict_index_get_n_unique_in_tree_nonleaf.cpp
+    dict_index_get_nth_field_pos.cpp
     dict_index_get_online_status.cpp
     dict_index_get_page.cpp
     dict_index_get_space.cpp
@@ -49,6 +57,7 @@ add_library( ${LIB_NAME} STATIC
     dict_index_is_sec_or_ibuf.cpp
     dict_index_is_spatial.cpp
     dict_index_is_unique.cpp
+    dict_index_remove_from_v_col_list.cpp
     dict_index_set_online_status.cpp
     dict_index_set_space.cpp
     dict_index_t.cpp
@@ -56,12 +65,15 @@ add_library( ${LIB_NAME} STATIC
     dict_index_zip_pad_mutex_destroy.cpp
     dict_index_zip_pad_unlock.cpp
     dict_lru_find_table.cpp
+    dict_lru_validate.cpp
     dict_max_field_len_store_undo.cpp
     dict_max_v_field_len_store_undo.cpp
     dict_mem_fill_column_struct.cpp
     dict_mem_table_add_col.cpp
     dict_mem_table_add_s_col.cpp
     dict_mem_table_add_v_col.cpp
+    dict_mutex_enter_for_mysql.cpp
+    dict_mutex_exit_for_mysql.cpp
     dict_non_lru_find_table.cpp
     dict_remove_db_name.cpp
     dict_s_col_list.cpp
@@ -73,16 +85,32 @@ add_library( ${LIB_NAME} STATIC
     dict_sys_t.cpp
     dict_sys_tables_type_to_tf.cpp
     dict_sys_tables_type_validate.cpp
+    dict_table_add_system_columns.cpp
+    dict_table_add_to_cache.cpp
     dict_table_allow_eviction.cpp
+    dict_table_autoinc_alloc.cpp
     dict_table_autoinc_create_lazy.cpp
     dict_table_autoinc_destroy.cpp
+    dict_table_autoinc_initialize.cpp
+    dict_table_autoinc_lock.cpp
     dict_table_autoinc_own.cpp
     dict_table_autoinc_persisted_update.cpp
+    dict_table_autoinc_read.cpp
     dict_table_autoinc_set_col_pos.cpp
+    dict_table_autoinc_unlock.cpp
+    dict_table_autoinc_update_if_greater.cpp
+    dict_table_change_id_in_cache.cpp
+    dict_table_check_if_in_cache_low.cpp
+    dict_table_col_in_clustered_key.cpp
+    dict_table_copy_types.cpp
+    dict_table_copy_v_types.cpp
     dict_table_ddl_acquire.cpp
     dict_table_ddl_release.cpp
     dict_table_decode_n_col.cpp
     dict_table_encode_n_col.cpp
+    dict_table_extent_size.cpp
+    dict_table_find_index_on_id.cpp
+    dict_table_get_all_fts_indexes.cpp
     dict_table_get_curr_table_sess_trx_id.cpp
     dict_table_get_highest_foreign_id.cpp
     dict_table_get_index_on_first_col.cpp
@@ -94,8 +122,10 @@ add_library( ${LIB_NAME} STATIC
     dict_table_get_nth_col_pos.cpp
     dict_table_get_nth_v_col.cpp
     dict_table_get_sys_col_no.cpp
+    dict_table_get_v_col_name.cpp
     dict_table_has_atomic_blobs.cpp
     dict_table_has_autoinc_col.cpp
+    dict_table_has_column.cpp
     dict_table_has_fts_index.cpp
     dict_table_has_indexed_v_cols.cpp
     dict_table_have_virtual_index.cpp
@@ -116,9 +146,18 @@ add_library( ${LIB_NAME} STATIC
     dict_table_mysql_pos_to_innodb.cpp
     dict_table_n_rows_dec.cpp
     dict_table_n_rows_inc.cpp
+    dict_table_next_uncorrupted_index.cpp
     dict_table_op_t.cpp
     dict_table_page_size.cpp
     dict_table_prevent_eviction.cpp
+    dict_table_set_big_rows.cpp
+    dict_table_skip_corrupt_index.cpp
+    dict_table_stats_latch_alloc.cpp
+    dict_table_stats_latch_create.cpp
+    dict_table_stats_latch_destroy.cpp
+    dict_table_stats_latch_free.cpp
+    dict_table_stats_lock.cpp
+    dict_table_stats_unlock.cpp
     dict_table_t.cpp
     dict_table_x_lock_indexes.cpp
     dict_table_x_unlock_indexes.cpp
@@ -145,29 +184,9 @@ add_library( ${LIB_NAME} STATIC
     table_lock_list_t.cpp
     temp_prebuilt_vec.cpp
     zip_pad_info_t.cpp
-    dict_col_name_is_reserved.cpp
-    dict_table_autoinc_lock.cpp
-    dict_table_autoinc_alloc.cpp
-    dict_table_autoinc_initialize.cpp
-    dict_table_autoinc_read.cpp
-    dict_table_autoinc_update_if_greater.cpp
-    dict_table_autoinc_unlock.cpp
-    dict_table_add_system_columns.cpp
-    dict_table_set_big_rows.cpp
-    dict_lru_validate.cpp
-    dict_table_add_to_cache.cpp
-    dict_table_change_id_in_cache.cpp
-    dict_foreign_remove_from_cache.cpp
-    dict_foreign_find.cpp
-    dict_table_check_if_in_cache_low.cpp
-    dict_foreign_error_report_low.cpp
-    dict_table_get_v_col_name.cpp
-    dict_table_has_column.cpp
-    dict_table_skip_corrupt_index.cpp
-    dict_table_next_uncorrupted_index.cpp
-    dict_table_get_all_fts_indexes.cpp
-    dict_table_extent_size.cpp
-    dict_table_col_in_clustered_key.cpp
+    dict_tables_have_same_db.cpp
+    dict_table_get_index_on_name.cpp
+    dict_move_to_mru.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -181,6 +200,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    bit
     data_types
     dict_types
     gis_type

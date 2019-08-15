@@ -431,3 +431,24 @@ page size | file space extent size
             ? (1048576 / UNIV_PAGE_SIZE)                                \
             : ((UNIV_PAGE_SIZE <= (32768)) ? (2097152 / UNIV_PAGE_SIZE) \
                                            : (4194304 / UNIV_PAGE_SIZE)))))
+
+
+
+
+/* Number of extra bytes in an old-style record,
+in addition to the data and the offsets */
+#define REC_N_OLD_EXTRA_BYTES 6
+/* Number of extra bytes in a new-style record,
+in addition to the data and the offsets */
+#define REC_N_NEW_EXTRA_BYTES 5
+/* NUmber of extra bytes in a new-style temporary record,
+in addition to the data and the offsets.
+This is used only after instant ADD COLUMN. */
+#define REC_N_TMP_EXTRA_BYTES 1
+
+
+
+/** Maximum number of columns in a foreign key constraint. Please Note MySQL
+has a much lower limit on the number of columns allowed in a foreign key
+constraint */
+#define MAX_NUM_FK_COLUMNS 500
