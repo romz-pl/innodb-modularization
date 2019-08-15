@@ -73,6 +73,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/io/os_file_create_subdirs_if_needed.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/record/rec_offs_set_n_fields.h>
+#include <innodb/dict_mem/dict_lru_find_table.h>
 
 #include "mysql/components/services/log_builtins.h"
 
@@ -101,8 +102,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifdef UNIV_HOTBACKUP
 #define dict_lru_validate(x) (true)
-#define dict_lru_find_table(x) (true)
-#define dict_non_lru_find_table(x) (true)
+
 #endif /* UNIV_HOTBACKUP */
 
 /** dummy index for ROW_FORMAT=REDUNDANT supremum and infimum records */
@@ -171,8 +171,7 @@ static_assert(DATA_N_SYS_COLS == 3, "DATA_N_SYS_COLS != 3");
 static_assert(DATA_TRX_ID_LEN == 6, "DATA_TRX_ID_LEN != 6");
 static_assert(DATA_ITT_N_SYS_COLS == 2, "DATA_ITT_N_SYS_COLS != 2");
 
-/** the dictionary system */
-dict_sys_t *dict_sys = NULL;
+
 
 /** The set of SE private IDs of DD tables. Used to tell whether a table is
 a DD table. Since the DD tables can be rebuilt with new SE private IDs,
@@ -284,14 +283,8 @@ static void dict_table_remove_from_cache_low(
 /** Validate the dictionary table LRU list.
  @return true if validate OK */
 static ibool dict_lru_validate(void);
-/** Check if table is in the dictionary table LRU list.
- @return true if table found */
-static ibool dict_lru_find_table(
-    const dict_table_t *find_table); /*!< in: table to find */
-/** Check if a table exists in the dict table non-LRU list.
- @return true if table found */
-static ibool dict_non_lru_find_table(
-    const dict_table_t *find_table); /*!< in: table to find */
+
+
 #endif                               /* UNIV_DEBUG */
 
 /* Stream for storing detailed information about the latest foreign key
@@ -880,43 +873,6 @@ void dict_table_autoinc_unlock(dict_table_t *table) /*!< in/out: table */
   mutex_exit(table->autoinc_mutex);
 }
 
-/** Returns TRUE if the index contains a column or a prefix of that column.
-@param[in]	index		index
-@param[in]	n		column number
-@param[in]	is_virtual	whether it is a virtual col
-@return true if contains the column or its prefix */
-ibool dict_index_contains_col_or_prefix(const dict_index_t *index, ulint n,
-                                        bool is_virtual) {
-  const dict_field_t *field;
-  const dict_col_t *col;
-  ulint pos;
-  ulint n_fields;
-
-  ut_ad(index);
-  ut_ad(index->magic_n == DICT_INDEX_MAGIC_N);
-
-  if (index->is_clustered()) {
-    return (TRUE);
-  }
-
-  if (is_virtual) {
-    col = &dict_table_get_nth_v_col(index->table, n)->m_col;
-  } else {
-    col = index->table->get_col(n);
-  }
-
-  n_fields = dict_index_get_n_fields(index);
-
-  for (pos = 0; pos < n_fields; pos++) {
-    field = index->get_field(pos);
-
-    if (col == field->col) {
-      return (TRUE);
-    }
-  }
-
-  return (FALSE);
-}
 
 /** Looks for a matching field in an index. The column has to be the same. The
  column in index must be complete, or must contain a prefix longer than the
@@ -1397,37 +1353,10 @@ ulint dict_make_room_in_cache(
   return (n_evicted);
 }
 
-/** Move a table to the non-LRU list from the LRU list. */
-void dict_table_move_from_lru_to_non_lru(
-    dict_table_t *table) /*!< in: table to move from LRU to non-LRU */
-{
-  ut_ad(mutex_own(&dict_sys->mutex));
-  ut_ad(dict_lru_find_table(table));
 
-  ut_a(table->can_be_evicted);
-
-  UT_LIST_REMOVE(dict_sys->table_LRU, table);
-
-  UT_LIST_ADD_LAST(dict_sys->table_non_LRU, table);
-
-  table->can_be_evicted = FALSE;
-}
 #endif /* !UNIV_HOTBACKUP */
 
-/** Move a table to the LRU end from the non LRU list.
-@param[in]	table	InnoDB table object */
-void dict_table_move_from_non_lru_to_lru(dict_table_t *table) {
-  ut_ad(mutex_own(&dict_sys->mutex));
-  ut_ad(dict_non_lru_find_table(table));
 
-  ut_a(!table->can_be_evicted);
-
-  UT_LIST_REMOVE(dict_sys->table_non_LRU, table);
-
-  UT_LIST_ADD_LAST(dict_sys->table_LRU, table);
-
-  table->can_be_evicted = TRUE;
-}
 
 /** Look up an index in a table.
 @param[in]	table	table
@@ -5914,49 +5843,9 @@ static ibool dict_lru_validate(void) {
   return (TRUE);
 }
 
-/** Check if a table exists in the dict table LRU list.
- @return true if table found in LRU list */
-static ibool dict_lru_find_table(
-    const dict_table_t *find_table) /*!< in: table to find */
-{
-  dict_table_t *table;
 
-  ut_ad(find_table != NULL);
-  ut_ad(mutex_own(&dict_sys->mutex));
 
-  for (table = UT_LIST_GET_FIRST(dict_sys->table_LRU); table != NULL;
-       table = UT_LIST_GET_NEXT(table_LRU, table)) {
-    ut_a(table->can_be_evicted);
 
-    if (table == find_table) {
-      return (TRUE);
-    }
-  }
-
-  return (FALSE);
-}
-
-/** Check if a table exists in the dict table non-LRU list.
- @return true if table found in non-LRU list */
-static ibool dict_non_lru_find_table(
-    const dict_table_t *find_table) /*!< in: table to find */
-{
-  dict_table_t *table;
-
-  ut_ad(find_table != NULL);
-  ut_ad(mutex_own(&dict_sys->mutex));
-
-  for (table = UT_LIST_GET_FIRST(dict_sys->table_non_LRU); table != NULL;
-       table = UT_LIST_GET_NEXT(table_LRU, table)) {
-    ut_a(!table->can_be_evicted);
-
-    if (table == find_table) {
-      return (TRUE);
-    }
-  }
-
-  return (FALSE);
-}
 #endif /* UNIV_DEBUG */
 /** Check an index to see whether its first fields are the columns in the array,
  in the same order and is not marked for deletion and is not the same

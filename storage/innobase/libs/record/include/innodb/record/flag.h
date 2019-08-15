@@ -155,16 +155,7 @@ is that mlog_parse_index() cannot recognize the system columns by
 just having n_fields, n_uniq and the lengths of the columns. */
 #define REC_MAX_N_USER_FIELDS (REC_MAX_N_FIELDS - DATA_N_SYS_COLS * 2)
 
-/* REC_ANTELOPE_MAX_INDEX_COL_LEN is measured in bytes and is the maximum
-indexed field length (or indexed prefix length) for indexes on tables of
-ROW_FORMAT=REDUNDANT and ROW_FORMAT=COMPACT format.
-Before we support UTF-8 encodings with mbmaxlen = 4, a UTF-8 character
-may take at most 3 bytes.  So the limit was set to 3*256, so that one
-can create a column prefix index on 256 characters of a TEXT or VARCHAR
-column also in the UTF-8 charset.
-This constant MUST NOT BE CHANGED, or the compatibility of InnoDB data
-files would be at risk! */
-#define REC_ANTELOPE_MAX_INDEX_COL_LEN 768
+
 
 
 

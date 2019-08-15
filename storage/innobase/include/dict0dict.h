@@ -36,6 +36,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_mem/dict_sys.h>
+#include <innodb/dict_mem/dict_table_move_from_non_lru_to_lru.h>
+#include <innodb/dict_mem/dict_table_move_from_lru_to_non_lru.h>
 #include <innodb/data_types/flags.h>
 #include <innodb/dict_types/dict_err_ignore_t.h>
 #include <innodb/dict_types/DictSysMutex.h>
@@ -50,6 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/dict_mem/dict_sys_t.h>
 #include <innodb/dict_mem/dict_get_db_name_len.h>
 #include <innodb/dict_mem/dict_table_get_n_tot_u_cols.h>
+#include <innodb/dict_mem/dict_index_contains_col_or_prefix.h>
 
 #include "buf0flu.h"
 
@@ -765,14 +769,7 @@ ulint dict_index_get_n_ordering_defined_by_user(
     const dict_index_t *index) /*!< in: an internal representation
                                of index (in the dictionary cache) */
     MY_ATTRIBUTE((warn_unused_result));
-/** Returns TRUE if the index contains a column or a prefix of that column.
- @return true if contains the column or its prefix */
-ibool dict_index_contains_col_or_prefix(
-    const dict_index_t *index, /*!< in: index */
-    ulint n,                   /*!< in: column number */
-    bool is_virtual)
-    /*!< in: whether it is a virtual col */
-    MY_ATTRIBUTE((warn_unused_result));
+
 /** Looks for a matching field in an index. The column has to be the same. The
  column in index must be complete, or must contain a prefix longer than the
  column in index2. That is, we must be able to construct the prefix in index2
@@ -991,11 +988,7 @@ ulint dict_table_is_fts_column(
     ulint col_no,         /*!< in: col number to search for */
     bool is_virtual)      /*!< in: whether it is a virtual column */
     MY_ATTRIBUTE((warn_unused_result));
-/** Prevent table eviction by moving a table to the non-LRU list from the
- LRU list if it is not already there. */
-UNIV_INLINE
-void dict_table_prevent_eviction(
-    dict_table_t *table); /*!< in: table to prevent eviction */
+
 
 /** Allow the table to be evicted by moving a table to the LRU list from
 the non-LRU list if it is not already there.
@@ -1016,13 +1009,9 @@ to non-LRU list
 UNIV_INLINE
 void dict_table_ddl_release(dict_table_t *table);
 
-/** Move a table to the non LRU end of the LRU list. */
-void dict_table_move_from_lru_to_non_lru(
-    dict_table_t *table); /*!< in: table to move from LRU to non-LRU */
 
-/** Move a table to the LRU end from the non LRU list.
-@param[in]	table	InnoDB table object */
-void dict_table_move_from_non_lru_to_lru(dict_table_t *table);
+
+
 
 /** Move to the most recently used segment of the LRU list. */
 void dict_move_to_mru(dict_table_t *table); /*!< in: table to move to MRU */
@@ -1039,8 +1028,7 @@ extern ib_mutex_t dict_foreign_err_mutex; /* mutex protecting the
                                           foreign key error messages */
 #endif                                    /* !UNIV_HOTBACKUP */
 
-/** the dictionary system */
-extern dict_sys_t *dict_sys;
+
 #ifndef UNIV_HOTBACKUP
 /** the data dictionary rw-latch protecting dict_sys */
 extern rw_lock_t *dict_operation_lock;

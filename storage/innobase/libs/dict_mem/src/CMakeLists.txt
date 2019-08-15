@@ -110,6 +110,19 @@ add_library( ${LIB_NAME} STATIC
     zip_pad_info_t.cpp
     dict_index_is_online_ddl.cpp
     dict_table_is_fts_column.cpp
+    dict_index_contains_col_or_prefix.cpp
+    dict_table_is_fts_column.cpp
+    dict_max_field_len_store_undo.cpp
+    dict_max_v_field_len_store_undo.cpp
+    dict_lru_find_table.cpp
+    dict_table_move_from_lru_to_non_lru.cpp
+    dict_table_prevent_eviction.cpp
+    dict_non_lru_find_table.cpp
+    dict_table_move_from_non_lru_to_lru.cpp
+    dict_sys.cpp
+    dict_table_allow_eviction.cpp
+    dict_table_ddl_acquire.cpp
+    dict_table_ddl_release.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

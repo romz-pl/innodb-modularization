@@ -80,7 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/dict_mem/dict_index_get_online_status.h>
 #include <innodb/dict_mem/dict_index_set_online_status.h>
 #include <innodb/dict_mem/dict_index_is_online_ddl.h>
-
+#include <innodb/dict_mem/dict_table_is_fts_column.h>
 
 #include "buf0flu.h"
 #include "dict0load.h"
@@ -93,133 +93,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
+#include <innodb/dict_mem/dict_max_field_len_store_undo.h>
+#include <innodb/dict_mem/dict_max_v_field_len_store_undo.h>
+#include <innodb/dict_mem/dict_table_prevent_eviction.h>
+#include <innodb/dict_mem/dict_table_allow_eviction.h>
+#include <innodb/dict_mem/dict_table_ddl_acquire.h>
+#include <innodb/dict_mem/dict_table_ddl_release.h>
 
-/** Check whether a column exists in an FTS index.
- @return ULINT_UNDEFINED if no match else the offset within the vector */
-UNIV_INLINE
-ulint dict_table_is_fts_column(
-    ib_vector_t *indexes, /*!< in: vector containing only FTS indexes */
-    ulint col_no,         /*!< in: col number to search for */
-    bool is_virtual)      /*!< in: whether it is a virtual column */
 
-{
-  ulint i;
-
-  for (i = 0; i < ib_vector_size(indexes); ++i) {
-    dict_index_t *index;
-
-    index = (dict_index_t *)ib_vector_getp(indexes, i);
-
-    if (dict_index_contains_col_or_prefix(index, col_no, is_virtual)) {
-      return (i);
-    }
-  }
-
-  return (ULINT_UNDEFINED);
-}
-
-/** Determine bytes of column prefix to be stored in the undo log. Please
- note that if !dict_table_has_atomic_blobs(table), no prefix
- needs to be stored in the undo log.
- @return bytes of column prefix to be stored in the undo log */
-UNIV_INLINE
-ulint dict_max_field_len_store_undo(
-    dict_table_t *table,   /*!< in: table */
-    const dict_col_t *col) /*!< in: column which index prefix
-                           is based on */
-{
-  if (!dict_table_has_atomic_blobs(table)) {
-    return (0);
-  }
-
-  if (col->max_prefix != 0) {
-    return (col->max_prefix);
-  }
-
-  return (REC_VERSION_56_MAX_INDEX_COL_LEN);
-}
-
-/** Determine maximum bytes of a virtual column need to be stored
-in the undo log.
-@param[in]	table		dict_table_t for the table
-@param[in]	col_no		virtual column number
-@return maximum bytes of virtual column to be stored in the undo log */
-UNIV_INLINE
-ulint dict_max_v_field_len_store_undo(dict_table_t *table, ulint col_no) {
-  const dict_col_t *col = &dict_table_get_nth_v_col(table, col_no)->m_col;
-  ulint max_log_len;
-
-  /* This calculation conforms to the non-virtual column
-  maximum log length calculation:
-  1) if No atomic BLOB, upto REC_ANTELOPE_MAX_INDEX_COL_LEN
-  2) if atomic BLOB, upto col->max_prefix or
-  REC_VERSION_56_MAX_INDEX_COL_LEN, whichever is less */
-  if (dict_table_has_atomic_blobs(table)) {
-    if (DATA_BIG_COL(col) && col->max_prefix > 0) {
-      max_log_len = col->max_prefix;
-    } else {
-      max_log_len = DICT_MAX_FIELD_LEN_BY_FORMAT(table);
-    }
-  } else {
-    max_log_len = REC_ANTELOPE_MAX_INDEX_COL_LEN;
-  }
-
-  return (max_log_len);
-}
-
-#ifndef UNIV_HOTBACKUP
-/** Prevent table eviction by moving a table to the non-LRU list from the
- LRU list if it is not already there. */
-UNIV_INLINE
-void dict_table_prevent_eviction(
-    dict_table_t *table) /*!< in: table to prevent eviction */
-{
-  ut_ad(mutex_own(&dict_sys->mutex));
-  if (table->can_be_evicted) {
-    dict_table_move_from_lru_to_non_lru(table);
-  }
-  table->explicitly_non_lru = true;
-}
-
-/** Allow the table to be evicted by moving a table to the LRU list from
-the non-LRU list if it is not already there.
-@param[in]      table   InnoDB table object can be evicted */
-UNIV_INLINE
-void dict_table_allow_eviction(dict_table_t *table) {
-  ut_ad(mutex_own(&dict_sys->mutex));
-  if (!table->can_be_evicted) {
-    dict_table_move_from_non_lru_to_lru(table);
-  }
-  table->explicitly_non_lru = false;
-}
-
-/** Move this table to non-LRU list for DDL operations if it's
-currently not there. This also prevents later opening table via DD objects,
-when the table name in InnoDB doesn't match with DD object.
-@param[in,out]	table	Table to put in non-LRU list */
-UNIV_INLINE
-void dict_table_ddl_acquire(dict_table_t *table) {
-  ut_ad(mutex_own(&dict_sys->mutex));
-  if (table->can_be_evicted) {
-    ut_ad(!table->ddl_not_evictable);
-    dict_table_prevent_eviction(table);
-    table->ddl_not_evictable = true;
-  }
-}
-
-/** Move this table to LRU list after DDL operations if it was moved
-to non-LRU list
-@param[in,out]	table	Table to put in LRU list */
-UNIV_INLINE
-void dict_table_ddl_release(dict_table_t *table) {
-  ut_ad(mutex_own(&dict_sys->mutex));
-  if (table->ddl_not_evictable) {
-    ut_ad(!table->can_be_evicted);
-    dict_table_allow_eviction(table);
-    table->ddl_not_evictable = false;
-  }
-}
-#endif /* !UNIV_HOTBACKUP */
 
 /** Check if the tablespace for the table has been discarded.
  @return true if the tablespace has been discarded. */
