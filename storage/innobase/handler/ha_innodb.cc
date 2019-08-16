@@ -46,6 +46,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/cmp/cmp_cols_are_equal.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/data_types/dtype_get_charset_coll.h>
 #include "dict/mem.h"
 #include <innodb/dict_mem/PersistentTableMetadata.h>
 #include <innodb/dict_mem/dict_mem_create_temporary_tablename.h>

@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/cmp/cmp_rec_rec.h>
+#include <innodb/cmp/cmp_dtuple_rec.h>
+#include <innodb/logger/fatal.h>
 #include <innodb/record/rec_get_n_fields_old.h>
 #include <innodb/record/rec_get_info_bits.h>
 #include <innodb/data_types/dtuple_get_info_bits.h>
@@ -73,7 +76,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_dbug.h"
 #include "page0page.h"
 #include "page0zip.h"
-#include "rem0cmp.h"
+
 #include "srv0mon.h"
 #include "trx0trx.h"
 #endif /* !UNIV_HOTBACKUP */

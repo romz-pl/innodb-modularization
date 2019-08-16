@@ -49,6 +49,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/fatal.h>
+#include <innodb/cmp/cmp_rec_rec_with_match.h>
 #include <innodb/data_types/DTUPLE_EST_ALLOC.h>
 #include <innodb/data_types/dtuple_big_rec_free.h>
 #include <innodb/data_types/dfield_is_ext.h>
@@ -103,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "que0que.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "rem0cmp.h"
+
 
 #include "row0log.h"
 #ifndef UNIV_HOTBACKUP

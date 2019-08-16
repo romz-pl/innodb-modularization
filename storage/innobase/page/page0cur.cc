@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/4/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/logger/fatal.h>
+#include <innodb/cmp/cmp_dtuple_rec_with_match.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_match_bytes.h>
 #include <innodb/memory/ut_memcpy.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
@@ -67,7 +69,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef UNIV_HOTBACKUP
 #include "gis0rtree.h"
-#include "rem0cmp.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 #ifdef PAGE_CUR_ADAPT

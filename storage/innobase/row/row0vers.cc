@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/6/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/cmp/cmp_dfield_dfield.h>
+#include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/data_types/dfield_is_null.h>
 #include <innodb/data_types/dtuple_coll_eq.h>
 #include <innodb/data_types/dtuple_copy.h>
@@ -55,7 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/machine/data.h>
 #include "que0que.h"
 #include "read0read.h"
-#include "rem0cmp.h"
+
 #include "row0ext.h"
 #include "row0mysql.h"
 #include "row0row.h"

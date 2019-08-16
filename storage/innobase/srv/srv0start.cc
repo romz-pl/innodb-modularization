@@ -147,7 +147,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "os0proc.h"
 #include "pars0pars.h"
 #include "que0que.h"
-#include "rem0cmp.h"
+
 #include "row0ins.h"
 #include "row0mysql.h"
 #include "row0row.h"

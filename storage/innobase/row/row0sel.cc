@@ -37,6 +37,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtuple_get_n_fields_cmp.h>
+#include <innodb/cmp/cmp_dtuple_is_prefix_of_rec.h>
+#include <innodb/cmp/cmp_dtuple_rec.h>
+#include <innodb/cmp/cmp_data_data.h>
 #include <innodb/record/rec_get_nth_field_instant.h>
 #include <innodb/record/rec_print.h>
 #include <innodb/record/rec_print_new.h>
@@ -90,7 +94,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0que.h"
 #include "read0read.h"
 #include "record_buffer.h"
-#include "rem0cmp.h"
+
 #include "row0mysql.h"
 #include "row0row.h"
 #include "row0upd.h"

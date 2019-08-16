@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed 2011/7/10 Sunny and Jimmy Yang
  *******************************************************/
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include <innodb/memory/ut_memcpy.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/time/ut_time_ms.h>

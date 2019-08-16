@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/logger/fatal.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/trx_types/trx_usegf_t.h>
 #include <innodb/clone/clone_mark_abort.h>

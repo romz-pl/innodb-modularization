@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/23/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/buf_pool/buf_withdraw_clock.h>
 #include <innodb/buf_pool/buf_pool_is_obsolete.h>
@@ -39,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
-#include "rem0cmp.h"
+
 #include "trx0trx.h"
 
 

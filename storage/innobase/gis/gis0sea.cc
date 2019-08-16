@@ -30,6 +30,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/data_types/dtuple_get_n_fields_cmp.h>
+#include <innodb/cmp/cmp_rec_rec.h>
+#include <innodb/logger/fatal.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_gis_internal.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_gis.h>
 #include <innodb/record/rec_get_info_bits.h>
@@ -63,7 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0sea.h"
 #include "ibuf0ibuf.h"
 #include "lock0lock.h"
-#include "rem0cmp.h"
+
 #include "srv0mon.h"
 
 #include "trx0trx.h"

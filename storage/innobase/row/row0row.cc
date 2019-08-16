@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dtype_get_charset_coll.h>
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include <innodb/record/rec_get_info_bits.h>
 #include <innodb/record/rec_get_nth_field_instant.h>
 #include <innodb/data_types/dfield_copy.h>
@@ -69,7 +72,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/machine/data.h>
 #include "que0que.h"
 #include "read0read.h"
-#include "rem0cmp.h"
+
 #include "row0ext.h"
 #include "row0mysql.h"
 #include "row0upd.h"

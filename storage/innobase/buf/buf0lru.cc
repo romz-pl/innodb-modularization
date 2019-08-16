@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/5/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/fatal.h>
 #include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/hash/HASH_DELETE.h>

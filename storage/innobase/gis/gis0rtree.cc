@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013/03/27 Allen Lai and Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/logger/fatal.h>
+#include <innodb/cmp/cmp_rec_rec_with_match.h>
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include <innodb/record/rec_get_info_bits.h>
 #include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
@@ -59,7 +63,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "gis0geo.h"
 #include "ibuf0ibuf.h"
 #include "lock0lock.h"
-#include "rem0cmp.h"
+
 #include "srv0mon.h"
 #include "trx0trx.h"
 

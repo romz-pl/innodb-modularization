@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/cmp/cmp_rec_rec_simple.h>
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include "dict/mem.h"
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/data_types/dtuple_create.h>

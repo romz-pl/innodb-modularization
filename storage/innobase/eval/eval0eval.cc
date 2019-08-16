@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/29/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/cmp/cmp_dfield_dfield.h>
+#include <innodb/cmp/cmp_dfield_dfield_eq_prefix.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/data_types/ib_like_t.h>
 #include <innodb/data_types/dtype_get_mtype.h>
@@ -39,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "eval0eval.h"
 #include "btr0types.h"
-#include "rem0cmp.h"
+
 #include "row0sel.h"
 
 /** Dummy adress used when we should allocate a buffer of size 0 in

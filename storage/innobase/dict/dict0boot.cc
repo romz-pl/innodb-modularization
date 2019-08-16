@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/18/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/logger/fatal.h>
 #include <innodb/align/ut_uint64_align_up.h>
 #include <innodb/memory/mem_heap_empty.h>
 

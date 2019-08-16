@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/logger/fatal.h>
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include <innodb/record/rec_get_info_bits.h>
 #include <innodb/record/rec_get_info_bits.h>
 #include <innodb/record/rec_get_converted_extra_size.h>
@@ -101,7 +104,7 @@ bool srv_ibuf_disable_background_merge;
 #include "lock0lock.h"
 #include "log0recv.h"
 #include "que0que.h"
-#include "rem0cmp.h"
+
 
 #include "row0upd.h"
 #include "srv0start.h"

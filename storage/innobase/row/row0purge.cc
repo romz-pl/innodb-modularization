@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/14/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include <innodb/record/rec_index_print.h>
 #include <innodb/sync_rw/rw_lock_sx_lock.h>
 #include <innodb/sync_rw/rw_lock_sx_unlock.h>

@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifdef UNIV_DEBUG
 #ifndef UNIV_HOTBACKUP
-#include "rem0cmp.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 /** Gets pointer to the page frame where the cursor is positioned.

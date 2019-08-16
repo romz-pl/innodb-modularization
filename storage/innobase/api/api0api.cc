@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  3/20/2011 Jimmy Yang extracted from Embedded InnoDB
  *******************************************************/
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/cmp/cmp_dtuple_rec_with_match.h>
 #include <innodb/record/rec_get_nth_field_instant.h>
 #include <dd/properties.h>
 #include <dd/types/tablespace.h>
@@ -82,7 +85,7 @@ struct lock_table_t;
 #include "dict0sdi-decompress.h"
 #include "dict0sdi.h"
 #include "pars0pars.h"
-#include "rem0cmp.h"
+
 #include "row0ins.h"
 #include "row0merge.h"
 #include "row0sel.h"

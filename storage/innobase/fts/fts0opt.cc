@@ -38,6 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 #include <zlib.h>
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/time/ut_time.h>

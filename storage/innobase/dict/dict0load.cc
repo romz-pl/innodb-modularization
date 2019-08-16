@@ -31,6 +31,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/24/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/cmp/cmp_data_data.h>
+#include <innodb/data_types/dtype_get_charset_coll.h>
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/logger/fatal.h>
 #include <innodb/record/rec_get_n_fields_old_raw.h>
 #include "dict/mem.h"
 #include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
@@ -90,7 +95,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fts0fts.h"
 #include "mysql_version.h"
 #include "page0page.h"
-#include "rem0cmp.h"
+
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "ut0ut.h"

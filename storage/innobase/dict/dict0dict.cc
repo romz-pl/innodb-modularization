@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/logger/fatal.h>
+#include <innodb/cmp/cmp_cols_are_equal.h>
 #include <innodb/record/rec_copy_prefix_to_buf.h>
 #include <innodb/data_types/dtuple_get_info_bits.h>
 #include <innodb/record/rec_copy_prefix_to_dtuple.h>
@@ -168,7 +170,7 @@ extern uint ibuf_debug;
 #include "pars0sym.h"
 #include "que0que.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "rem0cmp.h"
+
 #include "row0ins.h"
 #include "row0log.h"
 #ifndef UNIV_HOTBACKUP

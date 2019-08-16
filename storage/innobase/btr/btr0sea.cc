@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/17/1996 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/cmp/cmp_dtuple_rec_with_match.h>
 #include <innodb/record/rec_fold.h>
 #include <innodb/dict_types/index_id_t.h>
 #include <innodb/data_types/dtuple_fold.h>

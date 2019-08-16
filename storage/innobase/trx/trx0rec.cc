@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
 #include <innodb/record/rec_get_nth_field_instant.h>
 #include <innodb/record/rec_get_info_bits.h>
 #include <innodb/memory/ut_memcpy.h>

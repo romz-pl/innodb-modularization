@@ -24,6 +24,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+#include <innodb/data_types/dfield_get_data.h>
+#include <innodb/data_types/dfield_get_len.h>
+#include <innodb/logger/fatal.h>
 #include <innodb/data_types/dfield_set_ext.h>
 #include <innodb/buf_page/buf_page_release_zip.h>
 #include <innodb/buf_pool/buf_pool_t.h>

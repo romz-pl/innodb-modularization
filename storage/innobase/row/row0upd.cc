@@ -92,7 +92,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/machine/data.h>
 #include "pars0sym.h"
 #include "que0que.h"
-#include "rem0cmp.h"
+
 #endif /* !UNIV_HOTBACKUP */
 #include "row0ext.h"
 #include "row0ins.h"

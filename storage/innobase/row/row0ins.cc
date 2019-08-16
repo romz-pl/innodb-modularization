@@ -30,6 +30,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/cmp/cmp_dtuple_rec.h>
+#include <innodb/cmp/cmp_dtuple_rec_with_match.h>
+#include <innodb/cmp/cmp_dtuple_rec.h>
+#include <innodb/data_types/dtuple_get_n_fields_cmp.h>
+#include <innodb/data_types/dtype_get_charset_coll.h>
 #include <innodb/record/rec_print.h>
 #include <innodb/data_types/dfield_is_ext.h>
 #include <innodb/data_types/dfield_write_mbr.h>
@@ -75,7 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "m_string.h"
 #include <innodb/machine/data.h>
 #include "que0que.h"
-#include "rem0cmp.h"
+
 #include "row0ins.h"
 #include "row0log.h"
 #include "row0row.h"
