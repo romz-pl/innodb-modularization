@@ -1,67 +1,20 @@
-/*****************************************************************************
+#include <innodb/record/rec_get_converted_size.h>
 
-Copyright (c) 1994, 2019, Oracle and/or its affiliates. All Rights Reserved.
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License, version 2.0, as published by the
-Free Software Foundation.
-
-This program is also distributed with certain software (including but not
-limited to OpenSSL) that is licensed under separate terms, as designated in a
-particular file or component or in included license documentation. The authors
-of MySQL hereby grant you an additional permission to link the program and
-your derivative works with the separately licensed software that they have
-included with MySQL.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License, version 2.0,
-for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-*****************************************************************************/
-
-/** @file include/rem0rec.ic
- Record manager
-
- Created 5/30/1994 Heikki Tuuri
- *************************************************************************/
-
-#include <innodb/data_types/dtuple_t.h>
-#include <innodb/data_types/dtype_t.h>
-#include <innodb/data_types/dtuple_get_n_fields.h>
+#include <innodb/data_types/dtuple_check_typed.h>
 #include <innodb/data_types/dtuple_get_data_size.h>
 #include <innodb/data_types/dtuple_get_info_bits.h>
-#include <innodb/record/rec_set_n_fields.h>
-#include <innodb/memory/ut_memcpy.h>
-#include <innodb/record/rec_set_bit_field_1.h>
-#include <innodb/record/rec_get_info_bits.h>
-#include <innodb/record/rec_set_info_bits_new.h>
-#include <innodb/record/rec_offs_any_extern.h>
-#include <innodb/record/rec_get_nth_field.h>
-#include <innodb/record/rec_offs_nth_extern.h>
+#include <innodb/data_types/dtuple_get_n_fields.h>
+#include <innodb/data_types/dtuple_t.h>
+#include <innodb/dict_mem/dict_index_t.h>
+#include <innodb/dict_mem/dict_table_is_comp.h>
+#include <innodb/record/flag.h>
 #include <innodb/record/rec_get_converted_extra_size.h>
-#include <innodb/record/rec_get_nth_field_old.h>
-#include <innodb/record/rec_get_n_fields_old_raw.h>
-#include <innodb/record/rec_set_n_owned_new.h>
-#include <innodb/record/rec_set_deleted_flag_new.h>
-#include <innodb/record/rec_offs_any_null_extern.h>
-#include <innodb/record/rec_get_n_fields_length.h>
-
-#include "btr0types.h"
-#include "dict0boot.h"
-#include "dict0dict.h"
-#include "page0types.h"
-#include <innodb/machine/data.h>
+#include <innodb/record/rec_get_converted_size_comp.h>
 
 
 /** The following function returns the size of a data tuple when converted to
  a physical record.
  @return size */
-UNIV_INLINE
 ulint rec_get_converted_size(
     const dict_index_t *index, /*!< in: record descriptor */
     const dtuple_t *dtuple,    /*!< in: data tuple */
@@ -139,11 +92,6 @@ ulint rec_get_converted_size(
 
   return (data_size + extra_size);
 }
-
-
-
-
-
 
 
 

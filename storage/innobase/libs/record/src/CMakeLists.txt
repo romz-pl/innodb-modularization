@@ -124,6 +124,13 @@ add_library( ${LIB_NAME} STATIC
     rec_convert_dtuple_to_rec_old.cpp
     rec_convert_dtuple_to_rec_new.cpp
     rec_convert_dtuple_to_rec.cpp
+    rec_get_converted_size_comp_prefix.cpp
+    rec_get_converted_size.cpp
+    rec_copy_prefix_to_dtuple.cpp
+    rec_print.cpp
+    rec_index_print.cpp
+    rec_printer.cpp
+    rec_get_trx_id.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
