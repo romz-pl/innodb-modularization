@@ -61,6 +61,20 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_print_mbr_rec.h>
 #include <innodb/record/rec_print_new.h>
 #include <innodb/record/rec_print_old.h>
+#include <innodb/record/rec_get_offsets.h>
+#include <innodb/record/rec_get_nth_field_old_instant.h>
+#include <innodb/record/rec_get_nth_field_instant.h>
+#include <innodb/record/rec_get_converted_size_comp_prefix_low.h>
+#include <innodb/record/rec_get_converted_size_temp.h>
+#include <innodb/record/rec_init_offsets_temp.h>
+#include <innodb/record/rec_convert_dtuple_to_rec_comp.h>
+#include <innodb/record/rec_convert_dtuple_to_temp.h>
+#include <innodb/record/rec_copy_prefix_to_buf.h>
+#include <innodb/record/rec_fold.h>
+#include <innodb/record/rec_get_converted_size_comp.h>
+#include <innodb/record/rec_convert_dtuple_to_rec_old.h>
+#include <innodb/record/rec_convert_dtuple_to_rec_new.h>
+#include <innodb/record/rec_convert_dtuple_to_rec.h>
 
 #include "dict0boot.h"
 #include "dict0dict.h"
@@ -71,122 +85,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
-#ifdef UNIV_DEBUG
-#define rec_get_offsets(rec, index, offsets, n, heap) \
-  rec_get_offsets_func(rec, index, offsets, n, __FILE__, __LINE__, heap)
-#else /* UNIV_DEBUG */
-#define rec_get_offsets(rec, index, offsets, n, heap) \
-  rec_get_offsets_func(rec, index, offsets, n, heap)
-#endif /* UNIV_DEBUG */
 
 
-
-/** Gets the value of the specified field in the record in old style.
-This is only used for record from instant index, which is clustered
-index and has some instantly added columns.
-@param[in]	rec	physical record
-@param[in]	n	index of the field
-@param[in]	index	clustered index where the record resides
-@param[out]	len	length of the field, UNIV_SQL if SQL null
-@return value of the field, could be either pointer to rec or default value */
-UNIV_INLINE
-const byte *rec_get_nth_field_old_instant(const rec_t *rec, uint16_t n,
-                                          const dict_index_t *index,
-                                          ulint *len);
-
-
-/** Gets the value of the specified field in the record.
-This is only used when there is possibility that the record comes from the
-clustered index, which has some instantly added columns.
-@param[in]	rec	physical record
-@param[in]	offsets	array returned by rec_get_offsets()
-@param[in]	n	index of the field
-@param[in]	index	clustered index where the record resides, or nullptr
-                        if the record doesn't have instantly added columns
-                        for sure
-@param[out]	len	length of the field, UNIV_SQL_NULL if SQL null
-@return	value of the field, could be either pointer to rec or default value */
-UNIV_INLINE
-const byte *rec_get_nth_field_instant(const rec_t *rec, const ulint *offsets,
-                                      ulint n, const dict_index_t *index,
-                                      ulint *len);
-
-
-
-
-
-
-
-
-
-
-#ifndef UNIV_HOTBACKUP
-/** Determines the size of a data tuple prefix in a temporary file.
- @return total size */
-ulint rec_get_converted_size_temp(
-    const dict_index_t *index, /*!< in: record descriptor */
-    const dfield_t *fields,    /*!< in: array of data fields */
-    ulint n_fields,            /*!< in: number of data fields */
-    const dtuple_t *v_entry,   /*!< in: dtuple contains virtual column
-                               data */
-    ulint *extra)              /*!< out: extra size */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Determine the offset to each field in temporary file.
- @see rec_convert_dtuple_to_temp() */
-void rec_init_offsets_temp(
-    const rec_t *rec,          /*!< in: temporary file record */
-    const dict_index_t *index, /*!< in: record descriptor */
-    ulint *offsets);           /*!< in/out: array of offsets;
-                              in: n=rec_offs_n_fields(offsets) */
-
-/** Builds a temporary file record out of a data tuple.
- @see rec_init_offsets_temp() */
-void rec_convert_dtuple_to_temp(
-    rec_t *rec,                /*!< out: record */
-    const dict_index_t *index, /*!< in: record descriptor */
-    const dfield_t *fields,    /*!< in: array of data fields */
-    ulint n_fields,            /*!< in: number of fields */
-    const dtuple_t *v_entry);  /*!< in: dtuple contains
-                               virtual column data */
-
-/** Copies the first n fields of a physical record to a new physical record in
- a buffer.
- @return own: copied record */
-rec_t *rec_copy_prefix_to_buf(
-    const rec_t *rec,          /*!< in: physical record */
-    const dict_index_t *index, /*!< in: record descriptor */
-    ulint n_fields,            /*!< in: number of fields
-                               to copy */
-    byte **buf,                /*!< in/out: memory buffer
-                               for the copied prefix,
-                               or NULL */
-    size_t *buf_size           /*!< in/out: buffer size */
-);
-/** Compute a hash value of a prefix of a leaf page record.
-@param[in]	rec		leaf page record
-@param[in]	offsets		rec_get_offsets(rec)
-@param[in]	n_fields	number of complete fields to fold
-@param[in]	n_bytes		number of bytes to fold in the last field
-@param[in]	fold		fold value of the index identifier
-@param[in]	index		index where the record resides
-@return the folded value */
-UNIV_INLINE
-ulint rec_fold(const rec_t *rec, const ulint *offsets, ulint n_fields,
-               ulint n_bytes, ulint fold, const dict_index_t *index)
-    MY_ATTRIBUTE((warn_unused_result));
-#endif /* !UNIV_HOTBACKUP */
-/** Builds a physical record out of a data tuple and
- stores it into the given buffer.
- @return pointer to the origin of physical record */
-rec_t *rec_convert_dtuple_to_rec(
-    byte *buf,                 /*!< in: start address of the
-                               physical record */
-    const dict_index_t *index, /*!< in: record descriptor */
-    const dtuple_t *dtuple,    /*!< in: data tuple */
-    ulint n_ext)               /*!< in: number of
-                               externally stored columns */
-    MY_ATTRIBUTE((warn_unused_result));
 
 /** Determines the size of a data tuple prefix in ROW_FORMAT=COMPACT.
  @return total size */
@@ -197,17 +97,7 @@ ulint rec_get_converted_size_comp_prefix(
     ulint *extra)              /*!< out: extra size */
     MY_ATTRIBUTE((warn_unused_result));
 
-/** Determines the size of a data tuple in ROW_FORMAT=COMPACT.
- @return total size */
-ulint rec_get_converted_size_comp(
-    const dict_index_t *index, /*!< in: record descriptor;
-                               dict_table_is_comp() is
-                               assumed to hold, even if
-                               it does not */
-    ulint status,              /*!< in: status bits of the record */
-    const dfield_t *fields,    /*!< in: array of data fields */
-    ulint n_fields,            /*!< in: number of data fields */
-    ulint *extra);             /*!< out: extra size */
+
 /** The following function returns the size of a data tuple when converted to
  a physical record.
  @return size */

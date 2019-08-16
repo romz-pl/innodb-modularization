@@ -2,6 +2,7 @@
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_mem/DICT_MAX_FIELD_LEN_BY_FORMAT.h>
 #include <innodb/dict_mem/dict_table_t.h>
 #include <innodb/dict_mem/dict_table_get_nth_v_col.h>
 #include <innodb/dict_mem/dict_table_has_atomic_blobs.h>

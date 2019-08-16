@@ -110,6 +110,20 @@ add_library( ${LIB_NAME} STATIC
     rec_init_offsets_comp_ordinary.cpp
     rec_get_offsets_func.cpp
     rec_init_offsets.cpp
+    rec_get_offsets.cpp
+    rec_get_nth_field_old_instant.cpp
+    rec_get_nth_field_instant.cpp
+    rec_get_converted_size_comp_prefix_low.cpp
+    rec_get_converted_size_temp.cpp
+    rec_init_offsets_temp.cpp
+    rec_convert_dtuple_to_rec_comp.cpp
+    rec_convert_dtuple_to_temp.cpp
+    rec_copy_prefix_to_buf.cpp
+    rec_fold.cpp
+    rec_get_converted_size_comp.cpp
+    rec_convert_dtuple_to_rec_old.cpp
+    rec_convert_dtuple_to_rec_new.cpp
+    rec_convert_dtuple_to_rec.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

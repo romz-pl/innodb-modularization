@@ -207,6 +207,7 @@ add_library( ${LIB_NAME} STATIC
     table_lock_list_t.cpp
     temp_prebuilt_vec.cpp
     zip_pad_info_t.cpp
+    DICT_MAX_FIELD_LEN_BY_FORMAT.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

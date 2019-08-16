@@ -256,14 +256,7 @@ constant MUST NOT BE CHANGED, or the compatibility of InnoDB data
 files would be at risk! */
 #define DICT_ANTELOPE_MAX_INDEX_COL_LEN REC_ANTELOPE_MAX_INDEX_COL_LEN
 
-/** Find out maximum indexed column length by its table format.
-For ROW_FORMAT=REDUNDANT and ROW_FORMAT=COMPACT, the maximum
-field length is REC_ANTELOPE_MAX_INDEX_COL_LEN - 1 (767). For
-ROW_FORMAT=COMPRESSED and ROW_FORMAT=DYNAMIC, the length could
-be REC_VERSION_56_MAX_INDEX_COL_LEN (3072) bytes */
-#define DICT_MAX_FIELD_LEN_BY_FORMAT(table)                              \
-  (dict_table_has_atomic_blobs(table) ? REC_VERSION_56_MAX_INDEX_COL_LEN \
-                                      : REC_ANTELOPE_MAX_INDEX_COL_LEN - 1)
+
 
 #define DICT_MAX_FIELD_LEN_BY_FORMAT_FLAG(flags)                      \
   (DICT_TF_HAS_ATOMIC_BLOBS(flags) ? REC_VERSION_56_MAX_INDEX_COL_LEN \
