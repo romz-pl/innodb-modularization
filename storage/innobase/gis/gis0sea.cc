@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/cmp/cmp_dtuple_rec_with_gis_internal.h>
+#include <innodb/cmp/cmp_dtuple_rec_with_gis.h>
 #include <innodb/record/rec_get_info_bits.h>
 #include <innodb/record/rec_print.h>
 #include <innodb/sync_mutex/mutex_destroy.h>

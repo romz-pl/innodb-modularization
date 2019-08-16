@@ -15,6 +15,7 @@ add_subdirectory( buf_pool )
 
 add_subdirectory( clone )
 add_subdirectory( compiler_hints )
+add_subdirectory( cmp )
 add_subdirectory( crc32 )
 add_subdirectory( counter )
 add_subdirectory( cpu )
