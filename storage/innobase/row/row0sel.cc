@@ -37,6 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_nth_field_instant.h>
+#include <innodb/record/rec_print.h>
+#include <innodb/record/rec_print_new.h>
 #include <innodb/data_types/dfield_set_null.h>
 #include <innodb/data_types/dfield_write_mbr.h>
 #include <innodb/data_types/dtuple_contains_null.h>

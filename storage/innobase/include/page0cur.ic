@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/4/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/record/rec_get_converted_size.h>
+#include <innodb/data_types/dtuple_get_n_fields.h>
+#include <innodb/record/rec_get_offsets.h>
+#include <innodb/record/rec_convert_dtuple_to_rec.h>
 
 #include "page0page.h"
 

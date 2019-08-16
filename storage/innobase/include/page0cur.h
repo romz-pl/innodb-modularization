@@ -40,7 +40,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "gis0type.h"
 
 #include "page0page.h"
-#include "rem0rec.h"
+
+#include "page0types.h"
 
 #define PAGE_CUR_ADAPT
 

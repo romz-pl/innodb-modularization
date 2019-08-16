@@ -70,7 +70,7 @@ Data dictionary interface */
 
 #include "dict0dict.h"
 #include <innodb/machine/data.h>
-#include "rem0rec.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "fts0priv.h"
 #include "gis/rtree_support.h"  // fetch_srs

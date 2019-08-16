@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/record/rec_get_nth_field_instant.h>
+#include <innodb/record/rec_offs_nth_extern.h>
 #include "dict/mem.h"
 #include <innodb/dict_mem/dict_mem_table_col_rename.h>
 #include <innodb/dict_mem/dict_mem_table_add_v_col.h>

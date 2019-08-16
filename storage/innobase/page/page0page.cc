@@ -33,6 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_dbug.h"
 
+#include <innodb/record/rec_offs_any_extern.h>
+#include <innodb/record/rec_offs_nth_extern.h>
+#include <innodb/record/rec_print_new.h>
+#include <innodb/record/rec_print_mbr_rec.h>
+#include <innodb/record/rec_print_new.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/buf_calc/buf_checksum_algorithm_name.h>
 #include <innodb/logger/info.h>

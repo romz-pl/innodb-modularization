@@ -22,7 +22,6 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    crc32
     page
     PRIVATE
 )

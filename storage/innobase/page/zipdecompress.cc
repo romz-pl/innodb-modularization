@@ -37,6 +37,9 @@ external tools. */
 
 #include "dict/mem.h"
 
+#include <innodb/record/rec_get_offsets_reverse.h>
+#include <innodb/record/rec_offs_nth_extern.h>
+#include <innodb/record/rec_offs_any_extern.h>
 #include <innodb/dict_mem/dict_index_zip_pad_mutex_destroy.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/page/page_zip_dir_start_low.h>
@@ -55,7 +58,7 @@ external tools. */
 
 #include "page/zipdecompress.h"
 #include "page0page.h"
-#include "rem0rec.h"
+
 
 static_assert(DATA_TRX_ID_LEN <= 6, "COMPRESSION_ALGORITHM will not fit!");
 

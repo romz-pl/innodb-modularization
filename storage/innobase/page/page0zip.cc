@@ -31,6 +31,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created June 2005 by Marko Makela
  *******************************************************/
 
+#include <innodb/record/rec_get_n_extern_new.h>
+#include <innodb/record/rec_get_converted_size_comp_prefix.h>
+#include <innodb/record/rec_offs_any_extern.h>
+#include <innodb/record/rec_offs_nth_extern.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/assert/ASSERT_ZERO.h>
 #include <innodb/assert/ASSERT_ZERO_BLOB.h>

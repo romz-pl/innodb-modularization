@@ -44,7 +44,7 @@ struct lock_sys_t;
 struct lock_table_t;
 
 #include "que0types.h"
-#include "rem0rec.h"
+
 
 #include "row0mysql.h"
 #include "srv0srv.h"

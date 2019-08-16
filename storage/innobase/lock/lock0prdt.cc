@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/memory/ut_memcpy.h>
+
 #include <set>
 
 #include "btr0btr.h"

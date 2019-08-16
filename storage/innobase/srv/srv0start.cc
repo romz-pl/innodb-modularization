@@ -124,7 +124,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sync0debug.h"
 #include "page0cur.h"
 #include "page0page.h"
-#include "rem0rec.h"
+
 #include "row0ftsort.h"
 #include "srv0srv.h"
 #include "srv0start.h"

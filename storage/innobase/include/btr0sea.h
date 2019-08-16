@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "ha0ha.h"
 
-#include "rem0rec.h"
+
 
 /** Creates and initializes the adaptive search system at a database start.
 @param[in]	hash_size	hash table size. */

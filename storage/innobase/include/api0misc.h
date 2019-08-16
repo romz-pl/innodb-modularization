@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/lock_types/lock_mode.h>
 #include <sys/types.h>
 
 #include "handler.h"

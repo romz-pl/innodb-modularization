@@ -62,7 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "mysql/plugin.h"
 #include "page0page.h"
-#include "rem0rec.h"
+
 #include "row0row.h"
 #include "srv0srv.h"
 

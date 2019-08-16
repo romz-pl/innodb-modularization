@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_nth_field.h>
+#include <innodb/data_types/dtuple_get_n_fields.h>
+#include <innodb/record/rec_get_nth_field_offs.h>
 #include <innodb/data_types/dtuple_get_nth_field.h>
 #include <innodb/data_types/dfield_set_data.h>
 
@@ -37,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <cstdint>
 
 #include "dict0dict.h"
-#include "rem0rec.h"
+
 #include "trx0undo.h"
 
 /** Gets the offset of the DB_TRX_ID field, in bytes relative to the origin of

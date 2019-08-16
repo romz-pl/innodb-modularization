@@ -31,12 +31,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  3/20/2011 Jimmy Yang extracted from Embedded InnoDB
  *******************************************************/
 
+#include <innodb/record/rec_get_nth_field_instant.h>
 #include <dd/properties.h>
 #include <dd/types/tablespace.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
-
+#include <innodb/record/rec_get_info_bits.h>
 #include <innodb/data_types/dfield_set_len.h>
 #include <innodb/data_types/dfield_copy.h>
 #include <innodb/data_types/dfield_copy_data.h>

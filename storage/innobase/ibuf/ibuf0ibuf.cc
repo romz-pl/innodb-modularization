@@ -32,6 +32,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/record/rec_get_info_bits.h>
+#include <innodb/record/rec_get_info_bits.h>
+#include <innodb/record/rec_get_converted_extra_size.h>
+#include <innodb/record/rec_print.h>
+#include <innodb/record/rec_print_new.h>
+#include <innodb/record/rec_print_old.h>
+#include <innodb/record/rec_n_fields_is_sane.h>
 #include "dict/mem.h"
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/dict_mem/dict_mem_index_free.h>
@@ -95,7 +102,7 @@ bool srv_ibuf_disable_background_merge;
 #include "log0recv.h"
 #include "que0que.h"
 #include "rem0cmp.h"
-#include "rem0rec.h"
+
 #include "row0upd.h"
 #include "srv0start.h"
 #include "trx0sys.h"

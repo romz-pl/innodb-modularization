@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_print.h>
 #include <innodb/data_types/dfield_is_ext.h>
 #include <innodb/data_types/dfield_write_mbr.h>
 #include <innodb/data_types/dfield_is_null.h>

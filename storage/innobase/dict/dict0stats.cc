@@ -37,6 +37,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <vector>
 
+#include <innodb/record/rec_copy_prefix_to_buf.h>
+#include <innodb/record/rec_get_info_bits.h>
 #include <innodb/memory/mem_heap_strdup.h>
 #include <innodb/memory/mem_heap_dup.h>
 #include <innodb/mtr/mtr_s_lock.h>

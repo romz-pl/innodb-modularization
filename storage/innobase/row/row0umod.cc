@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/record/rec_index_print.h>
 #include <innodb/mtr/mtr_sx_lock.h>
 #include <innodb/mtr/mtr_s_lock.h>
 #include <innodb/mtr/mtr_start.h>

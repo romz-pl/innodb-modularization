@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/record/rec_get_info_bits.h>
+#include <innodb/record/rec_print.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/mtr/mtr_memo_release.h>

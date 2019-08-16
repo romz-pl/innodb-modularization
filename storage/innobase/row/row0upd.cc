@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/record/rec_get_nth_field_instant.h>
+#include <innodb/record/rec_index_print.h>
+#include <innodb/record/rec_set_info_bits_new.h>
 #include <innodb/dict_mem/dict_foreign_with_index.h>
 #include <innodb/data_types/dfield_copy.h>
 #include <innodb/data_types/dfield_data_is_binary_equal.h>
@@ -68,7 +71,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_byteorder.h"
 #include "my_dbug.h"
 
-#include "rem0rec.h"
+
 #include "row0upd.h"
 #include "trx0undo.h"
 #ifndef UNIV_HOTBACKUP

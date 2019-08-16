@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed by Sunny Bains and Marko Makela
  *******************************************************/
 
+#include <innodb/record/rec_convert_dtuple_to_temp.h>
+#include <innodb/record/rec_get_converted_size_temp.h>
+#include <innodb/record/rec_init_offsets_temp.h>
 #include "dict/mem.h"
 #include <innodb/dict_mem/dict_mem_index_free.h>
 #include <innodb/data_types/dtuple_create.h>

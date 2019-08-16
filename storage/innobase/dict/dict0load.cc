@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/24/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_n_fields_old_raw.h>
 #include "dict/mem.h"
 #include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
 #include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>

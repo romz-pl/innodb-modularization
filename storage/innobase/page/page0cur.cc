@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/4/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/memory/ut_memcpy.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/math/ut_pair_cmp.h>
 #include <innodb/math/ut_pair_min.h>

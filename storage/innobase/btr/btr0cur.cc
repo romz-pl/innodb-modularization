@@ -104,7 +104,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0que.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "rem0cmp.h"
-#include "rem0rec.h"
+
 #include "row0log.h"
 #ifndef UNIV_HOTBACKUP
 #include "row0purge.h"

@@ -28,6 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Full Text Search interface
  ***********************************************************************/
 
+#include <innodb/record/rec_get_nth_field_instant.h>
 #include <current_thd.h>
 #include <sys/types.h>
 #include <new>

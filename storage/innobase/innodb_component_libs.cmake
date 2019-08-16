@@ -41,7 +41,7 @@ SET( INNODB_COMPONENT_LIBS
     #formatting
 
     # H
-    hash
+    #hash
 
     # I
     #io

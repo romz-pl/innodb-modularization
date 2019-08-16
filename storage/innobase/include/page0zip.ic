@@ -52,6 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0page.h"
 #include "page0zip.h"
 #include "srv0srv.h"
+#include "page0types.h"
 
 
 /** Write a log record of writing to the uncompressed header portion of a page.

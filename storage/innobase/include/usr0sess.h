@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "btr0types.h"
 #include "que0types.h"
-#include "rem0rec.h"
+
 #include "srv0srv.h"
 #include "usr0types.h"
 

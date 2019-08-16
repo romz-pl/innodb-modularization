@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/21/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/ut_memcpy.h>
 #include <innodb/data_types/dtuple_create.h>
 
 #include "pars0opt.h"

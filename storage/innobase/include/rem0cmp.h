@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0dict.h"
 #include "ha_prototypes.h"
-#include "rem0rec.h"
+
 
 namespace dd {
 class Spatial_reference_system;

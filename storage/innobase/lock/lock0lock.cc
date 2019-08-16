@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/record/rec_print_new.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/lock_types/lock_mode_string.h>
 #include <innodb/memory/mem_heap_dup.h>

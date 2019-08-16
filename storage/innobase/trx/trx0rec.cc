@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_nth_field_instant.h>
+#include <innodb/record/rec_get_info_bits.h>
+#include <innodb/memory/ut_memcpy.h>
 #include <innodb/data_types/dtuple_create_with_vcol.h>
 #include <innodb/data_types/dtuple_init_v_fld.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>

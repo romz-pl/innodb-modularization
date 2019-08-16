@@ -31,6 +31,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_n_fields_old.h>
+#include <innodb/record/rec_get_info_bits.h>
+#include <innodb/data_types/dtuple_get_info_bits.h>
+#include <innodb/record/rec_print.h>
+#include <innodb/record/rec_print_old.h>
+#include <innodb/record/rec_print_new.h>
+#include <innodb/record/rec_set_info_bits_new.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/mtr/mtr_release_block_at_savepoint.h>
 #include <innodb/mtr/mtr_set_savepoint.h>

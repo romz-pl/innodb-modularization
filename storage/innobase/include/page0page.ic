@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_nth_field_old.h>
+#include <innodb/record/rec_set_n_owned_new.h>
 #include <innodb/machine/data.h>
 #include <innodb/buf_block/buf_block_get_frame.h>
 #include <innodb/page/page_header_get_field.h>

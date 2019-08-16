@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013/03/27 Allen Lai and Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/record/rec_get_info_bits.h>
 #include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
 #include <innodb/data_types/dtype_set.h>

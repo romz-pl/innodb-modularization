@@ -30,6 +30,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2011-05-26 Marko Makela
  *******************************************************/
 
+#include <innodb/record/rec_get_nth_field_instant.h>
+#include <innodb/record/rec_get_n_fields_old_raw.h>
+#include <innodb/record/rec_get_nth_field_old_instant.h>
+#include <innodb/record/rec_convert_dtuple_to_temp.h>
+#include <innodb/record/rec_get_converted_size_temp.h>
+#include <innodb/record/rec_init_offsets_temp.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/data_types/dtuple_contains_null.h>
 #include <innodb/data_types/dtuple_big_rec_free.h>

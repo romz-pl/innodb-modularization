@@ -33,6 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/record/rec_copy_prefix_to_buf.h>
+#include <innodb/data_types/dtuple_get_info_bits.h>
+#include <innodb/record/rec_copy_prefix_to_dtuple.h>
+#include <innodb/record/rec_get_n_fields_old_raw.h>
+#include <innodb/record/rec_init_offsets_comp_ordinary.h>
 #include "dict/mem.h"
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/dict_mem/CorruptedIndexPersister.h>

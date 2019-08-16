@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/record/rec_get_info_bits.h>
+#include <innodb/record/rec_get_nth_field_instant.h>
 #include <innodb/data_types/dfield_copy.h>
 #include <innodb/data_types/dfield_get_spatial_status.h>
 #include <innodb/data_types/dfield_is_ext.h>
