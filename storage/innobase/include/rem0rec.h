@@ -34,34 +34,42 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define rem0rec_h
 
 #include <innodb/univ/univ.h>
-#include <innodb/record/rec_print_old.h>
+
+#include <innodb/bit/UT_BITS_IN_BYTES.h>
+#include <innodb/data_types/dtuple_get_n_fields.h>
+#include <innodb/record/flag.h>
+#include <innodb/record/rec_get_instant_flag_new.h>
+#include <innodb/record/rec_get_instant_flag_new_temp.h>
+#include <innodb/record/rec_get_instant_offset.h>
+#include <innodb/record/rec_get_n_extern_new.h>
+#include <innodb/record/rec_get_n_fields.h>
+#include <innodb/record/rec_get_n_fields_instant.h>
+#include <innodb/record/rec_get_n_fields_old.h>
+#include <innodb/record/rec_get_n_fields_old_raw.h>
+#include <innodb/record/rec_get_offsets_func.h>
+#include <innodb/record/rec_get_offsets_reverse.h>
+#include <innodb/record/rec_get_status.h>
+#include <innodb/record/rec_init_null_and_len_comp.h>
+#include <innodb/record/rec_init_null_and_len_temp.h>
+#include <innodb/record/rec_init_offsets.h>
+#include <innodb/record/rec_init_offsets_comp_ordinary.h>
+#include <innodb/record/rec_n_fields_is_sane.h>
+#include <innodb/record/rec_offs_base.h>
 #include <innodb/record/rec_offs_make_nth_extern.h>
+#include <innodb/record/rec_offs_n_fields.h>
+#include <innodb/record/rec_print.h>
 #include <innodb/record/rec_print_mbr_rec.h>
 #include <innodb/record/rec_print_new.h>
-#include <innodb/record/rec_print.h>
+#include <innodb/record/rec_print_old.h>
+
+#include "dict0boot.h"
+#include "dict0dict.h"
+#include "btr0types.h"
 
 #include <ostream>
 #include <sstream>
 
-#include "btr0types.h"
 
-#include "rem/rec.h"
-
-
-
-
-
-
-
-
-/** Determine how many of the first n columns in a compact
- physical record are stored externally.
- @return number of externally stored columns */
-ulint rec_get_n_extern_new(
-    const rec_t *rec,          /*!< in: compact physical record */
-    const dict_index_t *index, /*!< in: record descriptor */
-    ulint n)                   /*!< in: number of columns to scan */
-    MY_ATTRIBUTE((warn_unused_result));
 
 #ifdef UNIV_DEBUG
 #define rec_get_offsets(rec, index, offsets, n, heap) \

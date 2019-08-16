@@ -3,6 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/memory/mem_heap_create_func.h>
+#include <innodb/memory/macros.h>
 
 #ifdef UNIV_DEBUG
 

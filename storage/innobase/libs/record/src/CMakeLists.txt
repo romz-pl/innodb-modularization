@@ -99,6 +99,17 @@ add_library( ${LIB_NAME} STATIC
     rec_offs_any_null_extern.cpp
     rec_get_n_fields_length.cpp
     rec_set_n_fields.cpp
+    rec_get_n_extern_new.cpp
+    rec_get_n_fields_old.cpp
+    rec_get_offsets_reverse.cpp
+    rec_get_n_fields.cpp
+    rec_n_fields_is_sane.cpp
+    rec_get_instant_offset.cpp
+    rec_init_null_and_len_temp.cpp
+    rec_init_null_and_len_comp.cpp
+    rec_init_offsets_comp_ordinary.cpp
+    rec_get_offsets_func.cpp
+    rec_init_offsets.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

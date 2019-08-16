@@ -4,6 +4,7 @@
 #include <innodb/record/rec_offs_base.h>
 #include <innodb/record/flag.h>
 #include <innodb/assert/assert.h>
+#include <innodb/record/rec_get_instant_offset.h>
 
 /** The following function is used to get an offset to the nth
  data field in a record.

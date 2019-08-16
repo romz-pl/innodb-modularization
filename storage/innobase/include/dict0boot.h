@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/dict_types/flags.h>
+
 #include "buf0buf.h"
 #include "dict0dict.h"
 #include "fsp0fsp.h"
@@ -95,13 +97,7 @@ bool dict_is_old_sys_table(table_id_t id) MY_ATTRIBUTE((warn_unused_result));
 #define DICT_HDR_SPACE 0 /* the SYSTEM tablespace */
 #define DICT_HDR_PAGE_NO FSP_DICT_HDR_PAGE_NO
 
-/* The ids for the basic system tables and their indexes */
-#define DICT_TABLES_ID 1
-#define DICT_COLUMNS_ID 2
-#define DICT_INDEXES_ID 3
-#define DICT_FIELDS_ID 4
-/* The following is a secondary index on SYS_TABLES */
-#define DICT_TABLE_IDS_ID 5
+
 
 #define DICT_HDR_FIRST_ID                  \
   10 /* the ids for tables etc. start      \
