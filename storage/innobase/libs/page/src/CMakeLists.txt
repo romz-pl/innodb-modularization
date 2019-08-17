@@ -158,6 +158,10 @@ add_library( ${LIB_NAME} STATIC
     page_zip_compress_clust.cpp
     page_zip_compress.cpp
     page_zip_decompress.cpp
+    page_zip_write_rec_ext.cpp
+    page_zip_write_rec.cpp
+    page_zip_parse_write_blob_ptr.cpp
+
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -171,6 +175,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    log_recv
     mtr
     record
     PRIVATE

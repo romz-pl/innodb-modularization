@@ -94,9 +94,9 @@ void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
 #include <innodb/page/page_zip_compress_clust_ext.h>
 #include <innodb/page/page_zip_compress.h>
 #include <innodb/page/page_zip_decompress.h>
-
-
-
+#include <innodb/page/page_zip_write_rec_ext.h>
+#include <innodb/page/page_zip_write_rec.h>
+#include <innodb/page/page_zip_parse_write_blob_ptr.h>
 
 
 #ifdef UNIV_ZIP_DEBUG
@@ -114,22 +114,9 @@ ibool page_zip_validate_low(
 
 
 
-/** Write an entire record on the compressed page.  The data must already
- have been written to the uncompressed page. */
-void page_zip_write_rec(
-    page_zip_des_t *page_zip,  /*!< in/out: compressed page */
-    const byte *rec,           /*!< in: record being written */
-    const dict_index_t *index, /*!< in: the index the record belongs to */
-    const ulint *offsets,      /*!< in: rec_get_offsets(rec, index) */
-    ulint create);             /*!< in: nonzero=insert, zero=update */
 
-/** Parses a log record of writing a BLOB pointer of a record.
- @return end of log record or NULL */
-byte *page_zip_parse_write_blob_ptr(
-    byte *ptr,                 /*!< in: redo log buffer */
-    byte *end_ptr,             /*!< in: redo log buffer end */
-    page_t *page,              /*!< in/out: uncompressed page */
-    page_zip_des_t *page_zip); /*!< in/out: compressed page */
+
+
 
 /** Write a BLOB pointer of a record on the leaf page of a clustered index.
  The information must already have been updated on the uncompressed page. */

@@ -3,6 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/disk/flags.h>
+#include <innodb/page/header.h>
 
 /*
  * Page HEAP Flags
