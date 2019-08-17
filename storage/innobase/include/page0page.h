@@ -82,6 +82,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_rec_is_user_rec_low.h>
 #include <innodb/page/page_dir_find_owner_slot.h>
 #include <innodb/page/page_dir_slot_check.h>
+#include <innodb/page/page_get_space_id.h>
+#include <innodb/page/page_get_ssn_id.h>
+#include <innodb/page/page_rec_get_next_low.h>
+#include <innodb/page/page_rec_get_next.h>
+#include <innodb/page/page_rec_set_next.h>
 
 #include "buf0buf.h"
 #include "btr0types.h"
@@ -124,11 +129,7 @@ UNIV_INLINE
 void page_update_max_trx_id(buf_block_t *block, page_zip_des_t *page_zip,
                             trx_id_t trx_id, mtr_t *mtr);
 
-/** Returns the RTREE SPLIT SEQUENCE NUMBER (FIL_RTREE_SPLIT_SEQ_NUM).
-@param[in]	page	page
-@return SPLIT SEQUENCE NUMBER */
-UNIV_INLINE
-node_seq_t page_get_ssn_id(const page_t *page);
+
 
 /** Sets the RTREE SPLIT SEQUENCE NUMBER field value
 @param[in,out]	block		page
@@ -186,36 +187,13 @@ void page_header_reset_last_insert(page_t *page, page_zip_des_t *page_zip,
 
 
 
-/** Returns the nth record of the record list.
- This is the inverse function of page_rec_get_n_recs_before().
- @return nth record */
-const rec_t *page_rec_get_nth_const(const page_t *page, /*!< in: page */
-                                    ulint nth)          /*!< in: nth record */
-    MY_ATTRIBUTE((warn_unused_result));
+#include <innodb/page/page_rec_get_nth_const.h>
+#include <innodb/page/page_rec_get_nth.h>
+#include <innodb/page/page_get_middle_rec.h>
 
-/** Returns the nth record of the record list.
-This is the inverse function of page_rec_get_n_recs_before().
-@param[in]	page	page
-@param[in]	nth	nth record
-@return nth record */
-UNIV_INLINE
-rec_t *page_rec_get_nth(page_t *page, ulint nth)
-    MY_ATTRIBUTE((warn_unused_result));
 
-#ifndef UNIV_HOTBACKUP
-/** Returns the middle record of the records on the page. If there is an
- even number of records in the list, returns the first record of the
- upper half-list.
- @return middle record */
-UNIV_INLINE
-rec_t *page_get_middle_rec(page_t *page) /*!< in: page */
-    MY_ATTRIBUTE((warn_unused_result));
-#endif /* !UNIV_HOTBACKUP */
 
-/** Gets the tablespace identifier.
- @return space id */
-UNIV_INLINE
-space_id_t page_get_space_id(const page_t *page); /*!< in: page */
+
 
 /** Returns the number of records before the given record in chain.
  The number includes infimum and supremum records.
@@ -265,89 +243,21 @@ void page_dir_slot_set_n_owned(page_dir_slot_t *slot, page_zip_des_t *page_zip,
 
 
 
-
-
-/** Gets the pointer to the next record on the page.
-@param[in]	rec	pointer to record
-@param[in]	comp	nonzero=compact page layout
-@return pointer to next record */
-UNIV_INLINE
-const rec_t *page_rec_get_next_low(const rec_t *rec, ulint comp);
-
-/** Gets the pointer to the next record on the page.
- @return pointer to next record */
-UNIV_INLINE
-rec_t *page_rec_get_next(rec_t *rec); /*!< in: pointer to record */
-/** Gets the pointer to the next record on the page.
- @return pointer to next record */
-UNIV_INLINE
-const rec_t *page_rec_get_next_const(
-    const rec_t *rec); /*!< in: pointer to record */
-/** Gets the pointer to the next non delete-marked record on the page.
- If all subsequent records are delete-marked, then this function
- will return the supremum record.
- @return pointer to next non delete-marked record or pointer to supremum */
-UNIV_INLINE
-const rec_t *page_rec_get_next_non_del_marked(
-    const rec_t *rec); /*!< in: pointer to record */
-
-/** Sets the pointer to the next record on the page.
-@param[in]	rec	pointer to record, must not be page supremum
-@param[in]	next	pointer to next record, must not be page infimum */
-UNIV_INLINE
-void page_rec_set_next(rec_t *rec, const rec_t *next);
-
-/** Gets the pointer to the previous record.
- @return pointer to previous record */
-UNIV_INLINE
-const rec_t *page_rec_get_prev_const(
-    const rec_t *rec); /*!< in: pointer to record, must not be page
-                       infimum */
-/** Gets the pointer to the previous record.
- @return pointer to previous record */
-UNIV_INLINE
-rec_t *page_rec_get_prev(rec_t *rec); /*!< in: pointer to record,
-                                      must not be page infimum */
+#include <innodb/page/page_rec_get_next_low.h>
+#include <innodb/page/page_rec_get_next_const.h>
+#include <innodb/record/rec_get_deleted_flag.h>
+#include <innodb/page/page_rec_get_prev_const.h>
+#include <innodb/page/page_rec_get_prev.h>
+#include <innodb/page/page_rec_is_first.h>
+#include <innodb/page/page_rec_is_second.h>
+#include <innodb/page/page_rec_is_last.h>
+#include <innodb/page/page_rec_is_second_last.h>
+#include <innodb/page/page_rec_find_owner_rec.h>
 
 
 
 
 
-
-
-
-/** true if the record is the first user record on a page.
- @return true if the first user record */
-UNIV_INLINE
-bool page_rec_is_first(const rec_t *rec,   /*!< in: record */
-                       const page_t *page) /*!< in: page */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** true if the record is the second user record on a page.
- @return true if the second user record */
-UNIV_INLINE
-bool page_rec_is_second(const rec_t *rec,   /*!< in: record */
-                        const page_t *page) /*!< in: page */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** true if the record is the last user record on a page.
- @return true if the last user record */
-UNIV_INLINE
-bool page_rec_is_last(const rec_t *rec,   /*!< in: record */
-                      const page_t *page) /*!< in: page */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** true if the record is the second last user record on a page.
- @return true if the second last user record */
-UNIV_INLINE
-bool page_rec_is_second_last(const rec_t *rec,   /*!< in: record */
-                             const page_t *page) /*!< in: page */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Looks for the record which owns the given record.
- @return the owner record */
-UNIV_INLINE
-rec_t *page_rec_find_owner_rec(rec_t *rec); /*!< in: the physical record */
 #ifndef UNIV_HOTBACKUP
 
 /** Write a 32-bit field in a data dictionary record.

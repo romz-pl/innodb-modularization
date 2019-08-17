@@ -100,16 +100,7 @@ void page_update_max_trx_id(
   }
 }
 
-/** Returns the RTREE SPLIT SEQUENCE NUMBER (FIL_RTREE_SPLIT_SEQ_NUM).
-@param[in]	page	page
-@return SPLIT SEQUENCE NUMBER */
-UNIV_INLINE
-node_seq_t page_get_ssn_id(const page_t *page) {
-  ut_ad(page);
 
-  return (static_cast<node_seq_t>(
-      mach_read_from_8(page + FIL_RTREE_SPLIT_SEQ_NUM)));
-}
 
 /** Sets the RTREE SPLIT SEQUENCE NUMBER field value
 @param[in,out]	block		page
@@ -237,87 +228,21 @@ void page_header_reset_last_insert(
 
 
 
-/** true if the record is the first user record on a page.
- @return true if the first user record */
-UNIV_INLINE
-bool page_rec_is_first(const rec_t *rec,   /*!< in: record */
-                       const page_t *page) /*!< in: page */
-{
-  ut_ad(page_get_n_recs(page) > 0);
-
-  return (page_rec_get_next_const(page_get_infimum_rec(page)) == rec);
-}
-
-/** true if the record is the second user record on a page.
- @return true if the second user record */
-UNIV_INLINE
-bool page_rec_is_second(const rec_t *rec,   /*!< in: record */
-                        const page_t *page) /*!< in: page */
-{
-  ut_ad(page_get_n_recs(page) > 1);
-
-  return (page_rec_get_next_const(
-              page_rec_get_next_const(page_get_infimum_rec(page))) == rec);
-}
-
-/** true if the record is the last user record on a page.
- @return true if the last user record */
-UNIV_INLINE
-bool page_rec_is_last(const rec_t *rec,   /*!< in: record */
-                      const page_t *page) /*!< in: page */
-{
-  ut_ad(page_get_n_recs(page) > 0);
-
-  return (page_rec_get_next_const(rec) == page_get_supremum_rec(page));
-}
-
-/** true if the record is the second last user record on a page.
- @return true if the second last user record */
-UNIV_INLINE
-bool page_rec_is_second_last(const rec_t *rec,   /*!< in: record */
-                             const page_t *page) /*!< in: page */
-{
-  ut_ad(page_get_n_recs(page) > 1);
-  ut_ad(!page_rec_is_last(rec, page));
-
-  return (page_rec_get_next_const(page_rec_get_next_const(rec)) ==
-          page_get_supremum_rec(page));
-}
-
-/** Returns the nth record of the record list.
- This is the inverse function of page_rec_get_n_recs_before().
- @return nth record */
-UNIV_INLINE
-rec_t *page_rec_get_nth(page_t *page, /*!< in: page */
-                        ulint nth)    /*!< in: nth record */
-{
-  return ((rec_t *)page_rec_get_nth_const(page, nth));
-}
-
-#ifndef UNIV_HOTBACKUP
-/** Returns the middle record of the records on the page. If there is an
- even number of records in the list, returns the first record of the
- upper half-list.
- @return middle record */
-UNIV_INLINE
-rec_t *page_get_middle_rec(page_t *page) /*!< in: page */
-{
-  ulint middle = (page_get_n_recs(page) + PAGE_HEAP_NO_USER_LOW) / 2;
-
-  return (page_rec_get_nth(page, middle));
-}
-#endif /* !UNIV_HOTBACKUP */
 
 
 
-/** Gets the tablespace identifier.
- @return space id */
-UNIV_INLINE
-space_id_t page_get_space_id(const page_t *page) /*!< in: page */
-{
-  ut_ad(page == page_align((page_t *)page));
-  return (mach_read_from_4(page + FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID));
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -378,172 +303,18 @@ void page_dir_slot_set_n_owned(
 
 
 
-/** Gets the pointer to the next record on the page.
- @return pointer to next record */
-UNIV_INLINE
-const rec_t *page_rec_get_next_low(
-    const rec_t *rec, /*!< in: pointer to record */
-    ulint comp)       /*!< in: nonzero=compact page layout */
-{
-  ulint offs;
-  const page_t *page;
 
-  ut_ad(page_rec_check(rec));
 
-  page = page_align(rec);
 
-  offs = rec_get_next_offs(rec, comp);
 
-  if (offs >= UNIV_PAGE_SIZE) {
-    fprintf(stderr,
-            "InnoDB: Next record offset is nonsensical %lu"
-            " in record at offset %lu\n"
-            "InnoDB: rec address %p, space id %lu, page %lu\n",
-            (ulong)offs, (ulong)page_offset(rec), (void *)rec,
-            (ulong)page_get_space_id(page), (ulong)page_get_page_no(page));
-    ut_error;
-  } else if (offs == 0) {
-    return (NULL);
-  }
 
-  return (page + offs);
-}
 
-/** Gets the pointer to the next record on the page.
- @return pointer to next record */
-UNIV_INLINE
-rec_t *page_rec_get_next(rec_t *rec) /*!< in: pointer to record */
-{
-  return ((rec_t *)page_rec_get_next_low(rec, page_rec_is_comp(rec)));
-}
 
-/** Gets the pointer to the next record on the page.
- @return pointer to next record */
-UNIV_INLINE
-const rec_t *page_rec_get_next_const(
-    const rec_t *rec) /*!< in: pointer to record */
-{
-  return (page_rec_get_next_low(rec, page_rec_is_comp(rec)));
-}
 
-/** Gets the pointer to the next non delete-marked record on the page.
- If all subsequent records are delete-marked, then this function
- will return the supremum record.
- @return pointer to next non delete-marked record or pointer to supremum */
-UNIV_INLINE
-const rec_t *page_rec_get_next_non_del_marked(
-    const rec_t *rec) /*!< in: pointer to record */
-{
-  const rec_t *r;
-  ulint page_is_compact = page_rec_is_comp(rec);
 
-  for (r = page_rec_get_next_const(rec);
-       !page_rec_is_supremum(r) && rec_get_deleted_flag(r, page_is_compact);
-       r = page_rec_get_next_const(r)) {
-    /* noop */
-  }
 
-  return (r);
-}
 
-/** Sets the pointer to the next record on the page. */
-UNIV_INLINE
-void page_rec_set_next(rec_t *rec,        /*!< in: pointer to record,
-                                          must not be page supremum */
-                       const rec_t *next) /*!< in: pointer to next record,
-                                          must not be page infimum */
-{
-  ulint offs;
 
-  ut_ad(page_rec_check(rec));
-  ut_ad(!page_rec_is_supremum(rec));
-  ut_ad(rec != next);
-
-  ut_ad(!next || !page_rec_is_infimum(next));
-  ut_ad(!next || page_align(rec) == page_align(next));
-
-  offs = next != NULL ? page_offset(next) : 0;
-
-  if (page_rec_is_comp(rec)) {
-    rec_set_next_offs_new(rec, offs);
-  } else {
-    rec_set_next_offs_old(rec, offs);
-  }
-}
-
-/** Gets the pointer to the previous record.
- @return pointer to previous record */
-UNIV_INLINE
-const rec_t *page_rec_get_prev_const(
-    const rec_t *rec) /*!< in: pointer to record, must not be page
-                      infimum */
-{
-  const page_dir_slot_t *slot;
-  ulint slot_no;
-  const rec_t *rec2;
-  const rec_t *prev_rec = NULL;
-  const page_t *page;
-
-  ut_ad(page_rec_check(rec));
-
-  page = page_align(rec);
-
-  ut_ad(!page_rec_is_infimum(rec));
-
-  slot_no = page_dir_find_owner_slot(rec);
-
-  ut_a(slot_no != 0);
-
-  slot = page_dir_get_nth_slot(page, slot_no - 1);
-
-  rec2 = page_dir_slot_get_rec(slot);
-
-  if (page_is_comp(page)) {
-    while (rec != rec2) {
-      prev_rec = rec2;
-      rec2 = page_rec_get_next_low(rec2, TRUE);
-    }
-  } else {
-    while (rec != rec2) {
-      prev_rec = rec2;
-      rec2 = page_rec_get_next_low(rec2, FALSE);
-    }
-  }
-
-  ut_a(prev_rec);
-
-  return (prev_rec);
-}
-
-/** Gets the pointer to the previous record.
- @return pointer to previous record */
-UNIV_INLINE
-rec_t *page_rec_get_prev(
-    rec_t *rec) /*!< in: pointer to record, must not be page
-                infimum */
-{
-  return ((rec_t *)page_rec_get_prev_const(rec));
-}
-
-/** Looks for the record which owns the given record.
- @return the owner record */
-UNIV_INLINE
-rec_t *page_rec_find_owner_rec(rec_t *rec) /*!< in: the physical record */
-{
-  ut_ad(page_rec_check(rec));
-
-  if (page_rec_is_comp(rec)) {
-    while (rec_get_n_owned_new(rec) == 0) {
-      rec = page_rec_get_next(rec);
-    }
-  } else {
-    while (rec_get_n_owned_old(rec) == 0) {
-      rec = page_rec_get_next(rec);
-    }
-  }
-
-  return (rec);
-}
 
 
 

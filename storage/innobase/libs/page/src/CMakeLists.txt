@@ -81,6 +81,23 @@ add_library( ${LIB_NAME} STATIC
     page_zip_t.cpp
     page_zip_validate.cpp
     supremum_extra_data.cpp
+    page_get_space_id.cpp
+    page_get_ssn_id.cpp
+    page_rec_get_next_low.cpp
+    page_rec_get_next.cpp
+    page_rec_get_next_const.cpp
+    page_rec_get_next_non_del_marked.cpp
+    page_rec_set_next.cpp
+    page_rec_get_prev_const.cpp
+    page_rec_get_prev.cpp
+    page_rec_is_first.cpp
+    page_rec_is_second.cpp
+    page_rec_is_last.cpp
+    page_rec_is_second_last.cpp
+    page_rec_find_owner_rec.cpp
+    page_rec_get_nth_const.cpp
+    page_rec_get_nth.cpp
+    page_get_middle_rec.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
