@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/trx_types/trx_ulogf_t.h>
+#include <innodb/align/ut_align_down.h>
+
 
 #include "page0page.h"
 #include "trx0purge.h"

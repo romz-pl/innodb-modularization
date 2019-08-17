@@ -91,6 +91,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0lru.h"
 #include "buf0rea.h"
 #include "fil0fil.h"
+#include "buf0dblwr.h"
 
 #include "ibuf0ibuf.h"
 #include "log0log.h"

@@ -58,6 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rseg.h"
 #include "trx0trx.h"
 #include "trx0undo.h"
+#include "buf0dblwr.h"
 
 /** The transaction system */
 trx_sys_t *trx_sys = NULL;

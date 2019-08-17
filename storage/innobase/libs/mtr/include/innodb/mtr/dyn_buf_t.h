@@ -10,6 +10,9 @@
 
 #include <innodb/lst/lst.h>
 
+/** Insert, update, and maybe other functions may use this value to define an
+extra mlog buffer size for variable size data */
+#define MLOG_BUF_MARGIN 256
 
 /** Value of dyn_block_t::magic_n */
 #define DYN_BLOCK_MAGIC_N 375767

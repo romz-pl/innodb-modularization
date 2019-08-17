@@ -100,6 +100,7 @@ The tablespace memory cache */
 #include "dict0dd.h"
 #include "dict0dict.h"
 #include "fsp0fsp.h"
+#include "buf0dblwr.h"
 
 #include "ha_prototypes.h"
 

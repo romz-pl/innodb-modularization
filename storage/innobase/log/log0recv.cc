@@ -100,6 +100,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0log.h"
 #include "log0recv.h"
 
+#include "buf0dblwr.h"
 #include "btr0btr.h"
 #include "btr0cur.h"
 #include "buf0buf.h"

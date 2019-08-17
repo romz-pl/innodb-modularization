@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/4/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/mtr/mtr_get_log_mode.h>
+#include <innodb/mtr/mlog_catenate_string.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_match.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_match_bytes.h>
