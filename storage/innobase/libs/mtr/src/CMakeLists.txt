@@ -1,6 +1,9 @@
 set( LIB_NAME mtr )
 
 add_library( ${LIB_NAME} STATIC
+    Add_dirty_blocks_to_flush_list.cpp
+    Command.cpp
+    Debug_check.cpp
     Find.cpp
     Find_page.cpp
     Iterate.cpp
@@ -8,6 +11,24 @@ add_library( ${LIB_NAME} STATIC
     Release_all.cpp
     dyn_buf_t.cpp
     memo_slot_release.cpp
+    mlog_catenate_string.cpp
+    mlog_catenate_ulint.cpp
+    mlog_catenate_ulint_compressed.cpp
+    mlog_catenate_ull_compressed.cpp
+    mlog_close.cpp
+    mlog_log_string.cpp
+    mlog_open.cpp
+    mlog_open_and_write_index.cpp
+    mlog_open_metadata.cpp
+    mlog_parse_initial_dict_log_record.cpp
+    mlog_parse_initial_log_record.cpp
+    mlog_write_initial_dict_log_record.cpp
+    mlog_write_initial_log_record.cpp
+    mlog_write_initial_log_record_fast.cpp
+    mlog_write_initial_log_record_low.cpp
+    mlog_write_string.cpp
+    mlog_write_ulint.cpp
+    mlog_write_ull.cpp
     mtr_block_dirtied.cpp
     mtr_block_sx_latch_at_savepoint.cpp
     mtr_block_x_latch_at_savepoint.cpp
@@ -44,27 +65,7 @@ add_library( ${LIB_NAME} STATIC
     mtr_t.cpp
     mtr_x_lock.cpp
     mtr_x_lock_space.cpp
-    Debug_check.cpp
-    Add_dirty_blocks_to_flush_list.cpp
-    Command.cpp
-    mlog_open.cpp
-    mlog_open_metadata.cpp
-    mlog_close.cpp
-    mlog_catenate_ulint.cpp
-    mlog_catenate_ulint_compressed.cpp
-    mlog_catenate_ull_compressed.cpp
-    mlog_write_initial_dict_log_record.cpp
-    mlog_write_initial_log_record_low.cpp
-    mlog_write_initial_log_record_fast.cpp
-    mlog_write_initial_log_record.cpp
-    mlog_write_ulint.cpp
-    mlog_write_ull.cpp
-    mlog_log_string.cpp
-    mlog_catenate_string.cpp
-    mlog_write_string.cpp
-    mlog_parse_initial_dict_log_record.cpp
-    mlog_parse_initial_log_record.cpp
-    mlog_open_and_write_index.cpp
+    mtr_write_log_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -79,6 +80,7 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     buf_pool
+    log_write
     PRIVATE
 )
 

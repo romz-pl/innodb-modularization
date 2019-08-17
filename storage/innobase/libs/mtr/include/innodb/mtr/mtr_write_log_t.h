@@ -6,12 +6,13 @@
 
 #include <innodb/mtr/mtr_buf_t.h>
 #include <innodb/log_sn/lsn_t.h>
+#include <innodb/log_buffer/log_buffer_write.h>
+#include <innodb/log_buffer/log_buffer_set_first_record_group.h>
+#include <innodb/log_types/log_sys.h>
+#include <innodb/log_sn/flags.h>
+#include <innodb/log_buffer/log_buffer_write_completed.h>
 
-lsn_t log_buffer_write(log_t &log, const Log_handle &handle, const byte *str,
-                       size_t str_len, lsn_t start_lsn);
 
-void log_buffer_set_first_record_group(log_t &log, const Log_handle &handle,
-                                       lsn_t rec_group_end_lsn);
 
 /** Write the block contents to the REDO log */
 struct mtr_write_log_t {
