@@ -60,7 +60,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_stat_per_index.h>
 #include <innodb/page/page_zip_write_header.h>
 #include <innodb/page/page_zip_write_header_log.h>
-
+#include <innodb/page/page_zip_get_n_prev_extern.h>
+#include <innodb/page/page_zip_compress_clust.h>
 
 #include "mtr0log.h"
 #include "page0page.h"
@@ -83,55 +84,20 @@ void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
 
 
 
-#ifndef UNIV_HOTBACKUP
-/** Check whether a tuple is too big for compressed table
-@param[in]	index	dict index object
-@param[in]	entry	entry for the index
-@return	true if it's too big, otherwise false */
-bool page_zip_is_too_big(const dict_index_t *index, const dtuple_t *entry);
-#endif /* !UNIV_HOTBACKUP */
 
-
+#include <innodb/page/page_zip_compress_write_log.h>
+#include <innodb/page/page_zip_is_too_big.h>
 #include <innodb/page/page_zip_set_alloc.h>
+#include <innodb/page/page_zip_fields_encode.h>
+#include <innodb/page/page_zip_compress_node_ptrs.h>
+#include <innodb/page/page_zip_compress_sec.h>
+#include <innodb/page/page_zip_compress_clust_ext.h>
+#include <innodb/page/page_zip_compress.h>
+#include <innodb/page/page_zip_decompress.h>
 
 
-/** Compress a page.
- @return true on success, false on failure; page_zip will be left
- intact on failure. */
-ibool page_zip_compress(page_zip_des_t *page_zip, /*!< in: size; out: data,
-                                                  n_blobs, m_start, m_end,
-                                                  m_nonempty */
-                        const page_t *page,       /*!< in: uncompressed page */
-                        dict_index_t *index,      /*!< in: index tree */
-                        ulint level,              /*!< in: commpression level */
-                        mtr_t *mtr);              /*!< in/out: mini-transaction,
-                                                  or NULL */
 
-/** Write the index information for the compressed page.
- @return used size of buf */
-ulint page_zip_fields_encode(
-    ulint n,                   /*!< in: number of fields
-                               to compress */
-    const dict_index_t *index, /*!< in: index comprising
-                               at least n fields */
-    ulint trx_id_pos,
-    /*!< in: position of the trx_id column
-    in the index, or ULINT_UNDEFINED if
-    this is a non-leaf page */
-    byte *buf); /*!< out: buffer of (n + 1) * 2 bytes */
 
-/** Decompress a page.  This function should tolerate errors on the compressed
- page.  Instead of letting assertions fail, it will return FALSE if an
- inconsistency is detected.
- @return true on success, false on failure */
-ibool page_zip_decompress(
-    page_zip_des_t *page_zip, /*!< in: data, ssize;
-                             out: m_start, m_end, m_nonempty, n_blobs */
-    page_t *page,             /*!< out: uncompressed page, may be trashed */
-    ibool all);               /*!< in: TRUE=decompress the whole page;
-                              FALSE=verify but do not copy some
-                              page header fields that should not change
-                              after page creation */
 
 #ifdef UNIV_ZIP_DEBUG
 /** Check that the compressed and decompressed pages match.

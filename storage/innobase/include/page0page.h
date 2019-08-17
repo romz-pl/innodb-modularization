@@ -141,23 +141,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_rec_print.h>
 #include <innodb/page/page_rec_validate.h>
 #include <innodb/page/page_mem_alloc_free.h>
+#include <innodb/page/page_mem_alloc_heap.h>
+#include <innodb/page/page_create_write_log.h>
 
 
 
 
 
-
-/** Allocates a block of memory from the heap of an index page.
- @return pointer to start of allocated buffer, or NULL if allocation fails */
-byte *page_mem_alloc_heap(
-    page_t *page,             /*!< in/out: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page with enough
-                             space available for inserting the record,
-                             or NULL */
-    ulint need,               /*!< in: total number of bytes needed */
-    ulint *heap_no);          /*!< out: this contains the heap number
-                             of the allocated record
-                             if allocation succeeds */
 
 /** Puts a record to free list.
 @param[in,out]	page		index page

@@ -73,69 +73,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <cstdio>
 
 
-/** Allocates a block of memory from the heap of an index page.
- @return pointer to start of allocated buffer, or NULL if allocation fails */
-byte *page_mem_alloc_heap(
-    page_t *page,             /*!< in/out: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page with enough
-                             space available for inserting the record,
-                             or NULL */
-    ulint need,               /*!< in: total number of bytes needed */
-    ulint *heap_no)           /*!< out: this contains the heap number
-                              of the allocated record
-                              if allocation succeeds */
-{
-  byte *block;
-  ulint avl_space;
 
-  ut_ad(page && heap_no);
-
-  avl_space = page_get_max_insert_size(page, 1);
-
-  if (avl_space >= need) {
-    block = page_header_get_ptr(page, PAGE_HEAP_TOP);
-
-    page_header_set_ptr(page, page_zip, PAGE_HEAP_TOP, block + need);
-    *heap_no = page_dir_get_n_heap(page);
-
-    page_dir_set_n_heap(page, page_zip, 1 + *heap_no);
-
-    return (block);
-  }
-
-  return (NULL);
-}
-
-#ifndef UNIV_HOTBACKUP
-/** Writes a log record of page creation
-@param[in]	frame		a buffer frame where the page is created
-@param[in]	mtr		mini-transaction handle
-@param[in]	comp		TRUE=compact page format
-@param[in]	page_type	page type */
-UNIV_INLINE
-void page_create_write_log(buf_frame_t *frame, mtr_t *mtr, ibool comp,
-                           page_type_t page_type) {
-  mlog_id_t type;
-
-  switch (page_type) {
-    case FIL_PAGE_INDEX:
-      type = comp ? MLOG_COMP_PAGE_CREATE : MLOG_PAGE_CREATE;
-      break;
-    case FIL_PAGE_RTREE:
-      type = comp ? MLOG_COMP_PAGE_CREATE_RTREE : MLOG_PAGE_CREATE_RTREE;
-      break;
-    case FIL_PAGE_SDI:
-      type = comp ? MLOG_COMP_PAGE_CREATE_SDI : MLOG_PAGE_CREATE_SDI;
-      break;
-    default:
-      ut_error;
-  }
-
-  mlog_write_initial_log_record(frame, type, mtr);
-}
-#else /* !UNIV_HOTBACKUP */
-#define page_create_write_log(frame, mtr, comp, type) ((void)0)
-#endif /* !UNIV_HOTBACKUP */
 
 /** The page infimum and supremum of an empty page in ROW_FORMAT=REDUNDANT */
 static const byte infimum_supremum_redundant[] = {

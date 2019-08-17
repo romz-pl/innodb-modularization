@@ -144,6 +144,20 @@ add_library( ${LIB_NAME} STATIC
     page_update_max_trx_id.cpp
     page_set_ssn_id.cpp
     page_mem_alloc_free.cpp
+    page_mem_alloc_heap.cpp
+    page_create_write_log.cpp
+    page_zip_get_n_prev_extern.cpp
+    page_zip_is_too_big.cpp
+    page_zip_compress_write_log.cpp
+    page_zip_fields_encode.cpp
+    page_zip_compress_node_ptrs.cpp
+    FILE_LOGFILE.cpp
+    LOGFILE.cpp
+    page_zip_compress_sec.cpp
+    page_zip_compress_clust_ext.cpp
+    page_zip_compress_clust.cpp
+    page_zip_compress.cpp
+    page_zip_decompress.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
