@@ -47,7 +47,6 @@ SET(INNOBASE_ZIP_DECOMPRESS_SOURCES
     dict/dict.cc
     dict/mem.cc
     os/os0thread.cc
-    page/zipdecompress.cc
 )
 
 SET(INNOBASE_SOURCES

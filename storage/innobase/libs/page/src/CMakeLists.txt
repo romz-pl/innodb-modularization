@@ -106,6 +106,16 @@ add_library( ${LIB_NAME} STATIC
     page_zip_fail.cpp
     page_zip_fields_free.cpp
     page_zip_dir_decode.cpp
+    page_zip_fields_decode.cpp
+    page_zip_apply_log_ext.cpp
+    page_zip_apply_log.cpp
+    page_zip_decompress_heap_no.cpp
+    page_zip_decompress_node_ptrs.cpp
+    page_zip_decompress_sec.cpp
+    page_zip_set_extra_bytes.cpp
+    page_zip_decompress_clust_ext.cpp
+    page_zip_decompress_clust.cpp
+    page_zip_decompress_low.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

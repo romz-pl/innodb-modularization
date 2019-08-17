@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 other files in library. The code in this file is used to make a library for
 external tools. */
 
+#include <innodb/dict_mem/dict_mem_table_create.h>
 #include <innodb/dict_mem/dict_table_mutex_destroy.h>
 #include <innodb/dict_mem/dict_index_zip_pad_mutex_create_lazy.h>
 #include <innodb/dict_mem/dict_table_mutex_create_lazy.h>

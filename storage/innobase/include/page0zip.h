@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_log_pages.h>
 #include <innodb/page/page_zip_empty_size.h>
 #include <innodb/page/page_zip_rec_needs_ext.h>
+#include <innodb/disk/page_t.h>
+#include <innodb/page/page_zip_decompress_low.h>
 
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE
@@ -55,7 +57,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/machine/data.h>
 
 
-#include "page/zipdecompress.h"
 #include "srv0srv.h"
 #include <innodb/crc32/crc32.h>
 
