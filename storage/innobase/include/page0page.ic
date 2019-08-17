@@ -68,142 +68,16 @@ void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
 
 
 
-/** Returns the max trx id field value. */
-UNIV_INLINE
-trx_id_t page_get_max_trx_id(const page_t *page) /*!< in: page */
-{
-  ut_ad(page);
-
-  return (mach_read_from_8(page + PAGE_HEADER + PAGE_MAX_TRX_ID));
-}
-
-/** Sets the max trx id field value if trx_id is bigger than the previous
- value. */
-UNIV_INLINE
-void page_update_max_trx_id(
-    buf_block_t *block,       /*!< in/out: page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be updated, or NULL */
-    trx_id_t trx_id,          /*!< in: transaction id */
-    mtr_t *mtr)               /*!< in/out: mini-transaction */
-{
-  ut_ad(block);
-#ifndef UNIV_HOTBACKUP
-  ut_ad(mtr_memo_contains(mtr, block, MTR_MEMO_PAGE_X_FIX));
-#endif /* !UNIV_HOTBACKUP */
-  /* During crash recovery, this function may be called on
-  something else than a leaf page of a secondary index or the
-  insert buffer index tree (dict_index_is_sec_or_ibuf() returns
-  TRUE for the dummy indexes constructed during redo log
-  application).  In that case, PAGE_MAX_TRX_ID is unused,
-  and trx_id is usually zero. */
-  ut_ad(trx_id || recv_recovery_is_on());
-  ut_ad(page_is_leaf(buf_block_get_frame(block)));
-
-  if (page_get_max_trx_id(buf_block_get_frame(block)) < trx_id) {
-    page_set_max_trx_id(block, page_zip, trx_id, mtr);
-  }
-}
-
-
-
-/** Sets the RTREE SPLIT SEQUENCE NUMBER field value
-@param[in,out]	block		page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL
-@param[in]	ssn_id		transaction id
-@param[in,out]	mtr		mini-transaction */
-UNIV_INLINE
-void page_set_ssn_id(buf_block_t *block, page_zip_des_t *page_zip,
-                     node_seq_t ssn_id, mtr_t *mtr) {
-  page_t *page = buf_block_get_frame(block);
-#ifndef UNIV_HOTBACKUP
-  ut_ad(!mtr || mtr_memo_contains(mtr, block, MTR_MEMO_PAGE_SX_FIX) ||
-        mtr_memo_contains(mtr, block, MTR_MEMO_PAGE_X_FIX));
-#endif /* !UNIV_HOTBACKUP */
-
-  if (page_zip) {
-    mach_write_to_8(page + FIL_RTREE_SPLIT_SEQ_NUM, ssn_id);
-    page_zip_write_header(page_zip, page + FIL_RTREE_SPLIT_SEQ_NUM, 8, mtr);
-#ifndef UNIV_HOTBACKUP
-  } else if (mtr) {
-    mlog_write_ull(page + FIL_RTREE_SPLIT_SEQ_NUM, ssn_id, mtr);
-#endif /* !UNIV_HOTBACKUP */
-  } else {
-    mach_write_to_8(page + FIL_RTREE_SPLIT_SEQ_NUM, ssn_id);
-  }
-}
 
-/** Sets the given header field. */
-UNIV_INLINE
-void page_header_set_field(
-    page_t *page,             /*!< in/out: page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be updated, or NULL */
-    ulint field,              /*!< in: PAGE_N_DIR_SLOTS, ... */
-    ulint val)                /*!< in: value */
-{
-  ut_ad(page);
-  ut_ad(field <= PAGE_N_RECS);
-  ut_ad(field == PAGE_N_HEAP || val < UNIV_PAGE_SIZE);
-  ut_ad(field != PAGE_N_HEAP || (val & 0x7fff) < UNIV_PAGE_SIZE);
 
-  mach_write_to_2(page + PAGE_HEADER + field, val);
-  if (page_zip) {
-    page_zip_write_header(page_zip, page + PAGE_HEADER + field, 2, NULL);
-  }
-}
 
 
-/** Sets the pointer stored in the given header field. */
-UNIV_INLINE
-void page_header_set_ptr(
-    page_t *page,             /*!< in: page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be updated, or NULL */
-    ulint field,              /*!< in: PAGE_FREE, ... */
-    const byte *ptr)          /*!< in: pointer or NULL*/
-{
-  ulint offs;
 
-  ut_ad(page);
-  ut_ad((field == PAGE_FREE) || (field == PAGE_LAST_INSERT) ||
-        (field == PAGE_HEAP_TOP));
 
-  if (ptr == NULL) {
-    offs = 0;
-  } else {
-    offs = ptr - page;
-  }
 
-  ut_ad((field != PAGE_HEAP_TOP) || offs);
 
-  page_header_set_field(page, page_zip, field, offs);
-}
 
-#ifndef UNIV_HOTBACKUP
-/** Resets the last insert info field in the page header. Writes to mlog
- about this operation. */
-UNIV_INLINE
-void page_header_reset_last_insert(
-    page_t *page,             /*!< in/out: page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be updated, or NULL */
-    mtr_t *mtr)               /*!< in: mtr */
-{
-  ut_ad(page != NULL);
-  ut_ad(mtr != NULL);
 
-  if (page_zip) {
-    mach_write_to_2(page + (PAGE_HEADER + PAGE_LAST_INSERT), 0);
-    page_zip_write_header(page_zip, page + (PAGE_HEADER + PAGE_LAST_INSERT), 2,
-                          mtr);
-  } else {
-    mlog_write_ulint(page + (PAGE_HEADER + PAGE_LAST_INSERT), 0, MLOG_2BYTES,
-                     mtr);
-  }
-}
-#endif /* !UNIV_HOTBACKUP */
 
 
 
@@ -251,36 +125,8 @@ void page_header_reset_last_insert(
 
 
 
-/** Sets the number of dir slots in directory. */
-UNIV_INLINE
-void page_dir_set_n_slots(
-    page_t *page,             /*!< in/out: page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be updated, or NULL */
-    ulint n_slots)            /*!< in: number of slots */
-{
-  page_header_set_field(page, page_zip, PAGE_N_DIR_SLOTS, n_slots);
-}
 
-/** Sets the number of records in the heap. */
-UNIV_INLINE
-void page_dir_set_n_heap(
-    page_t *page,             /*!< in/out: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be updated, or NULL.
-                             Note that the size of the dense page directory
-                             in the compressed page trailer is
-                             n_heap * PAGE_ZIP_DIR_SLOT_SIZE. */
-    ulint n_heap)             /*!< in: number of records */
-{
-  ut_ad(n_heap < 0x8000);
-  ut_ad(!page_zip ||
-        n_heap == (page_header_get_field(page, PAGE_N_HEAP) & 0x7fff) + 1);
 
-  page_header_set_field(
-      page, page_zip, PAGE_N_HEAP,
-      n_heap | (0x8000 & page_header_get_field(page, PAGE_N_HEAP)));
-}
 
 
 
@@ -290,21 +136,6 @@ void page_dir_set_n_heap(
 
 
 
-/** This is used to set the owned records field of a directory slot. */
-UNIV_INLINE
-void page_dir_slot_set_n_owned(
-    page_dir_slot_t *slot,    /*!< in/out: directory slot */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    ulint n)                  /*!< in: number of records owned by the slot */
-{
-  rec_t *rec = (rec_t *)page_dir_slot_get_rec(slot);
-  if (page_rec_is_comp(slot)) {
-    rec_set_n_owned_new(rec, page_zip, n);
-  } else {
-    ut_ad(!page_zip);
-    rec_set_n_owned_old(rec, n);
-  }
-}
 
 
 
@@ -325,55 +156,9 @@ void page_dir_slot_set_n_owned(
 
 
 
-/** Allocates a block of memory from the free list of an index page. */
-UNIV_INLINE
-void page_mem_alloc_free(
-    page_t *page,             /*!< in/out: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page with enough
-                             space available for inserting the record,
-                             or NULL */
-    rec_t *next_rec,          /*!< in: pointer to the new head of the
-                             free record list */
-    ulint need)               /*!< in: number of bytes allocated */
-{
-  ulint garbage;
 
-#ifdef UNIV_DEBUG
-  const rec_t *old_rec = page_header_get_ptr(page, PAGE_FREE);
-  ulint next_offs;
 
-  ut_ad(old_rec);
-  next_offs = rec_get_next_offs(old_rec, page_is_comp(page));
-  ut_ad(next_rec == (next_offs ? page + next_offs : NULL));
-#endif
 
-  page_header_set_ptr(page, page_zip, PAGE_FREE, next_rec);
-
-  garbage = page_header_get_field(page, PAGE_GARBAGE);
-  ut_ad(garbage >= need);
-
-  page_header_set_field(page, page_zip, PAGE_GARBAGE, garbage - need);
-}
-
-
-#ifndef UNIV_HOTBACKUP
-/** Write a 32-bit field in a data dictionary record. */
-UNIV_INLINE
-void page_rec_write_field(rec_t *rec, /*!< in/out: record to update */
-                          ulint i,    /*!< in: index of the field to update */
-                          ulint val,  /*!< in: value to write */
-                          mtr_t *mtr) /*!< in/out: mini-transaction */
-{
-  byte *data;
-  ulint len;
-
-  data = rec_get_nth_field_old(rec, i, &len);
-
-  ut_ad(len == 4);
-
-  mlog_write_ulint(data, val, MLOG_4BYTES, mtr);
-}
-#endif /* !UNIV_HOTBACKUP */
 
 
 

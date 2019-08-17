@@ -122,6 +122,28 @@ add_library( ${LIB_NAME} STATIC
     page_zip_parse_compress_no_data.cpp
     page_zip_stat_per_index_mutex.cpp
     page_zip_reset_stat_per_index.cpp
+    page_header_set_field.cpp
+    page_header_get_ptr.cpp
+    page_header_set_ptr.cpp
+    page_header_reset_last_insert.cpp
+    page_header_print.cpp
+    page_dir_set_n_heap.cpp
+    page_dir_set_n_slots.cpp
+    page_dir_slot_set_n_owned.cpp
+    page_dir_add_slot.cpp
+    page_dir_split_slot.cpp
+    page_dir_delete_slot.cpp
+    page_dir_balance_slot.cpp
+    page_dir_print.cpp
+    page_rec_get_n_recs_before.cpp
+    page_rec_write_field.cpp
+    page_rec_print.cpp
+    page_rec_validate.cpp
+    page_get_max_trx_id.cpp
+    page_set_max_trx_id.cpp
+    page_update_max_trx_id.cpp
+    page_set_ssn_id.cpp
+    page_mem_alloc_free.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

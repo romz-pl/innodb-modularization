@@ -87,6 +87,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_rec_get_next_low.h>
 #include <innodb/page/page_rec_get_next.h>
 #include <innodb/page/page_rec_set_next.h>
+#include <innodb/page/page_header_print.h>
+#include <innodb/page/page_dir_add_slot.h>
 
 #include "buf0buf.h"
 #include "btr0types.h"
@@ -106,143 +108,21 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
-
-
-/** Returns the max trx id field value. */
-UNIV_INLINE
-trx_id_t page_get_max_trx_id(const page_t *page); /*!< in: page */
-/** Sets the max trx id field value. */
-void page_set_max_trx_id(
-    buf_block_t *block,       /*!< in/out: page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    trx_id_t trx_id,          /*!< in: transaction id */
-    mtr_t *mtr);              /*!< in/out: mini-transaction, or NULL */
-
-/** Sets the max trx id field value if trx_id is bigger than the previous
-value.
-@param[in,out]	block		page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL
-@param[in]	trx_id		transaction id
-@param[in,out]	mtr		mini-transaction */
-UNIV_INLINE
-void page_update_max_trx_id(buf_block_t *block, page_zip_des_t *page_zip,
-                            trx_id_t trx_id, mtr_t *mtr);
-
-
-
-/** Sets the RTREE SPLIT SEQUENCE NUMBER field value
-@param[in,out]	block		page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL
-@param[in]	ssn_id		split sequence id
-@param[in,out]	mtr		mini-transaction */
-UNIV_INLINE
-void page_set_ssn_id(buf_block_t *block, page_zip_des_t *page_zip,
-                     node_seq_t ssn_id, mtr_t *mtr);
-
-
-/** Sets the given header field.
-@param[in,out]	page		page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL
-@param[in]	field		PAGE_N_DIR_SLOTS, ...
-@param[in]	val		value */
-UNIV_INLINE
-void page_header_set_field(page_t *page, page_zip_des_t *page_zip, ulint field,
-                           ulint val);
-
-
-
-/** Returns the pointer stored in the given header field, or NULL. */
-#define page_header_get_ptr(page, field)          \
-  (page_header_get_offs(page, field)              \
-       ? page + page_header_get_offs(page, field) \
-       : NULL)
-
-/** Sets the pointer stored in the given header field.
-@param[in,out]	page		page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL
-@param[in,out]	field		PAGE_FREE, ...
-@param[in]	ptr		pointer or NULL */
-UNIV_INLINE
-void page_header_set_ptr(page_t *page, page_zip_des_t *page_zip, ulint field,
-                         const byte *ptr);
-#ifndef UNIV_HOTBACKUP
-
-/** Resets the last insert info field in the page header. Writes to mlog about
-this operation.
-@param[in]	page		page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL
-@param[in]	mtr		mtr */
-UNIV_INLINE
-void page_header_reset_last_insert(page_t *page, page_zip_des_t *page_zip,
-                                   mtr_t *mtr);
-#endif /* !UNIV_HOTBACKUP */
-
-
-
-
-
-
+#include <innodb/page/page_get_max_trx_id.h>
+#include <innodb/page/page_set_max_trx_id.h>
+#include <innodb/page/page_update_max_trx_id.h>
+#include <innodb/page/page_set_ssn_id.h>
+#include <innodb/page/page_header_set_field.h>
+#include <innodb/page/page_header_get_ptr.h>
+#include <innodb/page/page_header_set_ptr.h>
+#include <innodb/page/page_header_reset_last_insert.h>
 #include <innodb/page/page_rec_get_nth_const.h>
 #include <innodb/page/page_rec_get_nth.h>
 #include <innodb/page/page_get_middle_rec.h>
-
-
-
-
-
-/** Returns the number of records before the given record in chain.
- The number includes infimum and supremum records.
- This is the inverse function of page_rec_get_nth().
- @return number of records */
-ulint page_rec_get_n_recs_before(
-    const rec_t *rec); /*!< in: the physical record */
-
-
-/** Sets the number of records in the heap.
-@param[in,out]	page		index page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL. Note that the size of the
-                                dense page directory in the compressed page
-                                trailer is n_heap * PAGE_ZIP_DIR_SLOT_SIZE.
-@param[in]	n_heap		number of records*/
-UNIV_INLINE
-void page_dir_set_n_heap(page_t *page, page_zip_des_t *page_zip, ulint n_heap);
-
-
-
-/** Sets the number of dir slots in directory.
-@param[in,out]	page		page
-@param[in,out]	page_zip	compressed page whose uncompressed part will
-                                be updated, or NULL
-@param[in]	n_slots		number of slots */
-UNIV_INLINE
-void page_dir_set_n_slots(page_t *page, page_zip_des_t *page_zip,
-                          ulint n_slots);
-
-
-
-
-
-
-
-
-
-/** This is used to set the owned records field of a directory slot.
-@param[in,out]	slot		directory slot
-@param[in,out]	page_zip	compressed page, or NULL
-@param[in]	n		number of records owned by the slot */
-UNIV_INLINE
-void page_dir_slot_set_n_owned(page_dir_slot_t *slot, page_zip_des_t *page_zip,
-                               ulint n);
-
-
-
-
+#include <innodb/page/page_dir_set_n_heap.h>
+#include <innodb/page/page_dir_set_n_slots.h>
+#include <innodb/page/page_dir_slot_set_n_owned.h>
+#include <innodb/page/page_rec_get_n_recs_before.h>
 #include <innodb/page/page_rec_get_next_low.h>
 #include <innodb/page/page_rec_get_next_const.h>
 #include <innodb/record/rec_get_deleted_flag.h>
@@ -253,38 +133,19 @@ void page_dir_slot_set_n_owned(page_dir_slot_t *slot, page_zip_des_t *page_zip,
 #include <innodb/page/page_rec_is_last.h>
 #include <innodb/page/page_rec_is_second_last.h>
 #include <innodb/page/page_rec_find_owner_rec.h>
+#include <innodb/page/page_dir_split_slot.h>
+#include <innodb/page/page_dir_delete_slot.h>
+#include <innodb/page/page_dir_balance_slot.h>
+#include <innodb/page/page_dir_print.h>
+#include <innodb/page/page_rec_write_field.h>
+#include <innodb/page/page_rec_print.h>
+#include <innodb/page/page_rec_validate.h>
+#include <innodb/page/page_mem_alloc_free.h>
 
 
 
 
 
-#ifndef UNIV_HOTBACKUP
-
-/** Write a 32-bit field in a data dictionary record.
-@param[in,out]	rec	record to update
-@param[in]	i	index of the field to update
-@param[in]	val	value to write
-@param[in,out]	mtr	mini-transaction */
-UNIV_INLINE
-void page_rec_write_field(rec_t *rec, ulint i, ulint val, mtr_t *mtr);
-#endif /* !UNIV_HOTBACKUP */
-
-
-
-
-
-
-/** Allocates a block of memory from the head of the free list of an index
-page.
-@param[in,out]	page		index page
-@param[in,out]	page_zip	compressed page with enough space available
-                                for inserting the record, or NULL
-@param[in]	next_rec	pointer to the new head of the free record
-                                list
-@param[in]	need		number of bytes allocated */
-UNIV_INLINE
-void page_mem_alloc_free(page_t *page, page_zip_des_t *page_zip,
-                         rec_t *next_rec, ulint need);
 
 /** Allocates a block of memory from the heap of an index page.
  @return pointer to start of allocated buffer, or NULL if allocation fails */
@@ -430,20 +291,7 @@ ibool page_move_rec_list_start(
     rec_t *split_rec,       /*!< in: first record not to move */
     dict_index_t *index,    /*!< in: record descriptor */
     mtr_t *mtr);            /*!< in: mtr */
-/** Splits a directory slot which owns too many records. */
-void page_dir_split_slot(
-    page_t *page,             /*!< in: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be written, or NULL */
-    ulint slot_no);           /*!< in: the directory slot */
-/** Tries to balance the given directory slot with too few records
- with the upper neighbor, so that there are at least the minimum number
- of records owned by the slot; this may result in the merging of
- two slots. */
-void page_dir_balance_slot(
-    page_t *page,             /*!< in/out: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    ulint slot_no);           /*!< in: the directory slot */
+
 /** Parses a log record of a record list end or start deletion.
  @return end of log record or NULL */
 byte *page_parse_delete_rec_list(
@@ -463,23 +311,15 @@ byte *page_parse_delete_rec_list(
 @param[in]	page_type	page type */
 void page_parse_create(buf_block_t *block, ulint comp, page_type_t page_type);
 #ifndef UNIV_HOTBACKUP
-/** Prints record contents including the data relevant only in
- the index page context. */
-void page_rec_print(const rec_t *rec,      /*!< in: physical record */
-                    const ulint *offsets); /*!< in: record descriptor */
 #ifdef UNIV_BTR_PRINT
-/** This is used to print the contents of the directory for
- debugging purposes. */
-void page_dir_print(page_t *page, /*!< in: index page */
-                    ulint pr_n);  /*!< in: print n first and n last entries */
+
 /** This is used to print the contents of the page record list for
  debugging purposes. */
 void page_print_list(
     buf_block_t *block,  /*!< in: index page */
     dict_index_t *index, /*!< in: dictionary index of the page */
     ulint pr_n);         /*!< in: print n first and n last entries */
-/** Prints the info in a page header. */
-void page_header_print(const page_t *page); /*!< in: index page */
+
 /** This is used to print the contents of the page for
  debugging purposes. */
 void page_print(buf_block_t *block,  /*!< in: index page */
@@ -490,13 +330,7 @@ void page_print(buf_block_t *block,  /*!< in: index page */
                                      in directory */
 #endif                               /* UNIV_BTR_PRINT */
 #endif                               /* !UNIV_HOTBACKUP */
-/** The following is used to validate a record on a page. This function
- differs from rec_validate as it can also check the n_owned field and
- the heap_no field.
- @return true if ok */
-ibool page_rec_validate(
-    const rec_t *rec,      /*!< in: physical record */
-    const ulint *offsets); /*!< in: array returned by rec_get_offsets() */
+
 #ifdef UNIV_DEBUG
 /** Checks that the first directory slot points to the infimum record and
  the last to the supremum. This function is intended to track if the

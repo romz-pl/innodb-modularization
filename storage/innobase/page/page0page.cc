@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/univ/univ.h>
+
 #include "my_dbug.h"
 
 #include <innodb/cmp/cmp_rec_rec.h>
@@ -68,36 +70,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 
 
+#include <cstdio>
 
-
-/** Sets the max trx id field value. */
-void page_set_max_trx_id(
-    buf_block_t *block,       /*!< in/out: page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    trx_id_t trx_id,          /*!< in: transaction id */
-    mtr_t *mtr)               /*!< in/out: mini-transaction, or NULL */
-{
-  page_t *page = buf_block_get_frame(block);
-#ifndef UNIV_HOTBACKUP
-  ut_ad(!mtr || mtr_memo_contains(mtr, block, MTR_MEMO_PAGE_X_FIX));
-#endif /* !UNIV_HOTBACKUP */
-
-  /* It is not necessary to write this change to the redo log, as
-  during a database recovery we assume that the max trx id of every
-  page is the maximum trx id assigned before the crash. */
-
-  if (page_zip) {
-    mach_write_to_8(page + (PAGE_HEADER + PAGE_MAX_TRX_ID), trx_id);
-    page_zip_write_header(page_zip, page + (PAGE_HEADER + PAGE_MAX_TRX_ID), 8,
-                          mtr);
-#ifndef UNIV_HOTBACKUP
-  } else if (mtr) {
-    mlog_write_ull(page + (PAGE_HEADER + PAGE_MAX_TRX_ID), trx_id, mtr);
-#endif /* !UNIV_HOTBACKUP */
-  } else {
-    mach_write_to_8(page + (PAGE_HEADER + PAGE_MAX_TRX_ID), trx_id);
-  }
-}
 
 /** Allocates a block of memory from the heap of an index page.
  @return pointer to start of allocated buffer, or NULL if allocation fails */
@@ -1102,315 +1076,12 @@ ibool page_move_rec_list_start(
 }
 #endif /* !UNIV_HOTBACKUP */
 
-/** Used to delete n slots from the directory. This function updates
- also n_owned fields in the records, so that the first slot after
- the deleted ones inherits the records of the deleted slots. */
-UNIV_INLINE
-void page_dir_delete_slot(
-    page_t *page,             /*!< in/out: the index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    ulint slot_no)            /*!< in: slot to be deleted */
-{
-  page_dir_slot_t *slot;
-  ulint n_owned;
-  ulint i;
-  ulint n_slots;
 
-  ut_ad(!page_zip || page_is_comp(page));
-  ut_ad(slot_no > 0);
-  ut_ad(slot_no + 1 < page_dir_get_n_slots(page));
-
-  n_slots = page_dir_get_n_slots(page);
-
-  /* 1. Reset the n_owned fields of the slots to be
-  deleted */
-  slot = page_dir_get_nth_slot(page, slot_no);
-  n_owned = page_dir_slot_get_n_owned(slot);
-  page_dir_slot_set_n_owned(slot, page_zip, 0);
-
-  /* 2. Update the n_owned value of the first non-deleted slot */
-
-  slot = page_dir_get_nth_slot(page, slot_no + 1);
-  page_dir_slot_set_n_owned(slot, page_zip,
-                            n_owned + page_dir_slot_get_n_owned(slot));
-
-  /* 3. Destroy the slot by copying slots */
-  for (i = slot_no + 1; i < n_slots; i++) {
-    rec_t *rec = (rec_t *)page_dir_slot_get_rec(page_dir_get_nth_slot(page, i));
-    page_dir_slot_set_rec(page_dir_get_nth_slot(page, i - 1), rec);
-  }
-
-  /* 4. Zero out the last slot, which will be removed */
-  mach_write_to_2(page_dir_get_nth_slot(page, n_slots - 1), 0);
-
-  /* 5. Update the page header */
-  page_header_set_field(page, page_zip, PAGE_N_DIR_SLOTS, n_slots - 1);
-}
-
-/** Used to add n slots to the directory. Does not set the record pointers
- in the added slots or update n_owned values: this is the responsibility
- of the caller. */
-UNIV_INLINE
-void page_dir_add_slot(
-    page_t *page,             /*!< in/out: the index page */
-    page_zip_des_t *page_zip, /*!< in/out: comprssed page, or NULL */
-    ulint start)              /*!< in: the slot above which the new slots
-                              are added */
-{
-  page_dir_slot_t *slot;
-  ulint n_slots;
-
-  n_slots = page_dir_get_n_slots(page);
-
-  ut_ad(start < n_slots - 1);
-
-  /* Update the page header */
-  page_dir_set_n_slots(page, page_zip, n_slots + 1);
-
-  /* Move slots up */
-  slot = page_dir_get_nth_slot(page, n_slots);
-  memmove(slot, slot + PAGE_DIR_SLOT_SIZE,
-          (n_slots - 1 - start) * PAGE_DIR_SLOT_SIZE);
-}
-
-/** Splits a directory slot which owns too many records. */
-void page_dir_split_slot(
-    page_t *page,             /*!< in/out: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page whose
-                             uncompressed part will be written, or NULL */
-    ulint slot_no)            /*!< in: the directory slot */
-{
-  rec_t *rec;
-  page_dir_slot_t *new_slot;
-  page_dir_slot_t *prev_slot;
-  page_dir_slot_t *slot;
-  ulint i;
-  ulint n_owned;
-
-  ut_ad(page);
-  ut_ad(!page_zip || page_is_comp(page));
-  ut_ad(slot_no > 0);
-
-  slot = page_dir_get_nth_slot(page, slot_no);
-
-  n_owned = page_dir_slot_get_n_owned(slot);
-  ut_ad(n_owned == PAGE_DIR_SLOT_MAX_N_OWNED + 1);
-
-  /* 1. We loop to find a record approximately in the middle of the
-  records owned by the slot. */
-
-  prev_slot = page_dir_get_nth_slot(page, slot_no - 1);
-  rec = (rec_t *)page_dir_slot_get_rec(prev_slot);
-
-  for (i = 0; i < n_owned / 2; i++) {
-    rec = page_rec_get_next(rec);
-  }
-
-  ut_ad(n_owned / 2 >= PAGE_DIR_SLOT_MIN_N_OWNED);
-
-  /* 2. We add one directory slot immediately below the slot to be
-  split. */
-
-  page_dir_add_slot(page, page_zip, slot_no - 1);
-
-  /* The added slot is now number slot_no, and the old slot is
-  now number slot_no + 1 */
-
-  new_slot = page_dir_get_nth_slot(page, slot_no);
-  slot = page_dir_get_nth_slot(page, slot_no + 1);
-
-  /* 3. We store the appropriate values to the new slot. */
-
-  page_dir_slot_set_rec(new_slot, rec);
-  page_dir_slot_set_n_owned(new_slot, page_zip, n_owned / 2);
-
-  /* 4. Finally, we update the number of records field of the
-  original slot */
-
-  page_dir_slot_set_n_owned(slot, page_zip, n_owned - (n_owned / 2));
-}
-
-/** Tries to balance the given directory slot with too few records with the
- upper neighbor, so that there are at least the minimum number of records owned
- by the slot; this may result in the merging of two slots. */
-void page_dir_balance_slot(
-    page_t *page,             /*!< in/out: index page */
-    page_zip_des_t *page_zip, /*!< in/out: compressed page, or NULL */
-    ulint slot_no)            /*!< in: the directory slot */
-{
-  page_dir_slot_t *slot;
-  page_dir_slot_t *up_slot;
-  ulint n_owned;
-  ulint up_n_owned;
-  rec_t *old_rec;
-  rec_t *new_rec;
-
-  ut_ad(page);
-  ut_ad(!page_zip || page_is_comp(page));
-  ut_ad(slot_no > 0);
-
-  slot = page_dir_get_nth_slot(page, slot_no);
-
-  /* The last directory slot cannot be balanced with the upper
-  neighbor, as there is none. */
-
-  if (UNIV_UNLIKELY(slot_no == page_dir_get_n_slots(page) - 1)) {
-    return;
-  }
-
-  up_slot = page_dir_get_nth_slot(page, slot_no + 1);
-
-  n_owned = page_dir_slot_get_n_owned(slot);
-  up_n_owned = page_dir_slot_get_n_owned(up_slot);
-
-  ut_ad(n_owned == PAGE_DIR_SLOT_MIN_N_OWNED - 1);
-
-  /* If the upper slot has the minimum value of n_owned, we will merge
-  the two slots, therefore we assert: */
-  ut_ad(2 * PAGE_DIR_SLOT_MIN_N_OWNED - 1 <= PAGE_DIR_SLOT_MAX_N_OWNED);
-
-  if (up_n_owned > PAGE_DIR_SLOT_MIN_N_OWNED) {
-    /* In this case we can just transfer one record owned
-    by the upper slot to the property of the lower slot */
-    old_rec = (rec_t *)page_dir_slot_get_rec(slot);
-
-    if (page_is_comp(page)) {
-      new_rec = rec_get_next_ptr(old_rec, TRUE);
-
-      rec_set_n_owned_new(old_rec, page_zip, 0);
-      rec_set_n_owned_new(new_rec, page_zip, n_owned + 1);
-    } else {
-      new_rec = rec_get_next_ptr(old_rec, FALSE);
-
-      rec_set_n_owned_old(old_rec, 0);
-      rec_set_n_owned_old(new_rec, n_owned + 1);
-    }
-
-    page_dir_slot_set_rec(slot, new_rec);
-
-    page_dir_slot_set_n_owned(up_slot, page_zip, up_n_owned - 1);
-  } else {
-    /* In this case we may merge the two slots */
-    page_dir_delete_slot(page, page_zip, slot_no);
-  }
-}
-
-/** Returns the number of records before the given record in chain.
- The number includes infimum and supremum records.
- @return number of records */
-ulint page_rec_get_n_recs_before(
-    const rec_t *rec) /*!< in: the physical record */
-{
-  const page_dir_slot_t *slot;
-  const rec_t *slot_rec;
-  const page_t *page;
-  ulint i;
-  lint n = 0;
-
-  ut_ad(page_rec_check(rec));
-
-  page = page_align(rec);
-  if (page_is_comp(page)) {
-    while (rec_get_n_owned_new(rec) == 0) {
-      rec = rec_get_next_ptr_const(rec, TRUE);
-      n--;
-    }
-
-    for (i = 0;; i++) {
-      slot = page_dir_get_nth_slot(page, i);
-      slot_rec = page_dir_slot_get_rec(slot);
-
-      n += rec_get_n_owned_new(slot_rec);
-
-      if (rec == slot_rec) {
-        break;
-      }
-    }
-  } else {
-    while (rec_get_n_owned_old(rec) == 0) {
-      rec = rec_get_next_ptr_const(rec, FALSE);
-      n--;
-    }
-
-    for (i = 0;; i++) {
-      slot = page_dir_get_nth_slot(page, i);
-      slot_rec = page_dir_slot_get_rec(slot);
-
-      n += rec_get_n_owned_old(slot_rec);
-
-      if (rec == slot_rec) {
-        break;
-      }
-    }
-  }
-
-  n--;
-
-  ut_ad(n >= 0);
-  ut_ad((ulong)n < UNIV_PAGE_SIZE / (REC_N_NEW_EXTRA_BYTES + 1));
-
-  return ((ulint)n);
-}
 
 #ifndef UNIV_HOTBACKUP
-/** Prints record contents including the data relevant only in
- the index page context. */
-void page_rec_print(const rec_t *rec,     /*!< in: physical record */
-                    const ulint *offsets) /*!< in: record descriptor */
-{
-  ut_a(!page_rec_is_comp(rec) == !rec_offs_comp(offsets));
-  rec_print_new(stderr, rec, offsets);
-  if (page_rec_is_comp(rec)) {
-    ib::info(ER_IB_MSG_863) << "n_owned: " << rec_get_n_owned_new(rec)
-                            << "; heap_no: " << rec_get_heap_no_new(rec)
-                            << "; next rec: " << rec_get_next_offs(rec, TRUE);
-  } else {
-    ib::info(ER_IB_MSG_864) << "n_owned: " << rec_get_n_owned_old(rec)
-                            << "; heap_no: " << rec_get_heap_no_old(rec)
-                            << "; next rec: " << rec_get_next_offs(rec, FALSE);
-  }
-
-  page_rec_check(rec);
-  rec_validate(rec, offsets);
-}
-
 #ifdef UNIV_BTR_PRINT
-/** This is used to print the contents of the directory for
- debugging purposes. */
-void page_dir_print(page_t *page, /*!< in: index page */
-                    ulint pr_n)   /*!< in: print n first and n last entries */
-{
-  ulint n;
-  ulint i;
-  page_dir_slot_t *slot;
 
-  n = page_dir_get_n_slots(page);
 
-  fprintf(stderr,
-          "--------------------------------\n"
-          "PAGE DIRECTORY\n"
-          "Page address %p\n"
-          "Directory stack top at offs: %lu; number of slots: %lu\n",
-          page, (ulong)page_offset(page_dir_get_nth_slot(page, n - 1)),
-          (ulong)n);
-  for (i = 0; i < n; i++) {
-    slot = page_dir_get_nth_slot(page, i);
-    if ((i == pr_n) && (i < n - pr_n)) {
-      fputs("    ...   \n", stderr);
-    }
-    if ((i < pr_n) || (i >= n - pr_n)) {
-      fprintf(stderr,
-              "Contents of slot: %lu: n_owned: %lu,"
-              " rec offs: %lu\n",
-              (ulong)i, (ulong)page_dir_slot_get_n_owned(slot),
-              (ulong)page_offset(page_dir_slot_get_rec(slot)));
-    }
-  }
-  fprintf(stderr,
-          "Total of %lu records\n"
-          "--------------------------------\n",
-          (ulong)(PAGE_HEAP_NO_USER_LOW + page_get_n_recs(page)));
-}
 
 /** This is used to print the contents of the page record list for
  debugging purposes. */
@@ -1479,26 +1150,6 @@ void page_print_list(
   }
 }
 
-/** Prints the info in a page header. */
-void page_header_print(const page_t *page) {
-  fprintf(stderr,
-          "--------------------------------\n"
-          "PAGE HEADER INFO\n"
-          "Page address %p, n records %lu (%s)\n"
-          "n dir slots %lu, heap top %lu\n"
-          "Page n heap %lu, free %lu, garbage %lu\n"
-          "Page last insert %lu, direction %lu, n direction %lu\n",
-          page, (ulong)page_header_get_field(page, PAGE_N_RECS),
-          page_is_comp(page) ? "compact format" : "original format",
-          (ulong)page_header_get_field(page, PAGE_N_DIR_SLOTS),
-          (ulong)page_header_get_field(page, PAGE_HEAP_TOP),
-          (ulong)page_dir_get_n_heap(page),
-          (ulong)page_header_get_field(page, PAGE_FREE),
-          (ulong)page_header_get_field(page, PAGE_GARBAGE),
-          (ulong)page_header_get_field(page, PAGE_LAST_INSERT),
-          (ulong)page_header_get_field(page, PAGE_DIRECTION),
-          (ulong)page_header_get_field(page, PAGE_N_DIRECTION));
-}
 
 /** This is used to print the contents of the page for
  debugging purposes. */
@@ -1518,47 +1169,6 @@ void page_print(buf_block_t *block,  /*!< in: index page */
 #endif /* UNIV_BTR_PRINT */
 #endif /* !UNIV_HOTBACKUP */
 
-/** The following is used to validate a record on a page. This function
- differs from rec_validate as it can also check the n_owned field and
- the heap_no field.
- @return true if ok */
-ibool page_rec_validate(
-    const rec_t *rec,     /*!< in: physical record */
-    const ulint *offsets) /*!< in: array returned by rec_get_offsets() */
-{
-  ulint n_owned;
-  ulint heap_no;
-  const page_t *page;
-
-  page = page_align(rec);
-  ut_a(!page_is_comp(page) == !rec_offs_comp(offsets));
-
-  page_rec_check(rec);
-  rec_validate(rec, offsets);
-
-  if (page_rec_is_comp(rec)) {
-    n_owned = rec_get_n_owned_new(rec);
-    heap_no = rec_get_heap_no_new(rec);
-  } else {
-    n_owned = rec_get_n_owned_old(rec);
-    heap_no = rec_get_heap_no_old(rec);
-  }
-
-  if (UNIV_UNLIKELY(!(n_owned <= PAGE_DIR_SLOT_MAX_N_OWNED))) {
-    ib::warn(ER_IB_MSG_865) << "Dir slot of rec " << page_offset(rec)
-                            << ", n owned too big " << n_owned;
-    return (FALSE);
-  }
-
-  if (UNIV_UNLIKELY(!(heap_no < page_dir_get_n_heap(page)))) {
-    ib::warn(ER_IB_MSG_866)
-        << "Heap no of rec " << page_offset(rec) << " too big " << heap_no
-        << " " << page_dir_get_n_heap(page);
-    return (FALSE);
-  }
-
-  return (TRUE);
-}
 
 #ifndef UNIV_HOTBACKUP
 #ifdef UNIV_DEBUG
