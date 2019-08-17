@@ -49,6 +49,9 @@ external tools. */
 #include <innodb/page/page_zip_get_size.h>
 #include <innodb/page/page_zip_dir_get.h>
 #include <innodb/page/page_zip_des_t.h>
+#include <innodb/page/page_zip_zalloc.h>
+#include <innodb/page/page_zip_free.h>
+#include <innodb/page/page_zip_fail.h>
 
 #include <stdarg.h>
 #include <sys/types.h>
@@ -63,167 +66,13 @@ external tools. */
 static_assert(DATA_TRX_ID_LEN <= 6, "COMPRESSION_ALGORITHM will not fit!");
 
 
-/* Enable some extra debugging output.  This code can be enabled
-independently of any UNIV_ debugging conditions. */
-#if defined UNIV_DEBUG || defined UNIV_ZIP_DEBUG
-#include <stdarg.h>
 
-MY_ATTRIBUTE((format(printf, 1, 2)))
-/** Report a failure to decompress or compress.
- @return number of characters printed */
-int page_zip_fail_func(const char *fmt, /*!< in: printf(3) format string */
-                       ...) /*!< in: arguments corresponding to fmt */
-{
-  int res;
-  va_list ap;
 
-  ut_print_timestamp(stderr);
-  fputs("  InnoDB: ", stderr);
-  va_start(ap, fmt);
-  res = vfprintf(stderr, fmt, ap);
-  va_end(ap);
 
-  return (res);
-}
-/** Wrapper for page_zip_fail_func()
-@param fmt_args in: printf(3) format string and arguments */
-#define page_zip_fail(fmt_args) page_zip_fail_func fmt_args
-#else                           /* UNIV_DEBUG || UNIV_ZIP_DEBUG */
-/** Dummy wrapper for page_zip_fail_func()
-@param fmt_args ignored: printf(3) format string and arguments */
-#define page_zip_fail(fmt_args) /* empty */
-#endif                          /* UNIV_DEBUG || UNIV_ZIP_DEBUG */
+#include <innodb/page/page_zip_fields_free.h>
+#include <innodb/page/page_zip_dir_decode.h>
 
-extern "C" {
 
-/** Allocate memory for zlib. */
-static void *page_zip_zalloc(void *opaque, /*!< in/out: memory heap */
-                             uInt items, /*!< in: number of items to allocate */
-                             uInt size)  /*!< in: size of an item in bytes */
-{
-  return (mem_heap_zalloc(static_cast<mem_heap_t *>(opaque), items * size));
-}
-
-/** Deallocate memory for zlib. */
-static void page_zip_free(
-    void *opaque MY_ATTRIBUTE((unused)),  /*!< in: memory heap */
-    void *address MY_ATTRIBUTE((unused))) /*!< in: object to free */
-{}
-
-} /* extern "C" */
-
-/** Deallocate the index information initialized by page_zip_fields_decode(). */
-static void page_zip_fields_free(
-    dict_index_t *index) /*!< in: dummy index to be freed */
-{
-  if (index) {
-    dict_table_t *table = index->table;
-#ifndef UNIV_HOTBACKUP
-    dict_index_zip_pad_mutex_destroy(index);
-#endif /* !UNIV_HOTBACKUP */
-    mem_heap_free(index->heap);
-
-    dict_mem_table_free(table);
-  }
-}
-
-/** Configure the zlib allocator to use the given memory heap. */
-void page_zip_set_alloc(void *stream,     /*!< in/out: zlib stream */
-                        mem_heap_t *heap) /*!< in: memory heap to use */
-{
-  z_stream *strm = static_cast<z_stream *>(stream);
-
-  strm->zalloc = page_zip_zalloc;
-  strm->zfree = page_zip_free;
-  strm->opaque = heap;
-}
-
-/** Populate the sparse page directory from the dense directory.
- @return true on success, false on failure */
-static MY_ATTRIBUTE((warn_unused_result)) ibool page_zip_dir_decode(
-    const page_zip_des_t *page_zip, /*!< in: dense page directory on
-                                   compressed page */
-    page_t *page,                   /*!< in: compact page with valid header;
-                                    out: trailer and sparse page directory
-                                    filled in */
-    rec_t **recs,                   /*!< out: dense page directory sorted by
-                                    ascending address (and heap_no) */
-    ulint n_dense)                  /*!< in: number of user records, and
-                                    size of recs[] */
-{
-  ulint i;
-  ulint n_recs;
-  byte *slot;
-
-  n_recs = page_get_n_recs(page);
-
-  if (UNIV_UNLIKELY(n_recs > n_dense)) {
-    page_zip_fail(
-        ("page_zip_dir_decode 1: %lu > %lu\n", (ulong)n_recs, (ulong)n_dense));
-    return (FALSE);
-  }
-
-  /* Traverse the list of stored records in the sorting order,
-  starting from the first user record. */
-
-  slot = page + (UNIV_PAGE_SIZE - PAGE_DIR - PAGE_DIR_SLOT_SIZE);
-  UNIV_PREFETCH_RW(slot);
-
-  /* Zero out the page trailer. */
-  memset(slot + PAGE_DIR_SLOT_SIZE, 0, PAGE_DIR);
-
-  mach_write_to_2(slot, PAGE_NEW_INFIMUM);
-  slot -= PAGE_DIR_SLOT_SIZE;
-  UNIV_PREFETCH_RW(slot);
-
-  /* Initialize the sparse directory and copy the dense directory. */
-  for (i = 0; i < n_recs; i++) {
-    ulint offs = page_zip_dir_get(page_zip, i);
-
-    if (offs & PAGE_ZIP_DIR_SLOT_OWNED) {
-      mach_write_to_2(slot, offs & PAGE_ZIP_DIR_SLOT_MASK);
-      slot -= PAGE_DIR_SLOT_SIZE;
-      UNIV_PREFETCH_RW(slot);
-    }
-
-    if (UNIV_UNLIKELY((offs & PAGE_ZIP_DIR_SLOT_MASK) <
-                      PAGE_ZIP_START + REC_N_NEW_EXTRA_BYTES)) {
-      page_zip_fail(("page_zip_dir_decode 2: %u %u %lx\n", (unsigned)i,
-                     (unsigned)n_recs, (ulong)offs));
-      return (FALSE);
-    }
-
-    recs[i] = page + (offs & PAGE_ZIP_DIR_SLOT_MASK);
-  }
-
-  mach_write_to_2(slot, PAGE_NEW_SUPREMUM);
-  {
-    const page_dir_slot_t *last_slot =
-        page_dir_get_nth_slot(page, page_dir_get_n_slots(page) - 1);
-
-    if (UNIV_UNLIKELY(slot != last_slot)) {
-      page_zip_fail(("page_zip_dir_decode 3: %p != %p\n", (const void *)slot,
-                     (const void *)last_slot));
-      return (FALSE);
-    }
-  }
-
-  /* Copy the rest of the dense directory. */
-  for (; i < n_dense; i++) {
-    ulint offs = page_zip_dir_get(page_zip, i);
-
-    if (UNIV_UNLIKELY(offs & ~PAGE_ZIP_DIR_SLOT_MASK)) {
-      page_zip_fail(("page_zip_dir_decode 4: %u %u %lx\n", (unsigned)i,
-                     (unsigned)n_dense, (ulong)offs));
-      return (FALSE);
-    }
-
-    recs[i] = page + offs;
-  }
-
-  std::sort(recs, recs + n_dense);
-  return (TRUE);
-}
 
 /** Read the index information for the compressed page.
 @param[in]	buf		index information

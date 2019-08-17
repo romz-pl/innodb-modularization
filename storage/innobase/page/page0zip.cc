@@ -70,7 +70,6 @@ const byte field_ref_zero[FIELD_REF_SIZE] = {
 #include "log0recv.h"
 #include "mtr0log.h"
 #include "page0page.h"
-#include "page0types.h"
 #ifndef UNIV_HOTBACKUP
 #include "btr0sea.h"
 #include "buf0buf.h"
@@ -96,11 +95,7 @@ static_assert(DATA_TRX_ID_LEN == 6, "DATA_TRX_ID_LEN != 6");
 static_assert(DATA_ROLL_PTR_LEN == 7, "DATA_ROLL_PTR_LEN != 7");
 static_assert(DATA_TRX_ID + 1 == DATA_ROLL_PTR, "DATA_TRX_ID invalid value!");
 
-#ifndef UNIV_HOTBACKUP
 
-/** Statistics on compression, indexed by index->id */
-page_zip_stat_per_index_t page_zip_stat_per_index;
-#endif /* !UNIV_HOTBACKUP */
 
 
 

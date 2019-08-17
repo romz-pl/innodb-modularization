@@ -47,12 +47,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_dir_user_size.h>
 #include <innodb/page/page_zip_dir_find_free.h>
 #include <innodb/memory_check/memory_check.h>
+#include <innodb/page/page_zip_stat_per_index.h>
 
 #include "mtr0log.h"
 #include "page0page.h"
 #include "page0zip.h"
 #include "srv0srv.h"
-#include "page0types.h"
 
 
 /** Write a log record of writing to the uncompressed header portion of a page.

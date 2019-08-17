@@ -98,6 +98,14 @@ add_library( ${LIB_NAME} STATIC
     page_rec_get_nth_const.cpp
     page_rec_get_nth.cpp
     page_get_middle_rec.cpp
+    page_zip_stat_per_index_t.cpp
+    page_zip_stat_per_index.cpp
+    page_zip_zalloc.cpp
+    page_zip_free.cpp
+    page_zip_set_alloc.cpp
+    page_zip_fail.cpp
+    page_zip_fields_free.cpp
+    page_zip_dir_decode.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

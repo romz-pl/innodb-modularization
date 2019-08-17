@@ -41,7 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "page0page.h"
 
-#include "page0types.h"
+
+struct page_cur_t;
 
 #define PAGE_CUR_ADAPT
 

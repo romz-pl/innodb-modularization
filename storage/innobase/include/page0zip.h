@@ -60,7 +60,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/crc32/crc32.h>
 
 
-
+/** Shift the dense page directory when a record is deleted.
+@param[in,out]	page_zip	compressed page
+@param[in]	rec		deleted record
+@param[in]	index		index of rec
+@param[in]	offsets		rec_get_offsets(rec)
+@param[in]	free		previous start of the free list */
+void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
+                         dict_index_t *index, const ulint *offsets,
+                         const byte *free);
 
 
 
@@ -73,10 +81,8 @@ bool page_zip_is_too_big(const dict_index_t *index, const dtuple_t *entry);
 #endif /* !UNIV_HOTBACKUP */
 
 
+#include <innodb/page/page_zip_set_alloc.h>
 
-/** Configure the zlib allocator to use the given memory heap. */
-void page_zip_set_alloc(void *stream,      /*!< in/out: zlib stream */
-                        mem_heap_t *heap); /*!< in: memory heap to use */
 
 /** Compress a page.
  @return true on success, false on failure; page_zip will be left
