@@ -15,6 +15,7 @@
 #include <innodb/monitor/MONITOR_INC.h>
 #include <innodb/sync_mutex/mutex_enter.h>
 #include <innodb/sync_mutex/mutex_exit.h>
+#include <innodb/buf_lru/buf_LRU_stat_inc_unzip.h>
 
 extern bool srv_cmp_per_index_enabled;
 

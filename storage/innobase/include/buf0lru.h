@@ -231,28 +231,11 @@ least this many milliseconds ago.  Not protected by any mutex or latch. */
 extern uint buf_LRU_old_threshold_ms;
 /* @} */
 
-/** @brief Statistics for selecting the LRU list for eviction.
-
-These statistics are not 'of' LRU but 'for' LRU.  We keep count of I/O
-and page_zip_decompress() operations.  Based on the statistics we decide
-if we want to evict from buf_pool->unzip_LRU or buf_pool->LRU. */
-struct buf_LRU_stat_t {
-  ulint io;    /**< Counter of buffer pool I/O operations. */
-  ulint unzip; /**< Counter of page_zip_decompress operations. */
-};
-
-/** Current operation counters.  Not protected by any mutex.
-Cleared by buf_LRU_stat_update(). */
-extern buf_LRU_stat_t buf_LRU_stat_cur;
-
-/** Running sum of past values of buf_LRU_stat_cur.
-Updated by buf_LRU_stat_update(). Accesses protected by memory barriers. */
-extern buf_LRU_stat_t buf_LRU_stat_sum;
-
-/** Increments the I/O counter in buf_LRU_stat_cur. */
-#define buf_LRU_stat_inc_io() buf_LRU_stat_cur.io++
-/** Increments the page_zip_decompress() counter in buf_LRU_stat_cur. */
-#define buf_LRU_stat_inc_unzip() buf_LRU_stat_cur.unzip++
+#include <innodb/buf_lru/buf_LRU_stat_t.h>
+#include <innodb/buf_lru/buf_LRU_stat_cur.h>
+#include <innodb/buf_lru/buf_LRU_stat_sum.h>
+#include <innodb/buf_lru/buf_LRU_stat_inc_io.h>
+#include <innodb/buf_lru/buf_LRU_stat_inc_unzip.h>
 
 #include "buf0lru.ic"
 

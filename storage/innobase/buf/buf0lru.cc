@@ -159,13 +159,9 @@ static buf_LRU_stat_t buf_LRU_stat_arr[BUF_LRU_STAT_N_INTERVAL];
 /** Cursor to buf_LRU_stat_arr[] that is updated in a round-robin fashion. */
 static ulint buf_LRU_stat_arr_ind;
 
-/** Current operation counters.  Not protected by any mutex.  Cleared
-by buf_LRU_stat_update(). */
-buf_LRU_stat_t buf_LRU_stat_cur;
 
-/** Running sum of past values of buf_LRU_stat_cur.
-Updated by buf_LRU_stat_update().  Not Protected by any mutex. */
-buf_LRU_stat_t buf_LRU_stat_sum;
+
+
 
 /* @} */
 

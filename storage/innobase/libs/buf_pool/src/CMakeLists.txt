@@ -69,6 +69,7 @@ target_link_libraries(
     buf_block
     buf_chunk
     buf_flush
+    buf_lru
     tablespace
     PRIVATE
 )

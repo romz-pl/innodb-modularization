@@ -10,6 +10,7 @@ add_subdirectory( buf_calc )
 add_subdirectory( buf_chunk )
 add_subdirectory( buf_flush )
 add_subdirectory( buf_frame )
+add_subdirectory( buf_lru )
 add_subdirectory( buf_page )
 add_subdirectory( buf_pool )
 
