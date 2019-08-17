@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/page/page_zip_parse_compress_no_data.h>
 #include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/dict_mem/Persister.h>
 #include <innodb/dict_mem/PersistentTableMetadata.h>

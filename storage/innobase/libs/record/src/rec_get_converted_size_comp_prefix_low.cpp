@@ -20,7 +20,7 @@
 
 /** Determines the size of a data tuple prefix in ROW_FORMAT=COMPACT.
  @return total size */
-UNIV_INLINE MY_ATTRIBUTE((warn_unused_result)) ulint
+MY_ATTRIBUTE((warn_unused_result)) ulint
     rec_get_converted_size_comp_prefix_low(
         const dict_index_t *index, /*!< in: record descriptor;
                                    dict_table_is_comp() is

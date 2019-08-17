@@ -36,29 +36,39 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/crc32/crc32.h>
+#include <innodb/disk/page_t.h>
+#include <innodb/machine/data.h>
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/page/flag.h>
+#include <innodb/page/page_dir_get_n_heap.h>
+#include <innodb/page/page_zip_available.h>
+#include <innodb/page/page_zip_decompress_low.h>
+#include <innodb/page/page_zip_dir_find_free.h>
+#include <innodb/page/page_zip_dir_find_low.h>
+#include <innodb/page/page_zip_dir_start_offs.h>
+#include <innodb/page/page_zip_dir_user_size.h>
+#include <innodb/page/page_zip_empty_size.h>
+#include <innodb/page/page_zip_get_size.h>
+#include <innodb/page/page_zip_get_trailer_len.h>
 #include <innodb/page/page_zip_level.h>
 #include <innodb/page/page_zip_log_pages.h>
-#include <innodb/page/page_zip_empty_size.h>
+#include <innodb/page/page_zip_max_ins_size.h>
 #include <innodb/page/page_zip_rec_needs_ext.h>
-#include <innodb/disk/page_t.h>
-#include <innodb/page/page_zip_decompress_low.h>
+#include <innodb/page/page_zip_rec_needs_ext.h>
+#include <innodb/page/page_zip_reset_stat_per_index.h>
+#include <innodb/page/page_zip_stat_per_index.h>
+#include <innodb/page/page_zip_write_header.h>
+#include <innodb/page/page_zip_write_header_log.h>
 
-#ifdef UNIV_MATERIALIZE
-#undef UNIV_INLINE
-#define UNIV_INLINE
-#endif
 
+#include "mtr0log.h"
+#include "page0page.h"
+#include "page0zip.h"
+#include "srv0srv.h"
 #include <sys/types.h>
 #include <zlib.h>
-
 #include "buf0buf.h"
-
-#include <innodb/machine/data.h>
-
-
-#include "srv0srv.h"
-#include <innodb/crc32/crc32.h>
 
 
 /** Shift the dense page directory when a record is deleted.
@@ -136,15 +146,7 @@ ibool page_zip_validate_low(
 #endif                              /* UNIV_ZIP_DEBUG */
 
 
-/** Write data to the uncompressed header portion of a page. The data must
-already have been written to the uncompressed page.
-@param[in,out]	page_zip	compressed page
-@param[in]	str		address on the uncompressed page
-@param[in]	length		length of the data
-@param[in]	mtr		mini-transaction, or NULL */
-UNIV_INLINE
-void page_zip_write_header(page_zip_des_t *page_zip, const byte *str,
-                           ulint length, mtr_t *mtr);
+
 
 /** Write an entire record on the compressed page.  The data must already
  have been written to the uncompressed page. */
@@ -242,17 +244,6 @@ byte *page_zip_parse_write_header(
     page_t *page,              /*!< in/out: uncompressed page */
     page_zip_des_t *page_zip); /*!< in/out: compressed page */
 
-/** Write data to the uncompressed header portion of a page.  The data must
-already have been written to the uncompressed page.
-However, the data portion of the uncompressed page may differ from the
-compressed page when a record is being inserted in page_cur_insert_rec_low().
-@param[in,out]  page_zip        compressed page
-@param[in]      str             address on the uncompressed page
-@param[in]      length          length of the data
-@param[in]      mtr             mini-transaction, or NULL */
-UNIV_INLINE
-void page_zip_write_header(page_zip_des_t *page_zip, const byte *str,
-                           ulint length, mtr_t *mtr);
 
 /** Reorganize and compress a page.  This is a low-level operation for
  compressed pages, to be used when page_zip_compress() fails.
@@ -295,27 +286,9 @@ byte *page_zip_parse_compress(
     page_t *page,              /*!< out: uncompressed page */
     page_zip_des_t *page_zip); /*!< out: compressed page */
 
-/** Write a log record of compressing an index page without the data on the
-page.
-@param[in]	level	compression level
-@param[in]	page	page that is compressed
-@param[in]	index	index
-@param[in]	mtr	mtr */
-UNIV_INLINE
-void page_zip_compress_write_log_no_data(ulint level, const page_t *page,
-                                         dict_index_t *index, mtr_t *mtr);
+#include <innodb/page/page_zip_compress_write_log_no_data.h>
 
-/** Parses a log record of compressing an index page without the data.
-@param[in]	ptr		buffer
-@param[in]	end_ptr		buffer end
-@param[in]	page		uncompressed page
-@param[out]	page_zip	compressed page
-@param[in]	index		index
-@return end of log record or NULL */
-UNIV_INLINE
-byte *page_zip_parse_compress_no_data(byte *ptr, byte *end_ptr, page_t *page,
-                                      page_zip_des_t *page_zip,
-                                      dict_index_t *index);
+
 
 #ifndef UNIV_HOTBACKUP
 /** Reset the counters used for filling
@@ -329,6 +302,5 @@ void page_zip_reset_stat_per_index();
 #endif
 #endif /* !UNIV_HOTBACKUP */
 
-#include "page0zip.ic"
 
 #endif /* page0zip_h */

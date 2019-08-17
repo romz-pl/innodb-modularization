@@ -97,6 +97,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_wait/srv_log_wait_for_flush_timeout.h>
 #include <innodb/log_flush/srv_log_flush_notifier_timeout.h>
 #include <innodb/log_flush/srv_log_flush_notifier_spin_delay.h>
+#include <innodb/page/page_zip_stat_per_index_mutex.h>
 
 
 #include "fil0fil.h"
@@ -184,8 +185,7 @@ at a time */
 #define SRV_AUTO_EXTEND_INCREMENT (srv_sys_space.get_autoextend_increment())
 
 #ifndef UNIV_HOTBACKUP
-/** Mutex protecting page_zip_stat_per_index */
-extern ib_mutex_t page_zip_stat_per_index_mutex;
+
 /* Mutex for locking srv_monitor_file. Not created if srv_read_only_mode */
 extern ib_mutex_t srv_monitor_file_mutex;
 /* Temporary file for innodb monitor output */

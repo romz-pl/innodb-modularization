@@ -46,6 +46,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_offs_size.h>
 #include <innodb/page/header.h>
 
+void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
+                         const dict_index_t *index, const ulint *offsets,
+                         const byte *free);
+
+
 
 #ifdef UNIV_DEBUG
 #include "log0recv.h"

@@ -116,6 +116,12 @@ add_library( ${LIB_NAME} STATIC
     page_zip_decompress_clust_ext.cpp
     page_zip_decompress_clust.cpp
     page_zip_decompress_low.cpp
+    page_zip_write_header_log.cpp
+    page_zip_write_header.cpp
+    page_zip_compress_write_log_no_data.cpp
+    page_zip_parse_compress_no_data.cpp
+    page_zip_stat_per_index_mutex.cpp
+    page_zip_reset_stat_per_index.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -129,6 +135,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    mtr
     record
     PRIVATE
 )
