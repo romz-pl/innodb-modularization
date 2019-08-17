@@ -27,7 +27,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** @file dict/dict0dd.cc
 Data dictionary interface */
 
-#include "dict/mem.h"
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
+#include <innodb/dict_mem/dict_mem_table_create.h>
+#include <innodb/dict_mem/dict_mem_table_free.h>
+#include <innodb/dict_mem/dict_mem_index_create.h>
+#include <innodb/dict_mem/dict_mem_fill_column_struct.h>
 #include <innodb/dict_mem/dict_mem_table_fill_foreign_vcol_set.h>
 #include <innodb/dict_mem/dict_mem_table_free_foreign_vcol_set.h>
 #include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>

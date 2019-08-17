@@ -31,11 +31,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_match.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
-#include "dict/mem.h"
+
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/dict_mem/dict_foreign_different_tables.h>
 #include <innodb/dict_mem/dict_mem_index_free.h>

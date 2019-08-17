@@ -46,6 +46,7 @@ external tools. */
 #include <innodb/string/mem_strdup.h>
 #include <innodb/dict_mem/lock_table_lock_list_init.h>
 
+
 #include <new>
 
 #include "dict0dict.h"
@@ -54,64 +55,6 @@ external tools. */
 #endif /* !UNIV_HOTBACKUP */
 
 
-/** Free a table memory object. */
-void dict_mem_table_free(dict_table_t *table) /*!< in: table */
-{
-  ut_ad(table);
-  ut_ad(table->magic_n == DICT_TABLE_MAGIC_N);
-  ut_d(table->cached = FALSE);
-
-#ifndef UNIV_HOTBACKUP
-#ifndef UNIV_LIBRARY
-  if (dict_table_has_fts_index(table) ||
-      DICT_TF2_FLAG_IS_SET(table, DICT_TF2_FTS_HAS_DOC_ID) ||
-      DICT_TF2_FLAG_IS_SET(table, DICT_TF2_FTS_ADD_DOC_ID)) {
-    if (table->fts) {
-      fts_optimize_remove_table(table);
-
-      fts_free(table);
-    }
-  }
-
-  dict_table_mutex_destroy(table);
-
-  dict_table_autoinc_destroy(table);
-
-  dict_table_stats_latch_destroy(table);
-
-  table->foreign_set.~dict_foreign_set();
-  table->referenced_set.~dict_foreign_set();
-#endif /* !UNIV_LIBRARY */
-#endif /* !UNIV_HOTBACKUP */
-
-  ut_free(table->name.m_name);
-  table->name.m_name = NULL;
-
-#ifndef UNIV_HOTBACKUP
-#ifndef UNIV_LIBRARY
-  /* Clean up virtual index info structures that are registered
-  with virtual columns */
-  for (ulint i = 0; i < table->n_v_def; i++) {
-    dict_v_col_t *vcol = dict_table_get_nth_v_col(table, i);
-
-    UT_DELETE(vcol->v_indexes);
-  }
-#endif /* !UNIV_LIBRARY */
-#endif /* !UNIV_HOTBACKUP */
-
-  if (table->s_cols != NULL) {
-    UT_DELETE(table->s_cols);
-  }
-
-#ifndef UNIV_HOTBACKUP
-  if (table->temp_prebuilt != NULL) {
-    ut_ad(table->is_intrinsic());
-    UT_DELETE(table->temp_prebuilt);
-  }
-#endif /* !UNIV_HOTBACKUP */
-
-  mem_heap_free(table->heap);
-}
 
 /** Creates a table memory object.
  @return own: table object */
@@ -211,46 +154,3 @@ dict_table_t *dict_mem_table_create(
 
   return (table);
 }
-
-/** Creates an index memory object.
- @return own: index object */
-dict_index_t *dict_mem_index_create(
-    const char *table_name, /*!< in: table name */
-    const char *index_name, /*!< in: index name */
-    ulint space,            /*!< in: space where the index tree is
-                            placed, ignored if the index is of
-                            the clustered type */
-    ulint type,             /*!< in: DICT_UNIQUE,
-                            DICT_CLUSTERED, ... ORed */
-    ulint n_fields)         /*!< in: number of fields */
-{
-  dict_index_t *index;
-  mem_heap_t *heap;
-
-  ut_ad(table_name && index_name);
-
-  heap = mem_heap_create(DICT_HEAP_SIZE);
-
-  index = static_cast<dict_index_t *>(mem_heap_zalloc(heap, sizeof(*index)));
-
-  dict_mem_fill_index_struct(index, heap, table_name, index_name, space, type,
-                             n_fields);
-
-#ifndef UNIV_HOTBACKUP
-#ifndef UNIV_LIBRARY
-  dict_index_zip_pad_mutex_create_lazy(index);
-
-  if (type & DICT_SPATIAL) {
-    mutex_create(LATCH_ID_RTR_SSN_MUTEX, &index->rtr_ssn.mutex);
-    index->rtr_track = static_cast<rtr_info_track_t *>(
-        mem_heap_alloc(heap, sizeof(*index->rtr_track)));
-    mutex_create(LATCH_ID_RTR_ACTIVE_MUTEX,
-                 &index->rtr_track->rtr_active_mutex);
-    index->rtr_track->rtr_active = UT_NEW_NOKEY(rtr_info_active());
-  }
-#endif /* !UNIV_LIBRARY */
-#endif /* !UNIV_HOTBACKUP */
-
-  return (index);
-}
-

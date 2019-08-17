@@ -1,11 +1,11 @@
 #include <innodb/page/page_zip_fields_free.h>
 
+#include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/dict_mem/dict_table_t.h>
 #include <innodb/dict_mem/dict_index_t.h>
 #include <innodb/dict_mem/dict_index_zip_pad_mutex_destroy.h>
 #include <innodb/memory/mem_heap_free.h>
 
-void dict_mem_table_free(dict_table_t *table);
 
 /** Deallocate the index information initialized by page_zip_fields_decode(). */
 void page_zip_fields_free(

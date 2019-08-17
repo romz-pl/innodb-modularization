@@ -32,6 +32,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/dict_mem/dict_add_col_name.h>
+#include <innodb/dict_mem/dict_mem_fill_column_struct.h>
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
+#include <innodb/dict_mem/dict_mem_table_free.h>
+#include <innodb/dict_mem/dict_mem_table_create.h>
+#include <innodb/dict_mem/dict_mem_index_create.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
@@ -42,7 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_print_new.h>
 #include <innodb/record/rec_print_old.h>
 #include <innodb/record/rec_n_fields_is_sane.h>
-#include "dict/mem.h"
+
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/dict_mem/dict_mem_index_free.h>
 #include <innodb/data_types/dfield_copy.h>

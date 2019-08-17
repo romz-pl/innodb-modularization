@@ -30,7 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1996 Heikki Tuuri
  *******************************************************/
 
-#include "dict/mem.h"
+#include <innodb/dict_mem/dict_mem_table_free.h>
+#include <innodb/dict_mem/dict_mem_index_create.h>
+#include <innodb/dict_mem/dict_mem_table_create.h>
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/tablespace/Tablespace.h>
 #include <innodb/tablespace/Datafile.h>

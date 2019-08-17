@@ -37,7 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
-#include "dict/mem.h"
+#include <innodb/dict_mem/dict_mem_index_create.h>
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
+#include <innodb/dict_mem/dict_mem_table_create.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/memory/mem_heap_strdup.h>
 #include <innodb/data_types/dtuple_create.h>

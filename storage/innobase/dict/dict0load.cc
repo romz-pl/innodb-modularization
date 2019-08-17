@@ -31,13 +31,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/24/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/dict_mem/dict_mem_table_create.h>
+#include <innodb/dict_mem/dict_mem_fill_column_struct.h>
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
+#include <innodb/dict_mem/dict_mem_index_create.h>
 #include <innodb/cmp/cmp_data_data.h>
 #include <innodb/data_types/dtype_get_charset_coll.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/record/rec_get_n_fields_old_raw.h>
-#include "dict/mem.h"
+
 #include <innodb/dict_mem/dict_mem_referenced_table_name_lookup_set.h>
 #include <innodb/dict_mem/dict_mem_foreign_table_name_lookup_set.h>
 #include <innodb/dict_mem/dict_mem_foreign_create.h>

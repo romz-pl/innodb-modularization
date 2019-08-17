@@ -35,8 +35,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 other files in library. The code in this file is used to make a library for
 external tools. */
 
-#include "dict/mem.h"
-
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
+#include <innodb/dict_mem/dict_mem_index_create.h>
+#include <innodb/dict_mem/dict_mem_table_create.h>
 #include <innodb/record/rec_get_offsets_reverse.h>
 #include <innodb/record/rec_offs_nth_extern.h>
 #include <innodb/record/rec_offs_any_extern.h>

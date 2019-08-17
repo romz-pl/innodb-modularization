@@ -29,8 +29,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  Created 12/7/1995 Heikki Tuuri
  *******************************************************/
+#include <innodb/dict_mem/dict_mem_table_create.h>
+#include <innodb/dict_mem/dict_mem_index_create.h>
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
 
-#include "dict/mem.h"
 #include "mtr0log.h"
 
 #ifndef UNIV_HOTBACKUP

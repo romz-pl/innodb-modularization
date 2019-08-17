@@ -33,6 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/dict_mem/dict_mem_table_free.h>
+#include <innodb/dict_mem/dict_mem_table_add_col.h>
+#include <innodb/dict_mem/dict_mem_table_create.h>
+#include <innodb/dict_mem/dict_mem_index_create.h>
+#include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/cmp/cmp_cols_are_equal.h>
 #include <innodb/record/rec_copy_prefix_to_buf.h>
@@ -40,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_copy_prefix_to_dtuple.h>
 #include <innodb/record/rec_get_n_fields_old_raw.h>
 #include <innodb/record/rec_init_offsets_comp_ordinary.h>
-#include "dict/mem.h"
+
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/dict_mem/CorruptedIndexPersister.h>
 #include <innodb/dict_mem/AutoIncPersister.h>
