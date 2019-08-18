@@ -161,6 +161,28 @@ add_library( ${LIB_NAME} STATIC
     page_zip_write_rec_ext.cpp
     page_zip_write_rec.cpp
     page_zip_parse_write_blob_ptr.cpp
+    page_zip_write_blob_ptr.cpp
+    page_zip_parse_write_node_ptr.cpp
+    page_zip_write_node_ptr.cpp
+    page_zip_write_trx_id_and_roll_ptr.cpp
+    page_zip_clear_rec.cpp
+    page_zip_dir_insert.cpp
+    page_zip_dir_delete.cpp
+    page_zip_parse_write_header.cpp
+    page_zip_reorganize.cpp
+    page_zip_copy_recs.cpp
+    page_zip_parse_compress.cpp
+    page_zip_validate_low.cpp
+    page_zip_header_cmp.cpp
+    page_zip_compress_dbg.cpp
+    page_zip_compress_log.cpp
+    page_zip_compress_deflate.cpp
+    deflate.cpp
+    page_zip_hexdump_func.cpp
+    page_zip_hexdump.cpp
+    page_zip_validate_header_only.cpp
+    page_zip_fail.cpp
+    page_zip_fail_func.cpp
 
 )
 

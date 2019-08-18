@@ -45,10 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_get_n_owned_old.h>
 #include <innodb/record/rec_offs_size.h>
 #include <innodb/page/header.h>
-
-void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
-                         const dict_index_t *index, const ulint *offsets,
-                         const byte *free);
+#include <innodb/page/page_zip_dir_delete.h>
 
 
 
@@ -65,103 +62,6 @@ void page_zip_dir_delete(page_zip_des_t *page_zip, byte *rec,
 #undef UNIV_INLINE
 #define UNIV_INLINE
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /** Puts a record to free list. */
 UNIV_INLINE

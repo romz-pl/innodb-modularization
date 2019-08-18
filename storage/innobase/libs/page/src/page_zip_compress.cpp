@@ -45,6 +45,10 @@
 
 #include <zlib.h>
 
+static_assert(DATA_TRX_ID_LEN == 6, "DATA_TRX_ID_LEN != 6");
+static_assert(DATA_ROLL_PTR_LEN == 7, "DATA_ROLL_PTR_LEN != 7");
+static_assert(DATA_TRX_ID + 1 == DATA_ROLL_PTR, "DATA_TRX_ID invalid value!");
+
 extern bool srv_cmp_per_index_enabled;
 
 void dict_index_zip_failure(dict_index_t *index);
