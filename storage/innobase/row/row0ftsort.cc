@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/dict_mem/dict_mem_index_create.h>
 #include <innodb/cmp/cmp_rec_rec_simple.h>
 #include <innodb/data_types/dfield_get_data.h>

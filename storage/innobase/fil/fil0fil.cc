@@ -33,6 +33,7 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/clone/clone_mark_active.h>
 #include <innodb/clone/clone_mark_abort.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
@@ -110,7 +111,7 @@ The tablespace memory cache */
 #include "mtr0log.h"
 #include "my_dbug.h"
 #include "my_inttypes.h"
-#include "page0zip.h"
+
 #include "srv0start.h"
 #include <innodb/univ/call_destructor.h>
 #include <innodb/enum/to_int.h>

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/27/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/page/page_zip_write_trx_id_and_roll_ptr.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 
 #include "mtr0log.h"
@@ -39,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0trx.h"
 #include "trx0undo.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "page0zip.h"
+
 
 /** Creates an update vector object.
  @return own: update vector object */

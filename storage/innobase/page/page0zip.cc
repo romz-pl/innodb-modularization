@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created June 2005 by Marko Makela
  *******************************************************/
 
+#include <innodb/page/page_zip_compress.h>
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/record/rec_get_n_extern_new.h>
 #include <innodb/record/rec_get_converted_size_comp_prefix.h>
 #include <innodb/record/rec_offs_any_extern.h>
@@ -54,8 +56,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/page/page_zip_des_t.h>
 #include <innodb/crc32/crc32.h>
 #include <innodb/page/page_zip_stat.h>
+#include <innodb/page/page_zip_level.h>
 
-#include "page0zip.h"
+
 #include "btr0cur.h"
 #include "dict0dict.h"
 #include "log0recv.h"

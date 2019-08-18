@@ -31,6 +31,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory_check/memory_check.h>
+#include <innodb/page/page_zip_parse_compress.h>
+#include <innodb/page/page_zip_parse_write_blob_ptr.h>
+#include <innodb/page/page_zip_parse_write_header.h>
+#include <innodb/page/page_zip_parse_write_node_ptr.h>
 #include <innodb/page/page_zip_parse_compress_no_data.h>
 #include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/dict_mem/Persister.h>
@@ -119,7 +124,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_inttypes.h"
 #include <innodb/thread/os_thread_create.h>
 #include "page0cur.h"
-#include "page0zip.h"
+
 #include "trx0rec.h"
 #include "trx0undo.h"
 #include <innodb/univ/call_destructor.h>

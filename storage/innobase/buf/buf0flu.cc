@@ -85,7 +85,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "my_inttypes.h"
 #endif /* !UNIV_HOTBACKUP */
-#include "page0zip.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "log0log.h"
 #include "buf0lru.h"

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/5/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
@@ -89,7 +90,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0recv.h"
 #include "my_dbug.h"
 
-#include "page0zip.h"
+
 #include "srv0mon.h"
 #include "srv0srv.h"
 

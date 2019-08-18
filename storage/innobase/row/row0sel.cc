@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/data_types/dtuple_get_n_fields_cmp.h>
 #include <innodb/cmp/cmp_dtuple_is_prefix_of_rec.h>
 #include <innodb/cmp/cmp_dtuple_rec.h>

@@ -24,6 +24,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
 #include <innodb/logger/fatal.h>
@@ -33,6 +34,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/buf_block/buf_block_get_state.h>
 #include <innodb/record/rec_field_not_null_not_add_col_def.h>
 #include <innodb/data_types/dfield_is_ext.h>
+#include <innodb/page/page_zip_set_alloc.h>
 
 #include <sys/types.h>
 

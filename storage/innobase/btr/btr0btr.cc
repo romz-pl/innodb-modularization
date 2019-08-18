@@ -31,6 +31,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/page/page_zip_compress.h>
+#include <innodb/page/page_zip_copy_recs.h>
+#include <innodb/page/page_zip_empty_size.h>
+#include <innodb/page/page_zip_copy_recs.h>
+#include <innodb/page/page_zip_level.h>
+#include <innodb/page/page_zip_log_pages.h>
+#include <innodb/page/page_zip_write_node_ptr.h>
 #include <innodb/cmp/cmp_rec_rec.h>
 #include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/logger/fatal.h>
@@ -75,7 +82,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lock0lock.h"
 #include "my_dbug.h"
 #include "page0page.h"
-#include "page0zip.h"
+
 
 #include "srv0mon.h"
 #include "trx0trx.h"

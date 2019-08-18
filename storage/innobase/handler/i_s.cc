@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created July 18, 2007 Vasil Dimov
  *******************************************************/
 
+#include <innodb/page/page_zip_reset_stat_per_index.h>
+#include <innodb/page/page_zip_stat_per_index.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/memory/mem_heap_empty.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
@@ -78,7 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "ibuf0ibuf.h"
 #include "mysql/plugin.h"
-#include "page0zip.h"
+
 #include "pars0pars.h"
 #include "srv0mon.h"
 #include "srv0start.h"

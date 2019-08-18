@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created December 2006 by Marko Makela
  *******************************************************/
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/align/ut_align_down.h>
 #include <innodb/dict_types/index_id_t.h>
 #include <innodb/hash/HASH_INSERT.h>
@@ -54,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0lru.h"
 #include "dict0dict.h"
 
-#include "page0zip.h"
+
 
 /** When freeing a buf we attempt to coalesce by looking at its buddy
 and deciding whether it is free or not. To ascertain if the buddy is

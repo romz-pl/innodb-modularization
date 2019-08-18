@@ -49,6 +49,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/page/page_zip_available.h>
+#include <innodb/memory_check/memory_check.h>
+#include <innodb/page/page_zip_is_too_big.h>
+#include <innodb/page/page_zip_empty_size.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/cmp/cmp_rec_rec_with_match.h>
 #include <innodb/data_types/DTUPLE_EST_ALLOC.h>
@@ -101,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0upd.h"
 #endif /* !UNIV_HOTBACKUP */
 #include "page0page.h"
-#include "page0zip.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "que0que.h"
 #endif /* !UNIV_HOTBACKUP */

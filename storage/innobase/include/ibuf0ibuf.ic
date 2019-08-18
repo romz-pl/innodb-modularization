@@ -30,11 +30,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 7/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/page/page_zip_max_ins_size.h>
+#include <innodb/page/page_zip_max_ins_size.h>
 #include <innodb/mtr/mtr_start.h>
 #include <innodb/mtr/mtr_commit.h>
 
 #include "page0page.h"
-#include "page0zip.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "buf0lru.h"
 

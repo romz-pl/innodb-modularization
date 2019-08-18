@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_match.h>
 #include <innodb/logger/fatal.h>

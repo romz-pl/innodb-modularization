@@ -30,6 +30,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013/03/27 Allen Lai and Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/page/page_zip_compress.h>
+#include <innodb/page/page_zip_copy_recs.h>
+#include <innodb/page/page_zip_decompress.h>
+#include <innodb/page/page_zip_level.h>
+#include <innodb/page/page_zip_reorganize.h>
+#include <innodb/page/page_zip_write_rec.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/cmp/cmp_rec_rec_with_match.h>
 #include <innodb/data_types/dfield_get_data.h>
@@ -55,7 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "page0cur.h"
 #include "page0page.h"
-#include "page0zip.h"
+
 
 #include "btr0cur.h"
 #include "btr0pcur.h"

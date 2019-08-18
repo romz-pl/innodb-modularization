@@ -56,7 +56,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #endif /* !UNIV_HOTBACKUP */
 #include "mtr0log.h"
-#include "page0zip.h"
+
 
 #ifdef UNIV_MATERIALIZE
 #undef UNIV_INLINE

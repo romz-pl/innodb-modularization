@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/page_dir_get_n_heap.h>
 #include <innodb/lock_types/lock_mode_string.h>
 #include <innodb/lock_priv/lock_table_t.h>
 #include <innodb/lock_priv/lock_rec_t.h>

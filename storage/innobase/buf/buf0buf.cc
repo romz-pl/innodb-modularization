@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <innodb/page/page_zip_decompress.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/dict_types/index_id_t.h>
 #include <innodb/sync_mutex/mutex_free.h>
@@ -165,7 +166,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0dict.h"
 #include "log0recv.h"
 #include <innodb/thread/os_thread_create.h>
-#include "page0zip.h"
+
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "srv0start.h"

@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 03/11/2014 Shaohua Wang
  *******************************************************/
 
+#include <innodb/page/page_zip_compress.h>
+#include <innodb/page/page_zip_is_too_big.h>
+#include <innodb/page/page_zip_level.h>
 #include <innodb/data_types/dtuple_get_info_bits.h>
 #include <innodb/dict_types/index_id_t.h>
 #include <innodb/data_types/dtuple_set_info_bits.h>
@@ -40,6 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_set_heap_no_old.h>
 #include <innodb/record/rec_copy.h>
 #include <innodb/record/rec_get_end.h>
+#include <innodb/page/page_zip_rec_needs_ext.h>
 
 #include "btr0bulk.h"
 #include "btr0btr.h"

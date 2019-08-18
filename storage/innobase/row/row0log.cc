@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2011-05-26 Marko Makela
  *******************************************************/
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
 #include <innodb/record/rec_get_nth_field_instant.h>

@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/page/page_zip_write_blob_ptr.h>
+#include <innodb/page/page_zip_write_blob_ptr.h>
 #include <innodb/record/rec_offs_make_nth_extern.h>
 #include <innodb/record/rec_offs_nth_extern.h>
 #include <innodb/record/rec_offs_any_extern.h>
@@ -42,6 +44,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "page0page.h"
 #include "row0log.h"
+
+#include <zlib.h>
 
 /* Uncomment the following line to generate debug data, useful to analyze
 LOB issues. */

@@ -46,6 +46,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/memory_check/memory_check.h>
+#include <innodb/page/page_zip_log_pages.h>
+#include <innodb/page/page_zip_level.h>
+#include <innodb/page/page_zip_reset_stat_per_index.h>
 #include <innodb/dict_mem/dict_add_col_name.h>
 #include <innodb/dict_mem/dict_mem_fill_column_struct.h>
 #include <innodb/dict_mem/dict_mem_table_add_col.h>
@@ -229,7 +233,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include "p_s.h"
-#include "page0zip.h"
+
 #include "pars0pars.h"
 
 #include "row0ext.h"

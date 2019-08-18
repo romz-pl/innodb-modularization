@@ -35,6 +35,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_dbug.h"
 
+#include <innodb/page/page_dir_get_n_heap.h>
+#include <innodb/page/page_zip_compress.h>
+#include <innodb/page/page_zip_decompress.h>
+#include <innodb/page/page_zip_level.h>
+#include <innodb/page/page_zip_reorganize.h>
 #include <innodb/cmp/cmp_rec_rec.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/record/rec_offs_any_extern.h>
@@ -61,7 +66,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "buf0buf.h"
 #include "page0cur.h"
 #include "page0page.h"
-#include "page0zip.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "btr0sea.h"
 #include "fut0lst.h"

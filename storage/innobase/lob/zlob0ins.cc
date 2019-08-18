@@ -24,6 +24,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 *****************************************************************************/
 
+#include <innodb/page/page_zip_level.h>
+#include <innodb/page/page_zip_set_alloc.h>
 #include <innodb/error/dberr_t.h>
 #include <innodb/page/page_zip_get_size.h>
 

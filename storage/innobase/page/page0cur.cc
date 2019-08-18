@@ -31,6 +31,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/4/1994 Heikki Tuuri
  *************************************************************************/
 
+#include <innodb/page/page_zip_compress.h>
+#include <innodb/page/page_zip_available.h>
+#include <innodb/memory_check/memory_check.h>
+#include <innodb/page/page_zip_compress_write_log_no_data.h>
+#include <innodb/page/page_zip_dir_insert.h>
+#include <innodb/page/page_zip_dir_add_slot.h>
+#include <innodb/page/page_zip_decompress.h>
+#include <innodb/page/page_zip_level.h>
+#include <innodb/page/page_zip_log_pages.h>
+#include <innodb/page/page_zip_write_rec.h>
+#include <innodb/page/page_zip_reorganize.h>
 #include <innodb/mtr/mtr_get_log_mode.h>
 #include <innodb/mtr/mlog_catenate_string.h>
 #include <innodb/logger/fatal.h>
@@ -67,7 +78,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "mtr0log.h"
 
 #include <algorithm>
-#include "page0zip.h"
+
 
 #ifndef UNIV_HOTBACKUP
 #include "gis0rtree.h"

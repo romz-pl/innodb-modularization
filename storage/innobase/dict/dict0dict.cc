@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/page/page_zip_empty_size.h>
+#include <innodb/page/page_zip_stat_per_index.h>
 #include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/dict_mem/dict_mem_table_add_col.h>
 #include <innodb/dict_mem/dict_mem_table_create.h>
@@ -169,7 +171,7 @@ extern uint ibuf_debug;
 
 #include <innodb/dict_mem/os_once.h>
 #include "page0page.h"
-#include "page0zip.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "pars0pars.h"
 #include "pars0sym.h"

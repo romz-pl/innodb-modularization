@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <vector>
 
+#include <innodb/memory_check/memory_check.h>
 #include <innodb/page/page_rec_get_next_non_del_marked.h>
 #include <innodb/cmp/cmp_rec_rec_with_match.h>
 #include <innodb/data_types/dfield_get_data.h>

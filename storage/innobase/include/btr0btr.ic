@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/page/page_zip_write_header.h>
 #include <innodb/record/rec_get_nth_field.h>
 #include <innodb/record/rec_offs_n_fields.h>
 #include <innodb/univ/univ.h>
@@ -37,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "mtr0log.h"
 
-#include "page0zip.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 #define BTR_MAX_NODE_LEVEL          \
