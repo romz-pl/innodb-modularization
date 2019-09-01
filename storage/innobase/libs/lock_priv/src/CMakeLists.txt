@@ -45,6 +45,7 @@ target_link_libraries(
     PUBLIC
     dict_mem
     hash
+    lock_sys
     lock_types
     trx_types
     PRIVATE

@@ -337,8 +337,7 @@ static bool lock_rec_validate_page(
     MY_ATTRIBUTE((warn_unused_result));
 #endif /* UNIV_DEBUG */
 
-/* The lock system */
-lock_sys_t *lock_sys = NULL;
+
 
 /** We store info on the latest deadlock error to this buffer. InnoDB
 Monitor will then fetch it and print */

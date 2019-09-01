@@ -35,10 +35,19 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/lock_sys/LockMutex.h>
+#include <innodb/lock_sys/lock_sys_t.h>
 #include <innodb/lock_types/trx_lock_list_t.h>
 #include <innodb/lock_types/select_mode.h>
 #include <innodb/lock_priv/flags.h>
-
+#include <innodb/lock_sys/lock_sys.h>
+#include <innodb/lock_sys/lock_mutex_enter_nowait.h>
+#include <innodb/lock_sys/lock_mutex_own.h>
+#include <innodb/lock_sys/lock_mutex_enter.h>
+#include <innodb/lock_sys/lock_mutex_exit.h>
+#include <innodb/lock_sys/lock_wait_mutex_own.h>
+#include <innodb/lock_sys/lock_wait_mutex_enter.h>
+#include <innodb/lock_sys/lock_wait_mutex_exit.h>
 
 struct lock_t;
 struct lock_sys_t;
@@ -633,58 +642,7 @@ struct lock_op_t {
   lock_mode mode;      /*!< lock mode */
 };
 
-typedef ib_mutex_t LockMutex;
 
-/** The lock system struct */
-struct lock_sys_t {
-  char pad1[INNOBASE_CACHE_LINE_SIZE];
-  /*!< padding to prevent other
-  memory update hotspots from
-  residing on the same memory
-  cache line */
-  LockMutex mutex;              /*!< Mutex protecting the
-                                locks */
-  hash_table_t *rec_hash;       /*!< hash table of the record
-                                locks */
-  hash_table_t *prdt_hash;      /*!< hash table of the predicate
-                                lock */
-  hash_table_t *prdt_page_hash; /*!< hash table of the page
-                                lock */
-
-  char pad2[INNOBASE_CACHE_LINE_SIZE]; /*!< Padding */
-  LockMutex wait_mutex;                /*!< Mutex protecting the
-                                       next two fields */
-  srv_slot_t *waiting_threads;         /*!< Array  of user threads
-                                       suspended while waiting for
-                                       locks within InnoDB, protected
-                                       by the lock_sys->wait_mutex */
-  srv_slot_t *last_slot;               /*!< highest slot ever used
-                                       in the waiting_threads array,
-                                       protected by
-                                       lock_sys->wait_mutex */
-  int n_waiting;                       /*!< Number of slots in use.
-                                       Protected by lock_sys->mutex */
-  ibool rollback_complete;
-  /*!< TRUE if rollback of all
-  recovered transactions is
-  complete. Protected by
-  lock_sys->mutex */
-
-  ulint n_lock_max_wait_time; /*!< Max wait time */
-
-  os_event_t timeout_event; /*!< Set to the event that is
-                            created in the lock wait monitor
-                            thread. A value of 0 means the
-                            thread is not active */
-
-  /** Marker value before trx_t::age. */
-  uint64_t mark_age_updated;
-
-#ifdef UNIV_DEBUG
-  /** Lock timestamp counter */
-  uint64_t m_seq;
-#endif /* UNIV_DEBUG */
-};
 
 /*********************************************************************/ /**
 This function is kind of wrapper to lock_rec_convert_impl_to_expl_for_trx()
@@ -727,41 +685,21 @@ void lock_rec_free_all_from_discard_page(
 @param[in] type	whether the lock is in wait mode  */
 void lock_rec_trx_wait(lock_t *lock, ulint i, ulint type);
 
-/** The lock system */
-extern lock_sys_t *lock_sys;
 
-/** Test if lock_sys->mutex can be acquired without waiting. */
-#define lock_mutex_enter_nowait() (lock_sys->mutex.trylock(__FILE__, __LINE__))
 
-/** Test if lock_sys->mutex is owned. */
-#define lock_mutex_own() (lock_sys->mutex.is_owned())
 
-/** Acquire the lock_sys->mutex. */
-#define lock_mutex_enter()         \
-  do {                             \
-    mutex_enter(&lock_sys->mutex); \
-  } while (0)
 
-/** Release the lock_sys->mutex. */
-#define lock_mutex_exit()   \
-  do {                      \
-    lock_sys->mutex.exit(); \
-  } while (0)
 
-/** Test if lock_sys->wait_mutex is owned. */
-#define lock_wait_mutex_own() (lock_sys->wait_mutex.is_owned())
 
-/** Acquire the lock_sys->wait_mutex. */
-#define lock_wait_mutex_enter()         \
-  do {                                  \
-    mutex_enter(&lock_sys->wait_mutex); \
-  } while (0)
 
-/** Release the lock_sys->wait_mutex. */
-#define lock_wait_mutex_exit()   \
-  do {                           \
-    lock_sys->wait_mutex.exit(); \
-  } while (0)
+
+
+
+
+
+
+
+
 
 #include "lock0lock.ic"
 
