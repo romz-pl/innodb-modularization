@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/buf_block/buf_block_get_lock_hash_val.h>
+#include <innodb/lock_priv/lock_rec_get_n_bits.h>
 
 /* This file contains only methods which are used in
 lock/lock0* files, other than lock/lock0lock.cc.
@@ -41,15 +42,7 @@ methods but they are used only in that file. */
 #error Do not include lock0priv.ic outside of the lock/ module
 #endif
 
-/** Gets the type of a lock.
- @return LOCK_TABLE or LOCK_REC */
-UNIV_INLINE
-uint32_t lock_get_type_low(const lock_t *lock) /*!< in: lock */
-{
-  ut_ad(lock);
 
-  return (lock->type_mode & LOCK_TYPE_MASK);
-}
 
 /** Checks if some transaction has an implicit x-lock on a record in a clustered
  index.
@@ -66,13 +59,7 @@ trx_id_t lock_clust_rec_some_has_impl(
   return (row_get_rec_trx_id(rec, index, offsets));
 }
 
-/** Gets the number of bits in a record lock bitmap.
- @return	number of bits */
-UNIV_INLINE
-ulint lock_rec_get_n_bits(const lock_t *lock) /*!< in: record lock */
-{
-  return (lock->rec_lock.n_bits);
-}
+
 
 /** Sets the nth bit of a record lock to TRUE. */
 UNIV_INLINE

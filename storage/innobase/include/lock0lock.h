@@ -415,13 +415,7 @@ void lock_remove_all_on_table(
     ibool remove_also_table_sx_locks); /*!< in: also removes
                                    table S and X locks */
 
-/** Calculates the fold value of a page file address: used in inserting or
- searching for a lock in the hash table.
- @return folded value */
-UNIV_INLINE
-ulint lock_rec_fold(space_id_t space,  /*!< in: space */
-                    page_no_t page_no) /*!< in: page number */
-    MY_ATTRIBUTE((const));
+
 
 /** Calculates the hash value of a page file address: used in inserting or
 searching for a lock in the hash table.

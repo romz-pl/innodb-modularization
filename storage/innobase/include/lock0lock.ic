@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/record/rec_get_heap_no_new.h>
 #include <innodb/record/rec_get_heap_no_old.h>
 #include <innodb/hash/hash_calc_hash.h>
+#include <innodb/lock_priv/lock_rec_fold.h>
 
 #include "btr0cur.h"
 #include "buf0buf.h"
@@ -48,15 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0sys.h"
 #include "trx0trx.h"
 
-/** Calculates the fold value of a page file address: used in inserting or
- searching for a lock in the hash table.
- @return folded value */
-UNIV_INLINE
-ulint lock_rec_fold(space_id_t space,  /*!< in: space */
-                    page_no_t page_no) /*!< in: page number */
-{
-  return (ut_fold_ulint_pair(space, page_no));
-}
+
 
 /** Calculates the hash value of a page file address: used in inserting or
  searching for a lock in the hash table.

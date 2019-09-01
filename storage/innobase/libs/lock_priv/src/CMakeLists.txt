@@ -8,6 +8,9 @@ add_library( ${LIB_NAME} STATIC
     lock_strength_matrix.cpp
     lock_t.cpp
     lock_table_t.cpp
+    lock_rec_fold.cpp
+    lock_get_type_low.cpp
+    lock_rec_get_n_bits.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -21,6 +24,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    dict_mem
     hash
     lock_types
     trx_types

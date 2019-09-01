@@ -3,6 +3,7 @@
 #include <innodb/lock_types/lock_mode_string.h>
 
 #include <sstream>
+#include <ostream>
 
 /** Convert the member 'type_mode' into a human readable string.
 @return human readable string */
@@ -30,3 +31,15 @@ std::string lock_t::type_mode_string() const {
 }
 
 
+std::ostream &lock_t::print(std::ostream &out) const {
+  out << "[lock_t: type_mode=" << type_mode << "(" << type_mode_string() << ")";
+
+  if (is_record_lock()) {
+    out << rec_lock;
+  } else {
+    out << tab_lock;
+  }
+
+  out << "]";
+  return (out);
+}

@@ -12,7 +12,6 @@
 #include <innodb/trx_types/trx_que_t.h>
 #include <innodb/univ/page_no_t.h>
 
-
 struct dict_index_t;
 struct trx_t;
 
@@ -143,3 +142,7 @@ struct lock_t {
     }
   }
 };
+
+inline std::ostream &operator<<(std::ostream &out, const lock_t &lock) {
+  return (lock.print(out));
+}

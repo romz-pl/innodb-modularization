@@ -23,3 +23,9 @@ struct lock_table_t {
 };
 
 
+/** The global output operator is overloaded to conveniently
+print the lock_table_t object into the given output stream.
+@param[in,out]	out	the output stream
+@param[in]	lock	the table lock
+@return the given output stream */
+std::ostream &operator<<(std::ostream &out, const lock_table_t &lock);

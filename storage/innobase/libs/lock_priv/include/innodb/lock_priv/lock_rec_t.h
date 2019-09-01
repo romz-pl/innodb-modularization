@@ -20,3 +20,5 @@ struct lock_rec_t {
   @return the given output stream. */
   std::ostream &print(std::ostream &out) const;
 };
+
+std::ostream &operator<<(std::ostream &out, const lock_rec_t &lock);

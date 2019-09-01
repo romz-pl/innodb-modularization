@@ -131,6 +131,7 @@ add_library( ${LIB_NAME} STATIC
     rec_index_print.cpp
     rec_printer.cpp
     rec_get_trx_id.cpp
+    RecID.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
