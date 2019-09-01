@@ -30,6 +30,8 @@ add_library( ${LIB_NAME} STATIC
     lock_t.cpp
     lock_table_has.cpp
     lock_table_t.cpp
+    lock_rec_hash.cpp
+    lock_rec_get_first_on_page_addr.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

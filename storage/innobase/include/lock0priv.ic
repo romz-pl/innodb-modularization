@@ -83,27 +83,7 @@ void lock_rec_set_nth_bit(lock_t *lock, /*!< in: record lock */
 
 
 
-/** Gets the first record lock on a page, where the page is identified by its
- file address.
- @return	first lock, NULL if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_first_on_page_addr(
-    hash_table_t *lock_hash, /*!< in: Lock hash table */
-    space_id_t space,        /*!< in: space */
-    page_no_t page_no)       /*!< in: page number */
-{
-  ut_ad(lock_mutex_own());
 
-  for (lock_t *lock = static_cast<lock_t *>(
-           HASH_GET_FIRST(lock_hash, lock_rec_hash(space, page_no)));
-       lock != NULL; lock = static_cast<lock_t *>(HASH_GET_NEXT(hash, lock))) {
-    if (lock->space_id() == space && lock->page_no() == page_no) {
-      return (lock);
-    }
-  }
-
-  return (NULL);
-}
 
 /** Gets the first record lock on a page, where the page is identified by a
  pointer to it.

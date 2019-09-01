@@ -426,13 +426,7 @@ void lock_remove_all_on_table(
 
 
 
-/** Calculates the hash value of a page file address: used in inserting or
-searching for a lock in the hash table.
-@param[in]	space	space
-@param[in]	page_no	page number
-@return hashed value */
-UNIV_INLINE
-ulint lock_rec_hash(space_id_t space, page_no_t page_no);
+#include <innodb/lock_priv/lock_rec_hash.h>
 
 /** Get the lock hash table */
 UNIV_INLINE

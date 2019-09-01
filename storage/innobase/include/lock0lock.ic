@@ -51,15 +51,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
-/** Calculates the hash value of a page file address: used in inserting or
- searching for a lock in the hash table.
- @return hashed value */
-UNIV_INLINE
-ulint lock_rec_hash(space_id_t space,  /*!< in: space */
-                    page_no_t page_no) /*!< in: page number */
-{
-  return (hash_calc_hash(lock_rec_fold(space, page_no), lock_sys->rec_hash));
-}
+
 
 /** Gets the heap_no of the smallest user record on a page.
  @return heap_no of smallest user record, or PAGE_HEAP_NO_SUPREMUM */
