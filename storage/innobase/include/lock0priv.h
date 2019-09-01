@@ -42,6 +42,29 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/lock_priv/lock_t.h>
 #include <innodb/lock_priv/lock_get_type_low.h>
 #include <innodb/lock_priv/lock_rec_fold.h>
+#include <innodb/lock_priv/lock_compatibility_matrix.h>
+#include <innodb/lock_priv/lock_strength_matrix.h>
+#include <innodb/lock_priv/lock_rec_req_status.h>
+#include <innodb/record/RecID.h>
+#include <innodb/lock_priv/lock_rec_get_prev.h>
+#include <innodb/lock_priv/lock_cancel_waiting_and_release.h>
+#include <innodb/lock_priv/lock_reset_wait_and_release_thread_if_suspended.h>
+#include <innodb/lock_priv/lock_clust_rec_some_has_impl.h>
+#include <innodb/lock_priv/lock_rec_get_next_on_page_const.h>
+#include <innodb/lock_priv/lock_rec_get_nth_bit.h>
+#include <innodb/lock_priv/lock_rec_set_nth_bit.h>
+#include <innodb/lock_priv/lock_rec_get_next_on_page.h>
+#include <innodb/lock_priv/lock_rec_get_first_on_page_addr.h>
+#include <innodb/lock_priv/lock_rec_get_first_on_page.h>
+#include <innodb/lock_priv/lock_rec_get_next.h>
+#include <innodb/lock_priv/lock_rec_get_next_const.h>
+#include <innodb/lock_priv/lock_rec_get_first.h>
+#include <innodb/lock_priv/lock_get_mode.h>
+#include <innodb/lock_priv/lock_mode_compatible.h>
+#include <innodb/lock_priv/lock_mode_stronger_or_eq.h>
+#include <innodb/lock_priv/lock_get_wait.h>
+#include <innodb/lock_priv/lock_rec_find_similar_on_page.h>
+#include <innodb/lock_priv/lock_table_has.h>
 
 
 #ifndef LOCK_MODULE_IMPLEMENTATION
@@ -81,10 +104,7 @@ trx_que_t lock_t::trx_que_state() const { return (trx->lock.que_state); }
 extern ibool lock_print_waits;
 #endif /* UNIV_DEBUG */
 
-#include <innodb/lock_priv/lock_compatibility_matrix.h>
-#include <innodb/lock_priv/lock_strength_matrix.h>
-#include <innodb/lock_priv/lock_rec_req_status.h>
-#include <innodb/record/RecID.h>
+
 
 
 
@@ -397,158 +417,9 @@ static const ulint lock_types = UT_ARR_SIZE(lock_compatibility_matrix);
 
 
 
-/** Gets the previous record lock set on a record.
- @return previous lock on the same record, NULL if none exists */
-const lock_t *lock_rec_get_prev(
-    const lock_t *in_lock, /*!< in: record lock */
-    ulint heap_no);        /*!< in: heap number of the record */
-
-/** Cancels a waiting lock request and releases possible other transactions
-waiting behind it.
-@param[in,out]	lock		Waiting lock request
-@param[in]	use_fcfs	true -> use first come first served strategy */
-void lock_cancel_waiting_and_release(lock_t *lock, bool use_fcfs);
-
-/** This function is a wrapper around several functions which need to be called
-in particular order to wake up a transaction waiting for a lock.
-You should not call lock_wait_release_thread_if_suspended(thr) directly,
-but rather use this wrapper, as this makes it much easier to reason about all
-possible states in which lock, trx, and thr can be.
-It makes sure that trx is woken up exactly once, and only if it already went to
-sleep.
-@param[in, out]   lock    The lock for which lock->trx is waiting */
-void lock_reset_wait_and_release_thread_if_suspended(lock_t *lock);
-
-/** Checks if some transaction has an implicit x-lock on a record in a clustered
- index.
- @return transaction id of the transaction which has the x-lock, or 0 */
-UNIV_INLINE
-trx_id_t lock_clust_rec_some_has_impl(
-    const rec_t *rec,          /*!< in: user record */
-    const dict_index_t *index, /*!< in: clustered index */
-    const ulint *offsets)      /*!< in: rec_get_offsets(rec, index) */
-    MY_ATTRIBUTE((warn_unused_result));
-
-/** Gets the first or next record lock on a page.
- @return next lock, NULL if none exists */
-UNIV_INLINE
-const lock_t *lock_rec_get_next_on_page_const(
-    const lock_t *lock); /*!< in: a record lock */
-
-/** Gets the nth bit of a record lock.
-@param[in]	lock	record lock
-@param[in]	i	index of the bit
-@return true if bit set also if i == ULINT_UNDEFINED return false */
-UNIV_INLINE
-bool lock_rec_get_nth_bit(const lock_t *lock, ulint i);
 
 
 
-/** Sets the nth bit of a record lock to TRUE.
-@param[in]	lock	record lock
-@param[in]	i	index of the bit */
-UNIV_INLINE
-void lock_rec_set_nth_bit(lock_t *lock, ulint i);
-
-/** Gets the first or next record lock on a page.
- @return next lock, NULL if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_next_on_page(lock_t *lock); /*!< in: a record lock */
-
-/** Gets the first record lock on a page, where the page is identified by its
-file address.
-@param[in]	lock_hash	lock hash table
-@param[in]	space		space
-@param[in]	page_no		page number
-@return first lock, NULL if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_first_on_page_addr(hash_table_t *lock_hash,
-                                        space_id_t space, page_no_t page_no);
-
-/** Gets the first record lock on a page, where the page is identified by a
-pointer to it.
-@param[in]	lock_hash	lock hash table
-@param[in]	block		buffer block
-@return first lock, NULL if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_first_on_page(hash_table_t *lock_hash,
-                                   const buf_block_t *block);
-
-/** Gets the next explicit lock request on a record.
-@param[in]	heap_no	heap number of the record
-@param[in]	lock	lock
-@return next lock, NULL if none exists or if heap_no == ULINT_UNDEFINED */
-UNIV_INLINE
-lock_t *lock_rec_get_next(ulint heap_no, lock_t *lock);
-
-/** Gets the next explicit lock request on a record.
-@param[in]	heap_no	heap number of the record
-@param[in]	lock	lock
-@return next lock, NULL if none exists or if heap_no == ULINT_UNDEFINED */
-UNIV_INLINE
-const lock_t *lock_rec_get_next_const(ulint heap_no, const lock_t *lock);
-
-/** Gets the first explicit lock request on a record.
-@param[in]	hash		Record hash
-@param[in]	rec_id		Record ID
-@return	first lock, nullptr if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_first(hash_table_t *hash, const RecID &rec_id);
-
-/** Gets the first explicit lock request on a record.
-@param[in]	hash	hash chain the lock on
-@param[in]	block	block containing the record
-@param[in]	heap_no	heap number of the record
-@return first lock, NULL if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_first(hash_table_t *hash, const buf_block_t *block,
-                           ulint heap_no);
-
-/** Gets the mode of a lock.
- @return mode */
-UNIV_INLINE
-enum lock_mode lock_get_mode(const lock_t *lock); /*!< in: lock */
-
-/** Calculates if lock mode 1 is compatible with lock mode 2.
-@param[in]	mode1	lock mode
-@param[in]	mode2	lock mode
-@return nonzero if mode1 compatible with mode2 */
-UNIV_INLINE
-ulint lock_mode_compatible(enum lock_mode mode1, enum lock_mode mode2);
-
-/** Calculates if lock mode 1 is stronger or equal to lock mode 2.
-@param[in]	mode1	lock mode
-@param[in]	mode2	lock mode
-@return nonzero if mode1 stronger or equal to mode2 */
-UNIV_INLINE
-ulint lock_mode_stronger_or_eq(enum lock_mode mode1, enum lock_mode mode2);
-
-/** Gets the wait flag of a lock.
- @return LOCK_WAIT if waiting, 0 if not */
-UNIV_INLINE
-ulint lock_get_wait(const lock_t *lock); /*!< in: lock */
-
-/** Looks for a suitable type record lock struct by the same trx on the same
-page. This can be used to save space when a new record lock should be set on a
-page: no new struct is needed, if a suitable old is found.
-@param[in]	type_mode	lock type_mode field
-@param[in]	heap_no		heap number of the record
-@param[in]	lock		lock_rec_get_first_on_page()
-@param[in]	trx		transaction
-@return lock or NULL */
-UNIV_INLINE
-lock_t *lock_rec_find_similar_on_page(ulint type_mode, ulint heap_no,
-                                      lock_t *lock, const trx_t *trx);
-
-/** Checks if a transaction has the specified table lock, or stronger. This
-function should only be called by the thread that owns the transaction.
-@param[in]	trx	transaction
-@param[in]	table	table
-@param[in]	mode	lock mode
-@return lock or NULL */
-UNIV_INLINE
-const lock_t *lock_table_has(const trx_t *trx, const dict_table_t *table,
-                             enum lock_mode mode);
 
 #include "lock0priv.ic"
 

@@ -81,13 +81,7 @@ void lock_rec_set_nth_bit(lock_t *lock, /*!< in: record lock */
   ++lock->trx->lock.n_rec_locks;
 }
 
-/** Gets the first or next record lock on a page.
- @return	next lock, NULL if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_next_on_page(lock_t *lock) /*!< in: a record lock */
-{
-  return ((lock_t *)lock_rec_get_next_on_page_const(lock));
-}
+
 
 /** Gets the first record lock on a page, where the page is identified by its
  file address.
@@ -201,25 +195,7 @@ lock_t *lock_rec_get_first(
   return (NULL);
 }
 
-/** Gets the nth bit of a record lock.
-@param[in]	lock		Record lock
-@param[in]	i		Index of the bit to check
-@return true if bit set also if i == ULINT_UNDEFINED return false */
-UNIV_INLINE
-bool lock_rec_get_nth_bit(const lock_t *lock, ulint i) {
-  const byte *b;
 
-  ut_ad(lock);
-  ut_ad(lock_get_type_low(lock) == LOCK_REC);
-
-  if (i >= lock->rec_lock.n_bits) {
-    return (false);
-  }
-
-  b = ((const byte *)&lock[1]) + (i / 8);
-
-  return (true & *b >> (i % 8));
-}
 
 /** Gets the first or next record lock on a page.
  @return next lock, NULL if none exists */
@@ -243,49 +219,13 @@ const lock_t *lock_rec_get_next_on_page_const(
   return (NULL);
 }
 
-/** Gets the mode of a lock.
- @return mode */
-UNIV_INLINE
-enum lock_mode lock_get_mode(const lock_t *lock) /*!< in: lock */
-{
-  ut_ad(lock);
 
-  return (static_cast<enum lock_mode>(lock->type_mode & LOCK_MODE_MASK));
-}
 
-/** Calculates if lock mode 1 is compatible with lock mode 2.
- @return nonzero if mode1 compatible with mode2 */
-UNIV_INLINE
-ulint lock_mode_compatible(enum lock_mode mode1, /*!< in: lock mode */
-                           enum lock_mode mode2) /*!< in: lock mode */
-{
-  ut_ad((ulint)mode1 < lock_types);
-  ut_ad((ulint)mode2 < lock_types);
 
-  return (lock_compatibility_matrix[mode1][mode2]);
-}
 
-/** Calculates if lock mode 1 is stronger or equal to lock mode 2.
- @return nonzero if mode1 stronger or equal to mode2 */
-UNIV_INLINE
-ulint lock_mode_stronger_or_eq(enum lock_mode mode1, /*!< in: lock mode */
-                               enum lock_mode mode2) /*!< in: lock mode */
-{
-  ut_ad((ulint)mode1 < lock_types);
-  ut_ad((ulint)mode2 < lock_types);
 
-  return (lock_strength_matrix[mode1][mode2]);
-}
 
-/** Gets the wait flag of a lock.
- @return LOCK_WAIT if waiting, 0 if not */
-UNIV_INLINE
-ulint lock_get_wait(const lock_t *lock) /*!< in: lock */
-{
-  ut_ad(lock);
 
-  return (lock->type_mode & LOCK_WAIT);
-}
 
 /** The back pointer to a waiting lock request in the transaction is set to NULL
  and the wait bit in lock type_mode is reset. */

@@ -7,18 +7,6 @@
 #include <innodb/record/flag.h>
 
 
-/** @name File segment header
-The file segment header points to the inode describing the file segment. */
-/* @{ */
-#define FSEG_HDR_SPACE 0   /*!< space id of the inode */
-#define FSEG_HDR_PAGE_NO 4 /*!< page number of the inode */
-#define FSEG_HDR_OFFSET 8  /*!< byte offset of the inode */
-
-#define FSEG_HEADER_SIZE            \
-  10 /*!< Length of the file system \
-     header, in bytes */
-/* @} */
-
 
 
 /*			PAGE HEADER

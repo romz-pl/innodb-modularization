@@ -84,6 +84,7 @@ add_subdirectory( tablespace )
 add_subdirectory( thread )
 add_subdirectory( time )
 add_subdirectory( trx_types )
+add_subdirectory( trx_sys )
 
 add_subdirectory( univ )
 
