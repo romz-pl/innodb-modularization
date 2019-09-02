@@ -13,6 +13,5 @@ page: no new struct is needed, if a suitable old is found.
 @param[in]	lock		lock_rec_get_first_on_page()
 @param[in]	trx		transaction
 @return lock or NULL */
-UNIV_INLINE
 lock_t *lock_rec_find_similar_on_page(ulint type_mode, ulint heap_no,
                                       lock_t *lock, const trx_t *trx);

@@ -490,12 +490,7 @@ void lock_sys_create(
   }
 }
 
-/** Calculates the fold value of a lock: used in migrating the hash table.
-@param[in]	lock	record lock object
-@return	folded value */
-static ulint lock_rec_lock_fold(const lock_t *lock) {
-  return (lock_rec_fold(lock->rec_lock.space, lock->rec_lock.page_no));
-}
+#include <innodb/lock_priv/lock_rec_lock_fold.h>
 
 /** Resize the lock hash tables.
 @param[in]	n_cells	number of slots in lock hash table */
@@ -576,9 +571,6 @@ void lock_sys_close(void) {
   lock_sys = NULL;
 }
 
-/** Gets the size of a lock struct.
- @return size in bytes */
-ulint lock_get_size(void) { return ((ulint)sizeof(lock_t)); }
 
 /** Sets the wait flag of a lock and the back pointer in trx to lock. */
 UNIV_INLINE
@@ -594,35 +586,11 @@ void lock_set_lock_and_trx_wait(lock_t *lock, /*!< in: lock */
   lock->type_mode |= LOCK_WAIT;
 }
 
-/** Gets the gap flag of a record lock.
- @return LOCK_GAP or 0 */
-UNIV_INLINE
-ulint lock_rec_get_gap(const lock_t *lock) /*!< in: record lock */
-{
-  ut_ad(lock_get_type_low(lock) == LOCK_REC);
 
-  return (lock->type_mode & LOCK_GAP);
-}
 
-/** Gets the LOCK_REC_NOT_GAP flag of a record lock.
- @return LOCK_REC_NOT_GAP or 0 */
-UNIV_INLINE
-ulint lock_rec_get_rec_not_gap(const lock_t *lock) /*!< in: record lock */
-{
-  ut_ad(lock_get_type_low(lock) == LOCK_REC);
-
-  return (lock->type_mode & LOCK_REC_NOT_GAP);
-}
-
-/** Gets the waiting insert flag of a record lock.
- @return LOCK_INSERT_INTENTION or 0 */
-UNIV_INLINE
-ulint lock_rec_get_insert_intention(const lock_t *lock) /*!< in: record lock */
-{
-  ut_ad(lock_get_type_low(lock) == LOCK_REC);
-
-  return (lock->type_mode & LOCK_INSERT_INTENTION);
-}
+#include <innodb/lock_priv/lock_rec_get_gap.h>
+#include <innodb/lock_priv/lock_rec_get_rec_not_gap.h>
+#include <innodb/lock_priv/lock_rec_get_insert_intention.h>
 
 /** Checks if a lock request for a new lock has to wait for request lock2.
  @return true if new lock has to wait for lock2 to be removed */

@@ -58,6 +58,10 @@ add_library( ${LIB_NAME} STATIC
     lock_rec_bitmap_reset.cpp
     lock_rec_copy.cpp
     lock_rec_get_prev.cpp
+    lock_rec_get_insert_intention.cpp
+    lock_rec_get_rec_not_gap.cpp
+    lock_rec_get_gap.cpp
+    lock_rec_lock_fold.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -71,6 +75,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    buf_block
     dict_mem
     hash
     lock_sys

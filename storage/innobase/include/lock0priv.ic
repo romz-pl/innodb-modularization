@@ -85,29 +85,6 @@ void lock_rec_set_nth_bit(lock_t *lock, /*!< in: record lock */
 
 
 
-/** Gets the first record lock on a page, where the page is identified by a
- pointer to it.
- @return	first lock, NULL if none exists */
-UNIV_INLINE
-lock_t *lock_rec_get_first_on_page(
-    hash_table_t *lock_hash,  /*!< in: lock hash table */
-    const buf_block_t *block) /*!< in: buffer block */
-{
-  ut_ad(lock_mutex_own());
-
-  space_id_t space = block->page.id.space();
-  page_no_t page_no = block->page.id.page_no();
-  ulint hash = buf_block_get_lock_hash_val(block);
-
-  for (lock_t *lock = static_cast<lock_t *>(HASH_GET_FIRST(lock_hash, hash));
-       lock != NULL; lock = static_cast<lock_t *>(HASH_GET_NEXT(hash, lock))) {
-    if (lock->space_id() == space && lock->page_no() == page_no) {
-      return (lock);
-    }
-  }
-
-  return (NULL);
-}
 
 
 
@@ -158,28 +135,7 @@ void lock_reset_lock_and_trx_wait(lock_t *lock) /*!< in/out: record lock */
   lock->type_mode &= ~LOCK_WAIT;
 }
 
-/** Looks for a suitable type record lock struct by the same trx on the same
- page. This can be used to save space when a new record lock should be set on a
- page: no new struct is needed, if a suitable old is found.
- @return lock or NULL */
-UNIV_INLINE
-lock_t *lock_rec_find_similar_on_page(
-    ulint type_mode,  /*!< in: lock type_mode field */
-    ulint heap_no,    /*!< in: heap number of the record */
-    lock_t *lock,     /*!< in: lock_rec_get_first_on_page() */
-    const trx_t *trx) /*!< in: transaction */
-{
-  ut_ad(lock_mutex_own());
 
-  for (/* No op */; lock != NULL; lock = lock_rec_get_next_on_page(lock)) {
-    if (lock->trx == trx && lock->type_mode == type_mode &&
-        lock_rec_get_n_bits(lock) > heap_no) {
-      return (lock);
-    }
-  }
-
-  return (NULL);
-}
 
 /** Checks if a transaction has the specified table lock, or stronger. This
  function should only be called by the thread that owns the transaction.
