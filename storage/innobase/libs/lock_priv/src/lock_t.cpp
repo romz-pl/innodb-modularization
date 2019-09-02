@@ -1,6 +1,7 @@
 #include <innodb/lock_priv/lock_t.h>
 
 #include <innodb/lock_types/lock_mode_string.h>
+#include <innodb/lock_priv/lock_hash_get.h>
 
 #include <sstream>
 #include <ostream>
@@ -42,4 +43,10 @@ std::ostream &lock_t::print(std::ostream &out) const {
 
   out << "]";
   return (out);
+}
+
+
+hash_table_t *lock_t::hash_table() const
+{
+    return (lock_hash_get(type_mode));
 }

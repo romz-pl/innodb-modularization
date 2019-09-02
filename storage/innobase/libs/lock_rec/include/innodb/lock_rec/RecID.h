@@ -58,7 +58,7 @@ struct RecID {
   /* Check if the rec id matches the lock instance.
   @param[i]	lock		Lock to compare with
   @return true if <space, page_no, heap_no> matches the lock. */
-  inline bool matches(const lock_t *lock) const;
+  bool matches(const lock_t *lock) const;
 
   /**
   Tablespace ID */

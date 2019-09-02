@@ -3,7 +3,6 @@ set( LIB_NAME lock_priv )
 add_library( ${LIB_NAME} STATIC
     flags.cpp
     lock_cancel_waiting_and_release.cpp
-    lock_clust_rec_some_has_impl.cpp
     lock_compatibility_matrix.cpp
     lock_get_mode.cpp
     lock_get_type_low.cpp
@@ -12,7 +11,6 @@ add_library( ${LIB_NAME} STATIC
     lock_mode_stronger_or_eq.cpp
     lock_rec_find_similar_on_page.cpp
     lock_rec_fold.cpp
-    lock_rec_get_first.cpp
     lock_rec_get_first_on_page.cpp
     lock_rec_get_first_on_page_addr.cpp
     lock_rec_get_n_bits.cpp

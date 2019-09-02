@@ -11,7 +11,6 @@ struct buf_block_t;
 @param[in]	hash		Record hash
 @param[in]	rec_id		Record ID
 @return	first lock, nullptr if none exists */
-UNIV_INLINE
 lock_t *lock_rec_get_first(hash_table_t *hash, const RecID &rec_id);
 
 
