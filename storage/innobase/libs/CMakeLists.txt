@@ -73,6 +73,7 @@ add_subdirectory( random )
 add_subdirectory( rbt )
 add_subdirectory( record )
 
+add_subdirectory( srv_thread )
 add_subdirectory( string )
 add_subdirectory( sync_array )
 add_subdirectory( sync_event )

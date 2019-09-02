@@ -111,39 +111,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0conc.h"
 #include <innodb/counter/counter.h>
 #include <innodb/log_write/srv_stats_t.h>
-
-
-
-struct Srv_threads {
-  /** true if monitor thread is created */
-  bool m_monitor_thread_active;
-
-  /** true if error monitor thread is created */
-  bool m_error_monitor_thread_active;
-
-  /** true if buffer pool dump/load thread is created */
-  bool m_buf_dump_thread_active;
-
-  /** true if buffer pool resize thread is created */
-  bool m_buf_resize_thread_active;
-
-  /** true if stats thread is created */
-  bool m_dict_stats_thread_active;
-
-  /** true if timeout thread is created */
-  bool m_timeout_thread_active;
-
-  /** true if master thread is created */
-  bool m_master_thread_active;
-
-  /** true if tablespace alter encrypt thread is created */
-  bool m_ts_alter_encrypt_thread_active;
-};
-
-
-
-/** Structure with state of srv background threads. */
-extern Srv_threads srv_threads;
+#include <innodb/srv_thread/Srv_threads.h>
+#include <innodb/srv_thread/srv_threads.h>
 
 
 extern Log_DDL *log_ddl;
@@ -617,16 +586,8 @@ typedef enum srv_stats_method_name_enum srv_stats_method_name_t;
 extern ulong srv_debug_compress;
 #endif /* UNIV_DEBUG */
 
-/** Types of threads existing in the system. */
-enum srv_thread_type {
-  SRV_NONE,   /*!< None */
-  SRV_WORKER, /*!< threads serving parallelized
-              queries and queries released from
-              lock wait */
-  SRV_PURGE,  /*!< Purge coordinator thread */
-  SRV_MASTER  /*!< the master thread, (whose type
-              number must be biggest) */
-};
+#include <innodb/srv_thread/srv_thread_type.h>
+
 
 /** Boots Innobase server. */
 void srv_boot(void);
@@ -863,31 +824,6 @@ struct export_var_t {
 #endif                                /* UNIV_DEBUG */
 };
 
-#ifndef UNIV_HOTBACKUP
-/** Thread slot in the thread table.  */
-struct srv_slot_t {
-  srv_thread_type type;   /*!< thread type: user,
-                          utility etc. */
-  ibool in_use;           /*!< TRUE if this slot
-                          is in use */
-  ibool suspended;        /*!< TRUE if the thread is
-                          waiting for the event of this
-                          slot */
-  ib_time_t suspend_time; /*!< time when the thread was
-                          suspended. Initialized by
-                          lock_wait_table_reserve_slot()
-                          for lock wait */
-  ulong wait_timeout;     /*!< wait time that if exceeded
-                          the thread will be timed out.
-                          Initialized by
-                          lock_wait_table_reserve_slot()
-                          for lock wait */
-  os_event_t event;       /*!< event used in suspending
-                          the thread when it has nothing
-                          to do */
-  que_thr_t *thr;         /*!< suspended query thread
-                          (only used for user threads) */
-};
-#endif /* !UNIV_HOTBACKUP */
+#include <innodb/srv_thread/srv_slot_t.h>
 
 #endif

@@ -132,8 +132,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifdef UNIV_HOTBACKUP
 #include <innodb/disk/page_size_t.h>
 #else
-/** Structure with state of srv background threads. */
-Srv_threads srv_threads;
 
 #endif /* UNIV_HOTBACKUP */
 
@@ -719,36 +717,14 @@ static void srv_print_master_thread_info(FILE *file) /* in: output stream */
 #endif /* !UNIV_HOTBACKUP */
 
 
+#include <innodb/srv_thread/srv_thread_type_validate.h>
+
 
 
 #ifndef UNIV_HOTBACKUP
-#ifdef UNIV_DEBUG
-/** Validates the type of a thread table slot.
- @return true if ok */
-static ibool srv_thread_type_validate(
-    srv_thread_type type) /*!< in: thread type */
-{
-  switch (type) {
-    case SRV_NONE:
-      break;
-    case SRV_WORKER:
-    case SRV_PURGE:
-    case SRV_MASTER:
-      return (TRUE);
-  }
-  ut_error;
-}
-#endif /* UNIV_DEBUG */
 
-/** Gets the type of a thread table slot.
- @return thread type */
-static srv_thread_type srv_slot_get_type(
-    const srv_slot_t *slot) /*!< in: thread slot */
-{
-  srv_thread_type type = slot->type;
-  ut_ad(srv_thread_type_validate(type));
-  return (type);
-}
+#include <innodb/srv_thread/srv_slot_get_type.h>
+
 
 /** Reserves a slot in the thread table for the current thread.
  @return reserved slot */
