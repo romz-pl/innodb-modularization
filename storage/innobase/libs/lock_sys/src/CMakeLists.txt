@@ -14,6 +14,8 @@ add_library( ${LIB_NAME} STATIC
     lock_sys_create.cpp
     lock_latest_err_file.cpp
     lock_sys_resize.cpp
+    lock_sys_close.cpp
+    lock_cached_lock_mode_names.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

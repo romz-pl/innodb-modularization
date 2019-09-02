@@ -112,8 +112,7 @@ extern bool innobase_deadlock_detect;
 
 
 
-/** Closes the lock system at database shutdown. */
-void lock_sys_close(void);
+
 
 
 

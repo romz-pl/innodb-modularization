@@ -121,10 +121,8 @@ static const std::map<uint, const char *> lock_constant_names{
     {LOCK_PREDICATE, "PREDICATE"},
     {LOCK_PRDT_PAGE, "PRDT_PAGE"},
 };
-/** Used by lock_get_mode_str to cache results. Strings pointed by these
-pointers might be in use by performance schema and thus can not be freed
-until the very end */
-static std::unordered_map<uint, const char *> lock_cached_lock_mode_names;
+
+#include <innodb/lock_sys/lock_cached_lock_mode_names.h>
 
 /** Deadlock checker. */
 class DeadlockChecker {
@@ -461,37 +459,6 @@ bool lock_sec_rec_cons_read_sees(
 
 #include <innodb/lock_priv/lock_rec_lock_fold.h>
 
-/** Closes the lock system at database shutdown. */
-void lock_sys_close(void) {
-  if (lock_latest_err_file != NULL) {
-    fclose(lock_latest_err_file);
-    lock_latest_err_file = NULL;
-  }
-
-  hash_table_free(lock_sys->rec_hash);
-  hash_table_free(lock_sys->prdt_hash);
-  hash_table_free(lock_sys->prdt_page_hash);
-
-  os_event_destroy(lock_sys->timeout_event);
-
-  mutex_destroy(&lock_sys->mutex);
-  mutex_destroy(&lock_sys->wait_mutex);
-
-  srv_slot_t *slot = lock_sys->waiting_threads;
-
-  for (ulint i = 0; i < srv_max_n_threads; i++, ++slot) {
-    if (slot->event != NULL) {
-      os_event_destroy(slot->event);
-    }
-  }
-  for (auto &cached_lock_mode_name : lock_cached_lock_mode_names) {
-    ut_free(const_cast<char *>(cached_lock_mode_name.second));
-  }
-  lock_cached_lock_mode_names.clear();
-  ut_free(lock_sys);
-
-  lock_sys = NULL;
-}
 
 
 /** Sets the wait flag of a lock and the back pointer in trx to lock. */

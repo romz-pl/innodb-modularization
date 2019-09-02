@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/lock_sys/lock_sys_close.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/log_recv/recv_sys_init.h>
 #include <innodb/clone/clone_init.h>
