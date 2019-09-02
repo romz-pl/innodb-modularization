@@ -69,9 +69,10 @@ class ReadView;
 
 extern bool innobase_deadlock_detect;
 
-/** Gets the size of a lock struct.
- @return size in bytes */
-ulint lock_get_size(void);
+
+#include <innodb/lock_priv/lock_get_size.h>
+
+
 /** Creates the lock system at database start. */
 void lock_sys_create(
     ulint n_cells); /*!< in: number of slots in lock hash table */
@@ -81,141 +82,31 @@ void lock_sys_resize(ulint n_cells);
 
 /** Closes the lock system at database shutdown. */
 void lock_sys_close(void);
-/** Gets the heap_no of the smallest user record on a page.
- @return heap_no of smallest user record, or PAGE_HEAP_NO_SUPREMUM */
-UNIV_INLINE
-ulint lock_get_min_heap_no(const buf_block_t *block); /*!< in: buffer block */
-/** Updates the lock table when we have reorganized a page. NOTE: we copy
- also the locks set on the infimum of the page; the infimum may carry
- locks if an update of a record is occurring on the page, and its locks
- were temporarily stored on the infimum. */
-void lock_move_reorganize_page(
-    const buf_block_t *block,   /*!< in: old index page, now
-                                reorganized */
-    const buf_block_t *oblock); /*!< in: copy of the old, not
-                                reorganized page */
-/** Moves the explicit locks on user records to another page if a record
- list end is moved to another page. */
-void lock_move_rec_list_end(
-    const buf_block_t *new_block, /*!< in: index page to move to */
-    const buf_block_t *block,     /*!< in: index page */
-    const rec_t *rec);            /*!< in: record on page: this
-                                  is the first record moved */
-/** Moves the explicit locks on user records to another page if a record
- list start is moved to another page. */
-void lock_move_rec_list_start(
-    const buf_block_t *new_block, /*!< in: index page to move to */
-    const buf_block_t *block,     /*!< in: index page */
-    const rec_t *rec,             /*!< in: record on page:
-                                  this is the first
-                                  record NOT copied */
-    const rec_t *old_end);        /*!< in: old
-                                  previous-to-last
-                                  record on new_page
-                                  before the records
-                                  were copied */
-/** Updates the lock table when a page is split to the right. */
-void lock_update_split_right(
-    const buf_block_t *right_block, /*!< in: right page */
-    const buf_block_t *left_block); /*!< in: left page */
-/** Updates the lock table when a page is merged to the right. */
-void lock_update_merge_right(
-    const buf_block_t *right_block, /*!< in: right page to
-                                    which merged */
-    const rec_t *orig_succ,         /*!< in: original
-                                    successor of infimum
-                                    on the right page
-                                    before merge */
-    const buf_block_t *left_block); /*!< in: merged index
-                                    page which will be
-                                    discarded */
-/** Updates the lock table when the root page is copied to another in
- btr_root_raise_and_insert. Note that we leave lock structs on the
- root page, even though they do not make sense on other than leaf
- pages: the reason is that in a pessimistic update the infimum record
- of the root page will act as a dummy carrier of the locks of the record
- to be updated. */
-void lock_update_root_raise(
-    const buf_block_t *block, /*!< in: index page to which copied */
-    const buf_block_t *root); /*!< in: root page */
-/** Updates the lock table when a page is copied to another and the original
- page is removed from the chain of leaf pages, except if page is the root! */
-void lock_update_copy_and_discard(
-    const buf_block_t *new_block, /*!< in: index page to
-                                  which copied */
-    const buf_block_t *block);    /*!< in: index page;
-                                  NOT the root! */
-/** Updates the lock table when a page is split to the left. */
-void lock_update_split_left(
-    const buf_block_t *right_block, /*!< in: right page */
-    const buf_block_t *left_block); /*!< in: left page */
-/** Updates the lock table when a page is merged to the left. */
-void lock_update_merge_left(
-    const buf_block_t *left_block,   /*!< in: left page to
-                                     which merged */
-    const rec_t *orig_pred,          /*!< in: original predecessor
-                                     of supremum on the left page
-                                     before merge */
-    const buf_block_t *right_block); /*!< in: merged index page
-                                     which will be discarded */
-/** Resets the original locks on heir and replaces them with gap type locks
- inherited from rec. */
-void lock_rec_reset_and_inherit_gap_locks(
-    const buf_block_t *heir_block, /*!< in: block containing the
-                                   record which inherits */
-    const buf_block_t *block,      /*!< in: block containing the
-                                   record from which inherited;
-                                   does NOT reset the locks on
-                                   this record */
-    ulint heir_heap_no,            /*!< in: heap_no of the
-                                   inheriting record */
-    ulint heap_no);                /*!< in: heap_no of the
-                                   donating record */
-/** Updates the lock table when a page is discarded. */
-void lock_update_discard(
-    const buf_block_t *heir_block, /*!< in: index page
-                                   which will inherit the locks */
-    ulint heir_heap_no,            /*!< in: heap_no of the record
-                                   which will inherit the locks */
-    const buf_block_t *block);     /*!< in: index page
-                                   which will be discarded */
-/** Updates the lock table when a new user record is inserted. */
-void lock_update_insert(
-    const buf_block_t *block, /*!< in: buffer block containing rec */
-    const rec_t *rec);        /*!< in: the inserted record */
-/** Updates the lock table when a record is removed. */
-void lock_update_delete(
-    const buf_block_t *block, /*!< in: buffer block containing rec */
-    const rec_t *rec);        /*!< in: the record to be removed */
-/** Stores on the page infimum record the explicit locks of another record.
- This function is used to store the lock state of a record when it is
- updated and the size of the record changes in the update. The record
- is in such an update moved, perhaps to another page. The infimum record
- acts as a dummy carrier record, taking care of lock releases while the
- actual record is being moved. */
-void lock_rec_store_on_page_infimum(
-    const buf_block_t *block, /*!< in: buffer block containing rec */
-    const rec_t *rec);        /*!< in: record whose lock state
-                              is stored on the infimum
-                              record of the same page; lock
-                              bits are reset on the
-                              record */
-/** Restores the state of explicit lock requests on a single record, where the
- state was stored on the infimum of the page. */
-void lock_rec_restore_from_page_infimum(
-    const buf_block_t *block,    /*!< in: buffer block containing rec */
-    const rec_t *rec,            /*!< in: record whose lock state
-                                 is restored */
-    const buf_block_t *donator); /*!< in: page (rec is not
-                                necessarily on this page)
-                                whose infimum stored the lock
-                                state; lock bits are reset on
-                                the infimum */
-/** Determines if there are explicit record locks on a page.
- @return an explicit record lock on the page, or NULL if there are none */
-lock_t *lock_rec_expl_exist_on_page(space_id_t space,  /*!< in: space id */
-                                    page_no_t page_no) /*!< in: page number */
-    MY_ATTRIBUTE((warn_unused_result));
+
+
+#include <innodb/lock_priv/lock_get_min_heap_no.h>
+#include <innodb/lock_priv/lock_move_reorganize_page.h>
+#include <innodb/lock_priv/lock_move_rec_list_end.h>
+#include <innodb/lock_priv/lock_move_rec_list_start.h>
+#include <innodb/lock_priv/lock_update_split_right.h>
+#include <innodb/lock_priv/lock_update_merge_right.h>
+#include <innodb/lock_priv/lock_update_root_raise.h>
+#include <innodb/lock_priv/lock_update_copy_and_discard.h>
+#include <innodb/lock_priv/lock_update_split_left.h>
+#include <innodb/lock_priv/lock_update_merge_left.h>
+#include <innodb/lock_priv/lock_rec_reset_and_inherit_gap_locks.h>
+#include <innodb/lock_priv/lock_update_discard.h>
+#include <innodb/lock_priv/lock_update_insert.h>
+#include <innodb/lock_priv/lock_update_delete.h>
+#include <innodb/lock_priv/lock_rec_store_on_page_infimum.h>
+#include <innodb/lock_priv/lock_rec_restore_from_page_infimum.h>
+#include <innodb/lock_priv/lock_rec_expl_exist_on_page.h>
+
+
+
+
+
+
 /** Checks if locks of other transactions prevent an immediate insert of
  a record. If they do, first tests if the query thread should anyway
  be suspended for some reason; if not, then puts the transaction and
@@ -427,25 +318,13 @@ void lock_remove_all_on_table(
 
 
 #include <innodb/lock_priv/lock_rec_hash.h>
+#include <innodb/lock_priv/lock_hash_get.h>
+#include <innodb/lock_priv/lock_rec_find_set_bit.h>
+#include <innodb/lock_priv/lock_rec_find_next_set_bit.h>
 
-/** Get the lock hash table */
-UNIV_INLINE
-hash_table_t *lock_hash_get(ulint mode); /*!< in: lock mode */
 
-/** Looks for a set bit in a record lock bitmap. Returns ULINT_UNDEFINED,
- if none found.
- @return bit index == heap number of the record, or ULINT_UNDEFINED if
- none found */
-ulint lock_rec_find_set_bit(
-    const lock_t *lock); /*!< in: record lock with at least one
-                         bit set */
 
-/** Looks for the next set bit in the record lock bitmap.
-@param[in] lock		record lock with at least one bit set
-@param[in] heap_no	current set bit
-@return The next bit index  == heap number following heap_no, or ULINT_UNDEFINED
-if none found */
-ulint lock_rec_find_next_set_bit(const lock_t *lock, ulint heap_no);
+
 
 /** Checks if a lock request lock1 has to wait for request lock2.
  @return TRUE if lock1 has to wait for lock2 to be removed */
@@ -673,11 +552,7 @@ void lock_rtr_move_rec_list(const buf_block_t *new_block, /*!< in: index page to
 void lock_rec_free_all_from_discard_page(
     const buf_block_t *block); /*!< in: page to be discarded */
 
-/** Reset the nth bit of a record lock.
-@param[in,out]	lock record lock
-@param[in] i	index of the bit that will be reset
-@param[in] type	whether the lock is in wait mode  */
-void lock_rec_trx_wait(lock_t *lock, ulint i, ulint type);
+#include <innodb/lock_priv/lock_rec_trx_wait.h>
 
 
 

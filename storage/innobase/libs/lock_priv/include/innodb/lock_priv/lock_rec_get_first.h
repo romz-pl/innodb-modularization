@@ -20,6 +20,5 @@ lock_t *lock_rec_get_first(hash_table_t *hash, const RecID &rec_id);
 @param[in]	block	block containing the record
 @param[in]	heap_no	heap number of the record
 @return first lock, NULL if none exists */
-UNIV_INLINE
 lock_t *lock_rec_get_first(hash_table_t *hash, const buf_block_t *block,
                            ulint heap_no);

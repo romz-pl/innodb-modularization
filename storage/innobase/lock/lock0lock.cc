@@ -732,38 +732,9 @@ bool lock_has_to_wait(
 
 /*============== RECORD LOCK BASIC FUNCTIONS ============================*/
 
-/** Looks for a set bit in a record lock bitmap. Returns ULINT_UNDEFINED,
- if none found.
- @return bit index == heap number of the record, or ULINT_UNDEFINED if
- none found */
-ulint lock_rec_find_set_bit(
-    const lock_t *lock) /*!< in: record lock with at least one bit set */
-{
-  for (ulint i = 0; i < lock_rec_get_n_bits(lock); ++i) {
-    if (lock_rec_get_nth_bit(lock, i)) {
-      return (i);
-    }
-  }
 
-  return (ULINT_UNDEFINED);
-}
 
-/** Looks for the next set bit in the record lock bitmap.
-@param[in] lock		record lock with at least one bit set
-@param[in] heap_no	current set bit
-@return The next bit index  == heap number following heap_no, or ULINT_UNDEFINED
-if none found */
-ulint lock_rec_find_next_set_bit(const lock_t *lock, ulint heap_no) {
-  ut_ad(heap_no != ULINT_UNDEFINED);
 
-  for (ulint i = heap_no + 1; i < lock_rec_get_n_bits(lock); ++i) {
-    if (lock_rec_get_nth_bit(lock, i)) {
-      return (i);
-    }
-  }
-
-  return (ULINT_UNDEFINED);
-}
 
 /** Reset the nth bit of a record lock.
 @param[in,out] lock record lock
@@ -787,99 +758,12 @@ byte lock_rec_reset_nth_bit(lock_t *lock, ulint i) {
   return (bit);
 }
 
-/** Reset the nth bit of a record lock.
-@param[in,out]	lock record lock
-@param[in] i	index of the bit that will be reset
-@param[in] type	whether the lock is in wait mode */
-void lock_rec_trx_wait(lock_t *lock, ulint i, ulint type) {
-  lock_rec_reset_nth_bit(lock, i);
 
-  if (type & LOCK_WAIT) {
-    lock_reset_lock_and_trx_wait(lock);
-  }
-}
 
-/** Determines if there are explicit record locks on a page.
- @return an explicit record lock on the page, or NULL if there are none */
-lock_t *lock_rec_expl_exist_on_page(space_id_t space,  /*!< in: space id */
-                                    page_no_t page_no) /*!< in: page number */
-{
-  lock_t *lock;
 
-  lock_mutex_enter();
-  /* Only used in ibuf pages, so rec_hash is good enough */
-  lock = lock_rec_get_first_on_page_addr(lock_sys->rec_hash, space, page_no);
-  lock_mutex_exit();
+#include <innodb/lock_priv/lock_rec_bitmap_reset.h>
+#include <innodb/lock_priv/lock_rec_copy.h>
 
-  return (lock);
-}
-
-/** Resets the record lock bitmap to zero. NOTE: does not touch the wait_lock
- pointer in the transaction! This function is used in lock object creation
- and resetting. */
-static void lock_rec_bitmap_reset(lock_t *lock) /*!< in: record lock */
-{
-  ulint n_bytes;
-
-  ut_ad(lock_get_type_low(lock) == LOCK_REC);
-
-  /* Reset to zero the bitmap which resides immediately after the lock
-  struct */
-
-  n_bytes = lock_rec_get_n_bits(lock) / 8;
-
-  ut_ad((lock_rec_get_n_bits(lock) % 8) == 0);
-
-  memset(&lock[1], 0, n_bytes);
-}
-
-/** Copies a record lock to heap.
- @return copy of lock */
-static lock_t *lock_rec_copy(const lock_t *lock, /*!< in: record lock */
-                             mem_heap_t *heap)   /*!< in: memory heap */
-{
-  ulint size;
-
-  ut_ad(lock_get_type_low(lock) == LOCK_REC);
-
-  size = sizeof(lock_t) + lock_rec_get_n_bits(lock) / 8;
-
-  return (static_cast<lock_t *>(mem_heap_dup(heap, lock, size)));
-}
-
-/** Gets the previous record lock set on a record.
- @return previous lock on the same record, NULL if none exists */
-const lock_t *lock_rec_get_prev(
-    const lock_t *in_lock, /*!< in: record lock */
-    ulint heap_no)         /*!< in: heap number of the record */
-{
-  lock_t *lock;
-  space_id_t space;
-  page_no_t page_no;
-  lock_t *found_lock = NULL;
-  hash_table_t *hash;
-
-  ut_ad(lock_mutex_own());
-  ut_ad(lock_get_type_low(in_lock) == LOCK_REC);
-
-  space = in_lock->rec_lock.space;
-  page_no = in_lock->rec_lock.page_no;
-
-  hash = lock_hash_get(in_lock->type_mode);
-
-  for (lock = lock_rec_get_first_on_page_addr(hash, space, page_no);
-       /* No op */; lock = lock_rec_get_next_on_page(lock)) {
-    ut_ad(lock);
-
-    if (lock == in_lock) {
-      return (found_lock);
-    }
-
-    if (lock_rec_get_nth_bit(lock, heap_no)) {
-      found_lock = lock;
-    }
-  }
-}
 
 /*============= FUNCTIONS FOR ANALYZING RECORD LOCK QUEUE ================*/
 
