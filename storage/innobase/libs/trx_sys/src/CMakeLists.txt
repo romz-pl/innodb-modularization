@@ -2,6 +2,8 @@ set( LIB_NAME trx_sys )
 
 add_library( ${LIB_NAME} STATIC
     flags.cpp
+    trx_sys_t.cpp
+    trx_ut_list_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
