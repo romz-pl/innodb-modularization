@@ -11,6 +11,9 @@ add_library( ${LIB_NAME} STATIC
     lock_wait_mutex_enter.cpp
     lock_wait_mutex_exit.cpp
     lock_wait_mutex_own.cpp
+    lock_sys_create.cpp
+    lock_latest_err_file.cpp
+    lock_sys_resize.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -24,6 +27,9 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    io
+    hash
+    lock_priv
     srv_thread
     sync_mutex
     PRIVATE

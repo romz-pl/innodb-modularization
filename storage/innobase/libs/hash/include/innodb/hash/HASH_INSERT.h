@@ -5,7 +5,7 @@
 #include <innodb/hash/HASH_ASSERT_OWN.h>
 #include <innodb/hash/hash_cell_t.h>
 #include <innodb/hash/hash_get_nth_cell.h>
-#include <innodb/hash/hash_get_nth_cell.h>
+#include <innodb/hash/hash_calc_hash.h>
 
 /** Inserts a struct to a hash table. */
 

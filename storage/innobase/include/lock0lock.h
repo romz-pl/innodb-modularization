@@ -107,15 +107,10 @@ class ReadView;
 extern bool innobase_deadlock_detect;
 
 
+#include <innodb/lock_sys/lock_sys_create.h>
+#include <innodb/lock_sys/lock_sys_resize.h>
 
 
-
-/** Creates the lock system at database start. */
-void lock_sys_create(
-    ulint n_cells); /*!< in: number of slots in lock hash table */
-/** Resize the lock hash table.
-@param[in]	n_cells	number of slots in lock hash table */
-void lock_sys_resize(ulint n_cells);
 
 /** Closes the lock system at database shutdown. */
 void lock_sys_close(void);

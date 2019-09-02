@@ -343,8 +343,8 @@ static bool lock_rec_validate_page(
 Monitor will then fetch it and print */
 static bool lock_deadlock_found = false;
 
-/** Only created if !srv_read_only_mode */
-static FILE *lock_latest_err_file;
+#include <innodb/lock_sys/lock_latest_err_file.h>
+
 
 /** Reports that a transaction id is insensible, i.e., in the future. */
 void lock_report_trx_id_insanity(
@@ -458,86 +458,8 @@ bool lock_sec_rec_cons_read_sees(
   return (view->sees(max_trx_id));
 }
 
-/** Creates the lock system at database start. */
-void lock_sys_create(
-    ulint n_cells) /*!< in: number of slots in lock hash table */
-{
-  ulint lock_sys_sz;
-
-  lock_sys_sz = sizeof(*lock_sys) + srv_max_n_threads * sizeof(srv_slot_t);
-
-  lock_sys = static_cast<lock_sys_t *>(ut_zalloc_nokey(lock_sys_sz));
-
-  void *ptr = &lock_sys[1];
-
-  lock_sys->waiting_threads = static_cast<srv_slot_t *>(ptr);
-
-  lock_sys->last_slot = lock_sys->waiting_threads;
-
-  mutex_create(LATCH_ID_LOCK_SYS, &lock_sys->mutex);
-
-  mutex_create(LATCH_ID_LOCK_SYS_WAIT, &lock_sys->wait_mutex);
-
-  lock_sys->timeout_event = os_event_create(0);
-
-  lock_sys->rec_hash = hash_create(n_cells);
-  lock_sys->prdt_hash = hash_create(n_cells);
-  lock_sys->prdt_page_hash = hash_create(n_cells);
-
-  if (!srv_read_only_mode) {
-    lock_latest_err_file = os_file_create_tmpfile(NULL);
-    ut_a(lock_latest_err_file);
-  }
-}
 
 #include <innodb/lock_priv/lock_rec_lock_fold.h>
-
-/** Resize the lock hash tables.
-@param[in]	n_cells	number of slots in lock hash table */
-void lock_sys_resize(ulint n_cells) {
-  hash_table_t *old_hash;
-
-  lock_mutex_enter();
-
-  old_hash = lock_sys->rec_hash;
-  lock_sys->rec_hash = hash_create(n_cells);
-  HASH_MIGRATE(old_hash, lock_sys->rec_hash, lock_t, hash, lock_rec_lock_fold);
-  hash_table_free(old_hash);
-
-  old_hash = lock_sys->prdt_hash;
-  lock_sys->prdt_hash = hash_create(n_cells);
-  HASH_MIGRATE(old_hash, lock_sys->prdt_hash, lock_t, hash, lock_rec_lock_fold);
-  hash_table_free(old_hash);
-
-  old_hash = lock_sys->prdt_page_hash;
-  lock_sys->prdt_page_hash = hash_create(n_cells);
-  HASH_MIGRATE(old_hash, lock_sys->prdt_page_hash, lock_t, hash,
-               lock_rec_lock_fold);
-  hash_table_free(old_hash);
-
-  /* need to update block->lock_hash_val */
-  for (ulint i = 0; i < srv_buf_pool_instances; ++i) {
-    buf_pool_t *buf_pool = buf_pool_from_array(i);
-
-    mutex_enter(&buf_pool->LRU_list_mutex);
-    buf_page_t *bpage;
-    bpage = UT_LIST_GET_FIRST(buf_pool->LRU);
-
-    while (bpage != NULL) {
-      if (buf_page_get_state(bpage) == BUF_BLOCK_FILE_PAGE) {
-        buf_block_t *block;
-        block = reinterpret_cast<buf_block_t *>(bpage);
-
-        block->lock_hash_val =
-            lock_rec_hash(bpage->id.space(), bpage->id.page_no());
-      }
-      bpage = UT_LIST_GET_NEXT(LRU, bpage);
-    }
-    mutex_exit(&buf_pool->LRU_list_mutex);
-  }
-
-  lock_mutex_exit();
-}
 
 /** Closes the lock system at database shutdown. */
 void lock_sys_close(void) {
