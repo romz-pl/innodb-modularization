@@ -45,7 +45,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/lock_priv/lock_compatibility_matrix.h>
 #include <innodb/lock_priv/lock_strength_matrix.h>
 #include <innodb/lock_priv/lock_rec_req_status.h>
-#include <innodb/record/RecID.h>
+#include <innodb/lock_rec/RecID.h>
 #include <innodb/lock_priv/lock_rec_get_prev.h>
 #include <innodb/lock_priv/lock_cancel_waiting_and_release.h>
 #include <innodb/lock_priv/lock_reset_wait_and_release_thread_if_suspended.h>

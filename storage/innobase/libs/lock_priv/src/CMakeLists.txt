@@ -35,7 +35,6 @@ add_library( ${LIB_NAME} STATIC
     lock_rec_find_set_bit.cpp
     lock_rec_find_next_set_bit.cpp
     lock_get_size.cpp
-    lock_get_min_heap_no.cpp
     lock_move_reorganize_page.cpp
     lock_move_rec_list_end.cpp
     lock_move_rec_list_start.cpp

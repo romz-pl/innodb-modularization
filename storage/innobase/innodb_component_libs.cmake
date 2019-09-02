@@ -50,6 +50,7 @@ SET( INNODB_COMPONENT_LIBS
     #ioasync
 
     # L
+    lock_rec
     #log_arch
     #log_closer
     #log_recv

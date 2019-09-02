@@ -39,6 +39,7 @@ add_subdirectory( io )
 add_subdirectory( ioasync )
 
 add_subdirectory( lock_priv )
+add_subdirectory( lock_rec )
 add_subdirectory( lock_sys )
 add_subdirectory( lock_types )
 add_subdirectory( log_arch )

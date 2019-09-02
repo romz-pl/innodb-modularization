@@ -48,43 +48,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/lock_sys/lock_wait_mutex_own.h>
 #include <innodb/lock_sys/lock_wait_mutex_enter.h>
 #include <innodb/lock_sys/lock_wait_mutex_exit.h>
-
-struct lock_t;
-struct lock_sys_t;
-struct lock_table_t;
-
-#include "que0types.h"
-
-#include "srv0srv.h"
-#include <innodb/vector/vector.h>
-#ifndef UNIV_HOTBACKUP
-#include "gis0rtree.h"
-#endif /* UNIV_HOTBACKUP */
-#include "lock0prdt.h"
-
-struct trx_lock_t;
-
-// Forward declaration
-class ReadView;
-
-extern bool innobase_deadlock_detect;
-
-
 #include <innodb/lock_priv/lock_get_size.h>
-
-
-/** Creates the lock system at database start. */
-void lock_sys_create(
-    ulint n_cells); /*!< in: number of slots in lock hash table */
-/** Resize the lock hash table.
-@param[in]	n_cells	number of slots in lock hash table */
-void lock_sys_resize(ulint n_cells);
-
-/** Closes the lock system at database shutdown. */
-void lock_sys_close(void);
-
-
-#include <innodb/lock_priv/lock_get_min_heap_no.h>
+#include <innodb/lock_rec/lock_get_min_heap_no.h>
 #include <innodb/lock_priv/lock_move_reorganize_page.h>
 #include <innodb/lock_priv/lock_move_rec_list_end.h>
 #include <innodb/lock_priv/lock_move_rec_list_start.h>
@@ -101,6 +66,60 @@ void lock_sys_close(void);
 #include <innodb/lock_priv/lock_rec_store_on_page_infimum.h>
 #include <innodb/lock_priv/lock_rec_restore_from_page_infimum.h>
 #include <innodb/lock_priv/lock_rec_expl_exist_on_page.h>
+#include <innodb/lock_priv/lock_rec_hash.h>
+#include <innodb/lock_priv/lock_hash_get.h>
+#include <innodb/lock_priv/lock_rec_find_set_bit.h>
+#include <innodb/lock_priv/lock_rec_find_next_set_bit.h>
+#include <innodb/record/rec_get_heap_no_new.h>
+#include <innodb/record/rec_get_heap_no_old.h>
+#include <innodb/hash/hash_calc_hash.h>
+#include <innodb/lock_priv/lock_rec_fold.h>
+#include <innodb/lock_priv/lock_rec_trx_wait.h>
+#include <innodb/vector/vector.h>
+
+#include "btr0cur.h"
+#include "buf0buf.h"
+#include "dict0dict.h"
+#include "log0recv.h"
+#include "page0cur.h"
+#include "page0page.h"
+#include "que0que.h"
+#include "read0read.h"
+#include "row0row.h"
+#include "row0vers.h"
+#include "srv0srv.h"
+#include "trx0sys.h"
+#include "trx0trx.h"
+#include "que0types.h"
+#include "srv0srv.h"
+#include "lock0prdt.h"
+
+#ifndef UNIV_HOTBACKUP
+#include "gis0rtree.h"
+#endif /* UNIV_HOTBACKUP */
+
+struct lock_t;
+struct lock_sys_t;
+struct lock_table_t;
+struct trx_lock_t;
+class ReadView;
+
+extern bool innobase_deadlock_detect;
+
+
+
+
+
+/** Creates the lock system at database start. */
+void lock_sys_create(
+    ulint n_cells); /*!< in: number of slots in lock hash table */
+/** Resize the lock hash table.
+@param[in]	n_cells	number of slots in lock hash table */
+void lock_sys_resize(ulint n_cells);
+
+/** Closes the lock system at database shutdown. */
+void lock_sys_close(void);
+
 
 
 
@@ -317,10 +336,6 @@ void lock_remove_all_on_table(
 
 
 
-#include <innodb/lock_priv/lock_rec_hash.h>
-#include <innodb/lock_priv/lock_hash_get.h>
-#include <innodb/lock_priv/lock_rec_find_set_bit.h>
-#include <innodb/lock_priv/lock_rec_find_next_set_bit.h>
 
 
 
@@ -552,24 +567,5 @@ void lock_rtr_move_rec_list(const buf_block_t *new_block, /*!< in: index page to
 void lock_rec_free_all_from_discard_page(
     const buf_block_t *block); /*!< in: page to be discarded */
 
-#include <innodb/lock_priv/lock_rec_trx_wait.h>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#include "lock0lock.ic"
 
 #endif
