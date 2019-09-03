@@ -168,3 +168,4 @@ void MVCC::view_close(ReadView *&view, bool own_mutex) {
     view = NULL;
   }
 }
+

@@ -18,8 +18,6 @@ target_link_libraries(
     ${LIB_NAME}
     PUBLIC
     dict_types
-    lst
-    trx_types
     trx_sys
     PRIVATE
 )

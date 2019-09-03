@@ -233,3 +233,4 @@ void ReadView::copy_complete() {
   /* We added the creator transaction ID to the m_ids. */
   m_creator_trx_id = 0;
 }
+
