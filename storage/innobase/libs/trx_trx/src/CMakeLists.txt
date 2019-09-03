@@ -1,9 +1,14 @@
-set( LIB_NAME read )
+set( LIB_NAME trx_trx )
 
 add_library( ${LIB_NAME} STATIC
-    MVCC.cpp
-    ReadView.cpp
-    ViewCheck.cpp
+    trx_undo_ptr_t.cpp
+    trx_rsegs_t.cpp
+    trx_t.cpp
+    lock_pool_t.cpp
+    trx_lock_t.cpp
+    TrxVersion.cpp
+    hit_list_t.cpp
+    trx_mod_tables_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -17,9 +22,11 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    dict_types
-    trx_trx
-    trx_sys
+    lock_types
+    log_sn
+    memory
+    trx_types
+    vector
     PRIVATE
 )
 
