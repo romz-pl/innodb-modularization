@@ -71,13 +71,13 @@ class MVCC {
   a new view. This function will also attempt to move delete marked
   views from the active list to the freed list.
   @return a view to use */
-  inline ReadView *get_view();
+  ReadView *get_view();
 
   /**
   Get the oldest view in the system. It will also move the delete
   marked read views from the views list to the freed list.
   @return oldest view if found or NULL */
-  inline ReadView *get_oldest_view() const;
+  ReadView *get_oldest_view() const;
   ReadView *get_view_created_by_trx_id(trx_id_t trx_id) const;
 
  private:
