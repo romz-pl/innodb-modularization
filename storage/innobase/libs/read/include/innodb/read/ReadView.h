@@ -215,7 +215,7 @@ class ReadView {
   Opens a read view where exactly the transactions serialized before this
   point in time are seen in the view.
   @param id		Creator transaction id */
-  inline void prepare(trx_id_t id);
+  void prepare(trx_id_t id);
 
   /**
   Copy state from another view. Must call copy_complete() to finish.

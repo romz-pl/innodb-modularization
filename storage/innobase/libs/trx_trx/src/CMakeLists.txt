@@ -9,6 +9,7 @@ add_library( ${LIB_NAME} STATIC
     TrxVersion.cpp
     hit_list_t.cpp
     trx_mod_tables_t.cpp
+    trx_is_autocommit_non_locking.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

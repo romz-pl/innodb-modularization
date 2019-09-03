@@ -445,13 +445,7 @@ from innodb_lock_wait_timeout via trx_t::mysql_thd.
 @return lock wait timeout in seconds */
 #define trx_lock_wait_timeout_get(t) thd_lock_wait_timeout((t)->mysql_thd)
 
-/**
-Determine if the transaction is a non-locking autocommit select
-(implied read-only).
-@param t transaction
-@return true if non-locking autocommit select transaction. */
-#define trx_is_autocommit_non_locking(t) \
-  ((t)->auto_commit && (t)->will_lock == 0)
+#include <innodb/trx_trx/trx_is_autocommit_non_locking.h>
 
 /**
 Determine if the transaction is a non-locking autocommit select

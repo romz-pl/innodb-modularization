@@ -1,6 +1,8 @@
 #include <innodb/read/ReadView.h>
 
 #include <innodb/allocator/UT_NEW_ARRAY_NOKEY.h>
+#include <innodb/trx_trx/trx_t.h>
+#include <innodb/trx_sys/trx_sys.h>
 
 /** Minimum number of elements to reserve in ReadView::ids_t */
 static const ulint MIN_TRX_IDS = 32;
@@ -234,3 +236,35 @@ void ReadView::copy_complete() {
   m_creator_trx_id = 0;
 }
 
+/**
+Opens a read view where exactly the transactions serialized before this
+point in time are seen in the view.
+@param id		Creator transaction id */
+
+void ReadView::prepare(trx_id_t id) {
+  ut_ad(mutex_own(&trx_sys->mutex));
+
+  m_creator_trx_id = id;
+
+  m_low_limit_no = m_low_limit_id = m_up_limit_id = trx_sys->max_trx_id;
+
+  if (!trx_sys->rw_trx_ids.empty()) {
+    copy_trx_ids(trx_sys->rw_trx_ids);
+  } else {
+    m_ids.clear();
+  }
+
+  ut_ad(m_up_limit_id <= m_low_limit_id);
+
+  if (UT_LIST_GET_LEN(trx_sys->serialisation_list) > 0) {
+    const trx_t *trx;
+
+    trx = UT_LIST_GET_FIRST(trx_sys->serialisation_list);
+
+    if (trx->no < m_low_limit_no) {
+      m_low_limit_no = trx->no;
+    }
+  }
+
+  m_closed = false;
+}

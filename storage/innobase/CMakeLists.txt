@@ -146,7 +146,6 @@ SET(INNOBASE_SOURCES
     pars/pars0pars.cc
     pars/pars0sym.cc
     que/que0que.cc
-    read/read0read.cc
     row/row0ext.cc
     row/row0ftsort.cc
     row/row0import.cc
