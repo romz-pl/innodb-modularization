@@ -220,12 +220,12 @@ class ReadView {
   /**
   Copy state from another view. Must call copy_complete() to finish.
   @param other		view to copy from */
-  inline void copy_prepare(const ReadView &other);
+  void copy_prepare(const ReadView &other);
 
   /**
   Complete the copy, insert the creator transaction id into the
   m_trx_ids too and adjust the m_up_limit_id *, if required */
-  inline void copy_complete();
+  void copy_complete();
 
   /**
   Set the creator transaction id, existing id must be 0 */
