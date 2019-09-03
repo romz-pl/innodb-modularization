@@ -45,6 +45,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/tablespace/consts.h>
 #include <innodb/page/header.h>
 #include <innodb/trx_sys/trx_sys_t.h>
+#include <innodb/trx_sys/trx_sys.h>
+#include <innodb/trx_sys/flags.h>
+#include <innodb/trx_sys/trx_sys_mutex_own.h>
+#include <innodb/trx_sys/trx_sys_mutex_enter.h>
+#include <innodb/trx_sys/trx_sys_mutex_exit.h>
+#include <innodb/trx_sys/trx_sys_get_max_trx_id.h>
 
 #include "buf0buf.h"
 #include "fil0fil.h"
@@ -66,8 +72,7 @@ class MVCC;
 class ReadView;
 struct trx_sys_t;
 
-/** The transaction system */
-extern trx_sys_t *trx_sys;
+
 
 /** Checks if a page address is the trx sys header page.
 @param[in]	page_id	page id
@@ -143,11 +148,7 @@ void trx_sysf_rseg_set_page_no(trx_sysf_t *sys_header, ulint i,
  @return new, allocated trx id */
 UNIV_INLINE
 trx_id_t trx_sys_get_new_trx_id();
-/** Determines the maximum transaction id.
- @return maximum currently allocated trx id; will be stale after the
- next call to trx_sys_get_new_trx_id() */
-UNIV_INLINE
-trx_id_t trx_sys_get_max_trx_id(void);
+
 
 #ifdef UNIV_DEBUG
 /* Flag to control TRX_RSEG_N_SLOTS behavior debugging. */
@@ -261,32 +262,10 @@ called once during thread de-initialization. */
 void trx_sys_undo_spaces_deinit();
 
 
-#include <innodb/trx_sys/flags.h>
 
 
 
 
-
-
-/** When a trx id which is zero modulo this number (which must be a power of
-two) is assigned, the field TRX_SYS_TRX_ID_STORE on the transaction system
-page is updated */
-#define TRX_SYS_TRX_ID_WRITE_MARGIN ((trx_id_t)256)
-
-/** Test if trx_sys->mutex is owned. */
-#define trx_sys_mutex_own() (trx_sys->mutex.is_owned())
-
-/** Acquire the trx_sys->mutex. */
-#define trx_sys_mutex_enter()     \
-  do {                            \
-    mutex_enter(&trx_sys->mutex); \
-  } while (0)
-
-/** Release the trx_sys->mutex. */
-#define trx_sys_mutex_exit() \
-  do {                       \
-    trx_sys->mutex.exit();   \
-  } while (0)
 
 #include "trx0sys.ic"
 

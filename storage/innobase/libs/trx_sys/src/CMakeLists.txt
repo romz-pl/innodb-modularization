@@ -4,6 +4,11 @@ add_library( ${LIB_NAME} STATIC
     flags.cpp
     trx_sys_t.cpp
     trx_ut_list_t.cpp
+    trx_sys.cpp
+    trx_sys_mutex_own.cpp
+    trx_sys_mutex_enter.cpp
+    trx_sys_mutex_exit.cpp
+    trx_sys_get_max_trx_id.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -17,6 +22,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
+    data_types
     trx_types
     PRIVATE
 )

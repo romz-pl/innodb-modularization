@@ -60,8 +60,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0undo.h"
 #include "buf0dblwr.h"
 
-/** The transaction system */
-trx_sys_t *trx_sys = NULL;
+
 
 /** Check whether transaction id is valid.
 @param[in]	id	transaction id to check

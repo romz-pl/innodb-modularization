@@ -123,3 +123,10 @@ FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID. */
 
 
 /* @} */
+
+
+
+/** When a trx id which is zero modulo this number (which must be a power of
+two) is assigned, the field TRX_SYS_TRX_ID_STORE on the transaction system
+page is updated */
+#define TRX_SYS_TRX_ID_WRITE_MARGIN ((trx_id_t)256)
