@@ -42,7 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "page0page.h"
 #include "que0types.h"
-#include "read0types.h"
+#include <innodb/read/ReadView.h>
 #include "trx0sys.h"
 #include "usr0sess.h"
 #ifdef UNIV_HOTBACKUP

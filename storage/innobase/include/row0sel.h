@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "pars0sym.h"
 #include "que0types.h"
-#include "read0types.h"
+#include <innodb/read/ReadView.h>
 #include "row0mysql.h"
 #include "row0types.h"
 

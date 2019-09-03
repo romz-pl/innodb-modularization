@@ -93,7 +93,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "pars0pars.h"
 #include "pars0sym.h"
 #include "que0que.h"
-#include "read0read.h"
+
 #include "record_buffer.h"
 
 #include "row0mysql.h"

@@ -71,6 +71,7 @@ add_subdirectory( print )
 
 add_subdirectory( random )
 add_subdirectory( rbt )
+add_subdirectory( read )
 add_subdirectory( record )
 
 add_subdirectory( srv_thread )
