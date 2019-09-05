@@ -166,20 +166,8 @@ struct roll_node_t {
   que_thr_t *undo_thr;        /*!< undo query graph */
 };
 
-/** A savepoint set with SQL's "SAVEPOINT savepoint_id" command */
-struct trx_named_savept_t {
-  char *name;          /*!< savepoint name */
-  trx_savept_t savept; /*!< the undo number corresponding to
-                       the savepoint */
-  int64_t mysql_binlog_cache_pos;
-  /*!< the MySQL binlog cache position
-  corresponding to this savepoint, not
-  defined if the MySQL binlogging is not
-  enabled */
-  UT_LIST_NODE_T(trx_named_savept_t)
-  trx_savepoints; /*!< the list of savepoints of a
-                  transaction */
-};
+#include <innodb/trx_trx/trx_named_savept_t.h>
+
 
 #include "trx0roll.ic"
 

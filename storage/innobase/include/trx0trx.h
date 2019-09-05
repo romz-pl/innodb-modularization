@@ -124,25 +124,17 @@ class FlushObserver;
 #include <innodb/trx_trx/trx_set_flush_observer.h>
 #include <innodb/trx_trx/trx_set_detailed_error.h>
 #include <innodb/trx_trx/trx_set_detailed_error_from_file.h>
-
-
-/** Creates a transaction object for MySQL.
- @return own: transaction object */
-trx_t *trx_allocate_for_mysql(void);
-/** Creates a transaction object for background operations by the master thread.
- @return own: transaction object */
-trx_t *trx_allocate_for_background(void);
+#include <innodb/trx_trx/trx_allocate_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_mysql.h>
+#include <innodb/trx_trx/trx_free_resurrected.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
 
 /** Resurrect table locks for resurrected transactions. */
 void trx_resurrect_locks();
 
-/** Free and initialize a transaction object instantiated during recovery.
-@param[in,out]	trx	transaction object to free and initialize */
-void trx_free_resurrected(trx_t *trx);
 
-/** Free a transaction that was allocated by background or user threads.
-@param[in,out]	trx	transaction object to free */
-void trx_free_for_background(trx_t *trx);
+
+
 
 /** At shutdown, frees a transaction object that is in the PREPARED state. */
 void trx_free_prepared(trx_t *trx); /*!< in, own: trx object */
@@ -347,11 +339,9 @@ bool trx_weight_ge(const trx_t *a,  /*!< in: the transaction to be compared */
 @param[in,out]	trx	transaction that involves write to temp-table. */
 void trx_assign_rseg_temp(trx_t *trx);
 
-/** Create the trx_t pool */
-void trx_pool_init();
+#include <innodb/trx_trx/trx_pool_init.h>
+#include <innodb/trx_trx/trx_pool_close.h>
 
-/** Destroy the trx_t pool */
-void trx_pool_close();
 
 /**
 Set the transaction as a read-write transaction if it is not already

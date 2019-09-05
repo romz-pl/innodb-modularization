@@ -52,6 +52,25 @@ add_library( ${LIB_NAME} STATIC
     trx_get_read_view.cpp
     trx_isolation_level.cpp
     TrxInInnoDB.cpp
+    trx_init.cpp
+    TrxFactory.cpp
+    trx_named_savept_t.cpp
+    TrxPoolLock.cpp
+    TrxPoolManagerLock.cpp
+    trx_pool_t.cpp
+    Pool.cpp
+    PoolManager.cpp
+    trx_pools_t.cpp
+    trx_pools.cpp
+    trx_pool_init.cpp
+    trx_pool_close.cpp
+    trx_create_low.cpp
+    trx_free.cpp
+    trx_allocate_for_background.cpp
+    trx_allocate_for_mysql.cpp
+    trx_validate_state_before_free.cpp
+    trx_free_resurrected.cpp
+    trx_free_for_background.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

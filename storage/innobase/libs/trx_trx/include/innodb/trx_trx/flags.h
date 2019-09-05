@@ -13,3 +13,6 @@ trx_get_que_state_str(). */
 Multiple flags can be combined with bitwise OR. */
 #define TRX_DUP_IGNORE 1  /* duplicate rows are to be updated */
 #define TRX_DUP_REPLACE 2 /* duplicate rows are to be replaced */
+
+
+
