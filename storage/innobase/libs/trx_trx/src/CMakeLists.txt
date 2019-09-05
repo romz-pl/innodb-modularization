@@ -33,6 +33,25 @@ add_library( ${LIB_NAME} STATIC
     trx_undo_ptr_t.cpp
     thd_trx_arbitrate.cpp
     trx_arbitrate.cpp
+    trx_set_flush_observer.cpp
+    flags.cpp
+    trx_set_detailed_error.cpp
+    trx_set_detailed_error_from_file.cpp
+    table_id_set.cpp
+    trx_table_map.cpp
+    resurrected_trx_tables.cpp
+    trx_dummy_sess.cpp
+    trx_erase_lists.cpp
+    TRX_WEIGHT.cpp
+    trx_lock_wait_timeout_get.cpp
+    assert_trx_is_free.cpp
+    assert_trx_is_inactive.cpp
+    assert_trx_nonlocking_or_in_list.cpp
+    trx_immutable_id.cpp
+    trx_is_started.cpp
+    trx_get_read_view.cpp
+    trx_isolation_level.cpp
+    TrxInInnoDB.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -46,10 +65,12 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME}
     PUBLIC
-    data_types
+    io
     lock_types
     log_sn
-    trx_types
+    read
+    string
+    trx_sys
     vector
     PRIVATE
 )

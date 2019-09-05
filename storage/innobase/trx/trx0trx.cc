@@ -77,27 +77,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_dbug.h"
 #include "mysql/plugin.h"
 
-static const ulint MAX_DETAILED_ERROR_LEN = 256;
 
-/** Set of table_id */
-typedef std::set<table_id_t, std::less<table_id_t>, ut_allocator<table_id_t>>
-    table_id_set;
+#include <innodb/trx_trx/table_id_set.h>
+#include <innodb/trx_trx/trx_table_map.h>
+#include <innodb/trx_trx/resurrected_trx_tables.h>
 
-/** Map of transactions to affected table_id */
-typedef std::map<trx_t *, table_id_set, std::less<trx_t *>,
-                 ut_allocator<std::pair<trx_t *const, table_id_set>>>
-    trx_table_map;
 
-/** Map of resurrected transactions to affected table_id */
-static trx_table_map resurrected_trx_tables;
 
-/** Dummy session used currently in MySQL interface */
-sess_t *trx_dummy_sess = NULL;
 
-/** Constructor */
-TrxVersion::TrxVersion(trx_t *trx) : m_trx(trx), m_version(trx->version) {
-  /* No op */
-}
+
+
+
+
 
 /* The following function makes the transaction committed in memory
 and makes its changes to data visible to other transactions.
@@ -122,28 +113,11 @@ committed.
 */
 static void trx_release_impl_and_expl_locks(trx_t *trx, bool serialized);
 
-/** Set flush observer for the transaction
-@param[in,out]	trx		transaction struct
-@param[in]	observer	flush observer */
-void trx_set_flush_observer(trx_t *trx, FlushObserver *observer) {
-  trx->flush_observer = observer;
-}
 
-/** Set detailed error message for the transaction. */
-void trx_set_detailed_error(trx_t *trx,      /*!< in: transaction struct */
-                            const char *msg) /*!< in: detailed error message */
-{
-  ut_strlcpy(trx->detailed_error, msg, MAX_DETAILED_ERROR_LEN);
-}
 
-/** Set detailed error message for the transaction from a file. Note that the
- file is rewinded before reading from it. */
-void trx_set_detailed_error_from_file(
-    trx_t *trx, /*!< in: transaction struct */
-    FILE *file) /*!< in: file to read message from */
-{
-  os_file_read_string(file, trx->detailed_error, MAX_DETAILED_ERROR_LEN);
-}
+
+
+
 
 /** Initialize transaction object.
  @param trx trx to initialize */
@@ -1702,46 +1676,6 @@ static void trx_update_mod_tables_timestamp(trx_t *trx) /*!< in: transaction */
   trx->mod_tables.clear();
 }
 
-/**
-Erase the transaction from running transaction lists and serialization
-list. Active RW transaction list of a MVCC snapshot(ReadView::prepare)
-won't include this transaction after this call. All implicit locks are
-also released by this call as trx is removed from rw_trx_list.
-@param[in] trx		Transaction to erase, must have an ID > 0
-@param[in] serialised	true if serialisation log was written */
-static void trx_erase_lists(trx_t *trx, bool serialised) {
-  ut_ad(trx->id > 0);
-  ut_ad(trx_sys_mutex_own());
-
-  if (serialised) {
-    UT_LIST_REMOVE(trx_sys->serialisation_list, trx);
-  }
-
-  trx_ids_t::iterator it = std::lower_bound(trx_sys->rw_trx_ids.begin(),
-                                            trx_sys->rw_trx_ids.end(), trx->id);
-  ut_ad(*it == trx->id);
-  trx_sys->rw_trx_ids.erase(it);
-
-  if (trx->read_only || trx->rsegs.m_redo.rseg == NULL) {
-    ut_ad(!trx->in_rw_trx_list);
-  } else {
-    UT_LIST_REMOVE(trx_sys->rw_trx_list, trx);
-    ut_d(trx->in_rw_trx_list = false);
-    ut_ad(trx_sys_validate_trx_list());
-
-    if (trx->read_view != NULL) {
-      trx_sys->mvcc->view_close(trx->read_view, true);
-    }
-  }
-
-  trx_sys->rw_trx_set.erase(TrxTrack(trx->id));
-
-  /* Set minimal active trx id. */
-  trx_id_t min_id = trx_sys->rw_trx_ids.empty() ? trx_sys->max_trx_id
-                                                : trx_sys->rw_trx_ids.front();
-
-  trx_sys->min_active_id.store(min_id);
-}
 
 static void trx_release_impl_and_expl_locks(trx_t *trx, bool serialized) {
   check_trx_state(trx);

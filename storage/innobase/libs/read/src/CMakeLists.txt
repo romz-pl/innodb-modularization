@@ -19,7 +19,6 @@ target_link_libraries(
     PUBLIC
     dict_types
     trx_trx
-    trx_sys
     PRIVATE
 )
 
