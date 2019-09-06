@@ -13,6 +13,7 @@
 #include <innodb/tablespace/fil_read.h>
 #include <innodb/tablespace/fil_write.h>
 #include <innodb/machine/data.h>
+#include <innodb/trx_sys/flags.h>
 
 /** Write the flushed LSN to the page header of the first page in the
 system tablespace.

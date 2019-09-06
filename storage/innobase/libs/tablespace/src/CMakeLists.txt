@@ -192,6 +192,7 @@ target_link_libraries(
     log_types
     page
     string
+    trx_sys
     trx_types
     PRIVATE
 )

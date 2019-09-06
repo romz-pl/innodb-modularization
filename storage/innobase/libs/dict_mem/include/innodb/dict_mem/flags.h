@@ -326,11 +326,7 @@ a foreign key constraint is enforced, therefore RESTRICT just means no flag */
 /** SDI version. Written on Page 1 & 2 at FIL_PAGE_FILE_FLUSH_LSN offset. */
 const uint32_t SDI_VERSION = 1;
 
-/** Space id of the transaction system page (the system tablespace) */
-static const space_id_t TRX_SYS_SPACE = 0;
 
-/** Space id of system tablespace */
-const space_id_t SYSTEM_TABLE_SPACE = TRX_SYS_SPACE;
 
 /** Identifies generated InnoDB foreign key names */
 static char dict_ibfk[] = "_ibfk_";

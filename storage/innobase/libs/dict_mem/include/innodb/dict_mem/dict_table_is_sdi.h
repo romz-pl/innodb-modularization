@@ -4,6 +4,7 @@
 
 #include <innodb/dict_mem/dict_sdi_get_table_id.h>
 #include <innodb/dict_mem/flags.h>
+#include <innodb/trx_sys/flags.h>
 
 /** Check if an table id belongs SDI table
 @param[in]	table_id	dict_table_t id

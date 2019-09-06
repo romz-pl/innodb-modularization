@@ -130,3 +130,30 @@ FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID. */
 two) is assigned, the field TRX_SYS_TRX_ID_STORE on the transaction system
 page is updated */
 #define TRX_SYS_TRX_ID_WRITE_MARGIN ((trx_id_t)256)
+
+
+
+
+
+/* Rollback segment specification slot offsets */
+/*-------------------------------------------------------------*/
+#define TRX_SYS_RSEG_SPACE          \
+  0 /* space where the segment      \
+    header is placed; starting with \
+    MySQL/InnoDB 5.1.7, this is     \
+    UNIV_UNDEFINED if the slot is unused */
+#define TRX_SYS_RSEG_PAGE_NO           \
+  4 /*  page number where the segment  \
+    header is placed; this is FIL_NULL \
+    if the slot is unused */
+/*-------------------------------------------------------------*/
+/* Size of a rollback segment specification slot */
+#define TRX_SYS_RSEG_SLOT_SIZE 8
+
+
+
+/** Space id of the transaction system page (the system tablespace) */
+static const space_id_t TRX_SYS_SPACE = 0;
+
+/** Space id of system tablespace */
+const space_id_t SYSTEM_TABLE_SPACE = TRX_SYS_SPACE;

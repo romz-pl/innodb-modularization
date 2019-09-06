@@ -65,6 +65,7 @@
 #include <innodb/tablespace/fil_system.h>
 #include <innodb/enum/to_int.h>
 #include <innodb/tablespace/dict_sys_t_is_reserved.h>
+#include <innodb/trx_sys/flags.h>
 
 #include <atomic>
 

@@ -3,6 +3,7 @@
 #include <innodb/tablespace/consts.h>
 #include <innodb/tablespace/dict_sys_t_is_reserved.h>
 #include <innodb/logger/warn.h>
+#include <innodb/trx_sys/flags.h>
 
 /** Constructor
 @param[in]	dir		Directory that the files are under */

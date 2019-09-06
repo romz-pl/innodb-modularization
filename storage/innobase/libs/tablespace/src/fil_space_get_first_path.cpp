@@ -2,6 +2,7 @@
 
 #include <innodb/tablespace/fil_system.h>
 #include <innodb/string/mem_strdup.h>
+#include <innodb/trx_sys/flags.h>
 
 /** Returns the path from the first fil_node_t found with this space ID.
 The caller is responsible for freeing the memory allocated here for the

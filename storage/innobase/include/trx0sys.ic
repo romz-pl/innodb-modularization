@@ -48,20 +48,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* The typedef for rseg slot in the file copy */
 typedef byte trx_sysf_rseg_t;
 
-/* Rollback segment specification slot offsets */
-/*-------------------------------------------------------------*/
-#define TRX_SYS_RSEG_SPACE          \
-  0 /* space where the segment      \
-    header is placed; starting with \
-    MySQL/InnoDB 5.1.7, this is     \
-    UNIV_UNDEFINED if the slot is unused */
-#define TRX_SYS_RSEG_PAGE_NO           \
-  4 /*  page number where the segment  \
-    header is placed; this is FIL_NULL \
-    if the slot is unused */
-/*-------------------------------------------------------------*/
-/* Size of a rollback segment specification slot */
-#define TRX_SYS_RSEG_SLOT_SIZE 8
+
 
 /** Writes the value of max_trx_id to the file based trx system header. */
 void trx_sys_flush_max_trx_id(void);

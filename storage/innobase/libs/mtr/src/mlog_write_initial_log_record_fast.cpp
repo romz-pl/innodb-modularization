@@ -4,7 +4,7 @@
 #include <innodb/dict_mem/flags.h>
 #include <innodb/mtr/mlog_write_initial_log_record_low.h>
 #include <innodb/mtr/mtr_t.h>
-
+#include <innodb/trx_sys/flags.h>
 
 /** Set to TRUE when the doublewrite buffer is being created */
 extern ibool buf_dblwr_being_created;

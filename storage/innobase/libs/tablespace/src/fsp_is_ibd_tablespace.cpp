@@ -3,6 +3,7 @@
 #include <innodb/tablespace/fsp_is_undo_tablespace.h>
 #include <innodb/tablespace/fsp_is_system_temporary.h>
 #include <innodb/tablespace/consts.h>
+#include <innodb/trx_sys/flags.h>
 
 /** Determine if the space ID is an IBD tablespace, either file_per_table
 or a general shared tablespace, where user tables exist.

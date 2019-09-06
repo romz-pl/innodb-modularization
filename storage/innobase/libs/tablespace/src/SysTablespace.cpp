@@ -14,6 +14,7 @@
 #include <innodb/tablespace/fil_type_t.h>
 #include <innodb/tablespace/fil_space_t.h>
 #include <innodb/dict_mem/flags.h>
+#include <innodb/trx_sys/flags.h>
 
 #include "sql/mysqld.h"
 

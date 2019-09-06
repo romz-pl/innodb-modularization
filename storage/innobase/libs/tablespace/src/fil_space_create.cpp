@@ -1,6 +1,7 @@
 #include <innodb/tablespace/fil_space_create.h>
 
 #include <innodb/tablespace/fil_system.h>
+#include <innodb/trx_sys/flags.h>
 
 bool clone_mark_abort(bool force);
 void clone_mark_active();
