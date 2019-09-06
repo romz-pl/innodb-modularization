@@ -29,6 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/trx_trx/trx_get_id_for_print.h>
 #include "storage/innobase/handler/p_s.h"
 
 #include <stdlib.h>

@@ -36,30 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 
-#include <innodb/trx_trx/trx_is_rseg_updated.h>
-#include <innodb/trx_trx/trx_is_rseg_assigned.h>
-#include <innodb/trx_trx/trx_get_que_state_str.h>
-#include <innodb/trx_trx/trx_get_id_for_print.h>
-#include <innodb/trx_trx/trx_reference.h>
-#include <innodb/trx_trx/trx_release_reference.h>
-#include <innodb/trx_trx/trx_is_referenced.h>
-#include <innodb/trx_trx/trx_arbitrate.h>
-#include <innodb/trx_trx/trx_is_high_priority.h>
-#include <innodb/trx_trx/trx_is_rseg_updated.h>
-#include <innodb/trx_trx/trx_is_autocommit_non_locking.h>
-#include <innodb/trx_trx/trx_is_ac_nl_ro.h>
-#include <innodb/trx_trx/assert_trx_in_rw_list.h>
-#include <innodb/trx_trx/check_trx_state.h>
-#include <innodb/trx_trx/lock_pool_t.h>
-#include <innodb/trx_trx/trx_mod_tables_t.h>
-#include <innodb/trx_trx/trx_undo_ptr_t.h>
-#include <innodb/trx_trx/trx_rsegs_t.h>
-#include <innodb/trx_trx/TrxVersion.h>
-#include <innodb/trx_trx/hit_list_t.h>
-#include <innodb/trx_trx/trx_t.h>
-#include <innodb/trx_trx/trx_mutex_own.h>
-#include <innodb/trx_trx/trx_mutex_enter.h>
-#include <innodb/trx_trx/trx_mutex_exit.h>
+
 
 #include <list>
 #include <set>

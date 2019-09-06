@@ -46,6 +46,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/trx_trx/trx_is_high_priority.h>
+#include <innodb/trx_trx/trx_is_rseg_updated.h>
+#include <innodb/trx_trx/trx_get_id_for_print.h>
 #include <innodb/trx_trx/trx_get_error_index.h>
 #include <innodb/trx_trx/trx_is_redo_rseg_updated.h>
 #include <innodb/memory_check/memory_check.h>

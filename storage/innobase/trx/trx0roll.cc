@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_trx/trx_get_id_for_print.h>
+#include <innodb/trx_trx/trx_is_rseg_updated.h>
 #include <innodb/trx_trx/trx_is_temp_rseg_updated.h>
 #include <innodb/trx_trx/trx_is_redo_rseg_updated.h>
 #include <innodb/memory/mem_heap_zalloc.h>

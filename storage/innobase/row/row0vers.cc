@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/6/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_release_reference.h>
 #include <innodb/cmp/cmp_dfield_dfield.h>
 #include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/data_types/dfield_is_null.h>

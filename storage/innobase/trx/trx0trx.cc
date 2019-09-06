@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_is_rseg_updated.h>
+#include <innodb/trx_trx/trx_get_id_for_print.h>
 #include <innodb/trx_trx/trx_is_temp_rseg_updated.h>
 #include <innodb/trx_trx/trx_is_redo_rseg_updated.h>
 #include <innodb/trx_trx/trx_set_dict_operation.h>
