@@ -9,6 +9,25 @@ add_library( ${LIB_NAME} STATIC
     trx_sys_mutex_enter.cpp
     trx_sys_mutex_exit.cpp
     trx_sys_get_max_trx_id.cpp
+    trx_sys_hdr_page.cpp
+    trx_sys_init_at_db_start.cpp
+    trx_sys_create.cpp
+    trx_sysf_rseg_t.cpp
+    trx_sys_flush_max_trx_id.cpp
+    trx_sys_create_sys_pages.cpp
+    trx_sysf_rseg_find_page_no.cpp
+    trx_sysf_rseg_find_free.cpp
+    trx_sysf_get.cpp
+    trx_sysf_rseg_get_space.cpp
+    trx_sysf_rseg_get_page_no.cpp
+    trx_sysf_rseg_set_space.cpp
+    trx_sysf_rseg_set_page_no.cpp
+    trx_sys_get_new_trx_id.cpp
+    trx_rseg_n_slots_debug.cpp
+    trx_write_trx_id.cpp
+    trx_read_trx_id.cpp
+    trx_get_rw_trx_by_id.cpp
+    trx_rw_min_trx_id.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

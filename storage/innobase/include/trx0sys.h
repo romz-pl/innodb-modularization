@@ -30,8 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
-#ifndef trx0sys_h
-#define trx0sys_h
+#pragma once
 
 #include <innodb/univ/univ.h>
 
@@ -73,116 +72,54 @@ class ReadView;
 struct trx_sys_t;
 
 
+#include <innodb/trx_sys/trx_sys_hdr_page.h>
+#include <innodb/trx_sys/trx_sys_init_at_db_start.h>
+#include <innodb/trx_sys/trx_sys_create.h>
 
-/** Checks if a page address is the trx sys header page.
-@param[in]	page_id	page id
-@return true if trx sys header page */
-UNIV_INLINE
-bool trx_sys_hdr_page(const page_id_t &page_id);
+#include <innodb/trx_trx/trx_reference.h>
+#include <innodb/trx_trx/assert_trx_in_rw_list.h>
+#include <innodb/trx_types/TrxIdSet.h>
+#include <innodb/trx_types/TrxTrack.h>
+#include <innodb/mtr/mtr_read_ulint.h>
+#include <innodb/disk/univ_page_size.h>
 
-/** Creates and initializes the central memory structures for the transaction
- system. This is called when the database is started.
- @return min binary heap of rsegs to purge */
-purge_pq_t *trx_sys_init_at_db_start(void);
-/** Creates the trx_sys instance and initializes purge_queue and mutex. */
-void trx_sys_create(void);
-/** Creates and initializes the transaction system at the database creation. */
-void trx_sys_create_sys_pages(void);
-
-/** Find the page number in the TRX_SYS page for a given slot/rseg_id
-@param[in]	rseg_id		slot number in the TRX_SYS page rseg array
-@return page number from the TRX_SYS page rseg array */
-page_no_t trx_sysf_rseg_find_page_no(ulint rseg_id);
-
-/** Look for a free slot for a rollback segment in the trx system file copy.
-@param[in,out]	mtr		mtr
-@return slot index or ULINT_UNDEFINED if not found */
-ulint trx_sysf_rseg_find_free(mtr_t *mtr);
-
-/** Gets a pointer to the transaction system file copy and x-locks its page.
- @return pointer to system file copy, page x-locked */
-UNIV_INLINE
-trx_sysf_t *trx_sysf_get(mtr_t *mtr); /*!< in: mtr */
-
-/** Gets the space of the nth rollback segment slot in the trx system
-file copy.
-@param[in]	sys_header	trx sys file copy
-@param[in]	i		slot index == rseg id
-@param[in]	mtr		mtr
-@return space id */
-UNIV_INLINE
-space_id_t trx_sysf_rseg_get_space(trx_sysf_t *sys_header, ulint i, mtr_t *mtr);
-
-/** Gets the page number of the nth rollback segment slot in the trx system
-file copy.
-@param[in]	sys_header	trx sys file copy
-@param[in]	i		slot index == rseg id
-@param[in]	mtr		mtr
-@return page number, FIL_NULL if slot unused */
-UNIV_INLINE
-page_no_t trx_sysf_rseg_get_page_no(trx_sysf_t *sys_header, ulint i,
-                                    mtr_t *mtr);
-
-/** Sets the space id of the nth rollback segment slot in the trx system
-file copy.
-@param[in]	sys_header	trx sys file copy
-@param[in]	i		slot index == rseg id
-@param[in]	space		space id
-@param[in]	mtr		mtr */
-UNIV_INLINE
-void trx_sysf_rseg_set_space(trx_sysf_t *sys_header, ulint i, space_id_t space,
-                             mtr_t *mtr);
-
-/** Set the page number of the nth rollback segment slot in the trx system
-file copy.
-@param[in]	sys_header	trx sys file copy
-@param[in]	i		slot index == rseg id
-@param[in]	page_no		page number, FIL_NULL if the slot is reset to
-                                unused
-@param[in]	mtr		mtr */
-UNIV_INLINE
-void trx_sysf_rseg_set_page_no(trx_sysf_t *sys_header, ulint i,
-                               page_no_t page_no, mtr_t *mtr);
-
-/** Allocates a new transaction id.
- @return new, allocated trx id */
-UNIV_INLINE
-trx_id_t trx_sys_get_new_trx_id();
+#include <innodb/buf_block/buf_block_get_frame.h>
 
 
-#ifdef UNIV_DEBUG
-/* Flag to control TRX_RSEG_N_SLOTS behavior debugging. */
-extern uint trx_rseg_n_slots_debug;
-#endif
+#include "srv0srv.h"
+
+
+#include "mtr0log.h"
+
+#include <innodb/trx_sys/trx_sysf_rseg_t.h>
+#include <innodb/trx_sys/trx_sys_flush_max_trx_id.h>
+#include <innodb/trx_sys/trx_sys_create_sys_pages.h>
+#include <innodb/trx_sys/trx_sysf_rseg_find_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_find_free.h>
+#include <innodb/trx_sys/trx_sysf_get.h>
+#include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
+#include <innodb/trx_sys/trx_sysf_rseg_get_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_set_space.h>
+#include <innodb/trx_sys/trx_sysf_rseg_set_page_no.h>
+#include <innodb/trx_sys/trx_sys_get_new_trx_id.h>
+#include <innodb/trx_sys/trx_rseg_n_slots_debug.h>
+
+
 #endif /* !UNIV_HOTBACKUP */
 
-/** Writes a trx id to an index page. In case that the id size changes in some
-future version, this function should be used instead of mach_write_...
-@param[in]	ptr	pointer to memory where written
-@param[in]	id	id */
-UNIV_INLINE
-void trx_write_trx_id(byte *ptr, trx_id_t id);
+
+#include <innodb/trx_sys/trx_write_trx_id.h>
+
+
 
 #ifndef UNIV_HOTBACKUP
-/** Reads a trx id from an index page. In case that the id size changes in
- some future version, this function should be used instead of
- mach_read_...
- @return id */
-UNIV_INLINE
-trx_id_t trx_read_trx_id(
-    const byte *ptr); /*!< in: pointer to memory from where to read */
 
-/** Looks for the trx instance with the given id in the rw trx_list.
- @return	the trx handle or NULL if not found */
-UNIV_INLINE
-trx_t *trx_get_rw_trx_by_id(trx_id_t trx_id); /*!< in: trx id to search for */
-/** Returns the minimum trx id in rw trx list. This is the smallest id for which
- the trx can possibly be active. (But, you must look at the trx->state to
- find out if the minimum trx id transaction itself is active, or already
- committed.)
- @return the minimum trx id, or trx_sys->max_trx_id if the trx list is empty */
-UNIV_INLINE
-trx_id_t trx_rw_min_trx_id(void);
+#include <innodb/trx_sys/trx_read_trx_id.h>
+#include <innodb/trx_sys/trx_get_rw_trx_by_id.h>
+#include <innodb/trx_sys/trx_rw_min_trx_id.h>
+
+
+
 
 /** Checks if a rw transaction with the given id is active.
 @param[in]	trx_id		trx id of the transaction
@@ -262,11 +199,3 @@ called once during thread de-initialization. */
 void trx_sys_undo_spaces_deinit();
 
 
-
-
-
-
-
-#include "trx0sys.ic"
-
-#endif
