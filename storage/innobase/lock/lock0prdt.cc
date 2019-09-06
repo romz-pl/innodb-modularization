@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #define LOCK_MODULE_IMPLEMENTATION
 
 #include <innodb/memory/ut_memcpy.h>
+#include <innodb/trx_trx/trx_mutex_enter.h>
+#include <innodb/trx_trx/trx_mutex_exit.h>
 
 #include <set>
 

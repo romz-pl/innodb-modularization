@@ -38,79 +38,18 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
-#include <list>
-#include <set>
-
-#include "ha_prototypes.h"
 
 
-struct lock_t;
-struct lock_sys_t;
-struct lock_table_t;
 
-#include "log0log.h"
 
 #include "que0types.h"
-#include "trx0xa.h"
-#include "usr0types.h"
 
-#ifndef UNIV_HOTBACKUP
-#include "fts0fts.h"
-#endif /* !UNIV_HOTBACKUP */
-#include "srv0srv.h"
-
-struct trx_undo_t;
-struct trx_rseg_t;
-struct trx_named_savept_t;
-struct commit_node_t;
-
-// Forward declaration
-struct mtr_t;
-
-// Forward declaration
-class ReadView;
-
-// Forward declaration
-class FlushObserver;
 
 
 
 #ifndef UNIV_HOTBACKUP
 
-
-#include <innodb/trx_trx/trx_weight_ge.h>
-#include <innodb/trx_trx/trx_assign_rseg_temp.h>
-#include <innodb/trx_trx/trx_pool_init.h>
-#include <innodb/trx_trx/trx_pool_close.h>
-#include <innodb/trx_trx/trx_set_rw_mode.h>
-#include <innodb/trx_trx/trx_kill_blocking.h>
-#include <innodb/trx_trx/trx_immutable_id.h>
-#include <innodb/trx_trx/trx_lock_wait_timeout_get.h>
-#include <innodb/trx_trx/assert_trx_is_free.h>
-#include <innodb/trx_trx/assert_trx_is_inactive.h>
-#include <innodb/trx_trx/assert_trx_nonlocking_or_in_list.h>
-#include <innodb/trx_trx/trx_rseg_type_t.h>
-#include <innodb/trx_trx/trx_isolation_level.h>
-#include <innodb/trx_trx/trx_is_started.h>
 #include <innodb/trx_trx/commit_node_state.h>
-#include <innodb/trx_trx/TrxInInnoDB.h>
-
-#endif /* !UNIV_HOTBACKUP */
-
-
-
-
-
-
-
-
-
-
-
-
-
-#ifndef UNIV_HOTBACKUP
-
 
 /** Commit command node in a query graph */
 struct commit_node_t {

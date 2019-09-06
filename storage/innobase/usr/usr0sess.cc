@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "usr0sess.h"
 #include "trx0trx.h"
 
+#include <innodb/trx_trx/trx_t.h>
 #include <innodb/trx_trx/trx_free_for_background.h>
 #include <innodb/trx_trx/trx_allocate_for_background.h>
 

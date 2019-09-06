@@ -45,6 +45,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/8/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/read/MVCC.h>
+#include <innodb/trx_trx/trx_pool_init.h>
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/dict_mem/dict_mem_init.h>

@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  3/20/2011 Jimmy Yang extracted from Embedded InnoDB
  *******************************************************/
 
+#include <innodb/trx_trx/trx_is_started.h>
 #include <innodb/trx_trx/trx_assign_read_view.h>
 #include <innodb/trx_trx/trx_commit.h>
 #include <innodb/trx_trx/trx_free_for_mysql.h>

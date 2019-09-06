@@ -37,6 +37,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <vector>
 
+#include <innodb/io/srv_read_only_mode.h>
+#include <innodb/trx_trx/trx_isolation_level.h>
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_commit_for_mysql.h>
 #include <innodb/trx_trx/trx_start_internal_read_only.h>
 #include <innodb/trx_trx/trx_allocate_for_background.h>

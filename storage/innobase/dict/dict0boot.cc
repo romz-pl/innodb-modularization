@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/18/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/dict_mem/dict_mem_index_create.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/align/ut_uint64_align_up.h>

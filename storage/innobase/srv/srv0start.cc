@@ -50,6 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/trx_trx/trx_pool_close.h>
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_resurrect_locks.h>
 #include <innodb/lock_sys/lock_sys_close.h>
 #include <innodb/sync_mutex/mutex_free.h>

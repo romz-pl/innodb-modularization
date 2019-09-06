@@ -32,6 +32,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/trx_trx/trx_weight_ge.h>
+#include <innodb/trx_trx/trx_immutable_id.h>
+#include <innodb/trx_trx/trx_state_eq.h>
+#include <innodb/trx_trx/trx_set_rw_mode.h>
+#include <innodb/io/srv_read_only_mode.h>
+#include <innodb/trx_trx/trx_mutex_enter.h>
+#include <innodb/trx_trx/trx_mutex_exit.h>
 #include <innodb/trx_trx/trx_print_low.h>
 #include <innodb/trx_trx/trx_print_latched.h>
 #include <innodb/trx_trx/trx_is_referenced.h>

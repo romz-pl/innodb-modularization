@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_commit_for_mysql.h>
 #include <innodb/trx_trx/trx_free_for_background.h>
 #include <innodb/trx_trx/trx_allocate_for_background.h>

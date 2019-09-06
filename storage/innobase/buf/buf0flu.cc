@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <time.h>
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/sync_mutex/mutex_destroy.h>
 #include <innodb/buf_calc/buf_calc_page_new_checksum.h>

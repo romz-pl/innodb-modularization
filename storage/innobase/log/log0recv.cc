@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/page/page_zip_parse_compress.h>
 #include <innodb/page/page_zip_parse_write_blob_ptr.h>

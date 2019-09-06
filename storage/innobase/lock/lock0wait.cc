@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/trx_trx/trx_lock_wait_timeout_get.h>
+#include <innodb/trx_trx/trx_mutex_enter.h>
+#include <innodb/trx_trx/trx_mutex_exit.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/trx_trx/trx_is_high_priority.h>
 #include <mysql/service_thd_wait.h>

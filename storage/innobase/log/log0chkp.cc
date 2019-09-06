@@ -44,6 +44,7 @@ the file COPYING.Google.
 
  *******************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/log_chkp/log_checkpoint_time_elapsed.h>
 #include <innodb/log_arch/arch_page_sys.h>
 #include <innodb/log_chkp/log_checkpointer_mutex_exit.h>

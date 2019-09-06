@@ -46,6 +46,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/read/MVCC.h>
+#include <innodb/trx_trx/trx_state_eq.h>
+#include <innodb/trx_trx/trx_isolation_level.h>
+#include <innodb/trx_trx/TrxInInnoDB.h>
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_get_trx_by_xid.h>
 #include <innodb/trx_trx/trx_recover_for_mysql.h>
 #include <innodb/trx_trx/trx_mark_sql_stat_end.h>

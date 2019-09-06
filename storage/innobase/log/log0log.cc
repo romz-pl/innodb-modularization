@@ -38,6 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/9/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/allocator/aligned_pointer.h>
 #include <innodb/logger/info.h>
 #include <innodb/align/ut_uint64_align_up.h>

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/mtr/mtr_x_lock.h>
 #include <innodb/mtr/mtr_start.h>

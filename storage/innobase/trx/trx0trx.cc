@@ -30,6 +30,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_set_rw_mode.h>
+#include <innodb/trx_trx/trx_state_eq.h>
+#include <innodb/trx_trx/trx_isolation_level.h>
+#include <innodb/trx_trx/assert_trx_nonlocking_or_in_list.h>
+#include <innodb/trx_trx/assert_trx_is_free.h>
+#include <innodb/trx_trx/TrxInInnoDB.h>
+#include <innodb/read/MVCC.h>
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/TRX_WEIGHT.h>
 #include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/trx_trx/trx_free_for_background.h>

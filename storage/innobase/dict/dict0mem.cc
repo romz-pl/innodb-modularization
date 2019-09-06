@@ -34,6 +34,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_trx/trx_t.h>
+#include <innodb/read/MVCC.h>
 #include <innodb/dict_mem/dict_table_t.h>
 #include <innodb/dict_mem/dict_index_t.h>
 #include <innodb/dict_mem/dict_index_is_online_ddl.h>

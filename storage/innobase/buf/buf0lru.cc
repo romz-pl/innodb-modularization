@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 11/5/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
+#include <innodb/trx_trx/trx_t.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/logger/fatal.h>

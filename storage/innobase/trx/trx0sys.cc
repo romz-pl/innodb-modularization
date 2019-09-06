@@ -33,6 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_trx/trx_state_eq.h>
+#include <innodb/io/srv_read_only_mode.h>
+#include <innodb/read/MVCC.h>
 #include <innodb/trx_trx/trx_free_prepared.h>
 #include <innodb/trx_trx/trx_lists_init_at_db_start.h>
 #include <innodb/trx_trx/trx_dummy_sess.h>

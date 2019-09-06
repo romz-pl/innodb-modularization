@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_kill_blocking.h>
+#include <innodb/trx_trx/trx_isolation_level.h>
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_print_low.h>
 #include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/trx_trx/trx_set_detailed_error.h>

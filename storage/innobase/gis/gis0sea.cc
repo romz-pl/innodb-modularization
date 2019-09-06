@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2014/01/16 Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
 #include <innodb/data_types/dtuple_get_n_fields_cmp.h>

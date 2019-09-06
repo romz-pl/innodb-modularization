@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/error/ut_error.h>
 #include <innodb/logger/fatal.h>
 
 #include <errno.h>
@@ -57,7 +58,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "mysql/components/services/log_builtins.h"
 #include "sql/derror.h"
-
+#include <innodb/trx_trx/trx_t.h>
 
 
 

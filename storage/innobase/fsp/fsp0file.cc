@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013-7-26 by Kevin Lewis
  *******************************************************/
 
+#include <innodb/io/srv_read_only_mode.h>
 #include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
 #include <innodb/logger/info.h>

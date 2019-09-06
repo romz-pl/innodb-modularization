@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_trx/TrxInInnoDB.h>
+#include <innodb/io/srv_read_only_mode.h>
+#include <innodb/trx_trx/assert_trx_nonlocking_or_in_list.h>
 #include <innodb/trx_trx/trx_commit_or_rollback_prepare.h>
 #include <innodb/trx_trx/trx_commit.h>
 #include <innodb/trx_trx/trx_cleanup_at_db_startup.h>
