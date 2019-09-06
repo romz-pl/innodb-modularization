@@ -87,6 +87,32 @@ add_library( ${LIB_NAME} STATIC
     trx_start_if_not_started.cpp
     trx_start_internal.cpp
     trx_start_internal_read_only.cpp
+    trx_commit.cpp
+    trx_commit_low.cpp
+    trx_cleanup_at_db_startup.cpp
+    trx_commit_for_mysql.cpp
+    trx_prepare_for_mysql.cpp
+    trx_recover_for_mysql.cpp
+    trx_get_trx_by_xid.cpp
+    trx_commit_complete_for_mysql.cpp
+    trx_mark_sql_stat_end.cpp
+    trx_assign_read_view.cpp
+    trx_commit_or_rollback_prepare.cpp
+    trx_commit_node_create.cpp
+    trx_commit_step.cpp
+    trx_print_low.cpp
+    trx_print_latched.cpp
+    trx_print.cpp
+    trx_assert_started.cpp
+    trx_is_interrupted.cpp
+    trx_is_strict.cpp
+    trx_weight_ge.cpp
+    trx_assign_rseg_temp.cpp
+    trx_set_rw_mode.cpp
+    trx_kill_blocking.cpp
+    trx_rseg_type_t.cpp
+    commit_node_state.cpp
+    commit_node_t.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

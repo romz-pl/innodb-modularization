@@ -142,157 +142,32 @@ class FlushObserver;
 #include <innodb/trx_trx/trx_start_if_not_started.h>
 #include <innodb/trx_trx/trx_start_internal.h>
 #include <innodb/trx_trx/trx_start_internal_read_only.h>
-
-
-
-
-
-/** Commits a transaction. */
-void trx_commit(trx_t *trx); /*!< in/out: transaction */
-
-/** Commits a transaction and a mini-transaction. */
-void trx_commit_low(
-    trx_t *trx,  /*!< in/out: transaction */
-    mtr_t *mtr); /*!< in/out: mini-transaction (will be committed),
-                 or NULL if trx made no modifications */
-/** Cleans up a transaction at database startup. The cleanup is needed if
- the transaction already got to the middle of a commit when the database
- crashed, and we cannot roll it back. */
-void trx_cleanup_at_db_startup(trx_t *trx); /*!< in: transaction */
-/** Does the transaction commit for MySQL.
- @return DB_SUCCESS or error number */
-dberr_t trx_commit_for_mysql(trx_t *trx); /*!< in/out: transaction */
-
-/**
-Does the transaction prepare for MySQL.
-@param[in, out] trx		Transaction instance to prepare */
-
-dberr_t trx_prepare_for_mysql(trx_t *trx);
-
-/** This function is used to find number of prepared transactions and
- their transaction objects for a recovery.
- @return number of prepared transactions */
-int trx_recover_for_mysql(
-    XA_recover_txn *txn_list, /*!< in/out: prepared transactions */
-    ulint len,                /*!< in: number of slots in xid_list */
-    MEM_ROOT *mem_root);      /*!< in: memory for table names */
-/** This function is used to find one X/Open XA distributed transaction
- which is in the prepared state
- @return trx or NULL; on match, the trx->xid will be invalidated;
- note that the trx may have been committed, unless the caller is
- holding lock_sys->mutex */
-trx_t *trx_get_trx_by_xid(
-    const XID *xid); /*!< in: X/Open XA transaction identifier */
-/** If required, flushes the log to disk if we called trx_commit_for_mysql()
- with trx->flush_log_later == TRUE. */
-void trx_commit_complete_for_mysql(trx_t *trx); /*!< in/out: transaction */
-/** Marks the latest SQL statement ended. */
-void trx_mark_sql_stat_end(trx_t *trx); /*!< in: trx handle */
-/** Assigns a read view for a consistent read query. All the consistent reads
- within the same transaction will get the same read view, which is created
- when this function is first called for a new started transaction. */
-ReadView *trx_assign_read_view(trx_t *trx); /*!< in: active transaction */
-
-
-/** Prepares a transaction for commit/rollback. */
-void trx_commit_or_rollback_prepare(trx_t *trx); /*!< in/out: transaction */
-/** Creates a commit command node struct.
- @return own: commit node struct */
-commit_node_t *trx_commit_node_create(
-    mem_heap_t *heap); /*!< in: mem heap where created */
-/** Performs an execution step for a commit type node in a query graph.
- @return query thread to run next, or NULL */
-que_thr_t *trx_commit_step(que_thr_t *thr); /*!< in: query thread */
-
-/** Prints info about a transaction.
- Caller must hold trx_sys->mutex. */
-void trx_print_low(FILE *f,
-                   /*!< in: output stream */
-                   const trx_t *trx,
-                   /*!< in: transaction */
-                   ulint max_query_len,
-                   /*!< in: max query length to print,
-                   or 0 to use the default max length */
-                   ulint n_rec_locks,
-                   /*!< in: lock_number_of_rows_locked(&trx->lock) */
-                   ulint n_trx_locks,
-                   /*!< in: length of trx->lock.trx_locks */
-                   ulint heap_size);
-/*!< in: mem_heap_get_size(trx->lock.lock_heap) */
-
-/** Prints info about a transaction.
- The caller must hold lock_sys->mutex and trx_sys->mutex.
- When possible, use trx_print() instead. */
-void trx_print_latched(
-    FILE *f,              /*!< in: output stream */
-    const trx_t *trx,     /*!< in: transaction */
-    ulint max_query_len); /*!< in: max query length to print,
-                          or 0 to use the default max length */
-
-/** Prints info about a transaction.
- Acquires and releases lock_sys->mutex and trx_sys->mutex. */
-void trx_print(FILE *f,              /*!< in: output stream */
-               const trx_t *trx,     /*!< in: transaction */
-               ulint max_query_len); /*!< in: max query length to print,
-                                     or 0 to use the default max length */
-
-
-
-
-
-
-#ifdef UNIV_DEBUG
-/** Asserts that a transaction has been started.
- The caller must hold trx_sys->mutex.
- @return true if started */
-ibool trx_assert_started(const trx_t *trx) /*!< in: transaction */
-    MY_ATTRIBUTE((warn_unused_result));
-#endif /* UNIV_DEBUG */
-
-/** Determines if the currently running transaction has been interrupted.
- @return true if interrupted */
-ibool trx_is_interrupted(const trx_t *trx); /*!< in: transaction */
-/** Determines if the currently running transaction is in strict mode.
- @return true if strict */
-ibool trx_is_strict(trx_t *trx); /*!< in: transaction */
-
+#include <innodb/trx_trx/trx_commit.h>
+#include <innodb/trx_trx/trx_commit_low.h>
+#include <innodb/trx_trx/trx_cleanup_at_db_startup.h>
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_prepare_for_mysql.h>
+#include <innodb/trx_trx/trx_recover_for_mysql.h>
+#include <innodb/trx_trx/trx_get_trx_by_xid.h>
+#include <innodb/trx_trx/trx_commit_complete_for_mysql.h>
+#include <innodb/trx_trx/trx_mark_sql_stat_end.h>
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_commit_or_rollback_prepare.h>
+#include <innodb/trx_trx/trx_commit_node_create.h>
+#include <innodb/trx_trx/trx_commit_step.h>
+#include <innodb/trx_trx/trx_print_low.h>
+#include <innodb/trx_trx/trx_print_latched.h>
+#include <innodb/trx_trx/trx_print.h>
+#include <innodb/trx_trx/trx_assert_started.h>
+#include <innodb/trx_trx/trx_is_interrupted.h>
+#include <innodb/trx_trx/trx_is_strict.h>
 #include <innodb/trx_trx/TRX_WEIGHT.h>
-
-
-/** Compares the "weight" (or size) of two transactions. Transactions that
- have edited non-transactional tables are considered heavier than ones
- that have not.
- @return true if weight(a) >= weight(b) */
-bool trx_weight_ge(const trx_t *a,  /*!< in: the transaction to be compared */
-                   const trx_t *b); /*!< in: the transaction to be compared */
-
-
-
-
-/** Assign a temp-tablespace bound rollback-segment to a transaction.
-@param[in,out]	trx	transaction that involves write to temp-table. */
-void trx_assign_rseg_temp(trx_t *trx);
-
+#include <innodb/trx_trx/trx_weight_ge.h>
+#include <innodb/trx_trx/trx_assign_rseg_temp.h>
 #include <innodb/trx_trx/trx_pool_init.h>
 #include <innodb/trx_trx/trx_pool_close.h>
-
-
-/**
-Set the transaction as a read-write transaction if it is not already
-tagged as such.
-@param[in,out] trx	Transaction that needs to be "upgraded" to RW from RO */
-void trx_set_rw_mode(trx_t *trx);
-
-
-
-/**
-Kill all transactions that are blocking this transaction from acquiring locks.
-@param[in,out] trx	High priority transaction */
-
-void trx_kill_blocking(trx_t *trx);
-
-
-
+#include <innodb/trx_trx/trx_set_rw_mode.h>
+#include <innodb/trx_trx/trx_kill_blocking.h>
 #include <innodb/trx_trx/trx_immutable_id.h>
 #include <innodb/trx_trx/trx_lock_wait_timeout_get.h>
 #include <innodb/trx_trx/assert_trx_is_free.h>
@@ -308,11 +183,8 @@ void trx_kill_blocking(trx_t *trx);
 
 
 
-enum trx_rseg_type_t {
-  TRX_RSEG_TYPE_NONE = 0, /*!< void rollback segment type. */
-  TRX_RSEG_TYPE_REDO,     /*!< redo rollback segment. */
-  TRX_RSEG_TYPE_NOREDO    /*!< non-redo rollback segment. */
-};
+#include <innodb/trx_trx/trx_rseg_type_t.h>
+
 
 
 
@@ -322,16 +194,11 @@ enum trx_rseg_type_t {
 
 #include <innodb/trx_trx/trx_isolation_level.h>
 #include <innodb/trx_trx/trx_is_started.h>
+#include <innodb/trx_trx/commit_node_state.h>
 
 
 
-/** Commit node states */
-enum commit_node_state {
-  COMMIT_NODE_SEND = 1, /*!< about to send a commit signal to
-                        the transaction */
-  COMMIT_NODE_WAIT      /*!< commit signal sent to the transaction,
-                        waiting for completion */
-};
+
 
 /** Commit command node in a query graph */
 struct commit_node_t {
