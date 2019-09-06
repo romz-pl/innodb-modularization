@@ -46,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/trx_sys/trx_sys.h>
 #include <innodb/read/MVCC.h>
 #include <innodb/trx_trx/trx_state_eq.h>
 #include <innodb/trx_trx/trx_isolation_level.h>
@@ -289,7 +290,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0tmp.h"
 #include "trx0roll.h"
 #include "trx0rseg.h"
-#include "trx0sys.h"
+
 
 #include "trx0xa.h"
 #else

@@ -32,6 +32,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/trx_sys/trx_rw_min_trx_id.h>
+#include <innodb/trx_sys/trx_rw_is_active.h>
+#include <innodb/trx_sys/trx_rw_min_trx_id.h>
+#include <innodb/trx_sys/trx_sys_get_max_trx_id.h>
+#include <innodb/trx_sys/trx_sys.h>
 #include <innodb/trx_trx/trx_reference.h>
 #include <innodb/trx_trx/assert_trx_in_rw_list.h>
 #include <innodb/trx_trx/check_trx_state.h>
@@ -100,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "srv0mon.h"
 #include "trx0purge.h"
-#include "trx0sys.h"
+
 #include "usr0sess.h"
 #include "ut0ut.h"
 #include <innodb/vector/vector.h>

@@ -50,6 +50,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/tablespace/trx_sys_undo_spaces.h>
+#include <innodb/trx_sys/trx_sys_close.h>
+#include <innodb/trx_sys/trx_sys_any_active_transactions.h>
+#include <innodb/trx_sys/trx_sys_need_rollback.h>
+#include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset.h>
+#include <innodb/trx_sys/trx_sys_init_at_db_start.h>
+#include <innodb/trx_sys/trx_sys_create_sys_pages.h>
+#include <innodb/trx_sys/trx_sys_create.h>
 #include <innodb/trx_sys/trx_sys_undo_spaces_deinit.h>
 #include <innodb/trx_sys/trx_sys_undo_spaces_init.h>
 #include <innodb/trx_trx/trx_pool_close.h>
@@ -135,7 +143,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0ftsort.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "trx0sys.h"
+
 
 #include <innodb/enum/to_int.h>
 

@@ -42,6 +42,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.
 */
 
+#include <innodb/trx_sys/trx_sys_mutex_enter.h>
+#include <innodb/trx_sys/trx_sys_mutex_exit.h>
+#include <innodb/trx_sys/trx_sys.h>
+#include <innodb/trx_sys/trx_ut_list_t.h>
 #include <innodb/trx_trx/trx_is_autocommit_non_locking.h>
 #include <innodb/trx_trx/assert_trx_nonlocking_or_in_list.h>
 #include <innodb/trx_trx/trx_is_started.h>
@@ -77,7 +81,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include "trx0i_s.h"
-#include "trx0sys.h"
+
 
 
 #include "storage/perfschema/pfs_data_lock.h"

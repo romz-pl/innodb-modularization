@@ -35,6 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/tablespace/Space_Ids.h>
+#include <innodb/trx_types/TrxUndoRsegs.h>
+#include <innodb/trx_types/trx_rseg_t.h>
+#include <innodb/trx_types/Rsegs.h>
 #include <innodb/trx_types/PQMutex.h>
 #include <innodb/allocator/UT_NEW_NOKEY.h>
 
@@ -43,14 +47,17 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "page0page.h"
 #include "que0types.h"
 #include <innodb/read/ReadView.h>
-#include "trx0sys.h"
+
 #include "usr0sess.h"
 #ifdef UNIV_HOTBACKUP
-#include "trx0sys.h"
+
 #endif /* UNIV_HOTBACKUP */
+
+#include <innodb/trx_types/purge_pq_t.h>
 
 struct trx_purge_t;
 struct trx_undo_ptr_t;
+
 
 /** The global data structure coordinating a purge */
 extern trx_purge_t *purge_sys;

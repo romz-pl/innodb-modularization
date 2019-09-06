@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_sys/trx_sys_mutex_enter.h>
+#include <innodb/trx_sys/trx_sys_mutex_exit.h>
 #include <innodb/trx_trx/assert_trx_in_rw_list.h>
 #include <innodb/trx_trx/check_trx_state.h>
 #include <innodb/trx_trx/TrxInInnoDB.h>
@@ -70,7 +72,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rec.h"
 #include "trx0roll.h"
 #include "trx0rseg.h"
-#include "trx0sys.h"
+
 
 #include "trx0undo.h"
 #include "usr0sess.h"

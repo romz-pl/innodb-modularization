@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "btr0types.h"
 #include "que0types.h"
 #include "row0types.h"
-#include "trx0sys.h"
+
 
 
 /** Converts an implict lock on the record to explict in case of partial

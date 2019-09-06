@@ -38,9 +38,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_types/trx_undo_rec_t.h>
 
 #include "sql/xa.h"
-#include "trx0sys.h"
+
 #include "trx0xa.h"
 
+struct trx_rseg_t;
+struct trx_undo_t;
 struct trx_undo_ptr_t;
 
 #ifndef UNIV_HOTBACKUP

@@ -35,6 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_dbug.h"
 
+#include <innodb/trx_sys/trx_sys_get_max_trx_id.h>
 #include <innodb/page/page_dir_get_n_heap.h>
 #include <innodb/page/page_zip_compress.h>
 #include <innodb/page/page_zip_decompress.h>

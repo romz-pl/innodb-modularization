@@ -30,6 +30,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_sys/trx_sys_mutex_enter.h>
+#include <innodb/trx_sys/trx_sys_mutex_exit.h>
+#include <innodb/trx_sys/trx_sys_get_new_trx_id.h>
+#include <innodb/trx_sys/trx_get_rw_trx_by_id.h>
+#include <innodb/trx_sys/trx_sys_rw_trx_add.h>
 #include <innodb/trx_trx/assert_trx_in_rw_list.h>
 #include <innodb/trx_sys/trx_sys_update_mysql_binlog_offset.h>
 #include <innodb/trx_trx/commit_node_t.h>

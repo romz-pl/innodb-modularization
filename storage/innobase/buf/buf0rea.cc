@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <mysql/service_thd_wait.h>
 #include <stddef.h>
 
+#include <innodb/trx_sys/trx_sys_hdr_page.h>
 #include <innodb/logger/info.h>
 #include <innodb/math/ut_ulint_cmp.h>
 #include <innodb/buf_pool/buf_pool_get.h>
@@ -59,7 +60,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_inttypes.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "trx0sys.h"
+
 #include <innodb/formatting/formatting.h>
 
 /** There must be at least this many pages in buf_pool in the area to start

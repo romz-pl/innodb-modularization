@@ -31,11 +31,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  *******************************************************/
 
 #include <innodb/tablespace/srv_tmp_space.h>
+#include <innodb/trx_sys/trx_sys.h>
 
 #include "mtr0log.h"
 #include "srv0srv.h"
 #include "trx0purge.h"
-#include "trx0sys.h"
+
 
 /** Gets a rollback segment header.
 @param[in]	space		space where placed

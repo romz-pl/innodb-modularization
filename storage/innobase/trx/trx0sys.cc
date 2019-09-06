@@ -33,6 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/tablespace/trx_sys_undo_spaces.h>
+#include <innodb/trx_sys/trx_sys_flush_max_trx_id.h>
+#include <innodb/trx_sys/trx_sys_mutex_enter.h>
+#include <innodb/trx_sys/trx_sys_mutex_exit.h>
 #include <innodb/trx_trx/trx_reference.h>
 #include <innodb/trx_trx/trx_t.h>
 #include <innodb/trx_trx/assert_trx_in_rw_list.h>
@@ -53,7 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "current_thd.h"
 #include "ha_prototypes.h"
 #include "sql_error.h"
-#include "trx0sys.h"
+
 
 #ifndef UNIV_HOTBACKUP
 #include "fsp0fsp.h"

@@ -49,6 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_sys/trx_sys.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/page/page_zip_available.h>
 #include <innodb/memory_check/memory_check.h>

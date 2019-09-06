@@ -29,6 +29,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
  *******************************************************/
 
+#include <innodb/trx_sys/trx_sys_mutex_enter.h>
+#include <innodb/trx_sys/trx_sys_mutex_exit.h>
+#include <innodb/trx_sys/trx_sys.h>
 #include <innodb/trx_trx/assert_trx_nonlocking_or_in_list.h>
 #include <innodb/trx_trx/trx_immutable_id.h>
 #include <innodb/trx_trx/trx_is_started.h>
@@ -43,7 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql_table.h"
 #include "table.h"
 #include "trx0i_s.h"
-#include "trx0sys.h"
+
 
 #include "my_io.h"
 
