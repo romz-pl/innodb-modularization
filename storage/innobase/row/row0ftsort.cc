@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/dict_mem/dict_mem_index_create.h>
 #include <innodb/cmp/cmp_rec_rec_simple.h>

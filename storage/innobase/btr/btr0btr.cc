@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 6/2/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/page/page_zip_compress.h>
 #include <innodb/page/page_zip_copy_recs.h>
 #include <innodb/page/page_zip_empty_size.h>

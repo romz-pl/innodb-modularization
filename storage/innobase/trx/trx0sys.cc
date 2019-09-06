@@ -33,6 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_trx/trx_free_prepared.h>
+#include <innodb/trx_trx/trx_lists_init_at_db_start.h>
+#include <innodb/trx_trx/trx_dummy_sess.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/mtr/mtr_x_lock_space.h>
 #include <innodb/mtr/mtr_start.h>

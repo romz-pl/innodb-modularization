@@ -26,6 +26,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <algorithm>
 
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+
 #include <current_thd.h>
 #include <sql_class.h>
 #include <sql_show.h>

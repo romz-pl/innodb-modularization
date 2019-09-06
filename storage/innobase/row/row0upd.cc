@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/page/page_zip_write_rec.h>
 #include <innodb/record/rec_get_nth_field_instant.h>

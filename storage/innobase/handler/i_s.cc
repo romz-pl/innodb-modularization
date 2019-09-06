@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created July 18, 2007 Vasil Dimov
  *******************************************************/
 
+#include <innodb/trx_trx/flags.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/page/page_zip_reset_stat_per_index.h>
 #include <innodb/page/page_zip_stat_per_index.h>
 #include <innodb/memory/mem_heap_zalloc.h>

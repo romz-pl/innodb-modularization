@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/trx_trx/trx_commit_step.h>
+
 #include "dict0crea.h"
 #include "eval0eval.h"
 #include "eval0proc.h"

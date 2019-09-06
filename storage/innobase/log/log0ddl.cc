@@ -36,6 +36,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/1/2016 Shaohua Wang
  *******************************************************/
 
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+#include <innodb/trx_trx/trx_start_internal.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/trx_trx/trx_set_dict_operation.h>
 #include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/memory/mem_heap_dup.h>

@@ -31,6 +31,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_is_interrupted.h>
+#include <innodb/trx_trx/trx_is_strict.h>
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/trx_trx/trx_set_dict_operation.h>
 #include <innodb/trx_trx/trx_get_dict_operation.h>
 #include <innodb/memory_check/memory_check.h>

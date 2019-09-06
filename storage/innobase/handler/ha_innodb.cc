@@ -46,6 +46,22 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/trx_trx/trx_get_trx_by_xid.h>
+#include <innodb/trx_trx/trx_recover_for_mysql.h>
+#include <innodb/trx_trx/trx_mark_sql_stat_end.h>
+#include <innodb/trx_trx/trx_prepare_for_mysql.h>
+#include <innodb/trx_trx/trx_mark_sql_stat_end.h>
+#include <innodb/trx_trx/trx_commit_complete_for_mysql.h>
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/flags.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
+#include <innodb/trx_trx/trx_disconnect_prepared.h>
+#include <innodb/trx_trx/trx_free_for_mysql.h>
+#include <innodb/trx_trx/trx_allocate_for_mysql.h>
 #include <innodb/trx_trx/trx_is_high_priority.h>
 #include <innodb/trx_trx/trx_is_rseg_updated.h>
 #include <innodb/trx_trx/trx_get_id_for_print.h>

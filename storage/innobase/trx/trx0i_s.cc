@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.
 */
 
+#include <innodb/trx_trx/TRX_WEIGHT.h>
 #include <innodb/trx_trx/trx_get_que_state_str.h>
 #include <innodb/trx_trx/trx_get_id_for_print.h>
 #include <innodb/sync_mutex/mutex_free.h>

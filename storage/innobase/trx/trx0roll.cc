@@ -32,6 +32,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_trx/trx_commit_or_rollback_prepare.h>
+#include <innodb/trx_trx/trx_commit.h>
+#include <innodb/trx_trx/trx_cleanup_at_db_startup.h>
+#include <innodb/trx_trx/trx_mark_sql_stat_end.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_free_resurrected.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/trx_trx/trx_get_id_for_print.h>
 #include <innodb/trx_trx/trx_is_rseg_updated.h>
 #include <innodb/trx_trx/trx_is_temp_rseg_updated.h>

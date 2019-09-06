@@ -33,6 +33,7 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/clone/clone_mark_active.h>
 #include <innodb/clone/clone_mark_abort.h>

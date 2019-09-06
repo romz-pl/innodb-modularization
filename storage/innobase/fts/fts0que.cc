@@ -31,6 +31,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed 2011/7/10 Sunny and Jimmy Yang
  *******************************************************/
 
+#include <innodb/trx_trx/trx_is_interrupted.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
 #include <innodb/memory/ut_memcpy.h>

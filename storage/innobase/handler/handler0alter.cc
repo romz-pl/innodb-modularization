@@ -28,6 +28,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Smart ALTER TABLE
  *******************************************************/
 
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/dict_mem/dict_add_col_name.h>
 #include <innodb/dict_mem/dict_mem_fill_column_struct.h>
 #include <innodb/dict_mem/dict_mem_table_add_col.h>

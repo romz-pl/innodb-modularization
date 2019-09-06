@@ -38,6 +38,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <time.h>
 #include <zlib.h>
 
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
 #include <innodb/memory/mem_heap_zalloc.h>

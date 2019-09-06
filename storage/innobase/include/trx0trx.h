@@ -53,7 +53,7 @@ struct lock_table_t;
 #include "que0types.h"
 #include "trx0xa.h"
 #include "usr0types.h"
-#include <innodb/vector/vector.h>
+
 #ifndef UNIV_HOTBACKUP
 #include "fts0fts.h"
 #endif /* !UNIV_HOTBACKUP */
@@ -73,53 +73,11 @@ class ReadView;
 // Forward declaration
 class FlushObserver;
 
-#include <innodb/trx_trx/trx_dummy_sess.h>
-#include <innodb/trx_trx/trx_erase_lists.h>
-#include <innodb/trx_trx/flags.h>
+
 
 #ifndef UNIV_HOTBACKUP
 
-#include <innodb/trx_trx/trx_set_flush_observer.h>
-#include <innodb/trx_trx/trx_set_detailed_error.h>
-#include <innodb/trx_trx/trx_set_detailed_error_from_file.h>
-#include <innodb/trx_trx/trx_allocate_for_background.h>
-#include <innodb/trx_trx/trx_allocate_for_mysql.h>
-#include <innodb/trx_trx/trx_free_resurrected.h>
-#include <innodb/trx_trx/trx_free_for_background.h>
-#include <innodb/trx_trx/trx_free_prepared.h>
-#include <innodb/trx_trx/trx_disconnect_plain.h>
-#include <innodb/trx_trx/trx_disconnect_prepared.h>
-#include <innodb/trx_trx/trx_free_for_mysql.h>
-#include <innodb/trx_trx/trx_resurrect_locks.h>
-#include <innodb/trx_trx/trx_lists_init_at_db_start.h>
-#include <innodb/trx_trx/trx_start_if_not_started_xa_low.h>
-#include <innodb/trx_trx/trx_start_if_not_started_low.h>
-#include <innodb/trx_trx/trx_start_internal_low.h>
-#include <innodb/trx_trx/trx_start_internal_read_only_low.h>
-#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
-#include <innodb/trx_trx/trx_start_if_not_started.h>
-#include <innodb/trx_trx/trx_start_internal.h>
-#include <innodb/trx_trx/trx_start_internal_read_only.h>
-#include <innodb/trx_trx/trx_commit.h>
-#include <innodb/trx_trx/trx_commit_low.h>
-#include <innodb/trx_trx/trx_cleanup_at_db_startup.h>
-#include <innodb/trx_trx/trx_commit_for_mysql.h>
-#include <innodb/trx_trx/trx_prepare_for_mysql.h>
-#include <innodb/trx_trx/trx_recover_for_mysql.h>
-#include <innodb/trx_trx/trx_get_trx_by_xid.h>
-#include <innodb/trx_trx/trx_commit_complete_for_mysql.h>
-#include <innodb/trx_trx/trx_mark_sql_stat_end.h>
-#include <innodb/trx_trx/trx_assign_read_view.h>
-#include <innodb/trx_trx/trx_commit_or_rollback_prepare.h>
-#include <innodb/trx_trx/trx_commit_node_create.h>
-#include <innodb/trx_trx/trx_commit_step.h>
-#include <innodb/trx_trx/trx_print_low.h>
-#include <innodb/trx_trx/trx_print_latched.h>
-#include <innodb/trx_trx/trx_print.h>
-#include <innodb/trx_trx/trx_assert_started.h>
-#include <innodb/trx_trx/trx_is_interrupted.h>
-#include <innodb/trx_trx/trx_is_strict.h>
-#include <innodb/trx_trx/TRX_WEIGHT.h>
+
 #include <innodb/trx_trx/trx_weight_ge.h>
 #include <innodb/trx_trx/trx_assign_rseg_temp.h>
 #include <innodb/trx_trx/trx_pool_init.h>
@@ -131,7 +89,11 @@ class FlushObserver;
 #include <innodb/trx_trx/assert_trx_is_free.h>
 #include <innodb/trx_trx/assert_trx_is_inactive.h>
 #include <innodb/trx_trx/assert_trx_nonlocking_or_in_list.h>
-
+#include <innodb/trx_trx/trx_rseg_type_t.h>
+#include <innodb/trx_trx/trx_isolation_level.h>
+#include <innodb/trx_trx/trx_is_started.h>
+#include <innodb/trx_trx/commit_node_state.h>
+#include <innodb/trx_trx/TrxInInnoDB.h>
 
 #endif /* !UNIV_HOTBACKUP */
 
@@ -141,7 +103,7 @@ class FlushObserver;
 
 
 
-#include <innodb/trx_trx/trx_rseg_type_t.h>
+
 
 
 
@@ -150,26 +112,11 @@ class FlushObserver;
 #ifndef UNIV_HOTBACKUP
 
 
-#include <innodb/trx_trx/trx_isolation_level.h>
-#include <innodb/trx_trx/trx_is_started.h>
-#include <innodb/trx_trx/commit_node_state.h>
-
-
-
-
-
 /** Commit command node in a query graph */
 struct commit_node_t {
   que_common_t common;          /*!< node type: QUE_NODE_COMMIT */
   enum commit_node_state state; /*!< node execution state */
 };
-
-
-
-
-#include <innodb/trx_trx/TrxInInnoDB.h>
-
-
 
 
 #endif /* !UNIV_HOTBACKUP */

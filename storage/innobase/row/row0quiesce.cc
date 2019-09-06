@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/io/os_file_delete_if_exists.h>
 #include <innodb/memory/mem_heap_get_size.h>
 

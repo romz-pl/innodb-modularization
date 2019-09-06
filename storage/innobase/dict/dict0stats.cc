@@ -37,6 +37,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <vector>
 
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_start_internal_read_only.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_start_internal.h>
+#include <innodb/trx_trx/trx_start_internal_read_only.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/page/page_rec_get_next_non_del_marked.h>
 #include <innodb/cmp/cmp_rec_rec_with_match.h>

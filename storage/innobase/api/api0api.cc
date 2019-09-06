@@ -31,6 +31,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  3/20/2011 Jimmy Yang extracted from Embedded InnoDB
  *******************************************************/
 
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_commit.h>
+#include <innodb/trx_trx/trx_free_for_mysql.h>
+#include <innodb/trx_trx/trx_allocate_for_mysql.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>

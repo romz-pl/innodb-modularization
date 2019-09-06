@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_print_low.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
+#include <innodb/trx_trx/trx_set_detailed_error.h>
+#include <innodb/trx_trx/trx_set_detailed_error_from_file.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_match.h>

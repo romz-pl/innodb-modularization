@@ -3,7 +3,7 @@
 #include <innodb/univ/univ.h>
 
 #include <innodb/trx_trx/trx_t.h>
-#include <innodb/trx_trx/trx_start_internal_read_only.h>
+#include <innodb/trx_trx/trx_start_internal_read_only_low.h>
 
 struct trx_t;
 

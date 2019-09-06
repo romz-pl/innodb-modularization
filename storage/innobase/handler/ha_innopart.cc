@@ -45,6 +45,8 @@ Created Nov 22, 2013 Mattias Jonsson */
 #include <strfunc.h>
 #include <new>
 
+#include <innodb/trx_trx/trx_is_interrupted.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
 #include <innodb/trx_trx/trx_get_error_index.h>
 #include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dtuple_set_n_fields.h>

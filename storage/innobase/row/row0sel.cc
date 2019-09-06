@@ -37,6 +37,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/19/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_is_interrupted.h>
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_print.h>
+#include <innodb/trx_trx/trx_assign_read_view.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/trx_trx/trx_get_read_view.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/data_types/dtuple_get_n_fields_cmp.h>

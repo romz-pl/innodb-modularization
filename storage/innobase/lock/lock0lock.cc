@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/trx_trx/trx_print_low.h>
+#include <innodb/trx_trx/trx_print_latched.h>
 #include <innodb/trx_trx/trx_is_referenced.h>
 #include <innodb/trx_trx/trx_is_high_priority.h>
 #include <innodb/trx_trx/trx_arbitrate.h>

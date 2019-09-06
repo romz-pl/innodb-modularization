@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/TRX_WEIGHT.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/trx_trx/trx_is_rseg_updated.h>
 #include <innodb/trx_trx/trx_get_id_for_print.h>
 #include <innodb/trx_trx/trx_is_temp_rseg_updated.h>

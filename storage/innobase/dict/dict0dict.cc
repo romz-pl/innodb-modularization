@@ -33,6 +33,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/trx_trx/trx_set_dict_operation.h>
 #include <innodb/page/page_zip_empty_size.h>
 #include <innodb/page/page_zip_stat_per_index.h>

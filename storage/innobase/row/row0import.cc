@@ -30,6 +30,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_is_interrupted.h>
+#include <innodb/trx_trx/trx_allocate_for_mysql.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+#include <innodb/trx_trx/trx_free_for_mysql.h>
 #include <innodb/trx_trx/trx_set_dict_operation.h>
 #include <innodb/trx_trx/trx_get_dict_operation.h>
 #include <innodb/buf_calc/BlockReporter.h>

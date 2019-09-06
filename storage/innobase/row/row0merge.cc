@@ -31,6 +31,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed by Sunny Bains and Marko Makela
  *******************************************************/
 
+#include <innodb/trx_trx/trx_is_interrupted.h>
+#include <innodb/trx_trx/trx_is_strict.h>
+#include <innodb/trx_trx/trx_commit_for_mysql.h>
+#include <innodb/trx_trx/trx_set_flush_observer.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/dict_mem/dict_mem_index_create.h>
 #include <innodb/cmp/cmp_rec_rec_simple.h>
