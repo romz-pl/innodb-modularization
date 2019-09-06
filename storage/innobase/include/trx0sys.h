@@ -117,85 +117,26 @@ struct trx_sys_t;
 #include <innodb/trx_sys/trx_read_trx_id.h>
 #include <innodb/trx_sys/trx_get_rw_trx_by_id.h>
 #include <innodb/trx_sys/trx_rw_min_trx_id.h>
+#include <innodb/trx_sys/trx_rw_is_active_low.h>
+#include <innodb/trx_sys/trx_rw_is_active.h>
+#include <innodb/trx_sys/trx_assert_recovered.h>
+#include <innodb/trx_sys/trx_sys_update_mysql_binlog_offset.h>
+#include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset.h>
+#include <innodb/trx_sys/trx_sys_close.h>
+#include <innodb/trx_sys/trx_sys_need_rollback.h>
+#include <innodb/trx_sys/trx_sys_any_active_transactions.h>
+#include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset_from_page.h>
+#include <innodb/trx_sys/trx_sys_rw_trx_add.h>
 
 
 
 
-/** Checks if a rw transaction with the given id is active.
-@param[in]	trx_id		trx id of the transaction
-@param[in]	corrupt		NULL or pointer to a flag that will be set if
-                                corrupt
-@return transaction instance if active, or NULL */
-UNIV_INLINE
-trx_t *trx_rw_is_active_low(trx_id_t trx_id, ibool *corrupt);
 
-/** Checks if a rw transaction with the given id is active. If the caller is
-not holding trx_sys->mutex, the transaction may already have been committed.
-@param[in]	trx_id		trx id of the transaction
-@param[in]	corrupt		NULL or pointer to a flag that will be set if
-                                corrupt
-@param[in]	do_ref_count	if true then increment the trx_t::n_ref_count
-@return transaction instance if active, or NULL; */
-UNIV_INLINE
-trx_t *trx_rw_is_active(trx_id_t trx_id, ibool *corrupt, bool do_ref_count);
-
-#if defined UNIV_DEBUG || defined UNIV_BLOB_LIGHT_DEBUG
-/** Assert that a transaction has been recovered.
- @return true */
-UNIV_INLINE
-ibool trx_assert_recovered(trx_id_t trx_id) /*!< in: transaction identifier */
-    MY_ATTRIBUTE((warn_unused_result));
-#endif /* UNIV_DEBUG || UNIV_BLOB_LIGHT_DEBUG */
-/** Updates the offset information about the end of the MySQL binlog entry
- which corresponds to the transaction just being committed. In a MySQL
- replication slave updates the latest master binlog position up to which
- replication has proceeded. */
-void trx_sys_update_mysql_binlog_offset(
-    const char *file_name, /*!< in: MySQL log file name */
-    int64_t offset,        /*!< in: position in that log file */
-    ulint field,           /*!< in: offset of the MySQL log info field in
-                           the trx sys header */
-    mtr_t *mtr);           /*!< in: mtr */
-/** Prints to stderr the MySQL binlog offset info in the trx system header if
- the magic number shows it valid. */
-void trx_sys_print_mysql_binlog_offset(void);
-/** Shutdown/Close the transaction system. */
-void trx_sys_close(void);
-
-/** Determine if there are incomplete transactions in the system.
-@return whether incomplete transactions need rollback */
-UNIV_INLINE
-bool trx_sys_need_rollback();
-
-/*********************************************************************
-Check if there are any active (non-prepared) transactions.
-@return total number of active transactions or 0 if none */
-ulint trx_sys_any_active_transactions(void);
 #else  /* !UNIV_HOTBACKUP */
-/** Prints to stderr the MySQL binlog info in the system header if the
- magic number shows it valid. */
-void trx_sys_print_mysql_binlog_offset_from_page(
-    const byte *page); /*!< in: buffer containing the trx
-                       system header page, i.e., page number
-                       TRX_SYS_PAGE_NO in the tablespace */
+
 #endif /* !UNIV_HOTBACKUP */
-/**
-Add the transaction to the RW transaction set
-@param trx		transaction instance to add */
-UNIV_INLINE
-void trx_sys_rw_trx_add(trx_t *trx);
 
-#ifdef UNIV_DEBUG
-/** Validate the trx_sys_t::rw_trx_list.
- @return true if the list is valid */
-bool trx_sys_validate_trx_list();
-#endif /* UNIV_DEBUG */
-
-/** Initialize trx_sys_undo_spaces, called once during srv_start(). */
-void trx_sys_undo_spaces_init();
-
-/** Free the resources occupied by trx_sys_undo_spaces,
-called once during thread de-initialization. */
-void trx_sys_undo_spaces_deinit();
-
+#include <innodb/trx_sys/trx_sys_validate_trx_list.h>
+#include <innodb/trx_sys/trx_sys_undo_spaces_init.h>
+#include <innodb/trx_sys/trx_sys_undo_spaces_deinit.h>
 

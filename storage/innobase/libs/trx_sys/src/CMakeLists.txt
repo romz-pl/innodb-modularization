@@ -28,6 +28,19 @@ add_library( ${LIB_NAME} STATIC
     trx_read_trx_id.cpp
     trx_get_rw_trx_by_id.cpp
     trx_rw_min_trx_id.cpp
+    trx_rw_is_active_low.cpp
+    trx_rw_is_active.cpp
+    trx_assert_recovered.cpp
+    trx_sys_update_mysql_binlog_offset.cpp
+    trx_sys_print_mysql_binlog_offset.cpp
+    trx_sys_close.cpp
+    trx_sys_need_rollback.cpp
+    trx_sys_any_active_transactions.cpp
+    trx_sys_print_mysql_binlog_offset_from_page.cpp
+    trx_sys_rw_trx_add.cpp
+    trx_sys_validate_trx_list.cpp
+    trx_sys_undo_spaces_init.cpp
+    trx_sys_undo_spaces_deinit.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

@@ -231,24 +231,7 @@ trx_id_t trx_rw_min_trx_id_low(void) {
   return (id);
 }
 
-#if defined UNIV_DEBUG || defined UNIV_BLOB_LIGHT_DEBUG
-/** Assert that a transaction has been recovered.
- @return true */
-UNIV_INLINE
-ibool trx_assert_recovered(trx_id_t trx_id) /*!< in: transaction identifier */
-{
-  const trx_t *trx;
 
-  trx_sys_mutex_enter();
-
-  trx = trx_get_rw_trx_by_id(trx_id);
-  ut_a(trx->is_recovered);
-
-  trx_sys_mutex_exit();
-
-  return (TRUE);
-}
-#endif /* UNIV_DEBUG || UNIV_BLOB_LIGHT_DEBUG */
 
 /** Returns the minimum trx id in rw trx list. This is the smallest id for which
  the rw trx can possibly be active. (But, you must look at the trx->state
@@ -304,7 +287,6 @@ trx_t *trx_rw_is_active_low(
  not holding lock_sys->mutex, the transaction may already have been
  committed.
  @return transaction instance if active, or NULL; */
-UNIV_INLINE
 trx_t *trx_rw_is_active(trx_id_t trx_id,   /*!< in: trx id of the transaction */
                         ibool *corrupt,    /*!< in: NULL or pointer to a flag
                                            that will be set if corrupt */
@@ -355,7 +337,6 @@ trx_id_t trx_sys_get_new_trx_id() {
 
 /** Determine if there are incomplete transactions in the system.
 @return whether incomplete transactions need rollback */
-UNIV_INLINE
 bool trx_sys_need_rollback() {
   ulint n_trx;
 
@@ -373,7 +354,6 @@ bool trx_sys_need_rollback() {
 /**
 Add the transaction to the RW transaction set
 @param trx		transaction instance to add */
-UNIV_INLINE
 void trx_sys_rw_trx_add(trx_t *trx) {
   ut_ad(trx->id != 0);
 
