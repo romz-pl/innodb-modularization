@@ -80,41 +80,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_trx/table_id_set.h>
 #include <innodb/trx_trx/trx_table_map.h>
 #include <innodb/trx_trx/resurrected_trx_tables.h>
-
-
-
-
-
-
-
-
-
-/* The following function makes the transaction committed in memory
-and makes its changes to data visible to other transactions.
-In particular it releases implicit and explicit locks held by transaction and
-transitions to the transaction to the TRX_STATE_COMMITTED_IN_MEMORY state.
-NOTE that there is a small discrepancy from the strict formal
-visibility rules here: a human user of the database can see
-modifications made by another transaction T even before the necessary
-log segment has been flushed to the disk. If the database happens to
-crash before the flush, the user has seen modifications from T which
-will never be a committed transaction. However, any transaction T2
-which sees the modifications of the committing transaction T, and
-which also itself makes modifications to the database, will get an lsn
-larger than the committing transaction T. In the case where the log
-flush fails, and T never gets committed, also T2 will never get
-committed.
-@param[in,out]  trx         The transaction for which will be committed in
-                            memory
-@param[in]      serialized  true if serialisation log was written. Affects the
-                            list of things we need to clean up during
-                            trx_erase_lists.
-*/
-static void trx_release_impl_and_expl_locks(trx_t *trx, bool serialized);
-
-
-
-
 #include <innodb/trx_trx/trx_init.h>
 #include <innodb/trx_trx/TrxFactory.h>
 #include <innodb/trx_trx/TrxPoolLock.h>
@@ -124,6 +89,8 @@ static void trx_release_impl_and_expl_locks(trx_t *trx, bool serialized);
 #include <innodb/trx_trx/trx_free.h>
 #include <innodb/trx_trx/trx_create_low.h>
 #include <innodb/trx_trx/trx_validate_state_before_free.h>
+#include <innodb/trx_trx/trx_release_impl_and_expl_locks.h>
+#include <innodb/trx_trx/trx_disconnect_from_mysql.h>
 
 
 
@@ -135,84 +102,6 @@ static void trx_release_impl_and_expl_locks(trx_t *trx, bool serialized);
 
 
 
-
-
-
-
-/** At shutdown, frees a transaction object that is in the PREPARED state. */
-void trx_free_prepared(trx_t *trx) /*!< in, own: trx object */
-{
-  ut_a(trx_state_eq(trx, TRX_STATE_PREPARED));
-  ut_a(trx->magic_n == TRX_MAGIC_N);
-
-  assert_trx_in_rw_list(trx);
-
-  trx_release_impl_and_expl_locks(trx, false);
-  trx_undo_free_prepared(trx);
-
-  ut_ad(!trx->in_rw_trx_list);
-  ut_a(!trx->read_only);
-
-  trx->state = TRX_STATE_NOT_STARTED;
-
-  /* Undo trx_resurrect_table_locks(). */
-  lock_trx_lock_list_init(&trx->lock.trx_locks);
-
-  trx_free(trx);
-}
-
-/** Disconnect a transaction from MySQL and optionally mark it as if
-it's been recovered. For the marking the transaction must be in prepared state.
-The recovery-marked transaction is going to survive "alone" so its association
-with the mysql handle is destroyed now rather than when it will be
-finally freed.
-@param[in,out]	trx		transaction
-@param[in]	prepared	boolean value to specify whether trx is
-                                for recovery or not. */
-inline void trx_disconnect_from_mysql(trx_t *trx, bool prepared) {
-  trx_sys_mutex_enter();
-
-  ut_ad(trx->in_mysql_trx_list);
-  ut_d(trx->in_mysql_trx_list = FALSE);
-
-  UT_LIST_REMOVE(trx_sys->mysql_trx_list, trx);
-
-  if (trx->read_view != NULL) {
-    trx_sys->mvcc->view_close(trx->read_view, true);
-  }
-
-  ut_ad(trx_sys_validate_trx_list());
-
-  if (prepared) {
-    ut_ad(trx_state_eq(trx, TRX_STATE_PREPARED));
-
-    trx->is_recovered = true;
-    trx->mysql_thd = NULL;
-    /* todo/fixme: suggest to do it at innodb prepare */
-    trx->will_lock = 0;
-  }
-
-  trx_sys_mutex_exit();
-}
-
-/** Disconnect a transaction from MySQL.
-@param[in,out]	trx	transaction */
-inline void trx_disconnect_plain(trx_t *trx) {
-  trx_disconnect_from_mysql(trx, false);
-}
-
-/** Disconnect a prepared transaction from MySQL.
-@param[in,out]	trx	transaction */
-void trx_disconnect_prepared(trx_t *trx) {
-  trx_disconnect_from_mysql(trx, true);
-}
-
-/** Free a transaction object for MySQL.
-@param[in,out]	trx	transaction */
-void trx_free_for_mysql(trx_t *trx) {
-  trx_disconnect_plain(trx);
-  trx_free_for_background(trx);
-}
 
 /** Resurrect the table IDs for a resurrected transaction.
 @param[in]	trx		resurrected transaction
@@ -1243,58 +1132,6 @@ static void trx_update_mod_tables_timestamp(trx_t *trx) /*!< in: transaction */
   trx->mod_tables.clear();
 }
 
-
-static void trx_release_impl_and_expl_locks(trx_t *trx, bool serialized) {
-  check_trx_state(trx);
-  ut_ad(trx_state_eq(trx, TRX_STATE_ACTIVE) ||
-        trx_state_eq(trx, TRX_STATE_PREPARED));
-
-  bool trx_sys_latch_is_needed =
-      (trx->id > 0) || trx_state_eq(trx, TRX_STATE_PREPARED);
-
-  if (trx_sys_latch_is_needed) {
-    trx_sys_mutex_enter();
-  }
-
-  if (trx->id > 0) {
-    /* For consistent snapshot, we need to remove current
-    transaction from running transaction id list for mvcc
-    before doing commit and releasing locks. */
-    trx_erase_lists(trx, serialized);
-  }
-
-  if (trx_state_eq(trx, TRX_STATE_PREPARED)) {
-    ut_a(trx_sys->n_prepared_trx > 0);
-    --trx_sys->n_prepared_trx;
-  }
-
-  trx_mutex_enter(trx);
-  /* Please consider this particular point in time as the moment the trx's
-  implicit locks become released.
-  This change is protected by both trx_sys->mutex and trx->mutex.
-  Therefore, there are two secure ways to check if the trx still can hold
-  implicit locks:
-  (1) if you only know id of the trx, then you can obtain trx_sys->mutex and
-      check if trx is still in rw_trx_set. This works, because the call to
-      trx_erase_list() which removes trx from this list several lines above is
-      also protected by trx_sys->mutex. We use this approach in
-      lock_rec_convert_impl_to_expl() by using trx_rw_is_active()
-  (2) if you have pointer to trx, and you know it is safe to access (say, you
-      hold reference to this trx which prevents it from being freed) then you
-      can obtain trx->mutex and check if trx->state is equal to
-      TRX_STATE_COMMITTED_IN_MEMORY. We use this approach in
-      lock_rec_convert_impl_to_expl_for_trx() when deciding for the final time
-      if we really want to create explicit lock on behalf of implicit lock
-      holder. */
-  trx->state = TRX_STATE_COMMITTED_IN_MEMORY;
-  trx_mutex_exit(trx);
-
-  if (trx_sys_latch_is_needed) {
-    trx_sys_mutex_exit();
-  }
-
-  lock_trx_release_locks(trx);
-}
 
 /** Commits a transaction in memory. */
 static void trx_commit_in_memory(

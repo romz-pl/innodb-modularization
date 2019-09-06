@@ -71,6 +71,22 @@ add_library( ${LIB_NAME} STATIC
     trx_validate_state_before_free.cpp
     trx_free_resurrected.cpp
     trx_free_for_background.cpp
+    trx_release_impl_and_expl_locks.cpp
+    trx_free_prepared.cpp
+    trx_disconnect_from_mysql.cpp
+    trx_disconnect_plain.cpp
+    trx_disconnect_prepared.cpp
+    trx_free_for_mysql.cpp
+    trx_resurrect_locks.cpp
+    trx_lists_init_at_db_start.cpp
+    trx_start_if_not_started_xa_low.cpp
+    trx_start_if_not_started_low.cpp
+    trx_start_internal_low.cpp
+    trx_start_internal_read_only_low.cpp
+    trx_start_if_not_started_xa.cpp
+    trx_start_if_not_started.cpp
+    trx_start_internal.cpp
+    trx_start_internal_read_only.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

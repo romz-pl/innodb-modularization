@@ -128,90 +128,24 @@ class FlushObserver;
 #include <innodb/trx_trx/trx_allocate_for_mysql.h>
 #include <innodb/trx_trx/trx_free_resurrected.h>
 #include <innodb/trx_trx/trx_free_for_background.h>
+#include <innodb/trx_trx/trx_free_prepared.h>
+#include <innodb/trx_trx/trx_disconnect_plain.h>
+#include <innodb/trx_trx/trx_disconnect_prepared.h>
+#include <innodb/trx_trx/trx_free_for_mysql.h>
+#include <innodb/trx_trx/trx_resurrect_locks.h>
+#include <innodb/trx_trx/trx_lists_init_at_db_start.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa_low.h>
+#include <innodb/trx_trx/trx_start_if_not_started_low.h>
+#include <innodb/trx_trx/trx_start_internal_low.h>
+#include <innodb/trx_trx/trx_start_internal_read_only_low.h>
+#include <innodb/trx_trx/trx_start_if_not_started_xa.h>
+#include <innodb/trx_trx/trx_start_if_not_started.h>
+#include <innodb/trx_trx/trx_start_internal.h>
+#include <innodb/trx_trx/trx_start_internal_read_only.h>
 
-/** Resurrect table locks for resurrected transactions. */
-void trx_resurrect_locks();
 
 
 
-
-
-/** At shutdown, frees a transaction object that is in the PREPARED state. */
-void trx_free_prepared(trx_t *trx); /*!< in, own: trx object */
-
-/** Free a transaction object for MySQL.
-@param[in,out]	trx	transaction */
-void trx_free_for_mysql(trx_t *trx);
-
-/** Disconnect a transaction from MySQL.
-@param[in,out]	trx	transaction */
-void trx_disconnect_plain(trx_t *trx);
-
-/** Disconnect a prepared transaction from MySQL.
-@param[in,out]	trx	transaction */
-void trx_disconnect_prepared(trx_t *trx);
-
-/** Creates trx objects for transactions and initializes the trx list of
- trx_sys at database start. Rollback segment and undo log lists must
- already exist when this function is called, because the lists of
- transactions to be rolled back or cleaned up are built based on the
- undo log lists. */
-void trx_lists_init_at_db_start(void);
-
-/** Starts the transaction if it is not yet started. */
-void trx_start_if_not_started_xa_low(
-    trx_t *trx,       /*!< in/out: transaction */
-    bool read_write); /*!< in: true if read write transaction */
-/** Starts the transaction if it is not yet started. */
-void trx_start_if_not_started_low(
-    trx_t *trx,       /*!< in/out: transaction */
-    bool read_write); /*!< in: true if read write transaction */
-
-/** Starts a transaction for internal processing. */
-void trx_start_internal_low(trx_t *trx); /*!< in/out: transaction */
-
-/** Starts a read-only transaction for internal processing.
-@param[in,out] trx	transaction to be started */
-void trx_start_internal_read_only_low(trx_t *trx);
-
-#ifdef UNIV_DEBUG
-#define trx_start_if_not_started_xa(t, rw)    \
-  do {                                        \
-    (t)->start_line = __LINE__;               \
-    (t)->start_file = __FILE__;               \
-    trx_start_if_not_started_xa_low((t), rw); \
-  } while (false)
-
-#define trx_start_if_not_started(t, rw)    \
-  do {                                     \
-    (t)->start_line = __LINE__;            \
-    (t)->start_file = __FILE__;            \
-    trx_start_if_not_started_low((t), rw); \
-  } while (false)
-
-#define trx_start_internal(t)    \
-  do {                           \
-    (t)->start_line = __LINE__;  \
-    (t)->start_file = __FILE__;  \
-    trx_start_internal_low((t)); \
-  } while (false)
-
-#define trx_start_internal_read_only(t)  \
-  do {                                   \
-    (t)->start_line = __LINE__;          \
-    (t)->start_file = __FILE__;          \
-    trx_start_internal_read_only_low(t); \
-  } while (false)
-#else
-#define trx_start_if_not_started(t, rw) trx_start_if_not_started_low((t), rw)
-
-#define trx_start_internal(t) trx_start_internal_low((t))
-
-#define trx_start_internal_read_only(t) trx_start_internal_read_only_low(t)
-
-#define trx_start_if_not_started_xa(t, rw) \
-  trx_start_if_not_started_xa_low((t), (rw))
-#endif /* UNIV_DEBUG */
 
 /** Commits a transaction. */
 void trx_commit(trx_t *trx); /*!< in/out: transaction */
