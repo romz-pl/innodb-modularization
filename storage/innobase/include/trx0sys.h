@@ -34,109 +34,73 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/trx_types/TrxIdSet.h>
-#include <innodb/trx_types/TrxSysMutex.h>
-#include <innodb/trx_types/trx_sysf_t.h>
-#include <innodb/trx_types/purge_pq_t.h>
-#include <innodb/trx_types/Rsegs.h>
-#include <innodb/tablespace/Space_Ids.h>
-#include <innodb/tablespace/trx_sys_undo_spaces.h>
-#include <innodb/tablespace/consts.h>
-#include <innodb/page/header.h>
-#include <innodb/trx_sys/trx_sys_t.h>
-#include <innodb/trx_sys/trx_sys.h>
-#include <innodb/trx_sys/flags.h>
-#include <innodb/trx_sys/trx_sys_mutex_own.h>
-#include <innodb/trx_sys/trx_sys_mutex_enter.h>
-#include <innodb/trx_sys/trx_sys_mutex_exit.h>
-#include <innodb/trx_sys/trx_sys_get_max_trx_id.h>
+
 
 #include "buf0buf.h"
 #include "fil0fil.h"
-#ifndef UNIV_HOTBACKUP
-
-
-
-#include <innodb/lst/lst.h>
-#endif /* !UNIV_HOTBACKUP */
+#include "mtr0log.h"
+#include "srv0srv.h"
 #include <atomic>
-
-
-#ifndef UNIV_HOTBACKUP
+#include <innodb/buf_block/buf_block_get_frame.h>
+#include <innodb/disk/univ_page_size.h>
+#include <innodb/lst/lst.h>
+#include <innodb/mtr/mtr_read_ulint.h>
+#include <innodb/page/header.h>
+#include <innodb/tablespace/Space_Ids.h>
+#include <innodb/tablespace/consts.h>
+#include <innodb/tablespace/trx_sys_undo_spaces.h>
+#include <innodb/trx_sys/flags.h>
+#include <innodb/trx_sys/trx_assert_recovered.h>
+#include <innodb/trx_sys/trx_get_rw_trx_by_id.h>
+#include <innodb/trx_sys/trx_read_trx_id.h>
+#include <innodb/trx_sys/trx_rseg_n_slots_debug.h>
+#include <innodb/trx_sys/trx_rw_is_active.h>
+#include <innodb/trx_sys/trx_rw_is_active_low.h>
+#include <innodb/trx_sys/trx_rw_min_trx_id.h>
+#include <innodb/trx_sys/trx_sys.h>
+#include <innodb/trx_sys/trx_sys_any_active_transactions.h>
+#include <innodb/trx_sys/trx_sys_close.h>
+#include <innodb/trx_sys/trx_sys_create.h>
+#include <innodb/trx_sys/trx_sys_create_sys_pages.h>
+#include <innodb/trx_sys/trx_sys_flush_max_trx_id.h>
+#include <innodb/trx_sys/trx_sys_get_max_trx_id.h>
+#include <innodb/trx_sys/trx_sys_get_new_trx_id.h>
+#include <innodb/trx_sys/trx_sys_hdr_page.h>
+#include <innodb/trx_sys/trx_sys_init_at_db_start.h>
+#include <innodb/trx_sys/trx_sys_mutex_enter.h>
+#include <innodb/trx_sys/trx_sys_mutex_exit.h>
+#include <innodb/trx_sys/trx_sys_mutex_own.h>
+#include <innodb/trx_sys/trx_sys_need_rollback.h>
+#include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset.h>
+#include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset_from_page.h>
+#include <innodb/trx_sys/trx_sys_rw_trx_add.h>
+#include <innodb/trx_sys/trx_sys_t.h>
+#include <innodb/trx_sys/trx_sys_undo_spaces_deinit.h>
+#include <innodb/trx_sys/trx_sys_undo_spaces_init.h>
+#include <innodb/trx_sys/trx_sys_update_mysql_binlog_offset.h>
+#include <innodb/trx_sys/trx_sys_validate_trx_list.h>
+#include <innodb/trx_sys/trx_sysf_get.h>
+#include <innodb/trx_sys/trx_sysf_rseg_find_free.h>
+#include <innodb/trx_sys/trx_sysf_rseg_find_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_get_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
+#include <innodb/trx_sys/trx_sysf_rseg_set_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_set_space.h>
+#include <innodb/trx_sys/trx_sysf_rseg_t.h>
 #include <innodb/trx_sys/trx_ut_list_t.h>
-
+#include <innodb/trx_sys/trx_write_trx_id.h>
+#include <innodb/trx_trx/assert_trx_in_rw_list.h>
+#include <innodb/trx_trx/trx_reference.h>
+#include <innodb/trx_types/Rsegs.h>
+#include <innodb/trx_types/TrxIdSet.h>
+#include <innodb/trx_types/TrxIdSet.h>
+#include <innodb/trx_types/TrxSysMutex.h>
+#include <innodb/trx_types/TrxTrack.h>
+#include <innodb/trx_types/purge_pq_t.h>
+#include <innodb/trx_types/trx_sysf_t.h>
 
 // Forward declaration
 class MVCC;
 class ReadView;
 struct trx_sys_t;
-
-
-#include <innodb/trx_sys/trx_sys_hdr_page.h>
-#include <innodb/trx_sys/trx_sys_init_at_db_start.h>
-#include <innodb/trx_sys/trx_sys_create.h>
-
-#include <innodb/trx_trx/trx_reference.h>
-#include <innodb/trx_trx/assert_trx_in_rw_list.h>
-#include <innodb/trx_types/TrxIdSet.h>
-#include <innodb/trx_types/TrxTrack.h>
-#include <innodb/mtr/mtr_read_ulint.h>
-#include <innodb/disk/univ_page_size.h>
-
-#include <innodb/buf_block/buf_block_get_frame.h>
-
-
-#include "srv0srv.h"
-
-
-#include "mtr0log.h"
-
-#include <innodb/trx_sys/trx_sysf_rseg_t.h>
-#include <innodb/trx_sys/trx_sys_flush_max_trx_id.h>
-#include <innodb/trx_sys/trx_sys_create_sys_pages.h>
-#include <innodb/trx_sys/trx_sysf_rseg_find_page_no.h>
-#include <innodb/trx_sys/trx_sysf_rseg_find_free.h>
-#include <innodb/trx_sys/trx_sysf_get.h>
-#include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
-#include <innodb/trx_sys/trx_sysf_rseg_get_page_no.h>
-#include <innodb/trx_sys/trx_sysf_rseg_set_space.h>
-#include <innodb/trx_sys/trx_sysf_rseg_set_page_no.h>
-#include <innodb/trx_sys/trx_sys_get_new_trx_id.h>
-#include <innodb/trx_sys/trx_rseg_n_slots_debug.h>
-
-
-#endif /* !UNIV_HOTBACKUP */
-
-
-#include <innodb/trx_sys/trx_write_trx_id.h>
-
-
-
-#ifndef UNIV_HOTBACKUP
-
-#include <innodb/trx_sys/trx_read_trx_id.h>
-#include <innodb/trx_sys/trx_get_rw_trx_by_id.h>
-#include <innodb/trx_sys/trx_rw_min_trx_id.h>
-#include <innodb/trx_sys/trx_rw_is_active_low.h>
-#include <innodb/trx_sys/trx_rw_is_active.h>
-#include <innodb/trx_sys/trx_assert_recovered.h>
-#include <innodb/trx_sys/trx_sys_update_mysql_binlog_offset.h>
-#include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset.h>
-#include <innodb/trx_sys/trx_sys_close.h>
-#include <innodb/trx_sys/trx_sys_need_rollback.h>
-#include <innodb/trx_sys/trx_sys_any_active_transactions.h>
-#include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset_from_page.h>
-#include <innodb/trx_sys/trx_sys_rw_trx_add.h>
-
-
-
-
-
-#else  /* !UNIV_HOTBACKUP */
-
-#endif /* !UNIV_HOTBACKUP */
-
-#include <innodb/trx_sys/trx_sys_validate_trx_list.h>
-#include <innodb/trx_sys/trx_sys_undo_spaces_init.h>
-#include <innodb/trx_sys/trx_sys_undo_spaces_deinit.h>
 
