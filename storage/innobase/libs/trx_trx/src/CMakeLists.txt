@@ -129,6 +129,7 @@ target_link_libraries(
     io
     lock_types
     log_sn
+    que_types
     read
     string
     trx_sys
