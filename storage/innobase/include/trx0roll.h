@@ -36,6 +36,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/trx_types/trx_undo_rec_t.h>
+#include <innodb/trx_types/trx_savept_t.h>
+#include <innodb/trx_trx/trx_named_savept_t.h>
 
 #include "trx0sys.h"
 

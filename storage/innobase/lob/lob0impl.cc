@@ -26,6 +26,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/page/page_zip_level.h>
 #include <innodb/mtr/mtr_start.h>
+#include <innodb/trx_trx/trx_t.h>
 
 #include "lob0impl.h"
 #include "lob0del.h"

@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* UNIV_HOTBACKUP */
 
 struct trx_purge_t;
+struct trx_undo_ptr_t;
 
 /** The global data structure coordinating a purge */
 extern trx_purge_t *purge_sys;

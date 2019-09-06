@@ -50,6 +50,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/trx_sys/trx_sys_undo_spaces_deinit.h>
+#include <innodb/trx_sys/trx_sys_undo_spaces_init.h>
 #include <innodb/trx_trx/trx_pool_close.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_resurrect_locks.h>

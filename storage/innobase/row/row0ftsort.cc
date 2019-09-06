@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_sys/trx_write_trx_id.h>
 #include <innodb/trx_trx/trx_start_if_not_started.h>
 #include <innodb/trx_trx/trx_free_for_background.h>
 #include <innodb/trx_trx/trx_allocate_for_background.h>

@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/assert_trx_in_rw_list.h>
+#include <innodb/trx_sys/trx_sys_update_mysql_binlog_offset.h>
 #include <innodb/trx_trx/commit_node_t.h>
 #include <innodb/trx_trx/trx_set_rw_mode.h>
 #include <innodb/trx_trx/trx_state_eq.h>

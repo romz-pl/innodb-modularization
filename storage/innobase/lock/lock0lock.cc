@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/trx_trx/trx_reference.h>
+#include <innodb/trx_trx/assert_trx_in_rw_list.h>
+#include <innodb/trx_trx/check_trx_state.h>
 #include <innodb/trx_trx/trx_weight_ge.h>
 #include <innodb/trx_trx/trx_immutable_id.h>
 #include <innodb/trx_trx/trx_state_eq.h>

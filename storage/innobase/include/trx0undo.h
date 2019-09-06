@@ -41,6 +41,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0sys.h"
 #include "trx0xa.h"
 
+struct trx_undo_ptr_t;
+
 #ifndef UNIV_HOTBACKUP
 /** Returns TRUE if the roll pointer is of the insert type.
  @return true if insert undo log */

@@ -33,6 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_trx/trx_reference.h>
+#include <innodb/trx_trx/trx_t.h>
+#include <innodb/trx_trx/assert_trx_in_rw_list.h>
+#include <innodb/trx_types/trx_sysf_t.h>
 #include <innodb/trx_trx/trx_state_eq.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/read/MVCC.h>

@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_trx/assert_trx_in_rw_list.h>
+#include <innodb/trx_trx/check_trx_state.h>
 #include <innodb/trx_trx/TrxInInnoDB.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/assert_trx_nonlocking_or_in_list.h>

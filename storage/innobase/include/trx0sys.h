@@ -75,32 +75,5 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_sys/trx_sys_print_mysql_binlog_offset_from_page.h>
 #include <innodb/trx_sys/trx_sys_rw_trx_add.h>
 #include <innodb/trx_sys/trx_sys_t.h>
-#include <innodb/trx_sys/trx_sys_undo_spaces_deinit.h>
-#include <innodb/trx_sys/trx_sys_undo_spaces_init.h>
-#include <innodb/trx_sys/trx_sys_update_mysql_binlog_offset.h>
-#include <innodb/trx_sys/trx_sys_validate_trx_list.h>
-#include <innodb/trx_sys/trx_sysf_get.h>
-#include <innodb/trx_sys/trx_sysf_rseg_find_free.h>
-#include <innodb/trx_sys/trx_sysf_rseg_find_page_no.h>
-#include <innodb/trx_sys/trx_sysf_rseg_get_page_no.h>
-#include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
-#include <innodb/trx_sys/trx_sysf_rseg_set_page_no.h>
-#include <innodb/trx_sys/trx_sysf_rseg_set_space.h>
-#include <innodb/trx_sys/trx_sysf_rseg_t.h>
-#include <innodb/trx_sys/trx_ut_list_t.h>
-#include <innodb/trx_sys/trx_write_trx_id.h>
-#include <innodb/trx_trx/assert_trx_in_rw_list.h>
-#include <innodb/trx_trx/trx_reference.h>
-#include <innodb/trx_types/Rsegs.h>
-#include <innodb/trx_types/TrxIdSet.h>
-#include <innodb/trx_types/TrxIdSet.h>
-#include <innodb/trx_types/TrxSysMutex.h>
-#include <innodb/trx_types/TrxTrack.h>
-#include <innodb/trx_types/purge_pq_t.h>
-#include <innodb/trx_types/trx_sysf_t.h>
 
-// Forward declaration
-class MVCC;
-class ReadView;
-struct trx_sys_t;
 

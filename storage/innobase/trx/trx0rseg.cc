@@ -30,6 +30,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
+#include <innodb/trx_sys/trx_sysf_rseg_get_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
+#include <innodb/trx_sys/trx_sysf_rseg_get_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_set_page_no.h>
+#include <innodb/trx_sys/trx_sysf_rseg_set_space.h>
+#include <innodb/trx_sys/trx_sysf_get.h>
+#include <innodb/trx_types/trx_sysf_t.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/sync_mutex/mutex_free.h>
 #include <innodb/mtr/mtr_x_lock.h>
