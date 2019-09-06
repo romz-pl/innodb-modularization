@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include "srv0srv.h"
-#include "trx0trx.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "mtr0log.h"
 

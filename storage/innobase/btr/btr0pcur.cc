@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stddef.h>
 
 
-#include "trx0trx.h"
+
 
 
 void btr_pcur_t::store_position(mtr_t *mtr) {

@@ -89,7 +89,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0vers.h"
 #include "srv0srv.h"
 #include "trx0sys.h"
-#include "trx0trx.h"
+
 #include "que0types.h"
 #include "srv0srv.h"
 #include "lock0prdt.h"

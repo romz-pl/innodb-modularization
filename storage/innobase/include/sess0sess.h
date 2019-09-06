@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sql_thd_internal_api.h>
 
 #include "srv0tmp.h"
-#include "trx0trx.h"
+
 
 #include <map>
 

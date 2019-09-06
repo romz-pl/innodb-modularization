@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_dbug.h"
 #include "row0upd.h"
 #include "table.h"
-#include "trx0trx.h"
+
 
 namespace lob {
 

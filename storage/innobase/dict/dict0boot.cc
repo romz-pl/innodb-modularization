@@ -49,7 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0dd.h"
 #include "srv0srv.h"
-#include "trx0trx.h"
+
 
 /** Gets a pointer to the dictionary header and x-latches its page.
  @return pointer to the dictionary header, page x-latched */

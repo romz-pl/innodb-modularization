@@ -71,7 +71,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lock0lock.h"
 
 #include "srv0mon.h"
-#include "trx0trx.h"
+
 
 /** Initial split nodes info for R-tree split.
  @return initialized split nodes array */

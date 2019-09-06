@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/commit_node_t.h>
 #include <innodb/trx_trx/trx_set_rw_mode.h>
 #include <innodb/trx_trx/trx_state_eq.h>
 #include <innodb/trx_trx/trx_isolation_level.h>
@@ -83,7 +84,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rec.h"
 #include "trx0roll.h"
 #include "trx0rseg.h"
-#include "trx0trx.h"
+
 #include "trx0undo.h"
 #include "trx0xa.h"
 #include "usr0sess.h"

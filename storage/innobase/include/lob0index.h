@@ -30,7 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "fut0lst.h"
 #include "lob0util.h"
-#include "trx0trx.h"
+
 
 namespace lob {
 

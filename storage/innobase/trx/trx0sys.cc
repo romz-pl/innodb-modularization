@@ -62,7 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "trx0purge.h"
 #include "trx0rseg.h"
-#include "trx0trx.h"
+
 #include "trx0undo.h"
 #include "buf0dblwr.h"
 

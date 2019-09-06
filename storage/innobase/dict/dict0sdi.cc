@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "dict0sdi.h"
 #include "fsp0fsp.h"
 #include "ha_innodb.h"
-#include "trx0trx.h"
+
 
 /** Check if SDI Index exists in a tablespace
 @param[in]	tablespace	tablespace object

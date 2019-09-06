@@ -112,7 +112,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0upd.h"
 #include "row0vers.h"
 #include "srv0mon.h"
-#include "trx0trx.h"
+
 #include "trx0undo.h"
 
 #include "my_dbug.h"

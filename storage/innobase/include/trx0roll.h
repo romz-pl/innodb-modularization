@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_types/trx_undo_rec_t.h>
 
 #include "trx0sys.h"
-#include "trx0trx.h"
+
 #ifdef UNIV_HOTBACKUP
 #include "que0que.h"
 #endif /* UNIV_HOTBACKUP */

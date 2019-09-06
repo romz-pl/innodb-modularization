@@ -27,7 +27,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_trx/trx_t.h>
 
 #include "zlob0first.h"
-#include "trx0trx.h"
+
 #include "zlob0index.h"
 #include "zlob0read.h"
 

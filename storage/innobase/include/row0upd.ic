@@ -37,7 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "lock0lock.h"
 #include "row0row.h"
-#include "trx0trx.h"
+
 #include "trx0undo.h"
 #endif /* !UNIV_HOTBACKUP */
 

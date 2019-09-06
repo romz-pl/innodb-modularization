@@ -87,7 +87,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include "srv0mon.h"
-#include "trx0trx.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 #ifndef UNIV_HOTBACKUP

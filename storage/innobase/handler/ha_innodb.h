@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "handler.h"
 #include "my_dbug.h"
 #include "row0pread-adapter.h"
-#include "trx0trx.h"
+
 
 /** "GEN_CLUST_INDEX" is the name reserved for InnoDB default
 system clustered index when there is no primary key. */

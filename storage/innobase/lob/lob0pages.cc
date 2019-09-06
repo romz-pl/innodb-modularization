@@ -29,7 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0pages.h"
 #include "lob0impl.h"
 #include "my_dbug.h"
-#include "trx0trx.h"
+
 
 namespace lob {
 

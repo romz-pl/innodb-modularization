@@ -29,7 +29,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0lob.h"
 #include "lob0zip.h"
 #include "my_dbug.h"
-#include "trx0trx.h"
+
 #include <innodb/univ/univ.h>
 #include "zlob0first.h"
 

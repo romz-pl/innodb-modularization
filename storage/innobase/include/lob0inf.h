@@ -35,7 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0lob.h"
 
 #include "table.h"
-#include "trx0trx.h"
+
 
 struct lob_diff_t;
 

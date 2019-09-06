@@ -53,7 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef UNIV_HOTBACKUP
 #include "sql/log.h"
-#include "trx0trx.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 #include "mysql/components/services/log_builtins.h"

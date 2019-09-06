@@ -87,7 +87,7 @@ the file COPYING.Google.
 #include "trx0roll.h"
 #include "trx0sys.h"
 #include <innodb/enum/to_int.h>
-#include "trx0trx.h"
+
 
 #ifndef UNIV_HOTBACKUP
 

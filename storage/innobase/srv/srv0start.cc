@@ -134,7 +134,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "trx0sys.h"
-#include "trx0trx.h"
+
 #include <innodb/enum/to_int.h>
 
 #include "log0log.h"

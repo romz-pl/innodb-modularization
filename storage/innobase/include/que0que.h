@@ -44,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0types.h"
 #include "srv0srv.h"
 #include "trx0roll.h"
-#include "trx0trx.h"
+
 #include "usr0types.h"
 
 /** Mutex protecting the query threads. */

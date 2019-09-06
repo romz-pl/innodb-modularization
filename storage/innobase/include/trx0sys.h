@@ -61,7 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/lst/lst.h>
 #endif /* !UNIV_HOTBACKUP */
 #include <atomic>
-#include "trx0trx.h"
+
 
 #ifndef UNIV_HOTBACKUP
 #include <innodb/trx_sys/trx_ut_list_t.h>

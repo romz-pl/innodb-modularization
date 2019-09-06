@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0index.h"
 #include "lob0lob.h"
 #include "table.h"
-#include "trx0trx.h"
+
 
 namespace lob {
 

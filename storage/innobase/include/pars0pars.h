@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_trx/commit_node_t.h>
+
 #include "pars0types.h"
 #include "que0types.h"
 #include "row0mysql.h"

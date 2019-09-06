@@ -66,7 +66,7 @@ on 1/27/1998 */
 #include "row0sel.h"
 #include "row0upd.h"
 #include "trx0roll.h"
-#include "trx0trx.h"
+
 
 #include "my_dbug.h"
 

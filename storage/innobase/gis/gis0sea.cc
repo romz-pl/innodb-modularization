@@ -72,7 +72,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "srv0mon.h"
 
-#include "trx0trx.h"
+
 
 /** Restore the stored position of a persistent cursor bufferfixing the page */
 static bool rtr_cur_restore_position(

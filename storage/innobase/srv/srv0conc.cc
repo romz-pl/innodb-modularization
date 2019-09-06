@@ -52,7 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "row0mysql.h"
 #include "srv0srv.h"
-#include "trx0trx.h"
+
 
 /** Number of times a thread is allowed to enter InnoDB within the same
 SQL query after it has once got the ticket. */

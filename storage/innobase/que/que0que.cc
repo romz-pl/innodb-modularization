@@ -50,7 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0undo.h"
 #include "row0upd.h"
 #include "trx0roll.h"
-#include "trx0trx.h"
+
 #include "usr0sess.h"
 
 #include "my_dbug.h"

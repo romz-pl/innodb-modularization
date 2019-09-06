@@ -59,7 +59,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0purge.h"
 #include "trx0rec.h"
 #include "trx0rseg.h"
-#include "trx0trx.h"
+
 
 /* How should the old versions in the history list be managed?
    ----------------------------------------------------------
