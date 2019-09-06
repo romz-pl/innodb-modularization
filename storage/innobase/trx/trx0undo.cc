@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/trx_trx/trx_get_dict_operation.h>
 #include <innodb/trx_types/trx_usegf_t.h>
 #include <innodb/trx_types/trx_upagef_t.h>
 #include <innodb/mtr/mtr_x_lock.h>

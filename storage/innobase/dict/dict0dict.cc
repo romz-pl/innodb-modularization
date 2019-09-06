@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "my_config.h"
 
+#include <innodb/trx_trx/trx_set_dict_operation.h>
 #include <innodb/page/page_zip_empty_size.h>
 #include <innodb/page/page_zip_stat_per_index.h>
 #include <innodb/dict_mem/dict_mem_table_free.h>

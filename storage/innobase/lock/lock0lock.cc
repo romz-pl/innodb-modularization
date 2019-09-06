@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/trx_trx/trx_get_read_view.h>
+#include <innodb/trx_trx/trx_get_dict_operation.h>
 #include <innodb/trx_trx/thd_trx_priority.h>
 #include <innodb/record/rec_print_new.h>
 #include <innodb/sync_mutex/mutex_destroy.h>

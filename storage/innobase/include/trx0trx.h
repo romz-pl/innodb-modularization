@@ -35,26 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/trx_trx/trx_get_read_view.h>
-#include <innodb/trx_types/trx_savept_t.h>
-#include <innodb/trx_types/UndoMutex.h>
-#include <innodb/trx_types/TrxMutex.h>
-#include <innodb/trx_types/trx_que_t.h>
-#include <innodb/trx_types/trx_state_t.h>
-#include <innodb/trx_types/trx_dict_op_t.h>
-#include <innodb/lock_types/trx_lock_list_t.h>
-#include <innodb/sync_mutex/mutex_enter.h>
-#include <innodb/sync_mutex/mutex_exit.h>
-#include <innodb/io/srv_read_only_mode.h>
-#include <innodb/trx_trx/trx_state_eq.h>
-#include <innodb/trx_trx/trx_get_error_index.h>
-#include <innodb/trx_trx/trx_get_dict_operation.h>
-#include <innodb/trx_trx/trx_set_dict_operation.h>
-#include <innodb/data_types/flags.h>
-#include <innodb/page/flag.h>
-#include <innodb/read/MVCC.h>
-#include <innodb/trx_trx/trx_is_redo_rseg_updated.h>
-#include <innodb/trx_trx/trx_is_temp_rseg_updated.h>
+
 #include <innodb/trx_trx/trx_is_rseg_updated.h>
 #include <innodb/trx_trx/trx_is_rseg_assigned.h>
 #include <innodb/trx_trx/trx_get_que_state_str.h>

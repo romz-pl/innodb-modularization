@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/trx_trx/trx_set_dict_operation.h>
+#include <innodb/trx_trx/trx_get_dict_operation.h>
 #include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/record/rec_offs_init.h>
 #include <innodb/memory/mem_heap_get_size.h>

@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_trx/trx_set_dict_operation.h>
+#include <innodb/trx_trx/trx_get_dict_operation.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/dict_mem/dict_mem_table_free.h>
 #include <innodb/cmp/cmp_dtuple_rec_with_match.h>

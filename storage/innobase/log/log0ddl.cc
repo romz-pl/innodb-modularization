@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/1/2016 Shaohua Wang
  *******************************************************/
 
+#include <innodb/trx_trx/trx_set_dict_operation.h>
 #include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/memory/mem_heap_dup.h>
 #include <innodb/mtr/mtr_start.h>
