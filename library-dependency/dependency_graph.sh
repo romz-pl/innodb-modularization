@@ -29,8 +29,11 @@ cmake ${CMAKE_FLAGS} --graphviz=${PREFIX} ${BORG_SOURCE_DIR}
 OUT_DIR=png_files
 mkdir -p ${OUT_DIR}
 
-dot ${PREFIX} -T png -o ${OUT_DIR}/all.png
-dot ${PREFIX}.innobase -T png -o ${OUT_DIR}/innobase.png
+GRAPH_ENGINE=dot
+# GRAPH_ENGINE=neato
+
+${GRAPH_ENGINE} ${PREFIX} -T png -o ${OUT_DIR}/all.png
+${GRAPH_ENGINE} ${PREFIX}.innobase -T png -o ${OUT_DIR}/innobase.png
 
 
 RED='\033[0;31m'

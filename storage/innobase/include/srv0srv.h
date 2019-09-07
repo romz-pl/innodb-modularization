@@ -213,8 +213,7 @@ extern ulong srv_rollback_segments;
 /** Maximum size of undo tablespace. */
 extern unsigned long long srv_max_undo_tablespace_size;
 
-/** Rate at which UNDO records should be purged. */
-extern ulong srv_purge_rseg_truncate_frequency;
+#include <innodb/trx_purge/srv_purge_rseg_truncate_frequency.h>
 
 /** Enable or Disable Truncate of UNDO tablespace. */
 extern bool srv_undo_log_truncate;

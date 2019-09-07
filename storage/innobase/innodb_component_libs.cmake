@@ -76,7 +76,6 @@ SET( INNODB_COMPONENT_LIBS
     # R
     #random
     rbt
-    read
     #record
 
     # S
@@ -93,6 +92,7 @@ SET( INNODB_COMPONENT_LIBS
     #tablespace
     #thread
     #time
+    trx_purge
     trx_rec
     trx_roll
     trx_rseq

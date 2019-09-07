@@ -183,8 +183,7 @@ const char *deprecated_undo_logs =
     " Please use innodb_rollback_segments instead."
     " See " REFMAN "innodb-undo-logs.html";
 
-/** Rate at which UNDO records should be purged. */
-ulong srv_purge_rseg_truncate_frequency = 128;
+
 #endif /* !UNIV_HOTBACKUP */
 
 /** Enable or Disable Truncate of UNDO tablespace.

@@ -107,6 +107,33 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0purge.h"
 
 
+/** Calculates the file address of an undo log header when we have the file
+ address of its history list node.
+ @return file address of the log */
+fil_addr_t trx_purge_get_log_from_hist(
+    fil_addr_t node_addr) /*!< in: file address of the history
+                          list node of the log */
+{
+  node_addr.boffset -= TRX_UNDO_HISTORY_NODE;
+
+  return (node_addr);
+}
+
+/** address of its history list node.
+ @return true if purge_sys_t::limit <= purge_sys_t::iter */
+UNIV_INLINE
+bool trx_purge_check_limit(void) {
+  /* limit is used to track till what point purge element has been
+  processed and so limit <= iter.
+  undo_no ordering is enforced only within the same rollback segment.
+  If a transaction uses multiple rollback segments then we need to
+  consider the rollback segment space id too. */
+  return (purge_sys->iter.trx_no > purge_sys->limit.trx_no ||
+          (purge_sys->iter.trx_no == purge_sys->limit.trx_no &&
+           ((purge_sys->iter.undo_no >= purge_sys->limit.undo_no) ||
+            (purge_sys->iter.undo_rseg_space !=
+             purge_sys->limit.undo_rseg_space))));
+}
 
 
 
@@ -116,8 +143,7 @@ ulong srv_max_purge_lag = 0;
 /** Max DML user threads delay in micro-seconds. */
 ulong srv_max_purge_lag_delay = 0;
 
-/** The global data structure coordinating a purge */
-trx_purge_t *purge_sys = NULL;
+
 
 #ifdef UNIV_DEBUG
 bool srv_purge_view_update_only_debug;
@@ -625,16 +651,102 @@ loop:
 
 namespace undo {
 
-/** Mutext for serializing undo tablespace related DDL.  These have to do with
-creating and dropping undo tablespaces. */
-ib_mutex_t ddl_mutex;
+/* Given a reserved undo space_id, return the next space_id for the associated
+undo space number. */
+space_id_t id2next_id(space_id_t space_id) {
+  ut_ad(is_reserved(space_id));
 
-/** A global object that contains a vector of undo::Tablespace structs. */
-Tablespaces *spaces;
+  space_id_t space_num = id2num(space_id);
+  space_id_t first_id = dict_sys_t_s_max_undo_space_id + 1 - space_num;
+  space_id_t last_id = first_id - (FSP_MAX_UNDO_TABLESPACES *
+                                   (dict_sys_t_undo_space_id_range - 1));
 
-/** List of currently used undo space IDs for each undo space number
-along with a boolean showing whether the undo space number is in use. */
-struct space_id_account *space_id_bank;
+  return (space_id == SPACE_UNKNOWN || space_id == last_id
+              ? first_id
+              : space_id - FSP_MAX_UNDO_TABLESPACES);
+}
+
+/* clang-format off */
+/** Convert an undo space ID into an undo space number.
+NOTE: This may be an undo space_id from a pre-exisiting 5.7
+database which used space_ids from 1 to 127.  If so, the
+space_id is the space_num.
+The space_ids are assigned to number ranges in reverse from high to low.
+In addition, the first space IDs for each undo number occur sequentionally
+and descending before the second space_id.
+
+Since s_max_undo_space_id = 0xFFFFFFEF, FSP_MAX_UNDO_TABLESPACES = 127
+and undo_space_id_range = 512:
+  Space ID   Space Num    Space ID   Space Num   ...  Space ID   Space Num
+  0xFFFFFFEF      1       0xFFFFFFEe       2     ...  0xFFFFFF71    127
+  0xFFFFFF70      1       0xFFFFFF6F       2     ...  0xFFFFFEF2    127
+  0xFFFFFEF1      1       0xFFFFFEF0       2     ...  0xFFFFFE73    127
+...
+
+This is done to maintain backward compatibility to when there was only one
+space_id per undo space number.
+@param[in]	space_id	undo tablespace ID
+@return space number of the undo tablespace */
+/* clang-format on */
+space_id_t id2num(space_id_t space_id) {
+  if (!is_reserved(space_id)) {
+    return (space_id);
+  }
+
+  return (((dict_sys_t_s_max_undo_space_id - space_id) %
+           FSP_MAX_UNDO_TABLESPACES) +
+          1);
+}
+
+/** Convert an undo space number (from 1 to 127) into an undo space_id.
+Use the undo::space_id_bank to return the curent space_id assigned to
+that undo number.
+@param[in]  space_num   undo tablespace number
+@return space_id of the undo tablespace */
+space_id_t num2id(space_id_t space_num) {
+  ut_ad(space_num > 0);
+  ut_ad(space_num <= FSP_MAX_UNDO_TABLESPACES);
+
+  size_t slot = space_num - 1;
+
+  /* The space_id_back is normally protected by undo::spaces::m_latch.
+  But this can only be called on a specific slot when truncation is not
+  happening on that slot, i.e. the undo tablespace is in use. */
+  ut_ad(undo::space_id_bank[slot].in_use);
+
+  return (undo::space_id_bank[slot].space_id);
+}
+
+/** Convert an undo space number (from 1 to 127) into the undo space_id,
+given an index indicating which space_id from the pool assigned to that
+undo number.
+@param[in]  space_num  undo tablespace number
+@param[in]  ndx        index of the space_id within that undo number
+@return space_id of the undo tablespace */
+space_id_t num2id(space_id_t space_num, size_t ndx) {
+  ut_ad(space_num > 0);
+  ut_ad(space_num <= FSP_MAX_UNDO_TABLESPACES);
+  ut_ad(ndx < dict_sys_t_undo_space_id_range);
+
+  space_id_t space_id = dict_sys_t_s_max_undo_space_id + 1 - space_num -
+                        static_cast<space_id_t>(ndx * FSP_MAX_UNDO_TABLESPACES);
+
+  return (space_id);
+}
+
+/** Check if the space_id is an undo space ID in the reserved range.
+@param[in]	space_id	undo tablespace ID
+@return true if it is in the reserved undo space ID range. */
+bool is_reserved(space_id_t space_id) {
+  return (space_id >= dict_sys_t_s_min_undo_space_id &&
+          space_id <= dict_sys_t_s_max_undo_space_id);
+}
+
+
+
+
+
+
 
 /** Initialize the undo tablespace space_id bank which is a lock free
 repository for information about the space IDs used for undo tablespaces.
@@ -1162,8 +1274,7 @@ bool is_active(space_id_t space_id, bool get_latch) {
 }
 }  // namespace undo
 
-/* Declare this global object. */
-Space_Ids undo::s_under_construction;
+
 
 /** Iterate over all the UNDO tablespaces and check if any of the UNDO
 tablespace qualifies for TRUNCATE (size > threshold).

@@ -178,6 +178,7 @@ SET(INNOBASE_SOURCES
     trx/trx0sys.cc
     trx/trx0trx.cc
     trx/trx0undo.cc
+    trx/Tablespace.cc
     usr/usr0sess.cc
     ut/ut0dbg.cc
     ut/ut0list.cc
