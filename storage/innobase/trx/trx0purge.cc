@@ -33,6 +33,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_undo/trx_undo_build_roll_ptr.h>
+#include <innodb/trx_undo/trx_undo_get_next_rec.h>
+#include <innodb/trx_undo/trx_undo_get_first_rec.h>
+#include <innodb/trx_types/trx_ulogf_t.h>
+#include <innodb/trx_undo/trx_undo_page_get_next_rec.h>
+#include <innodb/trx_undo/trx_undo_page_get_s_latched.h>
+#include <innodb/trx_undo/trx_undo_truncate_tablespace.h>
+#include <innodb/trx_undo/trx_undo_truncate_start.h>
+#include <innodb/trx_undo/trx_undo_page_get.h>
+#include <innodb/trx_undo/trx_undo_t.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/read/MVCC.h>
 #include <innodb/logger/fatal.h>

@@ -54,7 +54,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rec.h"
 
 
-#include "trx0undo.h"
+
 
 #include "current_thd.h"
 

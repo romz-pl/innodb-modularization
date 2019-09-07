@@ -81,7 +81,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "trx0rseg.h"
 
-#include "trx0undo.h"
+
 
 
 /** When an insert or purge to a table is performed, this function builds

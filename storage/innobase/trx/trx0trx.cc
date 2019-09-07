@@ -30,6 +30,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_undo/trx_undo_get_prev_rec.h>
+#include <innodb/trx_undo/trx_undo_set_state_at_prepare.h>
+#include <innodb/trx_undo/trx_undo_insert_cleanup.h>
+#include <innodb/trx_undo/trx_undo_update_cleanup.h>
+#include <innodb/trx_undo/trx_undo_set_state_at_finish.h>
+#include <innodb/trx_undo/trx_undo_page_get.h>
+#include <innodb/trx_undo/trx_undo_t.h>
 #include <innodb/trx_roll/trx_rollback_for_mysql.h>
 #include <innodb/trx_roll/trx_roll_savepoints_free.h>
 #include <innodb/trx_sys/trx_sys_mutex_enter.h>
@@ -94,7 +101,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "trx0rseg.h"
 
-#include "trx0undo.h"
+
 #include "trx0xa.h"
 #include "usr0sess.h"
 #include <innodb/vector/vector.h>

@@ -153,7 +153,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "log0log.h"
 
 #include "trx0purge.h"
-#include "trx0undo.h"
+
 #include <innodb/formatting/formatting.h>
 
 #include <errno.h>

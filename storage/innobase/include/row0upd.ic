@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/27/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_undo/trx_write_roll_ptr.h>
 #include <innodb/page/page_zip_write_trx_id_and_roll_ptr.h>
 #include <innodb/memory/mem_heap_zalloc.h>
 #include <innodb/trx_sys/trx_write_trx_id.h>
@@ -39,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lock0lock.h"
 #include "row0row.h"
 
-#include "trx0undo.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 

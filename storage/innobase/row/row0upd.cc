@@ -76,7 +76,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 
 #include "row0upd.h"
-#include "trx0undo.h"
+
 #ifndef UNIV_HOTBACKUP
 #include <algorithm>
 

@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
-#include <innodb/assert/assert.h>
+// #include <innodb/trx_undo/trx_undo.h>
 
 
 //
 //
-TEST( assert, constructor )
+TEST( trx_undo, constructor )
 {
 
 }

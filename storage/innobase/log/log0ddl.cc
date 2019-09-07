@@ -68,7 +68,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0ins.h"
 #include "row0row.h"
 #include "row0sel.h"
-
+#include "trx0purge.h"
 
 /** Object to handle Log_DDL */
 Log_DDL *log_ddl = nullptr;

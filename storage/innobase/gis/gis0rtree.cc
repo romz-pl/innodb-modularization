@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013/03/27 Allen Lai and Jimmy Yang
  ***********************************************************************/
 
+#include <innodb/trx_undo/trx_write_roll_ptr.h>
 #include <innodb/page/page_zip_compress.h>
 #include <innodb/page/page_zip_copy_recs.h>
 #include <innodb/page/page_zip_decompress.h>

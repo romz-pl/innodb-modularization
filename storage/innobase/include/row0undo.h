@@ -35,6 +35,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_types/trx_undo_rec_t.h>
+
 #include "btr0pcur.h"
 #include "btr0types.h"
 #include "que0types.h"

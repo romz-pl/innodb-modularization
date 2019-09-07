@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/6/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_undo/trx_undo_roll_ptr_is_insert.h>
 #include <innodb/trx_sys/trx_get_rw_trx_by_id.h>
 #include <innodb/trx_sys/trx_sys_mutex_enter.h>
 #include <innodb/trx_sys/trx_sys_mutex_exit.h>
@@ -75,7 +76,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "trx0rseg.h"
 
-#include "trx0undo.h"
+
 
 #include "my_dbug.h"
 

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_undo/trx_read_roll_ptr.h>
 #include <innodb/trx_sys/trx_read_trx_id.h>
 #include <innodb/record/rec_get_nth_field.h>
 #include <innodb/data_types/dtuple_get_n_fields.h>
@@ -42,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "dict0dict.h"
 
-#include "trx0undo.h"
+
 
 /** Gets the offset of the DB_TRX_ID field, in bytes relative to the origin of
  a clustered index record.

@@ -97,7 +97,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "row0upd.h"
 #include "trx0rec.h"
-#include "trx0undo.h"
+
 #include "usr0sess.h"
 
 #include "my_dbug.h"

@@ -30,6 +30,14 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_undo/trx_undo_decode_roll_ptr.h>
+#include <innodb/trx_undo/trx_undo_add_page.h>
+#include <innodb/trx_undo/trx_undo_build_roll_ptr.h>
+#include <innodb/trx_undo/trx_undo_free_last_page.h>
+#include <innodb/trx_undo/trx_undo_assign_undo.h>
+#include <innodb/trx_undo/trx_undo_roll_ptr_is_insert.h>
+#include <innodb/trx_undo/trx_undo_page_get_s_latched.h>
+#include <innodb/trx_undo/trx_undo_t.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_assign_rseg_temp.h>
 #include <innodb/data_types/dfield_get_data.h>
@@ -57,7 +65,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fsp0fsp.h"
 #include <innodb/machine/data.h>
 #include "mtr0log.h"
-#include "trx0undo.h"
+
 #ifndef UNIV_HOTBACKUP
 #include "dict0dict.h"
 

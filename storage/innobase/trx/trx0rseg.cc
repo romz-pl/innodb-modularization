@@ -30,6 +30,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_types/trx_ulogf_t.h>
+#include <innodb/trx_undo/trx_undo_page_get.h>
+#include <innodb/trx_undo/trx_undo_lists_init.h>
+#include <innodb/trx_undo/trx_undo_mem_free.h>
+#include <innodb/trx_undo/trx_undo_t.h>
 #include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
 #include <innodb/trx_sys/trx_sysf_rseg_get_page_no.h>
 #include <innodb/trx_sys/trx_sysf_rseg_get_space.h>
@@ -57,7 +62,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "trx0purge.h"
-#include "trx0undo.h"
+
 
 /** Creates a rollback segment header.
 This function is called only when a new rollback segment is created in

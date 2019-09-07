@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_undo/trx_undo_t.h>
 #include <innodb/tablespace/trx_sys_undo_spaces.h>
 #include <innodb/trx_sys/trx_sys_flush_max_trx_id.h>
 #include <innodb/trx_sys/trx_sys_mutex_enter.h>
@@ -71,7 +72,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0purge.h"
 #include "trx0rseg.h"
 
-#include "trx0undo.h"
+
 #include "buf0dblwr.h"
 
 

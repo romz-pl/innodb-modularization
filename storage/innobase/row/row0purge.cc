@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/14/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_undo/trx_undo_decode_roll_ptr.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
 #include <innodb/record/rec_index_print.h>
@@ -71,7 +72,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "trx0rseg.h"
 
-#include "trx0undo.h"
+
 #include <innodb/univ/call_destructor.h>
 
 /*************************************************************************

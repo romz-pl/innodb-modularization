@@ -79,7 +79,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0row.h"
 #include "srv0srv.h"
 
-
+#include "trx0purge.h"
 #include "trx0i_s.h"
 
 

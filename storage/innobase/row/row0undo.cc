@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_undo/trx_undo_roll_ptr_is_insert.h>
 #include <innodb/trx_roll/trx_roll_pop_top_rec_of_trx.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/data_types/dtuple_copy.h>
@@ -56,7 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "trx0rseg.h"
 
-#include "trx0undo.h"
+
 
 /* How to undo row operations?
 (1) For an insert, we have stored a prefix of the clustered index record

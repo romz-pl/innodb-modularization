@@ -93,6 +93,7 @@ add_subdirectory( trx_roll )
 add_subdirectory( trx_trx )
 add_subdirectory( trx_types )
 add_subdirectory( trx_sys )
+add_subdirectory( trx_undo )
 
 add_subdirectory( univ )
 

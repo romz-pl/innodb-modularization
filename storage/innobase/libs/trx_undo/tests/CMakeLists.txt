@@ -1,4 +1,4 @@
-set( TEST_NAME assert-utests )
+set( TEST_NAME trx_undo-utests )
 
 add_executable( ${TEST_NAME}
     base.cpp
@@ -11,6 +11,6 @@ target_compile_options( ${TEST_NAME} PRIVATE  )
 
 target_include_directories( ${TEST_NAME} PRIVATE )
 
-target_link_libraries( ${TEST_NAME} PRIVATE gtest assert )
+target_link_libraries( ${TEST_NAME} PRIVATE gtest trx_undo )
 
 

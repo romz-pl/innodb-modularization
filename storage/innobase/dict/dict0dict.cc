@@ -195,7 +195,7 @@ extern uint ibuf_debug;
 #include "srv0mon.h"
 #include "srv0start.h"
 
-#include "trx0undo.h"
+
 #endif /* !UNIV_HOTBACKUP */
 #include "ut0ut.h"
 

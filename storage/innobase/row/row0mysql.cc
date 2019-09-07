@@ -126,7 +126,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0purge.h"
 #include "trx0rec.h"
 
-#include "trx0undo.h"
+
 #include "ut0mpmcbq.h"
 #include "ut0ut.h"
 

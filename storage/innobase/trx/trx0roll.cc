@@ -32,6 +32,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_undo/trx_undo_get_prev_rec.h>
+#include <innodb/trx_undo/trx_undo_build_roll_ptr.h>
+#include <innodb/trx_undo/trx_undo_page_get_s_latched.h>
+#include <innodb/trx_undo/trx_undo_t.h>
+#include <innodb/trx_undo/trx_undo_truncate_end.h>
+#include <innodb/trx_undo/trx_undo_set_state_at_prepare.h>
 #include <innodb/trx_roll/trx_rollback_or_clean_is_active.h>
 #include <innodb/trx_roll/trx_savept_take.h>
 #include <innodb/trx_trx/trx_named_savept_t.h>
@@ -79,7 +85,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "trx0rseg.h"
 
 
-#include "trx0undo.h"
+
 #include "usr0sess.h"
 
 #include "current_thd.h"
