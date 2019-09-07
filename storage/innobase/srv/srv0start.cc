@@ -50,6 +50,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/trx_purge/purge_sys.h>
+#include <innodb/trx_purge/trx_purge_sys_create.h>
+#include <innodb/trx_purge/trx_purge_state.h>
+#include <innodb/trx_undo/flags.h>
+#include <innodb/trx_purge/space_id_bank.h>
+#include <innodb/trx_purge/s_under_construction.h>
+#include <innodb/trx_purge/use_next_space_id.h>
+#include <innodb/trx_purge/use_space_id.h>
+#include <innodb/trx_purge/unuse_space_id.h>
+#include <innodb/trx_purge/start_logging.h>
 #include <innodb/trx_rseq/trx_rseg_adjust_rollback_segments.h>
 #include <innodb/tablespace/srv_tmp_space.h>
 #include <innodb/trx_rseq/trx_rseg_init_rollback_segments.h>

@@ -45,6 +45,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/8/1995 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_purge/trx_purge_state.h>
+#include <innodb/trx_purge/trx_purge.h>
+#include <innodb/trx_purge/purge_sys.h>
 #include <innodb/trx_sys/trx_sys.h>
 #include <innodb/read/MVCC.h>
 #include <innodb/trx_trx/trx_pool_init.h>

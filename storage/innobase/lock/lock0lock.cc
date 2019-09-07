@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #define LOCK_MODULE_IMPLEMENTATION
 
+#include <innodb/trx_purge/purge_sys.h>
 #include <innodb/trx_sys/trx_rw_min_trx_id.h>
 #include <innodb/trx_sys/trx_rw_is_active.h>
 #include <innodb/trx_sys/trx_rw_min_trx_id.h>

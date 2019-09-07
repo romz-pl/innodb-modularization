@@ -67,35 +67,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_purge/next_space_id.h>
 #include <innodb/trx_purge/num2id.h>
 #include <innodb/trx_purge/purge_iter_t.h>
-#include <innodb/trx_purge/purge_state_t.h>
-#include <innodb/trx_purge/purge_sys.h>
-#include <innodb/trx_purge/s_under_construction.h>
-#include <innodb/trx_purge/set_active.h>
-#include <innodb/trx_purge/space_id_account.h>
-#include <innodb/trx_purge/space_id_bank.h>
-#include <innodb/trx_purge/spaces.h>
-#include <innodb/trx_purge/start_logging.h>
-#include <innodb/trx_purge/trx_purge.h>
-#include <innodb/trx_purge/trx_purge_add_update_undo_to_history.h>
-#include <innodb/trx_purge/trx_purge_get_log_from_hist.h>
-#include <innodb/trx_purge/trx_purge_run.h>
-#include <innodb/trx_purge/trx_purge_state.h>
-#include <innodb/trx_purge/trx_purge_stop.h>
-#include <innodb/trx_purge/trx_purge_sys_close.h>
-#include <innodb/trx_purge/trx_purge_sys_create.h>
-#include <innodb/trx_purge/trx_purge_t.h>
-#include <innodb/trx_purge/unuse_space_id.h>
-#include <innodb/trx_purge/use_next_space_id.h>
-#include <innodb/trx_purge/use_space_id.h>
-#include <innodb/trx_types/PQMutex.h>
-#include <innodb/trx_types/Rsegs.h>
-#include <innodb/trx_types/TrxUndoRsegs.h>
-#include <innodb/trx_types/purge_pq_t.h>
-#include <innodb/trx_types/trx_rseg_t.h>
-#include <innodb/trx_undo/flags.h>
 
-struct trx_purge_t;
-struct trx_undo_ptr_t;
 
 
 

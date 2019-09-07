@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_purge/purge_sys.h>
+#include <innodb/trx_undo/flags.h>
 #include <innodb/trx_rec/trx_undo_rec_get_pars.h>
 #include <innodb/trx_rec/type_cmpl_t.h>
 #include <innodb/trx_undo/trx_undo_get_prev_rec.h>

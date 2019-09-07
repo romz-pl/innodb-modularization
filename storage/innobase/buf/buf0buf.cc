@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <innodb/trx_undo/flags.h>
 #include <innodb/trx_sys/trx_sys_mutex_enter.h>
 #include <innodb/trx_sys/trx_sys_mutex_exit.h>
 #include <innodb/page/page_zip_decompress.h>

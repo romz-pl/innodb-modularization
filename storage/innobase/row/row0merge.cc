@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Completed by Sunny Bains and Marko Makela
  *******************************************************/
 
+#include <innodb/trx_purge/trx_purge_run.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/trx_trx/trx_is_strict.h>
 #include <innodb/trx_trx/trx_commit_for_mysql.h>

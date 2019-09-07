@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/trx_purge/trx_purge_run.h>
+#include <innodb/trx_purge/trx_purge_stop.h>
+#include <innodb/trx_purge/trx_purge_state.h>
+#include <innodb/trx_undo/flags.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/io/os_file_delete_if_exists.h>

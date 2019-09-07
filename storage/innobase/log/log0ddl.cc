@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 12/1/2016 Shaohua Wang
  *******************************************************/
 
+#include <innodb/trx_purge/unuse_space_id.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_commit_for_mysql.h>
 #include <innodb/trx_trx/trx_start_if_not_started.h>

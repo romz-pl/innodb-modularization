@@ -2,6 +2,8 @@
 
 #include <innodb/univ/univ.h>
 
+#include <innodb/trx_purge/space_id_account.h>
+
 namespace undo {
 
 /** List of currently used undo space IDs for each undo space number

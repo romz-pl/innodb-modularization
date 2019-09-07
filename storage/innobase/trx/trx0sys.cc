@@ -33,6 +33,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_undo/flags.h>
+#include <innodb/trx_purge/trx_purge_sys_close.h>
 #include <innodb/trx_rseq/trx_rsegs_init.h>
 #include <innodb/trx_rseq/trx_rseg_header_create.h>
 #include <innodb/trx_undo/trx_undo_t.h>

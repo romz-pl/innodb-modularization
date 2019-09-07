@@ -33,6 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_purge/s_under_construction.h>
+#include <innodb/trx_purge/space_id_bank.h>
+#include <innodb/trx_undo/flags.h>
+#include <innodb/trx_purge/purge_sys.h>
 #include <innodb/trx_rec/trx_undo_rec_copy.h>
 #include <innodb/trx_rec/trx_undo_rec_get_table_id.h>
 #include <innodb/trx_rec/trx_undo_rec_get_extern_storage.h>

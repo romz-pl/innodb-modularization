@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2012-02-08 by Sunny Bains.
  *******************************************************/
 
+#include <innodb/trx_undo/flags.h>
 #include <innodb/trx_undo/trx_undo_assign_undo.h>
 #include <innodb/trx_trx/trx_commit_for_mysql.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>

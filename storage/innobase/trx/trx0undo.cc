@@ -32,6 +32,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/trx_types/Rsegs.h>
+#include <innodb/trx_purge/use_next_space_id.h>
+#include <innodb/trx_purge/unuse_space_id.h>
+#include <innodb/trx_purge/trx_purge_add_update_undo_to_history.h>
+#include <innodb/trx_undo/flags.h>
 #include <innodb/trx_rec/trx_undo_rec_get_undo_no.h>
 #include <innodb/trx_types/trx_undo_rec_t.h>
 #include <innodb/trx_rseq/trx_rsegf_get_nth_undo.h>
