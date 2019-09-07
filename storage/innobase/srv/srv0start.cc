@@ -50,6 +50,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/trx_rseq/trx_rseg_adjust_rollback_segments.h>
+#include <innodb/tablespace/srv_tmp_space.h>
+#include <innodb/trx_rseq/trx_rseg_init_rollback_segments.h>
+#include <innodb/trx_rseq/trx_rseg_upgrade_undo_tablespaces.h>
+#include <innodb/trx_sys/trx_sys.h>
+#include <innodb/trx_rseq/trx_rseg_array_create.h>
+#include <innodb/trx_rseq/trx_rseg_get_n_undo_tablespaces.h>
 #include <innodb/trx_roll/trx_recovery_rollback_thread.h>
 #include <innodb/trx_roll/trx_rollback_or_clean_is_active.h>
 #include <innodb/trx_roll/trx_rollback_or_clean_recovered.h>

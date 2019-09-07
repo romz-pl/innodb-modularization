@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/string/mem_strdup.h>
 #include <innodb/trx_undo/trx_undo_get_prev_rec.h>
 #include <innodb/trx_undo/trx_undo_build_roll_ptr.h>
 #include <innodb/trx_undo/trx_undo_page_get_s_latched.h>

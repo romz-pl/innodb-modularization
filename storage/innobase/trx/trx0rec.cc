@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rseq/trx_rseg_id_to_space_id.h>
 #include <innodb/trx_undo/trx_undo_decode_roll_ptr.h>
 #include <innodb/trx_undo/trx_undo_add_page.h>
 #include <innodb/trx_undo/trx_undo_build_roll_ptr.h>

@@ -35,32 +35,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <innodb/univ/univ.h>
 
-#include <innodb/tablespace/Space_Ids.h>
-#include <innodb/tablespace/srv_tmp_space.h>
-#include <innodb/trx_rseq/flags.h>
-#include <innodb/trx_rseq/trx_rseg_adjust_rollback_segments.h>
-#include <innodb/trx_rseq/trx_rseg_array_create.h>
-#include <innodb/trx_rseq/trx_rseg_create.h>
-#include <innodb/trx_rseq/trx_rseg_get_n_undo_tablespaces.h>
-#include <innodb/trx_rseq/trx_rseg_header_create.h>
-#include <innodb/trx_rseq/trx_rseg_init_rollback_segments.h>
-#include <innodb/trx_rseq/trx_rseg_mem_create.h>
-#include <innodb/trx_rseq/trx_rseg_upgrade_undo_tablespaces.h>
-#include <innodb/trx_rseq/trx_rsegf_get.h>
-#include <innodb/trx_rseq/trx_rsegf_get_new.h>
-#include <innodb/trx_rseq/trx_rsegf_get_nth_undo.h>
-#include <innodb/trx_rseq/trx_rsegf_set_nth_undo.h>
-#include <innodb/trx_rseq/trx_rsegf_undo_find_free.h>
-#include <innodb/trx_rseq/trx_rsegs_init.h>
-#include <innodb/trx_rseq/trx_rsegsf_set_page_no.h>
-#include <innodb/trx_sys/trx_sys.h>
-#include <innodb/trx_types/purge_pq_t.h>
-#include <innodb/trx_types/trx_rseg_t.h>
-#include <innodb/trx_types/trx_rsegf_t.h>
-#include <innodb/trx_types/trx_rsegsf_t.h>
-#include <innodb/trx_rseq/trx_rseg_id_to_space_id.h>
-#include <innodb/trx_rseq/trx_rsegsf_get.h>
-#include <innodb/trx_rseq/trx_rsegsf_get_page_no.h>
+
 
 
 #include "mtr0log.h"

@@ -32,6 +32,16 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/trx_rseq/trx_rsegf_get_nth_undo.h>
+#include <innodb/trx_rseq/trx_rsegf_get_new.h>
+#include <innodb/trx_rseq/trx_rseg_header_create.h>
+#include <innodb/trx_rseq/trx_rseg_array_create.h>
+#include <innodb/trx_rseq/trx_rsegf_get_new.h>
+#include <innodb/trx_rseq/trx_rsegf_set_nth_undo.h>
+#include <innodb/trx_rseq/trx_rsegf_undo_find_free.h>
+#include <innodb/trx_rseq/flags.h>
+#include <innodb/trx_rseq/trx_rsegf_get.h>
+#include <innodb/trx_types/trx_rsegf_t.h>
 #include <innodb/trx_undo/trx_undo_free_last_page.h>
 #include <innodb/align/ut_align_down.h>
 #include <innodb/trx_types/trx_ulogf_t.h>

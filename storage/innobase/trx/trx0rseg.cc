@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_types/trx_rsegsf_t.h>
+#include <innodb/trx_sys/trx_sys.h>
+#include <innodb/tablespace/srv_tmp_space.h>
 #include <innodb/trx_types/trx_ulogf_t.h>
 #include <innodb/trx_undo/trx_undo_page_get.h>
 #include <innodb/trx_undo/trx_undo_lists_init.h>
@@ -50,6 +53,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/logger/info.h>
 #include <innodb/io/srv_is_being_started.h>
 #include <innodb/sync_os/pfs.h>
+#include <innodb/trx_types/trx_rsegf_t.h>
+#include <innodb/trx_rseq/flags.h>
 
 #include "trx0rseg.h"
 

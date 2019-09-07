@@ -46,6 +46,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/trx_rseq/trx_rseg_adjust_rollback_segments.h>
 #include <innodb/trx_roll/trx_savepoint_for_mysql.h>
 #include <innodb/trx_roll/trx_release_savepoint_for_mysql.h>
 #include <innodb/trx_roll/trx_rollback_to_savepoint_for_mysql.h>

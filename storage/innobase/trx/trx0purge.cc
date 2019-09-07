@@ -33,6 +33,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_rseq/trx_rsegf_set_nth_undo.h>
+#include <innodb/trx_rseq/flags.h>
+#include <innodb/trx_rseq/trx_rsegf_get.h>
+#include <innodb/trx_types/trx_rsegf_t.h>
+#include <innodb/trx_sys/trx_sys.h>
 #include <innodb/trx_undo/trx_undo_build_roll_ptr.h>
 #include <innodb/trx_undo/trx_undo_get_next_rec.h>
 #include <innodb/trx_undo/trx_undo_get_first_rec.h>

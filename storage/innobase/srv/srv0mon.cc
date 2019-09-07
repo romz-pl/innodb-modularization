@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <time.h>
 
+#include <innodb/trx_sys/trx_sys.h>
 #include <innodb/log_arch/arch_log_sys.h>
 #include <innodb/logger/info.h>
 #include <innodb/sync_rw/rw_lock_stats.h>
