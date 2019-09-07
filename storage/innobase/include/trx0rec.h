@@ -36,6 +36,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/univ/univ.h>
 
 #include <innodb/trx_types/trx_undo_rec_t.h>
+#include <innodb/memory/mem_heap_dup.h>
 
 #include "btr0types.h"
 
@@ -48,13 +49,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 #include "que0types.h"
 
-/** Copies the undo record to the heap.
-@param[in]	undo_rec	undo log record
-@param[in]	heap		heap where copied
-@return own: copy of undo log record */
-UNIV_INLINE
-trx_undo_rec_t *trx_undo_rec_copy(const trx_undo_rec_t *undo_rec,
-                                  mem_heap_t *heap);
+#include <innodb/trx_rec/trx_undo_rec_copy.h>
 
 /** Reads the undo log record type.
  @return record type */
@@ -387,7 +382,6 @@ byte *trx_undo_rec_get_pars(
     table_id_t *table_id,     /*!< out: table id */
     type_cmpl_t &type_cmpl);  /*!< out: type compilation info. */
 
-#include "trx0rec.ic"
 
 #endif /* !UNIV_HOTBACKUP */
 

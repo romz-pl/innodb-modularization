@@ -93,6 +93,7 @@ SET( INNODB_COMPONENT_LIBS
     #tablespace
     #thread
     #time
+    trx_rec
     trx_roll
     trx_rseq
     trx_undo

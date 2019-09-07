@@ -88,6 +88,75 @@ namespace dd {
 class Spatial_reference_system;
 }
 
+
+#ifndef UNIV_HOTBACKUP
+/** Reads from an undo log record the record type.
+ @return record type */
+UNIV_INLINE
+ulint trx_undo_rec_get_type(
+    const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
+{
+  return (mach_read_from_1(undo_rec + 2) & (TRX_UNDO_CMPL_INFO_MULT - 1));
+}
+
+/** Reads from an undo log record the record compiler info.
+ @return compiler info */
+UNIV_INLINE
+ulint trx_undo_rec_get_cmpl_info(
+    const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
+{
+  return (mach_read_from_1(undo_rec + 2) / TRX_UNDO_CMPL_INFO_MULT);
+}
+
+/** Returns TRUE if an undo log record contains an extern storage field.
+ @return true if extern */
+UNIV_INLINE
+ibool trx_undo_rec_get_extern_storage(
+    const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
+{
+  if (mach_read_from_1(undo_rec + 2) & TRX_UNDO_UPD_EXTERN) {
+    return (TRUE);
+  }
+
+  return (FALSE);
+}
+
+/** Reads the undo log record number.
+ @return undo no */
+UNIV_INLINE
+undo_no_t trx_undo_rec_get_undo_no(
+    const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
+{
+  const byte *ptr = undo_rec + 2;
+  uint8_t type_cmpl = mach_read_from_1(ptr);
+
+  const bool blob_undo = type_cmpl & TRX_UNDO_MODIFY_BLOB;
+
+  if (blob_undo) {
+    /* The next record offset takes 2 bytes + 1 byte for
+    type_cmpl flag + 1 byte for the new flag.  Total 4 bytes.*/
+    ptr = undo_rec + 4;
+  } else {
+    ptr = undo_rec + 3;
+  }
+  return (mach_u64_read_much_compressed(ptr));
+}
+
+/** Copies the undo record to the heap.
+ @return own: copy of undo log record */
+trx_undo_rec_t *trx_undo_rec_copy(
+    const trx_undo_rec_t *undo_rec, /*!< in: undo log record */
+    mem_heap_t *heap)               /*!< in: heap where copied */
+{
+  ulint len;
+
+  len = mach_read_from_2(undo_rec) - ut_align_offset(undo_rec, UNIV_PAGE_SIZE);
+  ut_ad(len < UNIV_PAGE_SIZE);
+  return ((trx_undo_rec_t *)mem_heap_dup(heap, undo_rec, len));
+}
+#endif /* !UNIV_HOTBACKUP */
+
+
 /*=========== UNDO LOG RECORD CREATION AND DECODING ====================*/
 
 /** Writes the mtr log entry of the inserted undo log record on the undo log
