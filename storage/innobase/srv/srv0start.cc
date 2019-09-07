@@ -181,7 +181,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0tmp.h"
 #include "trx0purge.h"
 
-#include "trx0rseg.h"
+
 #include "usr0sess.h"
 #include <innodb/crc32/crc32.h>
 #include "sql/log.h"

@@ -72,7 +72,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "trx0purge.h"
 #include "trx0rec.h"
-#include "trx0rseg.h"
+
 
 
 /* How should the old versions in the history list be managed?

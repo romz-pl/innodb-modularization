@@ -56,7 +56,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_types/trx_rsegf_t.h>
 #include <innodb/trx_rseq/flags.h>
 
-#include "trx0rseg.h"
+
 
 #include <stddef.h>
 #include <algorithm>

@@ -297,7 +297,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql_base.h"
 #include "srv0tmp.h"
 
-#include "trx0rseg.h"
+
 
 
 #include "trx0xa.h"
