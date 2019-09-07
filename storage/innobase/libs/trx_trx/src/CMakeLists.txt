@@ -113,6 +113,7 @@ add_library( ${LIB_NAME} STATIC
     trx_rseg_type_t.cpp
     commit_node_state.cpp
     commit_node_t.cpp
+    trx_resurrect_table_ids.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )
@@ -129,9 +130,12 @@ target_link_libraries(
     io
     lock_types
     log_sn
+    mtr
     que_types
     read
     string
+    trx_rec
+    trx_undo
     trx_sys
     vector
     PRIVATE
