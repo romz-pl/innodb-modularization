@@ -17,6 +17,9 @@ add_library( ${LIB_NAME} STATIC
     trx_rseg_array_create.cpp
     trx_rsegsf_set_page_no.cpp
     flags.cpp
+    trx_rseg_id_to_space_id.cpp
+    trx_rsegsf_get.cpp
+    trx_rsegsf_get_page_no.cpp
 )
 
 target_compile_options( ${LIB_NAME} PRIVATE  )

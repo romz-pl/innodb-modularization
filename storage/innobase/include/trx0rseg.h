@@ -58,6 +58,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/trx_types/trx_rseg_t.h>
 #include <innodb/trx_types/trx_rsegf_t.h>
 #include <innodb/trx_types/trx_rsegsf_t.h>
+#include <innodb/trx_rseq/trx_rseg_id_to_space_id.h>
+#include <innodb/trx_rseq/trx_rsegsf_get.h>
+#include <innodb/trx_rseq/trx_rsegsf_get_page_no.h>
+
 
 #include "mtr0log.h"
 #include "srv0srv.h"

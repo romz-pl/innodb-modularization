@@ -105,7 +105,6 @@ trx_rsegf_t *trx_rsegf_get_new(space_id_t space, page_no_t page_no,
 
 /** Gets the file page number of the nth undo log slot.
  @return page number of the undo log segment */
-UNIV_INLINE
 page_no_t trx_rsegf_get_nth_undo(
     trx_rsegf_t *rsegf, /*!< in: rollback segment header */
     ulint n,            /*!< in: index of slot */
@@ -132,7 +131,6 @@ void trx_rsegf_set_nth_undo(
 
 /** Looks for a free slot for an undo log segment.
  @return slot index or ULINT_UNDEFINED if not found */
-UNIV_INLINE
 ulint trx_rsegf_undo_find_free(
     trx_rsegf_t *rsegf, /*!< in: rollback segment header */
     mtr_t *mtr)         /*!< in: mtr */
@@ -167,7 +165,7 @@ an undo space ID.
 @param[in]	id		a 7-bit ID from a rollback pointer
 @param[in]	is_temp		true if rseg from Temp Tablespace else false.
 @return undo tablespace ID containing the rollback segment */
-inline space_id_t trx_rseg_id_to_space_id(ulint id, bool is_temp) {
+space_id_t trx_rseg_id_to_space_id(ulint id, bool is_temp) {
   /* The rseg_id must be an undo_space_num between 0 and 127. */
   ut_ad(id < TRX_SYS_N_RSEGS);
 
@@ -208,7 +206,7 @@ page.
 @param[in]	space_id	Undo Tablespace ID
 @param[in]	mtr		mtr
 @return pointer to rollback segment directory header with page x-latched. */
-inline trx_rsegsf_t *trx_rsegsf_get(space_id_t space_id, mtr_t *mtr) {
+trx_rsegsf_t *trx_rsegsf_get(space_id_t space_id, mtr_t *mtr) {
   buf_block_t *block;
   trx_rsegsf_t *rsegs_header;
 
@@ -230,7 +228,7 @@ RSEG_ARRAY page for this undo tablespace.
 @param[in]	slot		slot index == rseg id
 @param[in]	mtr		mtr
 @return page number, FIL_NULL if slot unused */
-inline page_no_t trx_rsegsf_get_page_no(trx_rsegsf_t *rsegs_header, ulint slot,
+page_no_t trx_rsegsf_get_page_no(trx_rsegsf_t *rsegs_header, ulint slot,
                                         mtr_t *mtr) {
   ut_ad(rsegs_header != nullptr);
   ut_ad(mtr != nullptr);
