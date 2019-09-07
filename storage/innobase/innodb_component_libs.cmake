@@ -94,6 +94,7 @@ SET( INNODB_COMPONENT_LIBS
     #thread
     #time
     trx_roll
+    trx_rseq
     trx_undo
 
     # U
