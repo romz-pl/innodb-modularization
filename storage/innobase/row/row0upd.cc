@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_rec/trx_undo_rec_get_col_val.h>
+#include <innodb/trx_rec/trx_undo_read_v_idx.h>
+#include <innodb/memory/mem_heap_dup.h>
 #include <innodb/trx_trx/trx_start_if_not_started_xa.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/page/page_zip_write_rec.h>
@@ -105,7 +108,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fts0types.h"
 #include "row0row.h"
 #include "row0sel.h"
-#include "trx0rec.h"
+
 #endif /* !UNIV_HOTBACKUP */
 #include <algorithm>
 #include "lob0lob.h"

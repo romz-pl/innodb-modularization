@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/17/2000 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/memory/mem_heap_dup.h>
 #include <innodb/trx_roll/trx_rollback_to_savepoint.h>
 #include <innodb/trx_roll/trx_savept_take.h>
 #include <innodb/trx_roll/trx_rollback_to_savepoint.h>
@@ -124,7 +125,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "row0upd.h"
 #include "trx0purge.h"
-#include "trx0rec.h"
+
 
 
 #include "ut0mpmcbq.h"

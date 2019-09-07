@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rec/flags.h>
+#include <innodb/trx_rec/trx_undo_rec_get_undo_no.h>
 #include <innodb/trx_undo/trx_undo_roll_ptr_is_insert.h>
 #include <innodb/trx_roll/trx_roll_pop_top_rec_of_trx.h>
 #include <innodb/logger/fatal.h>
@@ -53,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0upd.h"
 #include "srv0srv.h"
 #include "trx0purge.h"
-#include "trx0rec.h"
+
 
 
 

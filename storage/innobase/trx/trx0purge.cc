@@ -33,6 +33,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_rec/trx_undo_rec_copy.h>
+#include <innodb/trx_rec/trx_undo_rec_get_table_id.h>
+#include <innodb/trx_rec/trx_undo_rec_get_extern_storage.h>
+#include <innodb/trx_rec/trx_undo_rec_get_cmpl_info.h>
+#include <innodb/trx_rec/flags.h>
+#include <innodb/trx_rec/trx_undo_rec_get_type.h>
+#include <innodb/trx_rec/trx_undo_rec_get_undo_no.h>
 #include <innodb/trx_rseq/trx_rsegf_set_nth_undo.h>
 #include <innodb/trx_rseq/flags.h>
 #include <innodb/trx_rseq/trx_rsegf_get.h>
@@ -98,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 
 #include "trx0purge.h"
-#include "trx0rec.h"
+
 
 
 

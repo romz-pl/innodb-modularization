@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/trx_rec/trx_undo_rec_get_undo_no.h>
+#include <innodb/trx_types/trx_undo_rec_t.h>
 #include <innodb/trx_rseq/trx_rsegf_get_nth_undo.h>
 #include <innodb/trx_rseq/trx_rsegf_get_new.h>
 #include <innodb/trx_rseq/trx_rseg_header_create.h>
@@ -71,7 +73,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "trx0purge.h"
-#include "trx0rec.h"
+
 
 
 

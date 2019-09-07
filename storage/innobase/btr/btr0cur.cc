@@ -49,6 +49,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 10/16/1994 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rec/trx_undo_report_row_operation.h>
+#include <innodb/trx_rec/flags.h>
 #include <innodb/trx_undo/trx_undo_build_roll_ptr.h>
 #include <innodb/trx_undo/trx_write_roll_ptr.h>
 #include <innodb/trx_sys/trx_sys.h>
@@ -126,7 +128,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #endif /* !UNIV_HOTBACKUP */
 #include "srv0start.h"
 #ifndef UNIV_HOTBACKUP
-#include "trx0rec.h"
+
 
 #endif /* !UNIV_HOTBACKUP */
 

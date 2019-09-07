@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rec/trx_undo_read_v_cols.h>
+#include <innodb/trx_rec/type_cmpl_t.h>
+#include <innodb/memory/mem_heap_dup.h>
+#include <innodb/trx_rec/flags.h>
 #include <innodb/trx_rseq/trx_rseg_id_to_space_id.h>
 #include <innodb/trx_undo/trx_undo_decode_roll_ptr.h>
 #include <innodb/trx_undo/trx_undo_add_page.h>
@@ -58,8 +62,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/data_types/dtuple_create.h>
 #include <innodb/data_types/dfield_set_null.h>
 #include <innodb/data_types/dfield_set_len.h>
+#include <innodb/trx_types/trx_undo_rec_t.h>
 
-#include "trx0rec.h"
+
 
 #include <sys/types.h>
 
@@ -92,7 +97,6 @@ class Spatial_reference_system;
 #ifndef UNIV_HOTBACKUP
 /** Reads from an undo log record the record type.
  @return record type */
-UNIV_INLINE
 ulint trx_undo_rec_get_type(
     const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
 {
@@ -101,7 +105,6 @@ ulint trx_undo_rec_get_type(
 
 /** Reads from an undo log record the record compiler info.
  @return compiler info */
-UNIV_INLINE
 ulint trx_undo_rec_get_cmpl_info(
     const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
 {
@@ -110,7 +113,6 @@ ulint trx_undo_rec_get_cmpl_info(
 
 /** Returns TRUE if an undo log record contains an extern storage field.
  @return true if extern */
-UNIV_INLINE
 ibool trx_undo_rec_get_extern_storage(
     const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
 {
@@ -123,7 +125,6 @@ ibool trx_undo_rec_get_extern_storage(
 
 /** Reads the undo log record number.
  @return undo no */
-UNIV_INLINE
 undo_no_t trx_undo_rec_get_undo_no(
     const trx_undo_rec_t *undo_rec) /*!< in: undo log record */
 {

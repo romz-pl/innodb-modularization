@@ -30,6 +30,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/14/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rec/trx_undo_update_rec_get_update.h>
+#include <innodb/trx_rec/trx_undo_rec_get_pars.h>
+#include <innodb/trx_rec/trx_undo_rec_get_partial_row.h>
+#include <innodb/trx_rec/type_cmpl_t.h>
+#include <innodb/trx_rec/trx_undo_rec_get_table_id.h>
+#include <innodb/trx_rec/trx_undo_rec_get_row_ref.h>
+#include <innodb/trx_rec/trx_undo_update_rec_get_sys_cols.h>
+#include <innodb/trx_rec/trx_undo_rec_get_undo_no.h>
+#include <innodb/trx_rec/flags.h>
 #include <innodb/trx_rseq/trx_rseg_id_to_space_id.h>
 #include <innodb/trx_undo/trx_undo_decode_roll_ptr.h>
 #include <innodb/data_types/dfield_get_data.h>
@@ -69,7 +78,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "table.h"
 #include "trx0purge.h"
-#include "trx0rec.h"
+
 
 
 

@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2011-05-26 Marko Makela
  *******************************************************/
 
+#include <innodb/trx_rec/trx_undo_read_v_cols.h>
+#include <innodb/memory/mem_heap_dup.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/trx_trx/trx_is_interrupted.h>
 #include <innodb/memory_check/memory_check.h>
@@ -89,7 +91,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0row.h"
 #include "row0upd.h"
 #include "srv0mon.h"
-#include "trx0rec.h"
+
 #include "ut0stage.h"
 
 #include "my_dbug.h"

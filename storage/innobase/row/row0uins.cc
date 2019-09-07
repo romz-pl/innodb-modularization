@@ -30,6 +30,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2/25/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rec/trx_undo_rec_get_pars.h>
+#include <innodb/trx_rec/trx_undo_read_v_cols.h>
+#include <innodb/trx_rec/trx_undo_rec_get_row_ref.h>
+#include <innodb/trx_rec/type_cmpl_t.h>
 #include <innodb/mtr/mtr_sx_lock.h>
 #include <innodb/mtr/mtr_s_lock.h>
 #include <innodb/logger/warn.h>
@@ -51,7 +55,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0undo.h"
 #include "row0upd.h"
 #include "row0vers.h"
-#include "trx0rec.h"
+
 
 
 

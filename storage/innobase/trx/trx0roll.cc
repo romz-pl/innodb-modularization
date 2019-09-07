@@ -32,6 +32,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_rec/trx_undo_rec_copy.h>
+#include <innodb/trx_rec/trx_undo_rec_get_undo_no.h>
 #include <innodb/string/mem_strdup.h>
 #include <innodb/trx_undo/trx_undo_get_prev_rec.h>
 #include <innodb/trx_undo/trx_undo_build_roll_ptr.h>
@@ -81,7 +83,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql_thd_internal_api.h"
 #include "srv0mon.h"
 #include "srv0start.h"
-#include "trx0rec.h"
+
 
 
 

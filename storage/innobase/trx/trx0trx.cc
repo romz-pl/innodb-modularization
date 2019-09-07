@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rec/trx_undo_rec_get_pars.h>
+#include <innodb/trx_rec/type_cmpl_t.h>
 #include <innodb/trx_undo/trx_undo_get_prev_rec.h>
 #include <innodb/trx_undo/trx_undo_set_state_at_prepare.h>
 #include <innodb/trx_undo/trx_undo_insert_cleanup.h>
@@ -97,7 +99,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 #include "trx0purge.h"
-#include "trx0rec.h"
+
 
 
 

@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_rec/trx_undo_parse_erase_page_end.h>
+#include <innodb/trx_rec/trx_undo_parse_add_undo_rec.h>
 #include <innodb/trx_undo/trx_undo_parse_page_header.h>
 #include <innodb/trx_undo/trx_undo_parse_page_init.h>
 #include <innodb/io/srv_read_only_mode.h>
@@ -128,7 +130,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/thread/os_thread_create.h>
 #include "page0cur.h"
 
-#include "trx0rec.h"
+
 
 #include <innodb/univ/call_destructor.h>
 
