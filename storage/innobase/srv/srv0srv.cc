@@ -128,7 +128,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #ifndef UNIV_HOTBACKUP
 #include "trx0i_s.h"
-#include "trx0purge.h"
+
 #include "usr0sess.h"
 #include <innodb/crc32/crc32.h>
 #endif /* !UNIV_HOTBACKUP */

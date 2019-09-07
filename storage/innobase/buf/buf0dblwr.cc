@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_purge/is_active.h>
 #include <innodb/memory_check/memory_check.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/sync_mutex/mutex_free.h>
@@ -58,10 +59,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "ha_prototypes.h"
 #include "my_compiler.h"
 #include "my_inttypes.h"
-
+#include "page0page.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "trx0purge.h"
+
 #include <innodb/enum/to_int.h>
 
 /** The doublewrite buffer */

@@ -31,6 +31,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 9/20/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_purge/is_active.h>
 #include <innodb/trx_rec/trx_undo_parse_erase_page_end.h>
 #include <innodb/trx_rec/trx_undo_parse_add_undo_rec.h>
 #include <innodb/trx_undo/trx_undo_parse_page_header.h>
@@ -140,7 +141,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0merge.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "trx0purge.h"
+
 #else /* !UNIV_HOTBACKUP */
 /** This is set to false if the backup was originally taken with the
 mysqlbackup --include regexp option: then we do not want to create tables in

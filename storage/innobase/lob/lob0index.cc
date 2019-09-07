@@ -27,7 +27,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0index.h"
 #include "lob0first.h"
 #include "lob0pages.h"
-#include "trx0purge.h"
+
 
 
 namespace lob {

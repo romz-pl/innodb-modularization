@@ -33,6 +33,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/trx_purge/ddl_mutex.h>
+#include <innodb/trx_purge/is_reserved.h>
+#include <innodb/trx_purge/flags.h>
+#include <innodb/trx_purge/TrxUndoRsegsIterator.h>
 #include <innodb/trx_purge/s_under_construction.h>
 #include <innodb/trx_purge/space_id_bank.h>
 #include <innodb/trx_undo/flags.h>
@@ -108,7 +112,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "srv0start.h"
 
-#include "trx0purge.h"
+
 
 
 /** Calculates the file address of an undo log header when we have the file

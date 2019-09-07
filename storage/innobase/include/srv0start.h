@@ -41,7 +41,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef UNIV_HOTBACKUP
 
 #endif /* !UNIV_HOTBACKUP */
-#include "trx0purge.h"
+
 
 
 // Forward declaration

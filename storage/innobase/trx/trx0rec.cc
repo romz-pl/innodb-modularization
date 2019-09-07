@@ -86,7 +86,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0mysql.h"
 #include "row0row.h"
 #include "row0upd.h"
-#include "trx0purge.h"
+
 
 
 #include "my_dbug.h"

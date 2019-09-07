@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <sys/types.h>
 #include <new>
 
+#include <innodb/read/ReadView.h>
 #include <innodb/trx_undo/flags.h>
 #include <innodb/trx_purge/trx_purge_sys_close.h>
 #include <innodb/trx_rseq/trx_rsegs_init.h>
@@ -73,10 +74,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "trx0purge.h"
 
 
-
+#include "page0page.h"
+#include "usr0sess.h"
 #include "buf0dblwr.h"
 
 

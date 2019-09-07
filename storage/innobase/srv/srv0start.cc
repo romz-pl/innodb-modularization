@@ -50,6 +50,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/trx_purge/init_space_id_bank.h>
+#include <innodb/trx_purge/clear_construction_list.h>
+#include <innodb/trx_purge/done_logging.h>
+#include <innodb/trx_purge/is_under_construction.h>
+#include <innodb/trx_purge/next_space_id.h>
+#include <innodb/trx_purge/is_active_truncate_log_present.h>
+#include <innodb/trx_purge/num2id.h>
+#include <innodb/trx_purge/add_space_to_construction_list.h>
+#include <innodb/trx_purge/is_reserved.h>
 #include <innodb/trx_purge/purge_sys.h>
 #include <innodb/trx_purge/trx_purge_sys_create.h>
 #include <innodb/trx_purge/trx_purge_state.h>
@@ -189,7 +198,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "row0upd.h"
 #include "srv0tmp.h"
-#include "trx0purge.h"
+
 
 
 #include "usr0sess.h"

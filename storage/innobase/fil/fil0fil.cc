@@ -33,6 +33,10 @@ The tablespace memory cache */
 #include <fcntl.h>
 #include <sys/types.h>
 
+#include <innodb/trx_purge/is_active.h>
+#include <innodb/trx_purge/spaces.h>
+#include <innodb/trx_purge/id2num.h>
+#include <innodb/trx_purge/is_active_truncate_log_present.h>
 #include <innodb/trx_trx/TrxInInnoDB.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_start_if_not_started_xa.h>
@@ -127,7 +131,7 @@ The tablespace memory cache */
 #include "sql_backup_lock.h"
 #include "sql_class.h"
 
-#include "trx0purge.h"
+
 #else /* !UNIV_HOTBACKUP */
 #include <cstring>
 #include "srv0srv.h"

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 4/20/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/formatting/formatting.h>
 #include <innodb/data_types/dtype_get_charset_coll.h>
 #include <innodb/data_types/dfield_get_data.h>
 #include <innodb/data_types/dfield_get_len.h>
@@ -76,7 +77,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0ext.h"
 #include "row0mysql.h"
 #include "row0upd.h"
-#include "trx0purge.h"
+
 
 
 

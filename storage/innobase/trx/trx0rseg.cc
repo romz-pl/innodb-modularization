@@ -30,6 +30,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/tablespace/Space_Ids.h>
+#include <innodb/trx_purge/is_active_truncate_log_present.h>
+#include <innodb/trx_purge/num2id.h>
 #include <innodb/trx_purge/purge_sys.h>
 #include <innodb/trx_undo/flags.h>
 #include <innodb/trx_purge/trx_purge_get_log_from_hist.h>
@@ -65,12 +68,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stddef.h>
 #include <algorithm>
 
-
+#include "page0page.h"
 #include "fut0lst.h"
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "trx0purge.h"
+
 
 /** Gets a rollback segment header.
 @param[in]	space		space where placed

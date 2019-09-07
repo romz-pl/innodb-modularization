@@ -31,6 +31,7 @@ Created 2018-01-27 by Sunny Bains */
 
 #include <vector>
 
+#include <innodb/read/ReadView.h>
 #include <innodb/trx_trx/trx_isolation_level.h>
 #include <innodb/cmp/cmp_dtuple_rec.h>
 #include <innodb/data_types/dtuple_set_n_fields_cmp.h>
@@ -44,7 +45,7 @@ Created 2018-01-27 by Sunny Bains */
 #include <innodb/sync_rw/rw_lock_get_waiters.h>
 #include <innodb/record/rec_offs_init.h>
 
-#include "trx0purge.h"
+
 #include "btr0pcur.h"
 #include "dict0dict.h"
 #include "row0pread.h"

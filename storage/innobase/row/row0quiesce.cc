@@ -52,7 +52,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0mysql.h"
 #include "row0quiesce.h"
 #include "srv0start.h"
-#include "trx0purge.h"
+
 
 #include "my_dbug.h"
 

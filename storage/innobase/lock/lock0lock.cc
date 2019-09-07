@@ -105,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0mysql.h"
 #include "row0sel.h"
 #include "srv0mon.h"
-#include "trx0purge.h"
+
 
 #include "usr0sess.h"
 #include "ut0ut.h"

@@ -32,6 +32,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/trx_purge/id2num.h>
+#include <innodb/trx_purge/Tablespace.h>
+#include <innodb/trx_purge/id2num.h>
 #include <innodb/trx_types/Rsegs.h>
 #include <innodb/trx_purge/use_next_space_id.h>
 #include <innodb/trx_purge/unuse_space_id.h>
@@ -77,8 +80,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0mon.h"
 #include "srv0srv.h"
 #include "srv0start.h"
-#include "trx0purge.h"
 
+#include "page0page.h"
 
 
 

@@ -50,6 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <innodb/log_write/pfs.h>
 
 #include "sync0debug.h"
+#include "page0page.h"
 
 #include <stddef.h>
 #include <algorithm>

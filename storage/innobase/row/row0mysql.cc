@@ -124,7 +124,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0row.h"
 #include "row0sel.h"
 #include "row0upd.h"
-#include "trx0purge.h"
+
 
 
 

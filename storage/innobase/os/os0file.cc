@@ -69,6 +69,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 #include "my_io.h"
 #include "sql_const.h"
 #include "srv0start.h"
+#include "page0page.h"
 
 #include <lz4.h>
 #include <zlib.h>

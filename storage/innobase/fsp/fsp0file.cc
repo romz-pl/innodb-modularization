@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2013-7-26 by Kevin Lewis
  *******************************************************/
 
+#include <innodb/formatting/formatting.h>
+#include <innodb/trx_purge/make_space_name.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/buf_calc/BlockReporter.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
@@ -55,7 +57,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "page0page.h"
 #include "srv0start.h"
-#include "trx0purge.h"
+
 
 #ifdef UNIV_HOTBACKUP
 #include "my_sys.h"

@@ -105,7 +105,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0log.h"
 #include "row0merge.h"
 #include "row0sel.h"
-#include "trx0purge.h"
+
 #include "ut0sort.h"
 #include "ut0stage.h"
 

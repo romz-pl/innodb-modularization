@@ -42,6 +42,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
    From the symptoms, this is related to bug#46587 in the MySQL bug DB.
 */
 
+#include <innodb/formatting/formatting.h>
 #include <innodb/trx_sys/trx_sys_mutex_enter.h>
 #include <innodb/trx_sys/trx_sys_mutex_exit.h>
 #include <innodb/trx_sys/trx_sys.h>
@@ -79,7 +80,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0row.h"
 #include "srv0srv.h"
 
-#include "trx0purge.h"
+
 #include "trx0i_s.h"
 
 

@@ -32,7 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "lob0inf.h"
 #include "lob0lob.h"
 #include "row0upd.h"
-#include "trx0purge.h"
+
 
 #include "zlob0first.h"
 #include "zlob0index.h"

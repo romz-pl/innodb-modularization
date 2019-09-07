@@ -27,6 +27,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /** @file dict/dict0dd.cc
 Data dictionary interface */
 
+#include <innodb/trx_purge/id2num.h>
+#include <innodb/trx_purge/spaces.h>
+#include <innodb/trx_purge/Tablespace.h>
 #include <innodb/trx_sys/trx_sys.h>
 #include <innodb/dict_mem/dict_mem_table_add_col.h>
 #include <innodb/dict_mem/dict_mem_table_create.h>

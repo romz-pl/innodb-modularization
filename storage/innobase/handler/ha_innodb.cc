@@ -46,6 +46,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/trx_purge/get_next_available_space_num.h>
+#include <innodb/trx_purge/ddl_mutex.h>
 #include <innodb/trx_undo/flags.h>
 #include <innodb/trx_purge/set_active.h>
 #include <innodb/trx_purge/purge_sys.h>
@@ -288,7 +290,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 
 #ifdef UNIV_DEBUG
-#include "trx0purge.h"
+
 #endif /* UNIV_DEBUG */
 #include "dict0priv.h"
 #include "dict0sdi.h"
