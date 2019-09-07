@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  3/20/2011 Jimmy Yang extracted from Embedded InnoDB
  *******************************************************/
 
+#include <innodb/trx_roll/trx_savept_take.h>
+#include <innodb/trx_roll/trx_rollback_for_mysql.h>
 #include <innodb/trx_trx/trx_is_started.h>
 #include <innodb/trx_trx/trx_assign_read_view.h>
 #include <innodb/trx_trx/trx_commit.h>
@@ -99,7 +101,7 @@ struct lock_table_t;
 #include "row0upd.h"
 #include "row0vers.h"
 #include "srv0start.h"
-#include "trx0roll.h"
+
 
 /** configure variable for binlog option with InnoDB APIs */
 bool ib_binlog_enabled = FALSE;

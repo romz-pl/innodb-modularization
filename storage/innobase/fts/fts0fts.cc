@@ -28,6 +28,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Full Text Search interface
  ***********************************************************************/
 
+#include <innodb/trx_trx/trx_named_savept_t.h>
 #include <innodb/trx_trx/trx_free_for_background.h>
 #include <innodb/trx_trx/trx_allocate_for_background.h>
 #include <innodb/trx_trx/trx_get_dict_operation.h>
@@ -82,7 +83,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "row0upd.h"
 
-#include "trx0roll.h"
+
 
 static const ulint FTS_MAX_ID_LEN = 32;
 

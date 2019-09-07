@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 1/8/1997 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_roll/trx_roll_pop_top_rec_of_trx.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/data_types/dtuple_copy.h>
 #include <innodb/data_types/dtuple_get_nth_v_field.h>
@@ -52,7 +53,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0srv.h"
 #include "trx0purge.h"
 #include "trx0rec.h"
-#include "trx0roll.h"
+
 #include "trx0rseg.h"
 
 #include "trx0undo.h"

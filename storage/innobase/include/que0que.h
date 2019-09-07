@@ -43,7 +43,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "que0types.h"
 #include "row0types.h"
 #include "srv0srv.h"
-#include "trx0roll.h"
+
 
 #include "usr0types.h"
 

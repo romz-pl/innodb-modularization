@@ -61,7 +61,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0ins.h"
 #include "row0mysql.h"
 #include "srv0start.h"
-#include "trx0roll.h"
+
 #include "usr0sess.h"
 #include <innodb/vector/vector.h>
 

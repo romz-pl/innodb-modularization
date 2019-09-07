@@ -125,7 +125,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #ifndef UNIV_HOTBACKUP
 #include "trx0rec.h"
-#include "trx0roll.h"
+
 #endif /* !UNIV_HOTBACKUP */
 
 /** Buffered B-tree operation types, introduced as part of delete buffering. */

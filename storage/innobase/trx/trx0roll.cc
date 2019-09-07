@@ -32,6 +32,11 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <sys/types.h>
 
+#include <innodb/trx_roll/trx_rollback_or_clean_is_active.h>
+#include <innodb/trx_roll/trx_savept_take.h>
+#include <innodb/trx_trx/trx_named_savept_t.h>
+#include <innodb/trx_roll/roll_node_t.h>
+#include <innodb/trx_roll/roll_node_create.h>
 #include <innodb/trx_sys/trx_sys_mutex_enter.h>
 #include <innodb/trx_sys/trx_sys_mutex_exit.h>
 #include <innodb/trx_trx/assert_trx_in_rw_list.h>
@@ -70,7 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0mon.h"
 #include "srv0start.h"
 #include "trx0rec.h"
-#include "trx0roll.h"
+
 #include "trx0rseg.h"
 
 
@@ -83,8 +88,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 rollback */
 static const ulint TRX_ROLL_TRUNC_THRESHOLD = 1;
 
-/** true if trx_rollback_or_clean_all_recovered() thread is active */
-bool trx_rollback_or_clean_is_active;
+
 
 /** In crash recovery, the current trx to be rolled back; NULL otherwise */
 static const trx_t *trx_roll_crash_recv_trx = NULL;

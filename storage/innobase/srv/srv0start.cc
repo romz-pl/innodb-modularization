@@ -50,6 +50,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <innodb/trx_roll/trx_recovery_rollback_thread.h>
+#include <innodb/trx_roll/trx_rollback_or_clean_is_active.h>
+#include <innodb/trx_roll/trx_rollback_or_clean_recovered.h>
 #include <innodb/tablespace/trx_sys_undo_spaces.h>
 #include <innodb/trx_sys/trx_sys_close.h>
 #include <innodb/trx_sys/trx_sys_any_active_transactions.h>
@@ -170,7 +173,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0upd.h"
 #include "srv0tmp.h"
 #include "trx0purge.h"
-#include "trx0roll.h"
+
 #include "trx0rseg.h"
 #include "usr0sess.h"
 #include <innodb/crc32/crc32.h>

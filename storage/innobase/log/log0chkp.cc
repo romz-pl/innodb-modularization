@@ -84,7 +84,7 @@ the file COPYING.Google.
 #include "srv0srv.h"
 #include "srv0start.h"
 
-#include "trx0roll.h"
+
 
 #include <innodb/enum/to_int.h>
 

@@ -31,6 +31,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  3/20/2011 Jimmy Yang extracted from Embedded InnoDB
  *******************************************************/
 
+#include <innodb/trx_roll/trx_rollback_to_savepoint.h>
+#include <innodb/trx_roll/trx_rollback_for_mysql.h>
 #include <innodb/lock_types/select_mode.h>
 
 #include "api0misc.h"
@@ -42,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "pars0pars.h"
 #include "row0sel.h"
 #include "srv0srv.h"
-#include "trx0roll.h"
+
 
 /** Sets a lock on a table.
  @return error code or DB_SUCCESS */

@@ -33,6 +33,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 /* Historical note: Innobase executed its first SQL string (CREATE TABLE)
 on 1/27/1998 */
 
+#include <innodb/trx_roll/roll_node_create.h>
 #include <innodb/trx_trx/trx_commit_node_create.h>
 #include <innodb/logger/fatal.h>
 #include <innodb/sync_mutex/mutex_free.h>
@@ -65,7 +66,7 @@ on 1/27/1998 */
 #include "row0ins.h"
 #include "row0sel.h"
 #include "row0upd.h"
-#include "trx0roll.h"
+
 
 
 #include "my_dbug.h"

@@ -46,6 +46,13 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "my_config.h"
 #endif /* !UNIV_HOTBACKUP */
 
+#include <innodb/trx_roll/trx_savepoint_for_mysql.h>
+#include <innodb/trx_roll/trx_release_savepoint_for_mysql.h>
+#include <innodb/trx_roll/trx_rollback_to_savepoint_for_mysql.h>
+#include <innodb/trx_trx/trx_named_savept_t.h>
+#include <innodb/trx_roll/trx_rollback_last_sql_stat_for_mysql.h>
+#include <innodb/trx_roll/trx_rollback_for_mysql.h>
+#include <innodb/trx_roll/trx_rollback_to_savepoint.h>
 #include <innodb/trx_sys/trx_sys.h>
 #include <innodb/read/MVCC.h>
 #include <innodb/trx_trx/trx_state_eq.h>
@@ -288,7 +295,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "sql/json_dom.h"
 #include "sql_base.h"
 #include "srv0tmp.h"
-#include "trx0roll.h"
+
 #include "trx0rseg.h"
 
 

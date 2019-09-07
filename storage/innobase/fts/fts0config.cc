@@ -40,7 +40,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fts0priv.h"
 
 #include "row0sel.h"
-#include "trx0roll.h"
+
 
 /** Callback function for fetching the config value.
  @return always returns true */

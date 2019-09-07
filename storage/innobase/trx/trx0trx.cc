@@ -30,6 +30,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 3/26/1996 Heikki Tuuri
  *******************************************************/
 
+#include <innodb/trx_roll/trx_rollback_for_mysql.h>
+#include <innodb/trx_roll/trx_roll_savepoints_free.h>
 #include <innodb/trx_sys/trx_sys_mutex_enter.h>
 #include <innodb/trx_sys/trx_sys_mutex_exit.h>
 #include <innodb/trx_sys/trx_sys_get_new_trx_id.h>
@@ -89,7 +91,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "srv0start.h"
 #include "trx0purge.h"
 #include "trx0rec.h"
-#include "trx0roll.h"
+
 #include "trx0rseg.h"
 
 #include "trx0undo.h"

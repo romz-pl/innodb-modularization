@@ -37,6 +37,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 #include <vector>
 
+#include <innodb/trx_roll/trx_rollback_to_savepoint.h>
 #include <innodb/io/srv_read_only_mode.h>
 #include <innodb/trx_trx/trx_isolation_level.h>
 #include <innodb/io/srv_read_only_mode.h>

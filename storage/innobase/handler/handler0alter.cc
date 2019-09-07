@@ -133,7 +133,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "sql/create_field.h"
 #include "srv0mon.h"
-#include "trx0roll.h"
+
 
 #include "ut0stage.h"
 

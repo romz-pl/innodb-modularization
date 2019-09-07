@@ -32,6 +32,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <stddef.h>
 
+#include <innodb/trx_roll/trx_rollback_step.h>
 #include <innodb/trx_trx/trx_commit_step.h>
 #include <innodb/trx_trx/trx_mutex_enter.h>
 #include <innodb/trx_trx/trx_mutex_exit.h>
@@ -49,7 +50,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "row0sel.h"
 #include "row0undo.h"
 #include "row0upd.h"
-#include "trx0roll.h"
+
 
 #include "usr0sess.h"
 

@@ -30,6 +30,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
  Created 2007-03-27 Sunny Bains
  *******************************************************/
 
+#include <innodb/trx_roll/trx_rollback_to_savepoint.h>
 #include <innodb/trx_trx/trx_commit_for_mysql.h>
 #include <innodb/memory/mem_heap_printf.h>
 #include <innodb/allocator/ut_malloc_nokey.h>
@@ -43,7 +44,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
 #include "fts0types.h"
 #include "pars0pars.h"
 #include "que0que.h"
-#include "trx0roll.h"
+
 
 
 #include <algorithm>
